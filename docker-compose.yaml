@@ -1,0 +1,20 @@
+
+services:
+  server:
+    build:
+      context: .
+    environment:
+      NODE_ENV: production
+    networks:
+      - shiftcontrol
+    labels:
+      - traefik.enable=true # enable traefik for this service
+      - traefik.http.routers.frontend.rule=Host(`frontend.127.0.0.1.nip.io`) # define the domain to access the service
+      - traefik.http.routers.frontend.entrypoints=web # http insecure entrypoint
+      - traefik.http.services.frontend.loadbalancer.server.port=8080 # internal port of the service to be accessed
+      # - traefik.http.routers.frontend.middlewares=jwt-auth@file
+
+networks:
+    shiftcontrol:
+        external: true
+
