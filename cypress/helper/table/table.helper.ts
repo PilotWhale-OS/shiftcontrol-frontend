@@ -1,7 +1,3 @@
-/*!
- * Copyright notice: This software is protected by copyright. Copyright is held by
- * manubu gmbh, unless otherwise indicated below.
- */
 
 import { BaseWorkflow } from '../../models/base.workflow';
 import { DataTable } from '@badeball/cypress-cucumber-preprocessor';

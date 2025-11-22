@@ -1,7 +1,3 @@
-/*!
- * Copyright notice: This software is protected by copyright. Copyright is held by
- * manubu gmbh, unless otherwise indicated below.
- */
 
 import { verifySelectorVisibility } from './form.helper';
 

@@ -1,9 +1,5 @@
-/*!
- * Copyright notice: This software is protected by copyright. Copyright is held by
- * manubu gmbh, unless otherwise indicated below.
- */
+import {APP_CONFIG} from '../../config';
 
-import { APP_CONFIG } from '@config/index';
 
 /**
  * Deletes all files in the configured Cypress downloads folder.

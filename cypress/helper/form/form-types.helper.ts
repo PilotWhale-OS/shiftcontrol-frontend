@@ -1,7 +1,3 @@
-/*!
- * Copyright notice: This software is protected by copyright. Copyright is held by
- * manubu gmbh, unless otherwise indicated below.
- */
 
 /**
  * Returns the type of an element based on its tag name and role attributes.
