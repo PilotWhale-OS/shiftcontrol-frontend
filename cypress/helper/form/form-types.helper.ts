@@ -1,0 +1,45 @@
+/*!
+ * Copyright notice: This software is protected by copyright. Copyright is held by
+ * manubu gmbh, unless otherwise indicated below.
+ */
+
+/**
+ * Returns the type of an element based on its tag name and role attributes.
+ *
+ * The function checks the tag name and, if necessary, the role attribute to determine
+ * the element type (e.g., 'select', 'text', 'autocomplete', 'material-toggle', 'button', or 'unknown').
+ *
+ * @param {string} selector - The CSS selector for the element.
+ * @returns {Cypress.Chainable<string>} The type of the element as a string.
+ */
+export function getElementType(selector: string) {
+  return cy
+    .get(selector)
+    .should('exist')
+    .invoke('prop', 'tagName')
+    .then((tag) => {
+      const tagName = String(tag).toLowerCase();
+
+      return cy
+        .get(selector)
+        .invoke('attr', 'role')
+        .then((roleRaw) => {
+          const role = roleRaw ? String(roleRaw).toLowerCase() : null;
+
+          if (tagName === 'select') return 'select';
+          if (tagName === 'mat-select') return 'mat-select';
+          if (tagName === 'input' && selector.includes('datepicker')) return 'datepicker';
+          if (tagName === 'input' || tagName === 'textarea') {
+            if (role === 'combobox') return 'autocomplete';
+            return 'text';
+          }
+          if (tagName === 'button' && role === 'switch') return 'material-toggle';
+          if (tagName === 'button') return 'button';
+          if (tagName === 'input' && role === 'checkbox') return 'checkbox';
+          if (tagName === 'mat-checkbox') return 'mat-checkbox';
+          if (tagName === 'app-wysiwyg') return 'wysiwyg';
+          if (tagName === 'span') return 'span';
+          return 'unknown';
+        });
+    });
+}
