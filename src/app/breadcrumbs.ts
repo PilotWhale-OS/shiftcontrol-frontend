@@ -14,6 +14,17 @@ export class Breadcrumb {
     this._name = name;
   }
 
+  public getPath(): Breadcrumb[] {
+    const path: Breadcrumb[] = [];
+    let current: Breadcrumb | undefined = this;
+    while (current) {
+      path.unshift(current);
+      current = current.parent;
+    }
+
+    return path;
+  }
+
   /**
    * Clone this breadcrumb while preserving the id
    * @private
