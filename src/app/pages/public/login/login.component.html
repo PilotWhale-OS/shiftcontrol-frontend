@@ -1,1 +1,5 @@
 <p>login works!</p>
+<xsb-input-text #username
+                [formControl]="form.controls.username"
+                [xsb-typed]="[username, form.controls.username]"
+/>

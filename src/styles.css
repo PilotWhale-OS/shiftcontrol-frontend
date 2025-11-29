@@ -1,1 +1,15 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Source Sans 3', sans-serif;
+  color: white;
+}
+
+.signature-gradient-font {
+  background: white;
+  background: linear-gradient(124deg, #c7cbfd 0%, #aea6f3 70%, #c7cbfd 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

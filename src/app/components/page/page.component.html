@@ -1,5 +1,26 @@
-<p>page works!</p>
-<p>page breadcrumbs:
-  <span *ngFor="let breadcrumb of breadcrumbs">breadcrumb.name</span>
-</p>
-<ng-content></ng-content>
+<div class="page">
+
+  <!-- header area with title, profile link and breadcrumbs -->
+  <div class="header">
+
+    <div class="breadcrumbs">
+      <div *ngFor="let crumb of breadcrumbs" class="breadcrumb">{{crumb.name}}</div>
+    </div>
+
+    <div class="title signature-gradient-font">
+      <h1>Shift Control</h1>
+    </div>
+
+
+    <div class="links">
+
+    </div>
+
+
+  </div>
+
+  <!-- content area to be projected -->
+  <div class="content">
+    <ng-content></ng-content>
+  </div>
+</div>
