@@ -20,6 +20,8 @@
     "@fortawesome/angular-fontawesome": "^1.0.0",
     "@fortawesome/free-regular-svg-icons": "^6.7.1",
     "@fortawesome/free-solid-svg-icons": "^6.7.1",
+    "keycloak-angular": "^19.0.2",
+    "keycloak-js": "^26.2.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"

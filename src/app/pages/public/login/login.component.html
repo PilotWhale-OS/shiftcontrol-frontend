@@ -1,5 +1,21 @@
-<p>login works!</p>
-<xsb-input-text #username
-                [formControl]="form.controls.username"
-                [xsb-typed]="[username, form.controls.username]"
-/>
+<div class="h-full grid place-content-center">
+
+  <div class="flex w-50 flex-col gap-5 justify-center">
+    <!--<xsb-input-text #email
+                    name="email"
+                    placeholder="EMail"
+                    [formControl]="form.controls.email"
+                    [xsb-typed]="[email, form.controls.email]"
+    />
+    <xsb-input-text #password
+                    name="password"
+                    placeholder="Password"
+                    type="password"
+                    [formControl]="form.controls.password"
+                    [xsb-typed]="[password, form.controls.password]"
+    />-->
+
+    <xsb-input-button content="Login" name="submit" (click)="login()" />
+  </div>
+
+</div>

@@ -1,0 +1,23 @@
+<div class="w-full flex flex-row items-center border-framing-level_2 cursor-pointer --hover:scale-95 --active:scale-[98%] transition-all
+   rounded-lg bg-background-item" [ngClass]="{
+      'pointer-events-none opacity-60' : lock,
+
+      'border-framing-default_danger' : action === 'danger',
+      'border-framing-default_success' : action === 'success',
+      'border-framing-item focus-within:border-framing-highlight hover:border-framing-highlight' : action === 'normal',
+
+      'py-sm px-lg border-2 gap-md font-semibold' : size === 'regular',
+      'py-xs px-sm gap-sm hover:brightness-125 active:brightness-125' : size === 'minimal',
+      'gap-[0px]' : content.length === 0
+    }">
+  <fa-icon *ngIf="icon && !lock" [icon]="icon" [ngClass]="{
+    'text-text-danger' : action === 'danger',
+    'text-text-success' : action === 'success',
+    'text-text-secondary' : action === 'normal',
+  }" />
+  <fa-icon class="animate-spin" *ngIf="lock && !disableLockIcon" [icon]="lockIcon" />
+  <input class="grow cursor-pointer" (click)="preventDefault($event)" [ngClass]="{
+    'w-0' : content.length === 0
+  }"
+    [type]="type" [name]="name" tabindex="0" [value]="content">
+</div>
