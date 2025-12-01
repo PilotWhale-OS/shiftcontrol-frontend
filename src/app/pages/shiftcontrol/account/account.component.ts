@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from "@angular/core";
+import {Component, OnDestroy} from "@angular/core";
 import {UserService} from "../../../services/user/user.service";
 import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
 import {InputTextComponent} from "../../../components/inputs/input-text/input-text.component";
@@ -48,9 +48,11 @@ export class AccountComponent implements OnDestroy {
     this._profileSubscription.unsubscribe();
   }
 
+  /**
+   * open the external keycloak management console
+   */
   goToManagement() {
-    const url = this._userService.manageUrl;
-    window.location.href = url;
+    window.location.href = this._userService.manageUrl;
   }
 
   signOut() {

@@ -26,6 +26,10 @@ export class PageComponent {
     private readonly _userService: UserService
   ) { }
 
+  /**
+   * Get initials from profile data
+   * @param profile
+   */
   public getInitials(profile: KeycloakProfile) {
     if(!profile) return '';
     return `${profile.firstName?.charAt(0)} ${profile.lastName?.charAt(0)}`.trim();
@@ -34,5 +38,4 @@ export class PageComponent {
   public get profile$() {
     return this._userService.profile$;
   }
-
 }
