@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, HostBinding, Injector, Input, OnInit} from '@angular/core';
 import {FormsModule, NG_VALUE_ACCESSOR, NgControl} from "@angular/forms";
 import {TypedControlValueAccessor} from "../../../util/typedControlValueAccessor";
-import {NgClass, NgIf} from "@angular/common";
+import {NgClass} from "@angular/common";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {faCheckCircle, faTimesCircle} from "@fortawesome/free-solid-svg-icons";
 
@@ -13,7 +13,6 @@ import {faCheckCircle, faTimesCircle} from "@fortawesome/free-solid-svg-icons";
   imports: [
     FormsModule,
     NgClass,
-    NgIf,
     FaIconComponent
   ],
   providers: [
