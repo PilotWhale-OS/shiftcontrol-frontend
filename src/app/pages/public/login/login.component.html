@@ -1,6 +1,6 @@
 <div class="h-full grid place-content-center">
 
-  <div class="flex w-50 flex-col gap-5 justify-center">
+  <div class="flex w-50 flex-col gap-5 justify-center card">
     <!--<xsb-input-text #email
                     name="email"
                     placeholder="EMail"
@@ -14,6 +14,11 @@
                     [formControl]="form.controls.password"
                     [xsb-typed]="[password, form.controls.password]"
     />-->
+
+    <h1 class="signature-gradient-font text-2xl text-center font-bold">Welcome Back!</h1>
+    <p class="font-semibold">
+      ShiftControl is a powerful event planning<br> platform for organizators and volunteers
+    </p>
 
     <xsb-input-button content="Login" name="submit" (click)="login()" />
   </div>

@@ -36,6 +36,7 @@ export class Breadcrumb {
   }
 }
 
-
-export const BC_EVENTS = new Breadcrumb("Events", "events");
+export const BC_HOME = new Breadcrumb("Home", "/");
+export const BC_EVENTS = new Breadcrumb("Events", "events", BC_HOME);
 export const BC_SHIFTS = new Breadcrumb("Shifts", "shifts", BC_EVENTS);
+export const BC_ACCOUNT = new Breadcrumb("Account", "account", BC_HOME);

@@ -1,0 +1,9 @@
+.card {
+  @apply bg-background-card border-framing-card border-2;
+  padding: 2rem;
+  border-radius: 1.5rem;
+
+  .title {
+    @apply text-xl font-bold mb-4;
+  }
+}

@@ -1,11 +1,15 @@
 import { Component } from '@angular/core';
 import {PageService} from '../../services/breadcrumbs/page.service';
-import {NgForOf} from '@angular/common';
+import {AsyncPipe, NgForOf} from "@angular/common";
+import {RouterLink} from "@angular/router";
+import {UserService} from "../../services/user/user.service";
+import {KeycloakProfile} from "keycloak-js";
 
 @Component({
   selector: 'app-page',
   imports: [
-    NgForOf
+    RouterLink,
+    AsyncPipe
   ],
   standalone: true,
   templateUrl: './page.component.html',
@@ -17,6 +21,18 @@ export class PageComponent {
     return this._pageService.breadcrumbs?.getPath() ?? [];
   }
 
-  constructor(private readonly _pageService: PageService) { }
+  constructor(
+    private readonly _pageService: PageService,
+    private readonly _userService: UserService
+  ) { }
+
+  public getInitials(profile: KeycloakProfile) {
+    if(!profile) return '';
+    return `${profile.firstName?.charAt(0)} ${profile.lastName?.charAt(0)}`.trim();
+  }
+
+  public get profile$() {
+    return this._userService.profile$;
+  }
 
 }

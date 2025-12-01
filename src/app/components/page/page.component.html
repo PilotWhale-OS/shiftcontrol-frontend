@@ -3,20 +3,43 @@
   <!-- header area with title, profile link and breadcrumbs -->
   <div class="header">
 
+    <!-- breadcrumb navigation items -->
     <div class="breadcrumbs">
-      <div *ngFor="let crumb of breadcrumbs" class="breadcrumb">{{crumb.name}}</div>
+
+      @for (crumb of breadcrumbs; track crumb; let i = $index) {
+        <div class="breadcrumb" [routerLink]="crumb.href">
+          {{crumb.name}}
+        </div>
+
+        @if (i !== breadcrumbs.length - 1) {
+          <span class="separator">/</span>
+        }
+      }
+
     </div>
 
+    <!-- header in the middle -->
     <div class="title signature-gradient-font">
       <h1>Shift Control</h1>
     </div>
 
 
+    <!-- quick links at the right side -->
     <div class="links">
 
+      <!-- user acc display -->
+      @if (profile$ | async; as profile) {
+        @if(profile != null) {
+          <div
+            class="rounded-full aspect-square h-10 bg-blue-400 grid place-content-center select-none cursor-pointer"
+            routerLink="/me"
+          >
+            <span class="font-bold uppercase text-white">{{getInitials(profile)}}</span>
+          </div>
+        }
+      }
+
     </div>
-
-
   </div>
 
   <!-- content area to be projected -->

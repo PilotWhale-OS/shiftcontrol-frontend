@@ -1,0 +1,80 @@
+
+<!-- cards row -->
+<div class="flex flex-wrap flex-row gap-xl">
+
+  <!-- user management card -->
+  <div class="card grid grid-cols-2 w-fit">
+    <h2 class="col-span-2 title signature-gradient-font">Account Information</h2>
+
+    <span>Given Name:</span>
+    <xsb-input-text #givenName name="userGivenName"
+                    [disguise]="true"
+                    [formControl]="form.controls.givenName"
+                    [xsb-typed]="[givenName, form.controls.givenName]"
+    />
+
+    <span>Last Name:</span>
+    <xsb-input-text #lastName name="userLastName"
+                    [disguise]="true"
+                    [formControl]="form.controls.lastName"
+                    [xsb-typed]="[lastName, form.controls.lastName]"
+    />
+
+    <div class="col-span-2 flex flex-row gap-lg pt-lg">
+      <xsb-input-button name="me-manage-account" content="Manage Account" (click)="goToManagement()" size="minimal" />
+      <xsb-input-button name="me-sign-out" content="Sign Out" (click)="signOut()" size="minimal" />
+    </div>
+  </div>
+
+  <!-- notification preferences card -->
+  <div class="card grid grid-cols-2 w-fit">
+    <h2 class="col-span-2 title signature-gradient-font">Notifications</h2>
+
+    <span>Given Name:</span>
+    <xsb-input-text #givenName name="userGivenName"
+                    [disguise]="true"
+                    [formControl]="form.controls.givenName"
+                    [xsb-typed]="[givenName, form.controls.givenName]"
+    />
+
+    <span>Last Name:</span>
+    <xsb-input-text #lastName name="userLastName"
+                    [disguise]="true"
+                    [formControl]="form.controls.lastName"
+                    [xsb-typed]="[lastName, form.controls.lastName]"
+    />
+
+    <div class="col-span-2 flex flex-row gap-lg pt-lg">
+      <xsb-input-button name="me-manage-account" content="Manage Account" (click)="goToManagement()" size="minimal" />
+      <xsb-input-button name="me-sign-out" content="Sign Out" (click)="signOut()" size="minimal" />
+    </div>
+  </div>
+
+
+
+  <!-- unavailable time management card -->
+  <div class="card grid grid-cols-2 w-fit">
+    <h2 class="col-span-2 title signature-gradient-font">Unavailability</h2>
+
+    <span>Given Name:</span>
+    <xsb-input-text #givenName name="userGivenName"
+                    [disguise]="true"
+                    [formControl]="form.controls.givenName"
+                    [xsb-typed]="[givenName, form.controls.givenName]"
+    />
+
+    <span>Last Name:</span>
+    <xsb-input-text #lastName name="userLastName"
+                    [disguise]="true"
+                    [formControl]="form.controls.lastName"
+                    [xsb-typed]="[lastName, form.controls.lastName]"
+    />
+
+    <div class="col-span-2 flex flex-row gap-lg pt-lg">
+      <xsb-input-button name="me-manage-account" content="Manage Account" (click)="goToManagement()" size="minimal" />
+      <xsb-input-button name="me-sign-out" content="Sign Out" (click)="signOut()" size="minimal" />
+    </div>
+  </div>
+</div>
+
+

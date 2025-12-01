@@ -30,8 +30,8 @@ module.exports = {
         background: {
 
           /* dark */
-          base: "rgb(23 24 37)",
-          card: "#0e0f13",
+          base: "rgb(13 13 20)",
+          card: "rgb(17 18 28)",
           item: "rgb(23 24 37)",
           card_danger: "#1a141b",
           card_success: "#17201e",
@@ -49,8 +49,9 @@ module.exports = {
         },
         framing: {
           default: "#232430",
-          item: "#232430",
-          highlight: "#2f3040",
+          card: "#282a37",
+          item: "rgb(62 64 97)",
+          highlight: "rgb(75 86 141)",
           default_danger: "#521e1e",
           default_success: "#204f2e",
           default_hint: "#20384f",
