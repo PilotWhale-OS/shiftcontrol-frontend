@@ -36,6 +36,9 @@ module.exports = {
           card_danger: "#1a141b",
           card_success: "#17201e",
           card_hint: "#101625",
+          item_danger: "#1a141b",
+          item_success: "#17201e",
+          item_hint: "#101625",
 
           /* light */
           light: {
@@ -55,6 +58,12 @@ module.exports = {
           default_danger: "#521e1e",
           default_success: "#204f2e",
           default_hint: "#20384f",
+          item_danger: "#772f2f",
+          item_success: "#2f6d41",
+          item_hint: "#294764",
+          highlight_danger: "#ad5959",
+          highlight_success: "#4f9062",
+          highlight_hint: "#517496",
 
           /* light */
           light: {

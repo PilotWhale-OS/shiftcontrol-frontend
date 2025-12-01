@@ -1,1 +1,12 @@
-<p>home works!</p>
+
+<!-- card list -->
+<div class="flex flex-row gap-md flex-wrap">
+
+  @for (card of cards; track card) {
+    <div class="card interaction" [routerLink]="card.href">
+      <h1 class="title signature-gradient-font">{{card.title}}</h1>
+      <p class="font-semibold">{{card.content}}</p>
+    </div>
+  }
+
+</div>

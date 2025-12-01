@@ -4,6 +4,7 @@ import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
 import {InputTextComponent} from "../../../components/inputs/input-text/input-text.component";
 import {TypedFormControlDirective} from "../../../directives/typed-form-control.directive";
 import {InputButtonComponent} from "../../../components/inputs/input-button/input-button.component";
+import {InputToggleComponent} from "../../../components/inputs/input-toggle/input-toggle.component";
 
 @Component({
   selector: 'app-account',
@@ -11,7 +12,8 @@ import {InputButtonComponent} from "../../../components/inputs/input-button/inpu
     InputTextComponent,
     ReactiveFormsModule,
     TypedFormControlDirective,
-    InputButtonComponent
+    InputButtonComponent,
+    InputToggleComponent
   ],
   templateUrl: './account.component.html',
   styleUrl: './account.component.scss'
@@ -28,13 +30,15 @@ export class AccountComponent implements OnDestroy {
     this.form = _fb.group({
       givenName: this._fb.nonNullable.control<string>(''),
       lastName: this._fb.nonNullable.control<string>(''),
+      checked: this._fb.nonNullable.control<boolean>(false)
     });
 
     this._profileSubscription = this._userService.profile$.subscribe(profile => {
       if(profile) {
         this.form.setValue({
           givenName: profile.firstName ?? '',
-          lastName: profile.lastName ?? ''
+          lastName: profile.lastName ?? '',
+          checked: false
         });
       }
     });
