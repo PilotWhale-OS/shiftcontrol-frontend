@@ -1,6 +1,6 @@
 import { Component, HostBinding, Input } from '@angular/core';
 import { IconDefinition, faGear } from '@fortawesome/free-solid-svg-icons';
-import {NgClass, NgIf} from "@angular/common";
+import {NgClass} from "@angular/common";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 
 @Component({
@@ -9,8 +9,7 @@ import {FaIconComponent} from "@fortawesome/angular-fontawesome";
   templateUrl: "./input-button.component.html",
   imports: [
     NgClass,
-    FaIconComponent,
-    NgIf
+    FaIconComponent
   ],
   styleUrls: ["./input-button.component.scss"]
 })

@@ -1,8 +1,8 @@
-import { Component, HostBinding, Injector, Input, OnInit } from '@angular/core';
+import { Component, HostBinding, Injector, Input, OnInit, inject } from '@angular/core';
 import {FormsModule, NG_VALUE_ACCESSOR, NgControl} from '@angular/forms';
 import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import {TypedControlValueAccessor} from '../../../util/typedControlValueAccessor';
-import {NgClass, NgIf} from '@angular/common';
+import {NgClass} from '@angular/common';
 import {FaIconComponent} from '@fortawesome/angular-fontawesome';
 
 @Component({
@@ -12,7 +12,6 @@ import {FaIconComponent} from '@fortawesome/angular-fontawesome';
   standalone: true,
   imports: [
     NgClass,
-    NgIf,
     FaIconComponent,
     FormsModule
   ],
@@ -25,6 +24,8 @@ import {FaIconComponent} from '@fortawesome/angular-fontawesome';
   ]
 })
 export class InputTextComponent implements TypedControlValueAccessor<string>, OnInit {
+  private injector = inject(Injector);
+
 
   /**
    * the size style of the input. minimal will have less border and padding
@@ -79,8 +80,6 @@ export class InputTextComponent implements TypedControlValueAccessor<string>, On
 
   /** self form control to access validity state */
   ngControl?: NgControl;
-
-  constructor(private injector: Injector) { }
 
   /* hide actual properties from html to prevent accessibility issues */
   @HostBinding('attr.name') get hideNameAttr() { return null; }

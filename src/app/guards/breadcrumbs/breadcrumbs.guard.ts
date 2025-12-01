@@ -3,7 +3,7 @@ import {Breadcrumb} from '../../breadcrumbs';
 import {inject} from '@angular/core';
 import {PageService} from '../../services/breadcrumbs/page.service';
 
-export const breadcrumbsGuard: CanActivateFn = (route, state) => {
+export const breadcrumbsGuard: CanActivateFn = (route) => {
 
   /* set breadcrumbs only for leaf routes */
   if(route.children.length > 0) return true;

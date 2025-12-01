@@ -15,5 +15,4 @@ export class HomeComponent {
     {title:"Events", content: "Manage your events and shift plans", href: "events"},
     {title:"User Account", content: "Manage your notification settings and unavailable time", href: "me"}
   ];
-
 }

@@ -1,4 +1,4 @@
-import {Component, OnDestroy} from "@angular/core";
+import { Component, OnDestroy, inject } from "@angular/core";
 import {UserService} from "../../../services/user/user.service";
 import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
 import {InputTextComponent} from "../../../components/inputs/input-text/input-text.component";
@@ -19,14 +19,16 @@ import {InputToggleComponent} from "../../../components/inputs/input-toggle/inpu
   styleUrl: './account.component.scss'
 })
 export class AccountComponent implements OnDestroy {
+  private readonly _userService = inject(UserService);
+  readonly _fb = inject(FormBuilder);
+
   public readonly form;
 
   private readonly _profileSubscription;
 
-  constructor(
-    private readonly _userService: UserService,
-    readonly _fb: FormBuilder
-  ) {
+  constructor() {
+    const _fb = this._fb;
+
     this.form = _fb.group({
       givenName: this._fb.nonNullable.control<string>(''),
       lastName: this._fb.nonNullable.control<string>(''),

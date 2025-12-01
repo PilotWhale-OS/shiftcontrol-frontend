@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from "./pages/public/login/login.component";
 import { EventsComponent } from "./pages/shiftcontrol/events/events.component";
 import { ShiftsComponent } from "./pages/shiftcontrol/shifts/shifts.component";
-import {BC_EVENTS, BC_SHIFTS, BC_ACCOUNT, Breadcrumb, BC_HOME} from "./breadcrumbs";
+import {BC_EVENTS, BC_SHIFTS, BC_ACCOUNT, BC_HOME} from "./breadcrumbs";
 import { breadcrumbsGuard } from "./guards/breadcrumbs/breadcrumbs.guard";
 import {keycloakGuard} from "./guards/keycloak/keycloak.guard";
 import {AccountComponent} from "./pages/shiftcontrol/account/account.component";

@@ -28,7 +28,7 @@
 
       <!-- user acc display -->
       @if (profile$ | async; as profile) {
-        @if(profile != null) {
+        @if(profile !== null) {
           <div
             class="rounded-full aspect-square h-10 bg-blue-400 grid place-content-center select-none cursor-pointer"
             routerLink="/me"

@@ -10,12 +10,19 @@
       'py-xs px-sm  gap-sm hover:brightness-125 active:brightness-125' : size === 'minimal',
       'gap-[0px]' : content.length === 0
     }">
-  <fa-icon *ngIf="icon && !lock" [icon]="icon" [ngClass]="{
-    'text-text-danger' : action === 'danger',
-    'text-text-success' : action === 'success',
-    'text-text-secondary' : action === 'normal',
-  }" />
-  <fa-icon class="animate-spin" *ngIf="lock && !disableLockIcon" [icon]="lockIcon" />
+
+  @if (icon && !lock) {
+    <fa-icon [icon]="icon" [ngClass]="{
+      'text-text-danger' : action === 'danger',
+      'text-text-success' : action === 'success',
+      'text-text-secondary' : action === 'normal',
+    }" />
+  }
+
+  @if (lock && !disableLockIcon) {
+    <fa-icon class="animate-spin" [icon]="lockIcon" />
+  }
+
   <input class="grow cursor-pointer" (click)="preventDefault($event)" [ngClass]="{
     'w-0' : content.length === 0
   }"

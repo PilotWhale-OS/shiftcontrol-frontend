@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {PageService} from '../../services/breadcrumbs/page.service';
-import {AsyncPipe, NgForOf} from "@angular/common";
+import {AsyncPipe} from "@angular/common";
 import {RouterLink} from "@angular/router";
 import {UserService} from "../../services/user/user.service";
 import {KeycloakProfile} from "keycloak-js";
@@ -16,15 +16,13 @@ import {KeycloakProfile} from "keycloak-js";
   styleUrl: './page.component.scss'
 })
 export class PageComponent {
+  private readonly _pageService = inject(PageService);
+  private readonly _userService = inject(UserService);
+
 
   public get breadcrumbs() {
     return this._pageService.breadcrumbs?.getPath() ?? [];
   }
-
-  constructor(
-    private readonly _pageService: PageService,
-    private readonly _userService: UserService
-  ) { }
 
   /**
    * Get initials from profile data

@@ -7,7 +7,7 @@ const isAccessAllowed = async (
   _: RouterStateSnapshot,
   authData: AuthGuardData
 ): Promise<boolean | UrlTree> => {
-  const { authenticated, grantedRoles } = authData;
+  const { authenticated } = authData;
 
   if (authenticated) {
     return true;

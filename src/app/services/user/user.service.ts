@@ -1,16 +1,18 @@
-import {effect, Inject, Injectable, Signal} from "@angular/core";
+import { effect, Injectable, Signal, inject } from "@angular/core";
 import {KEYCLOAK_EVENT_SIGNAL, KeycloakEvent, KeycloakEventType, ReadyArgs, typeEventArgs} from "keycloak-angular";
 import Keycloak, {KeycloakProfile} from "keycloak-js";
-import {BehaviorSubject, Observable, Subject} from "rxjs";
+import {BehaviorSubject, Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
+  private readonly keycloak = inject(Keycloak);
 
   private _profile$ = new BehaviorSubject<KeycloakProfile | null>(null);
 
-  constructor(private readonly keycloak: Keycloak, @Inject(KEYCLOAK_EVENT_SIGNAL) eventSignal: Signal<KeycloakEvent>) {
+  constructor() {
+    const eventSignal = inject<Signal<KeycloakEvent>>(KEYCLOAK_EVENT_SIGNAL);
 
     // React to every Keycloak events
     effect(() => {
@@ -35,7 +37,6 @@ export class UserService {
       }
     });
   }
-
 
   /**
    * Observable of the currently logged-in profile

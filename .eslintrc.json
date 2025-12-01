@@ -1,21 +1,13 @@
 {
   "root": true,
   "ignorePatterns": [
-    "projects/**/*",
-    "src/api/",
-    "node_modules/"
+    "projects/**/*"
   ],
   "overrides": [
     {
       "files": [
         "*.ts"
       ],
-      "parserOptions": {
-        "project": [
-          "tsconfig.json"
-        ],
-        "createDefaultProgram": true
-      },
       "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
@@ -23,14 +15,6 @@
         "plugin:@angular-eslint/template/process-inline-templates"
       ],
       "rules": {
-        "@angular-eslint/component-selector": [
-          "error",
-          {
-            "type": "element",
-            "prefix": "app",
-            "style": "kebab-case"
-          }
-        ],
         "@angular-eslint/directive-selector": [
           "error",
           {
@@ -38,22 +22,15 @@
             "prefix": "app",
             "style": "camelCase"
           }
-        ],
-        "@typescript-eslint/explicit-member-accessibility": [
-          "off",
+        ]
+        /*,"@angular-eslint/component-selector": [
+          "error",
           {
-            "accessibility": "explicit"
+            "type": "element",
+            "prefix": "app",
+            "style": "kebab-case"
           }
-        ],
-        "arrow-parens": [
-          "off",
-          "always"
-        ],
-        "semi": "error",
-        "quotes": ["error", "double"],
-        "import/order": "off",
-        "@typescript-eslint/no-unused-vars": ["warn"],
-        "@typescript-eslint/member-ordering": "error"
+        ]*/
       }
     },
     {

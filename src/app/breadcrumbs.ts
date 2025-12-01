@@ -16,6 +16,8 @@ export class Breadcrumb {
 
   public getPath(): Breadcrumb[] {
     const path: Breadcrumb[] = [];
+
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     let current: Breadcrumb | undefined = this;
     while (current) {
       path.unshift(current);
