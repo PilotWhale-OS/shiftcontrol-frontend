@@ -7,7 +7,7 @@ import {InputButtonComponent} from "../../../components/inputs/input-button/inpu
 import {InputToggleComponent} from "../../../components/inputs/input-toggle/input-toggle.component";
 
 @Component({
-  selector: 'app-account',
+  selector: "app-account",
   imports: [
     InputTextComponent,
     ReactiveFormsModule,
@@ -15,31 +15,29 @@ import {InputToggleComponent} from "../../../components/inputs/input-toggle/inpu
     InputButtonComponent,
     InputToggleComponent
   ],
-  templateUrl: './account.component.html',
-  styleUrl: './account.component.scss'
+  templateUrl: "./account.component.html",
+  styleUrl: "./account.component.scss"
 })
 export class AccountComponent implements OnDestroy {
-  private readonly _userService = inject(UserService);
-  readonly _fb = inject(FormBuilder);
 
   public readonly form;
+  private readonly _userService = inject(UserService);
+  private readonly _fb = inject(FormBuilder);
 
   private readonly _profileSubscription;
 
   constructor() {
-    const _fb = this._fb;
-
-    this.form = _fb.group({
-      givenName: this._fb.nonNullable.control<string>(''),
-      lastName: this._fb.nonNullable.control<string>(''),
+    this.form = this._fb.group({
+      givenName: this._fb.nonNullable.control<string>(""),
+      lastName: this._fb.nonNullable.control<string>(""),
       checked: this._fb.nonNullable.control<boolean>(false)
     });
 
     this._profileSubscription = this._userService.profile$.subscribe(profile => {
       if(profile) {
         this.form.setValue({
-          givenName: profile.firstName ?? '',
-          lastName: profile.lastName ?? '',
+          givenName: profile.firstName ?? "",
+          lastName: profile.lastName ?? "",
           checked: false
         });
       }

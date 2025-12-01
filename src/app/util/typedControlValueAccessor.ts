@@ -1,4 +1,4 @@
-import { ControlValueAccessor } from '@angular/forms';
+import { ControlValueAccessor } from "@angular/forms";
 
 export interface TypedControlValueAccessor<T> extends ControlValueAccessor {
   writeValue(value: T): void;

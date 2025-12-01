@@ -1,6 +1,6 @@
-import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { inject } from '@angular/core';
-import { AuthGuardData, createAuthGuard } from 'keycloak-angular';
+import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot, UrlTree } from "@angular/router";
+import { inject } from "@angular/core";
+import { AuthGuardData, createAuthGuard } from "keycloak-angular";
 
 const isAccessAllowed = async (
   route: ActivatedRouteSnapshot,
@@ -14,7 +14,7 @@ const isAccessAllowed = async (
   }
 
   const router = inject(Router);
-  return router.parseUrl('/login');
+  return router.parseUrl("/login");
 };
 
 export const keycloakGuard = createAuthGuard<CanActivateFn>(isAccessAllowed);

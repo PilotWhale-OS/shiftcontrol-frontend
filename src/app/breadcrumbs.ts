@@ -1,14 +1,14 @@
 export class Breadcrumb {
   private _id;
 
+  constructor(private _name: string, private readonly _href: string, private readonly _parent?: Breadcrumb) {
+    this._id = Symbol(_name);
+  }
+
   public get parent() { return this._parent; }
   public get name() { return this._name; }
   public get href() { return this._href; }
   public get id() { return this._id; }
-
-  constructor(private _name: string, private readonly _href: string, private readonly _parent?: Breadcrumb) {
-    this._id = Symbol(_name);
-  }
 
   public set name(name: string) {
     this._name = name;

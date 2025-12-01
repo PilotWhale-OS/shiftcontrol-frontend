@@ -1,8 +1,8 @@
 /* eslint-disable @angular-eslint/directive-selector */
 /* eslint-disable @angular-eslint/no-input-rename */
-import { Directive, Input } from '@angular/core';
-import { AbstractControl } from '@angular/forms';
-import {TypedControlValueAccessor} from '../util/typedControlValueAccessor';
+import { Directive, Input } from "@angular/core";
+import { AbstractControl } from "@angular/forms";
+import {TypedControlValueAccessor} from "../util/typedControlValueAccessor";
 
 /**
  * a directive that does nothing else but infer types of a formControl directive binding to a FormControl object
@@ -11,14 +11,14 @@ import {TypedControlValueAccessor} from '../util/typedControlValueAccessor';
  * @example <app-ngf-input-select #selection [xsb-typed]="[selection, form.controls.option]" [formControl]="form.controls.option" />
  */
 @Directive({
-  selector: '[xsb-typed]'
+  selector: "[xsb-typed]"
 })
 export class TypedFormControlDirective<TData> {
 
   /**
    * Input to statically check the type compatibility between form component and control binding
    */
-  @Input({ required: true, alias: 'xsb-typed' })
+  @Input({ required: true, alias: "xsb-typed" })
   typeValidation!: [TypedControlValueAccessor<TData>, AbstractControl<TData>];
 }
 

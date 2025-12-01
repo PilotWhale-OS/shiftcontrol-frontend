@@ -4,7 +4,7 @@ import Keycloak, {KeycloakProfile} from "keycloak-js";
 import {BehaviorSubject, Observable} from "rxjs";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class UserService {
   private readonly keycloak = inject(Keycloak);

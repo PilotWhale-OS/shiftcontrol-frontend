@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { InputToggleComponent } from './input-toggle.component';
+import { InputToggleComponent } from "./input-toggle.component";
 
-describe('InputToggleComponent', () => {
+describe("InputToggleComponent", () => {
   let component: InputToggleComponent;
   let fixture: ComponentFixture<InputToggleComponent>;
 
@@ -15,7 +15,7 @@ describe('InputToggleComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

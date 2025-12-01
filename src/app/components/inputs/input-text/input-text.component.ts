@@ -1,14 +1,14 @@
-import { Component, HostBinding, Injector, Input, OnInit, inject } from '@angular/core';
-import {FormsModule, NG_VALUE_ACCESSOR, NgControl} from '@angular/forms';
-import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
-import {TypedControlValueAccessor} from '../../../util/typedControlValueAccessor';
-import {NgClass} from '@angular/common';
-import {FaIconComponent} from '@fortawesome/angular-fontawesome';
+import { Component, HostBinding, Injector, Input, OnInit, inject } from "@angular/core";
+import {FormsModule, NG_VALUE_ACCESSOR, NgControl} from "@angular/forms";
+import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
+import {TypedControlValueAccessor} from "../../../util/typedControlValueAccessor";
+import {NgClass} from "@angular/common";
+import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 
 @Component({
-  selector: 'xsb-input-text',
-  templateUrl: './input-text.component.html',
-  styleUrls: ['./input-text.component.scss'],
+  selector: "xsb-input-text",
+  templateUrl: "./input-text.component.html",
+  styleUrls: ["./input-text.component.scss"],
   standalone: true,
   imports: [
     NgClass,
@@ -24,26 +24,25 @@ import {FaIconComponent} from '@fortawesome/angular-fontawesome';
   ]
 })
 export class InputTextComponent implements TypedControlValueAccessor<string>, OnInit {
-  private injector = inject(Injector);
 
 
   /**
    * the size style of the input. minimal will have less border and padding
    */
   @Input()
-  size: 'minimal' | 'regular' = 'regular';
+  size: "minimal" | "regular" = "regular";
 
   /**
    * HTML type of the input element
    */
   @Input()
-  type: 'text' | 'email' | 'password' = 'text';
+  type: "text" | "email" | "password" = "text";
 
   /**
    * the native html for attribute for accessibility
    */
   @Input()
-  name = '';
+  name = "";
 
   /**
    * disguise the input as plain text and make immutable
@@ -61,7 +60,7 @@ export class InputTextComponent implements TypedControlValueAccessor<string>, On
    * HTML placeholder of the input element
    */
   @Input()
-  placeholder = '';
+  placeholder = "";
 
   /** error con */
   errorIcon = faCircleExclamation;
@@ -70,7 +69,7 @@ export class InputTextComponent implements TypedControlValueAccessor<string>, On
   disabled = false;
 
   /** bound ngmodel to the underlying input */
-  value = '';
+  value = "";
 
   /** onchange callback to be set by the parent form */
   onChange?: (value: string) => void;
@@ -81,12 +80,14 @@ export class InputTextComponent implements TypedControlValueAccessor<string>, On
   /** self form control to access validity state */
   ngControl?: NgControl;
 
+  private injector = inject(Injector);
+
   /* hide actual properties from html to prevent accessibility issues */
-  @HostBinding('attr.name') get hideNameAttr() { return null; }
-  @HostBinding('attr.id') get hideIdAttr() { return null; }
-  @HostBinding('attr.type') get hideTypeAttr() { return null; }
-  @HostBinding('attr.value') get hideValueAttr() { return null; }
-  @HostBinding('attr.placeholder') get hidePlaceholderAttr() { return null; }
+  @HostBinding("attr.name") get hideNameAttr() { return null; }
+  @HostBinding("attr.id") get hideIdAttr() { return null; }
+  @HostBinding("attr.type") get hideTypeAttr() { return null; }
+  @HostBinding("attr.value") get hideValueAttr() { return null; }
+  @HostBinding("attr.placeholder") get hidePlaceholderAttr() { return null; }
 
   /**
    * current validity state determined by validators

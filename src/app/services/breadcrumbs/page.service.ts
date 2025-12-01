@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import {Breadcrumb} from '../../breadcrumbs';
+import { Injectable } from "@angular/core";
+import {Breadcrumb} from "../../breadcrumbs";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class PageService {
 
@@ -14,8 +14,6 @@ export class PageService {
   public get breadcrumbs() {
     return this._breadcrumbs;
   }
-
-  constructor() { }
 
   /**
    * Set the current breadcrumbs

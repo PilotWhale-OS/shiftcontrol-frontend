@@ -1,4 +1,4 @@
-import { Component, HostBinding, Injector, Input, OnInit, inject } from '@angular/core';
+import { Component, HostBinding, Injector, Input, OnInit, inject } from "@angular/core";
 import {FormsModule, NG_VALUE_ACCESSOR, NgControl} from "@angular/forms";
 import {TypedControlValueAccessor} from "../../../util/typedControlValueAccessor";
 import {NgClass} from "@angular/common";
@@ -24,28 +24,26 @@ import {faCheckCircle, faTimesCircle} from "@fortawesome/free-solid-svg-icons";
   ]
 })
 export class InputToggleComponent implements TypedControlValueAccessor<boolean>, OnInit {
-  private injector = inject(Injector);
-
-
-  public readonly checkIcon = faCheckCircle;
-  public readonly crossIcon = faTimesCircle;
 
   /**
    * the size style of the input. minimal will have less border and padding
    */
   @Input()
-  size: 'minimal' | 'regular' = 'regular';
+  size: "minimal" | "regular" = "regular";
   /**
    * the native html for attribute for accessibility
    */
   @Input()
-  name = '';
+  name = "";
 
   /**
    * prohibit ID attribute on input
    */
   @Input()
   id = null;
+
+  public readonly checkIcon = faCheckCircle;
+  public readonly crossIcon = faTimesCircle;
 
   /** current disabled state */
   disabled = false;
@@ -62,10 +60,12 @@ export class InputToggleComponent implements TypedControlValueAccessor<boolean>,
   /** self form control to access validity state */
   ngControl?: NgControl;
 
+  private injector = inject(Injector);
+
   /* hide actual properties from html to prevent accessibility isues */
-  @HostBinding('attr.name') get hideNameAttr() { return null; }
-  @HostBinding('attr.id') get hideIdAttr() { return null; }
-  @HostBinding('attr.value') get hideValueAttr() { return null; }
+  @HostBinding("attr.name") get hideNameAttr() { return null; }
+  @HostBinding("attr.id") get hideIdAttr() { return null; }
+  @HostBinding("attr.value") get hideValueAttr() { return null; }
 
   /**
    * current validity state determined by validators

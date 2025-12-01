@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import { Routes } from "@angular/router";
 import { LoginComponent } from "./pages/public/login/login.component";
 import { EventsComponent } from "./pages/shiftcontrol/events/events.component";
 import { ShiftsComponent } from "./pages/shiftcontrol/shifts/shifts.component";

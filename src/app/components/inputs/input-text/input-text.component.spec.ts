@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { InputTextComponent } from './input-text.component';
+import { InputTextComponent } from "./input-text.component";
 
-describe('InputTextComponent', () => {
+describe("InputTextComponent", () => {
   let component: InputTextComponent;
   let fixture: ComponentFixture<InputTextComponent>;
 
@@ -17,7 +17,7 @@ describe('InputTextComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });
