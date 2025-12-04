@@ -29,11 +29,12 @@ export class PageService {
    * @param breadcrumb the target breadcrumb to configure
    * @param name the new display name of the breadcrumb
    */
-  public configureBreadcrumb(breadcrumb: Breadcrumb, name: string): PageService {
+  public configureBreadcrumb(breadcrumb: Breadcrumb, name: string, href: string): PageService {
     let traverse= this._breadcrumbs;
     while (traverse !== undefined) {
       if(traverse.id === breadcrumb.id) {
         traverse.name = name;
+        traverse.href = href;
         break;
       }
       traverse = traverse.parent;

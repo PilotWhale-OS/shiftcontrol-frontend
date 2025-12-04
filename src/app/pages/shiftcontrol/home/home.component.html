@@ -11,7 +11,7 @@
 
   @for (card of cards; track card) {
     <div class="card interaction" [routerLink]="card.href">
-      <h1 class="title signature-gradient-font">{{card.title}}</h1>
+      <h1 class="title">{{card.title}}</h1>
       <p class="font-semibold">{{card.content}}</p>
     </div>
   }

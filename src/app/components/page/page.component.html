@@ -7,7 +7,7 @@
     <div class="breadcrumbs">
 
       @for (crumb of breadcrumbs; track crumb; let i = $index) {
-        <div class="breadcrumb" [routerLink]="crumb.href">
+        <div class="breadcrumb" [routerLink]="crumb.getFullHref()">
           {{crumb.name}}
         </div>
 
@@ -42,7 +42,7 @@
   </div>
 
   <!-- content area to be projected -->
-  <div class="content">
+  <div class="content overflow-auto">
     <ng-content></ng-content>
   </div>
 </div>
