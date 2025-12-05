@@ -1,0 +1,19 @@
+
+<!-- card list -->
+<div class="flex flex-row gap-md flex-wrap">
+
+  <div class="basis-full">
+    <div class="card w-fit" >
+      <h1 class="title signature-gradient-font">UI Demo</h1>
+      <p class="font-semibold">This card demonstrates the UI difference between an info card and cards that can be interacted with.</p>
+    </div>
+  </div>
+
+  @for (card of cards; track card) {
+    <div class="card interaction" [routerLink]="card.href">
+      <h1 class="title signature-gradient-font">{{card.title}}</h1>
+      <p class="font-semibold">{{card.content}}</p>
+    </div>
+  }
+
+</div>
