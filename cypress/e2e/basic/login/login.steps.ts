@@ -5,7 +5,7 @@ import {APP_CONFIG} from '../../../config';
 
 const wf = WorkflowFactory.get<LoginWorkflow>('login');
 
-Given('I log in as admin', () => {
+Given('I log in as volunteer', () => {
   wf.visitLoginPage();
   wf.loginViaKeycloak(APP_CONFIG.USERNAME, APP_CONFIG.PASSWORD);
   // todo ad seperate admin and user username
