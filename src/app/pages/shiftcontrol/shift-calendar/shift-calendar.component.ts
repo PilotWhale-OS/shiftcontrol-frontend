@@ -8,6 +8,7 @@ import {InputDateComponent} from "../../../components/inputs/input-date/input-da
 import {InputSelectComponent, SelectOptions} from "../../../components/inputs/input-select/input-select.component";
 import {faEye} from "@fortawesome/free-solid-svg-icons";
 import {InputMultiselectComponent} from "../../../components/inputs/input-multiselect/input-multiselect.component";
+import {ShiftCalendarGridComponent} from "../../../components/shift-calendar/shift-calendar-grid.component";
 
 @Component({
   selector: "app-shift-calendar",
@@ -17,7 +18,8 @@ import {InputMultiselectComponent} from "../../../components/inputs/input-multis
     ReactiveFormsModule,
     InputDateComponent,
     InputSelectComponent,
-    InputMultiselectComponent
+    InputMultiselectComponent,
+    ShiftCalendarGridComponent
   ],
   standalone: true,
   templateUrl: "./shift-calendar.component.html",
