@@ -1,1 +1,50 @@
-<p>shift-calendar works!</p>
+<!-- wrapper -->
+<div class="flex flex-col gap-md h-full">
+
+  <!-- header with filters-->
+  <div class="card grid grid-cols-[auto_auto_auto_1fr] grid-rows-[1fr-1fr] gap-sm gap-x-xl">
+
+    <!-- date picker -->
+    <div class="">
+      <xsb-input-date #datePicker name="filterDate"
+                      [formControl]="form.controls.date"
+                      [xsb-typed]="[datePicker, form.controls.date]" />
+    </div>
+
+    <!-- title filter -->
+    <div class="flex gap-sm items-center">
+      <label for="filterShift">Shift name:</label>
+      <xsb-input-text #shiftName placeholder="Shift name" name="filterShift" [formControl]="form.controls.shiftName"
+                      [xsb-typed]="[shiftName, form.controls.shiftName]" />
+    </div>
+
+    <!-- positions filter -->
+    <div class="flex gap-sm items-center">
+      <label for="filterShift">Filter roles:</label>
+      <span>blabla</span>
+    </div>
+
+    <!-- summary -->
+    <div class="row-span-2 flex flex-col justify-center justify-self-end">
+      <span class="font-semibold opacity-50 text-sm">Results:</span>
+      <span>50 shifts</span>
+      <span>40 hours</span>
+      <span>10 unassigned</span>
+    </div>
+
+    <!-- view mode selection -->
+    <div class="">
+      <xsb-input-select #viewMode [options]="viewModeOptions" [formControl]="form.controls.viewMode"
+                        [xsb-typed]="[viewMode, form.controls.viewMode]" [icon]="iconView" />
+    </div>
+
+  </div>
+
+
+  <!-- calendar -->
+  <div class="card flex-grow">
+
+
+  </div>
+
+</div>

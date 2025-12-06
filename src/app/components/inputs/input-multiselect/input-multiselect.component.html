@@ -1,0 +1,58 @@
+<div class="contents" [id]="name" [attr.value]="value?.toString()">
+
+  <!-- select anchor -->
+  <div tabindex="0" *ngIf="!disguise, else disguiseElem" role="button"
+    class="flex gap-lg items-center cursor-pointer transition-all py-xs px-sm rounded-md select-none
+    light:hover:brightness-100 light:focus-within:brightness-100
+    hover:brightness-125 focus-within:brightness-125"
+    [flyout]="optionsFlyout" [ngClass]="{
+      'light:border-framing-light-level_1 light:bg-background-light-level_1 light:active:border-framing-light-level_2' : level === '1',
+      'light:border-framing-light-level_2 light:bg-background-light-level_2 light:active:border-framing-light-level_3' : level === '2',
+
+      'border-framing-level_1 bg-background-level_1 active:border-framing-level_2' : level === '1',
+      'border-framing-level_2 bg-background-level_2 active:border-framing-level_3' : level === '2',
+      'border-2' : border,
+      'pointer-events-none opacity-60' : disabled
+    }">
+
+    <!-- icon -->
+    <fa-icon *ngIf="icon !== undefined" [icon]="icon" />
+
+    <!-- value and arrow -->
+    <div class="grow flex gap-lg items-center">
+      <div class="grow">{{currentValueName}}</div>
+      <fa-icon icon="caret-down" class="light:text-text-light-secondary text-text-secondary" />
+    </div>
+
+  </div>
+
+  <ng-template #disguiseElem>
+    {{currentValueName}}
+  </ng-template>
+
+  <!-- options flyout -->
+  <app-flyout #optionsFlyout [closeOnClick]="false">
+    <div class="flex flex-col gap-xs max-h-56 overflow-y-auto select-none">
+
+      <!-- option items -->
+      <div role="option" [attr.aria-selected]="isSelected(option.value)" *ngFor="let option of allOptions"
+        (click)="toggleValue(option.value)" (keyup)="toggleValue(option.value)" tabindex="0"
+        class="flex gap-md items-center cursor-pointer hover:text-signature-300" [ngClass]="{
+        'light:text-text-light-primary text-text-primary' : isSelected(option.value),
+        'light:text-text-light-secondary text-text-secondary' : !isSelected(option.value),
+      }">
+
+        <!-- active icon -->
+        <fa-icon icon="circle-check" class="text-sm light:text-signature-600 text-text-secondary"
+          [ngClass]="{'opacity-0' : !isSelected(option.value)}" />
+
+        <!-- display name -->
+        <div>
+          {{option.name}}
+        </div>
+
+      </div>
+    </div>
+  </app-flyout>
+
+</div>
