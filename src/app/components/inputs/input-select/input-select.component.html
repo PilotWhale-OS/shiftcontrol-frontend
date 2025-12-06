@@ -44,8 +44,8 @@
         }">
 
           <!-- active icon -->
-          <fa-icon [icon]="circleCheckIcon" class="text-sm opacity-50"
-                   [ngClass]="{'opacity-0' : value !== option.value}" />
+          <fa-icon [icon]="circleCheckIcon" class="text-sm"
+                   [ngClass]="{'opacity-0' : value !== option.value, 'opacity-50' : value === option.value}" />
 
           <!-- display name -->
           <div>

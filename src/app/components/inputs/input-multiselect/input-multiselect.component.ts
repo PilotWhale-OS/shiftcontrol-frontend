@@ -1,19 +1,30 @@
-import {ChangeDetectionStrategy, Component, HostBinding, Injector, Input, OnInit} from '@angular/core';
-import { NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
-import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
-import { TypedControlValueAccessor } from 'src/app/shared/interfaces/typedControlValueAccessor';
-import { SelectOptions } from '../input-select/input-select.component';
+import {ChangeDetectionStrategy, Component, HostBinding, inject, Injector, Input, OnInit} from "@angular/core";
+import { NG_VALUE_ACCESSOR, NgControl } from "@angular/forms";
+import {faCaretDown, faCircleCheck, IconDefinition} from "@fortawesome/free-solid-svg-icons";
+import { SelectOptions } from "../input-select/input-select.component";
+import {TypedControlValueAccessor} from "../../../util/typedControlValueAccessor";
+import {FlyoutTriggerDirective} from "../../../directives/flyout-trigger.directive";
+import {NgClass} from "@angular/common";
+import {FaIconComponent} from "@fortawesome/angular-fontawesome";
+import {FlyoutComponent} from "../../flyout/flyout.component";
 
 @Component({
-  selector: 'app-input-multiselect',
-  templateUrl: './input-multiselect.component.html',
-  styleUrls: ['./input-multiselect.component.scss'],
+  selector: "xsb-input-multiselect",
+  templateUrl: "./input-multiselect.component.html",
+  styleUrls: ["./input-multiselect.component.scss"],
+  standalone: true,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
       multi: true,
       useExisting: InputMultiselectComponent
     }
+  ],
+  imports: [
+    FlyoutTriggerDirective,
+    NgClass,
+    FaIconComponent,
+    FlyoutComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -24,12 +35,6 @@ export class InputMultiselectComponent<TData> implements TypedControlValueAccess
    */
   @Input()
   options: SelectOptions<TData> = [];
-
-  /**
-   * the color level of the border and background
-   */
-  @Input()
-  level: '1' | '2' = '2';
 
   /**
    * border display
@@ -71,7 +76,7 @@ export class InputMultiselectComponent<TData> implements TypedControlValueAccess
    * the input's name, will reflect as id on the actual element
    */
   @Input()
-  name = '';
+  name = "";
 
   /** current disabled state */
   disabled = false;
@@ -91,10 +96,13 @@ export class InputMultiselectComponent<TData> implements TypedControlValueAccess
   /** whether the init value was modified to something else  */
   initModified?: TData[] | null;
 
-  constructor(private injector: Injector) { }
+  caretDownIcon = faCaretDown;
+  circleCheckIcon = faCircleCheck;
 
-  @HostBinding('attr.id') get hideIdAttr() { return null; }
-  @HostBinding('attr.name') get hideNameAttr() { return null; }
+  private injector = inject(Injector);
+
+  @HostBinding("attr.id") get hideIdAttr() { return null; }
+  @HostBinding("attr.name") get hideNameAttr() { return null; }
 
 
   /**
@@ -104,7 +112,7 @@ export class InputMultiselectComponent<TData> implements TypedControlValueAccess
    */
   get currentValueName() {
     const opt = this.options.filter(o => this.value?.some(v => v === o.value));
-    return opt.length === 0 ? ' - ' : opt.length === 1 ? opt[0].name : `${opt.length} ${this.naming}`;
+    return opt.length === 0 ? " - " : opt.length === 1 ? opt[0].name : `${opt.length} ${this.naming}`;
   }
 
   /**
@@ -138,13 +146,11 @@ export class InputMultiselectComponent<TData> implements TypedControlValueAccess
     const matches = (value ?? []).filter(v => this.options.some(o => o.value === v));
     if (matches.length > 0) {
       this.value = matches;
-    }
-    else {
+    } else {
       this.value = this.nullable || this.options.length === 0 ? null : [this.options[0].value];
       if (this.onChange !== undefined) {
         this.onChange(this.value);
-      }
-      else {
+      } else {
         this.initModified = this.value;
       }
     }
@@ -191,8 +197,7 @@ export class InputMultiselectComponent<TData> implements TypedControlValueAccess
     const active = this.isSelected(value);
     if (value !== null && !active) {
       this.value = this.value === null ? [value] : [...this.value, value];
-    }
-    else {
+    } else {
       this.value = this.value === null ? null : this.value.filter(v => v !== value);
     }
     this.onTouched?.();

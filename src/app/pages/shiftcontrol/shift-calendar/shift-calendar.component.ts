@@ -7,6 +7,7 @@ import {TypedFormControlDirective} from "../../../directives/typed-form-control.
 import {InputDateComponent} from "../../../components/inputs/input-date/input-date.component";
 import {InputSelectComponent, SelectOptions} from "../../../components/inputs/input-select/input-select.component";
 import {faEye} from "@fortawesome/free-solid-svg-icons";
+import {InputMultiselectComponent} from "../../../components/inputs/input-multiselect/input-multiselect.component";
 
 @Component({
   selector: "app-shift-calendar",
@@ -15,7 +16,8 @@ import {faEye} from "@fortawesome/free-solid-svg-icons";
     TypedFormControlDirective,
     ReactiveFormsModule,
     InputDateComponent,
-    InputSelectComponent
+    InputSelectComponent,
+    InputMultiselectComponent
   ],
   standalone: true,
   templateUrl: "./shift-calendar.component.html",
@@ -28,6 +30,28 @@ export class ShiftCalendarComponent {
   public readonly viewModeOptions: SelectOptions<"calendar" | "table"> = [
     {name: "Calendar", value: "calendar"},
     {name: "Table", value: "table"}
+  ];
+  public readonly rolesOptions: SelectOptions<string> = [
+    {name: "ID Checker", value: "idcheck"},
+    {name: "Light Technician", value: "lighttech"},
+    {name: "Sound Technician", value: "soundtech"}
+  ];
+  public readonly locationsOptions: SelectOptions<string> = [
+    {name: "Venue A", value: "va"},
+    {name: "Venue B", value: "vb"},
+    {name: "Outdoor", value: "od"}
+  ];
+  public readonly tagsOptions: SelectOptions<string> = [
+    {name: "Guard", value: "guard"},
+    {name: "Management", value: "mgm"},
+    {name: "Catering", value: "cat"}
+  ];
+  public readonly availabilityOptions: SelectOptions<"unassigned" | "assigned" | "own" | "auction" | "trade"> = [
+    {name: "Unassigned", value: "unassigned"},
+    {name: "Assigned", value: "assigned"},
+    {name: "Own Shifts", value: "own"},
+    {name: "Auctioned", value: "auction"},
+    {name: "Trade", value: "trade"}
   ];
   public readonly form;
 
@@ -42,7 +66,13 @@ export class ShiftCalendarComponent {
     this.form = this._fb.group({
       shiftName: this._fb.nonNullable.control<string>(""),
       date: this._fb.nonNullable.control<Date>(new Date()),
-      viewMode: this._fb.nonNullable.control<"calendar" | "table">("calendar")
+      viewMode: this._fb.nonNullable.control<"calendar" | "table">("calendar"),
+      rolesList: this._fb.nonNullable.control<string[]>(this.rolesOptions.map((role) => role.value)),
+      locationsList: this._fb.nonNullable.control<string[]>(this.locationsOptions.map((location) => location.value)),
+      tagsList: this._fb.nonNullable.control<string[]>(this.tagsOptions.map((tag) => tag.value)),
+      availabilityList: this._fb.nonNullable.control<("unassigned" | "assigned" | "own" | "auction" | "trade")[]>(
+        this.availabilityOptions.map((availability) => availability.value)
+      )
     });
   }
 
