@@ -11,8 +11,8 @@ export class ShiftCalendarGridComponent {
 
   public hours = Array.from({length: 24}, (_, i) => i); // 0 to 23
 
-  private readonly activityWidth = "15rem";
-  private readonly shiftWidth = "20rem";
+  private readonly activityWidth = "8rem";
+  private readonly shiftWidth = "10rem";
   private readonly minuteHeightRem = 0.05;
 
   // eslint-disable-next-line max-len, @typescript-eslint/member-ordering
@@ -23,7 +23,10 @@ export class ShiftCalendarGridComponent {
     [venue-a-shift-col-2-end venue-a-end venue-a-shift-end venue-b-start venue-b-activity-start] ${this.activityWidth}
     [venue-b-activity-end venue-b-shift-start venue-b-shift-col-1-start] ${this.shiftWidth}
     [venue-b-shift-col-1-end venue-b-shift-col-2-start] ${this.shiftWidth}
-    [venue-b-shift-col-2-end venue-b-end venue-b-shift-end]`;
+    [venue-b-shift-col-2-end venue-b-end venue-b-shift-end venue-c-start venue-c-activity-start] ${this.activityWidth}
+    [venue-c-activity-end venue-c-shift-start venue-c-shift-col-1-start] ${this.shiftWidth}
+    [venue-c-shift-col-1-end venue-c-shift-col-2-start] ${this.shiftWidth}
+    [venue-c-shift-col-2-end venue-c-end venue-c-shift-end]`;
 
   public getMinuteHeight(durationMinutes: number){
     return `${durationMinutes * this.minuteHeightRem}rem`;
