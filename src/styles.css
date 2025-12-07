@@ -13,3 +13,39 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+:root {
+  --scrollbar-foreground: #232430;
+  --scrollbar-background: rgb(13 13 20);
+}
+
+/* Default styled scrollbars */
+body {
+  scrollbar-color: var(--scrollbar-foreground) var(--scrollbar-background);
+}
+
+body::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-foreground);
+  border-radius: 1rem;
+}
+
+body::-webkit-scrollbar-track {
+  background: var(--scrollbar-background);
+  border-radius: 1rem;
+}
+
+/* Hidden scrollbars when .no-scrollbar is applied */
+.no-scrollbar {
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* old Edge/IE */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
+}
