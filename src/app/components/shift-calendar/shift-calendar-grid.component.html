@@ -1,0 +1,123 @@
+<div class="h-full w-full overflow-auto">
+
+  <!-- calendar grid: x -> grid columns, scrollable venues; y: continuous big row, time axis, growing by date range, position by top -->
+  <div
+    class="relative grid gap-sm gap-y-0 grid-rows-[auto_1fr]"
+    [style.grid-template-columns]="gridColumns"
+    [style.height]="getMinuteHeight(24*60)"
+  >
+
+    <!-- date side -->
+    <div style="grid-row: 1 / 1; grid-column: time-start / time-end" class="sticky left-0 top-0 h-full border-r-2 border-framing-card bg-background-card z-50 font-semibold text-sm">
+      12.12.2025
+    </div>
+
+    <!-- timeline side -->
+    <div style="grid-row: 2 / 2; grid-column: time-start / time-end" class="sticky left-0 h-full border-r-2 border-framing-card bg-background-card z-40">
+
+      @for (hour of hours; track hour) {
+        <div
+          class="absolute w-full grid place-content-center font-semibold text-sm opacity-50"
+          [style.top]="getMinuteHeight(hour * 60)"
+          [style.height]="getMinuteHeight(60)"
+        >
+          {{ hour.toString().padStart(2, "0") }}:00
+        </div>
+      }
+    </div>
+
+    <!-- sample venue A -->
+    <div class="sticky top-0 z-10 grid place-content-center font-semibold border-b-2 border-framing-card bg-background-card pb-xs" style="grid-row: 1/1; grid-column: venue-a-start / venue-a-end">
+      Venue A
+    </div>
+
+    <!-- sample venue B -->
+    <div class="sticky top-0 z-10 grid place-content-center font-semibold border-b-2 border-framing-card bg-background-card pb-xs" style="grid-row: 1/1; grid-column: venue-b-start / venue-b-end">
+      Venue B
+    </div>
+
+    <!-- sample activity -->
+    <div
+      class="absolute w-full grid place-content-center font-semibold border-2 border-framing-item bg-background-item rounded-lg"
+      style="grid-row: 2/2; grid-column: venue-a-activity-start / venue-a-activity-end"
+      [style.height]="getMinuteHeight(200)"
+      [style.top]="getMinuteHeight(60)"
+    >
+      Activity A
+    </div>
+
+    <!-- sample shift A -->
+    <div
+      class="absolute w-full grid place-content-center font-semibold border-2 border-framing-item bg-background-item rounded-lg"
+      style="grid-row: 2/2; grid-column: venue-a-shift-col-1-start / venue-a-shift-col-1-start"
+      [style.height]="getMinuteHeight(80)"
+      [style.top]="getMinuteHeight(30)"
+    >
+      Shift A
+    </div>
+
+    <!-- sample shift B -->
+    <div
+      class="absolute w-full grid place-content-center font-semibold border-2 border-framing-item bg-background-item rounded-lg"
+      style="grid-row: 2/2; grid-column: venue-a-shift-col-2-start / venue-a-shift-col-2-start"
+      [style.height]="getMinuteHeight(120)"
+      [style.top]="getMinuteHeight(60)"
+    >
+      Shift B
+    </div>
+
+    <!-- sample shift C -->
+    <div
+      class="absolute w-full grid place-content-center font-semibold border-2 border-framing-item bg-background-item rounded-lg"
+      style="grid-row: 2/2; grid-column: venue-a-shift-col-1-start / venue-a-shift-col-1-start"
+      [style.height]="getMinuteHeight(120)"
+      [style.top]="getMinuteHeight(150)"
+    >
+      Shift C
+    </div>
+
+
+    <!-- sample activity -->
+    <div
+      class="absolute w-full grid place-content-center font-semibold border-2 border-framing-item bg-background-item rounded-lg"
+      style="grid-row: 2/2; grid-column: venue-b-activity-start / venue-b-activity-end"
+      [style.height]="getMinuteHeight(900)"
+      [style.top]="getMinuteHeight(100)"
+    >
+      Activity B
+    </div>
+
+    <!-- sample shift A -->
+    <div
+      class="absolute w-full grid place-content-center font-semibold border-2 border-framing-item bg-background-item rounded-lg"
+      style="grid-row: 2/2; grid-column: venue-b-shift-col-1-start / venue-b-shift-col-1-start"
+      [style.height]="getMinuteHeight(80)"
+      [style.top]="getMinuteHeight(430)"
+    >
+      Shift A
+    </div>
+
+    <!-- sample shift B -->
+    <div
+      class="absolute w-full grid place-content-center font-semibold border-2 border-framing-item bg-background-item rounded-lg"
+      style="grid-row: 2/2; grid-column: venue-b-shift-col-2-start / venue-b-shift-col-2-start"
+      [style.height]="getMinuteHeight(120)"
+      [style.top]="getMinuteHeight(460)"
+    >
+      Shift B
+    </div>
+
+    <!-- sample shift C -->
+    <div
+      class="absolute w-full grid place-content-center font-semibold border-2 border-framing-item bg-background-item rounded-lg"
+      style="grid-row: 2/2; grid-column: venue-b-shift-col-1-start / venue-b-shift-col-1-start"
+      [style.height]="getMinuteHeight(120)"
+      [style.top]="getMinuteHeight(550)"
+    >
+      Shift C
+    </div>
+
+
+  </div>
+
+</div>
