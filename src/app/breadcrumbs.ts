@@ -55,3 +55,4 @@ export const BC_ACCOUNT = new Breadcrumb("Account", "account", BC_HOME);
 export const BC_SHIFT_DASHBOARD = new Breadcrumb("Shift Dashboard", "shift-dashboard", BC_SHIFTS);
 export const BC_SHIFT_CALENDAR = new Breadcrumb("Calendar", "calendar", BC_SHIFT_DASHBOARD);
 export const BC_SHIFT_DETAILS = new Breadcrumb("Shift Details", "shift-details", BC_SHIFT_DASHBOARD);
+export const BC_PLAN_ONBOARDING = new Breadcrumb("Onboarding", "onboarding", BC_SHIFT_DASHBOARD);
