@@ -1,1 +1,177 @@
-<p>shift-details works!</p>
+
+<!-- card grid -->
+<div class="flex flex-row gap-md">
+
+  <!-- overview card -->
+  <div class="card grid grid-columns-2 gap-lg w-[30rem] h-fit">
+
+    <!-- info caption -->
+    <span class="opacity-50 font-semibold text-sm">Shift Overview</span>
+    <p class="opacity-50 font-semibold text-sm justify-self-end">01.12.2025</p>
+
+    <!-- properties -->
+    <h1 class="text-xl font-bold signature-gradient-font">Pilot Shift</h1>
+    <p class="font-semibold justify-self-end">09:00 - 12:30</p>
+    <p class="col-span-2">
+      This is a pilot shift for mockup purposes.<br>
+      It does not yet exist in the database. This text right here is the long description of the shift.
+    </p>
+
+    <!-- activity info -->
+    <div class="flex flex-col">
+      <span class="font-semibold opacity-50 text-sm">Related Activities</span>
+      <span>Pilot activity</span>
+      <span>Other activity</span>
+    </div>
+
+    <!-- location info -->
+    <div class="flex flex-col">
+      <span class="font-semibold opacity-50 text-sm">Location</span>
+      <span>Venue A (main)</span>
+      <span>Venue B</span>
+    </div>
+
+    <!-- info text-->
+    <p class="col-span-2 font-semibold opacity-50 text-sm">
+      If you want to participate in this shift, select one of the applicable positions.
+      You can also select a preference for being auto-assigned to each position.
+    </p>
+
+    <!-- rewards-->
+    <span class="col-span-2">
+      <span class="font-semibold opacity-50 text-sm">Shift reward:</span>
+       10 points
+    </span>
+
+  </div>
+
+
+  <!-- sample positions -->
+  <div class="grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] grow gap-md">
+
+    <!-- eligible and signed up -->
+    <div class="position card signed-up">
+
+      <!-- info caption -->
+      <span class="opacity-50 font-semibold text-sm">Shift Role</span>
+
+      <!-- position tile -->
+      <h1 class="title signature-gradient-font">Pilot Position</h1>
+
+      <!-- role description -->
+      <p>
+        This is the description of the position role.
+      </p>
+
+      <!-- signup reminder -->
+      <p class="font-bold">
+        You are signed up for this position!
+      </p>
+
+      <div class="flex flex-col">
+        <span class="flex gap-sm items-center"><span class="font-semibold opacity-50 text-sm">Eligibility:</span> Signed Up</span>
+        <span class="flex gap-sm items-center"><span class="font-semibold opacity-50 text-sm">Reward:</span> 10 Points</span>
+        <span class="flex gap-sm items-center"><span class="font-semibold opacity-50 text-sm">Positions:</span> 2 / 5 taken</span>
+      </div>
+
+      <!-- trade  -->
+      <div class="mt-sm pt-sm border-t-2 border-framing-card flex flex-col gap-sm">
+        <span class="font-semibold opacity-50 text-sm">Trade Position</span>
+        <span>here goes the dropdown and submit button. locked when already in progress.</span>
+      </div>
+
+      <!-- auction  -->
+      <div class="mt-sm pt-sm border-t-2 border-framing-card flex flex-col gap-sm">
+        <span class="font-semibold opacity-50 text-sm">Auction Position</span>
+        <span>Auctioned positions can be claimed by all eligible volunteers. </span>
+        <xsb-input-button content="Auction this position" size="minimal" action="normal" />
+      </div>
+
+    </div>
+
+    <!-- eligible and free -->
+    <div class="position card">
+
+      <!-- info caption -->
+      <span class="opacity-50 font-semibold text-sm">Shift Role</span>
+
+      <!-- position tile -->
+      <h1 class="title signature-gradient-font">Pilot Position</h1>
+
+      <!-- role description -->
+      <p>
+        This is the description of the position role.
+      </p>
+
+      <div class="flex flex-col">
+        <span class="flex gap-sm items-center"><span class="font-semibold opacity-50 text-sm">Eligibility:</span> Eligible</span>
+        <span class="flex gap-sm items-center"><span class="font-semibold opacity-50 text-sm">Reward:</span> 10 Points</span>
+        <span class="flex gap-sm items-center"><span class="font-semibold opacity-50 text-sm">Positions:</span> 2 / 5 taken</span>
+      </div>
+
+      <!-- signup  -->
+      <div class="mt-sm pt-sm border-t-2 border-framing-card flex flex-col gap-sm">
+        <span class="font-semibold opacity-50 text-sm">Sign Up</span>
+        <span>Signing up is binding and cannot be made undone.</span>
+        <xsb-input-button content="Sign up for this position" size="minimal" action="success" />
+      </div>
+
+      <!-- Set preference  -->
+      <div class="mt-sm pt-sm border-t-2 border-framing-card flex flex-col gap-sm">
+        <span class="font-semibold opacity-50 text-sm">Preference</span>
+        <span>If slots need to be filled, you may be auto-assigned. You can set you preference here.</span>
+        <span><----------- slider goes here ----------></span>
+      </div>
+    </div>
+
+    <!-- eligible and taken -->
+    <div class="position card">
+
+      <!-- info caption -->
+      <span class="opacity-50 font-semibold text-sm">Shift Role</span>
+
+      <!-- position tile -->
+      <h1 class="title signature-gradient-font">Pilot Position</h1>
+
+      <!-- role description -->
+      <p>
+        This is the description of the position role.
+      </p>
+
+      <div class="flex flex-col">
+        <span class="flex gap-sm items-center"><span class="font-semibold opacity-50 text-sm">Eligibility:</span> No free positions</span>
+        <span class="flex gap-sm items-center"><span class="font-semibold opacity-50 text-sm">Reward:</span> 10 Points</span>
+        <span class="flex gap-sm items-center"><span class="font-semibold opacity-50 text-sm">Positions:</span> 5 / 5 taken</span>
+      </div>
+
+      <!-- Set preference  -->
+      <div class="mt-sm pt-sm border-t-2 border-framing-card flex flex-col gap-sm">
+        <span class="font-semibold opacity-50 text-sm">Preference</span>
+        <span>If slots need to be filled, you may be auto-assigned. You can set you preference here.</span>
+        <span><----------- slider goes here ----------></span>
+      </div>
+    </div>
+
+    <!-- requirements not met -->
+    <div class="position card not-eligible">
+
+      <!-- info caption -->
+      <span class="opacity-50 font-semibold text-sm">Shift Role</span>
+
+      <!-- position tile -->
+      <h1 class="title signature-gradient-font">Pilot Position</h1>
+
+      <!-- role description -->
+      <p>
+        This is the description of the position role.
+      </p>
+
+      <div class="flex flex-col">
+        <span class="flex gap-sm items-center"><span class="font-semibold opacity-50 text-sm">Status:</span> Requirements not met.</span>
+        <span class="flex gap-sm items-center"><span class="font-semibold opacity-50 text-sm">Reward:</span> 50 Points</span>
+        <span class="flex gap-sm items-center"><span class="font-semibold opacity-50 text-sm">Positions:</span> 2 / 5 taken</span>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -34,7 +34,7 @@ module.exports = {
           card: "rgb(17 18 28)",
           item: "rgb(23 24 37)",
           card_danger: "#1a141b",
-          card_success: "#17201e",
+          card_success: "#0e1413",
           card_hint: "#101625",
           item_danger: "#1a141b",
           item_success: "#17201e",
