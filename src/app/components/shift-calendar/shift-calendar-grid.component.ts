@@ -1,8 +1,14 @@
-import { Component } from "@angular/core";
+import {Component, inject} from "@angular/core";
+import {DialogComponent} from "../dialog/dialog.component";
+import {ShiftDetailsViewComponent} from "../shift-details-view/shift-details-view.component";
+import {DialogService} from "../../services/dialog/dialog.service";
 
 @Component({
   selector: "app-shift-calendar-grid",
-  imports: [],
+  imports: [
+    DialogComponent,
+    ShiftDetailsViewComponent
+  ],
   standalone: true,
   templateUrl: "./shift-calendar-grid.component.html",
   styleUrl: "./shift-calendar-grid.component.scss"
@@ -10,6 +16,7 @@ import { Component } from "@angular/core";
 export class ShiftCalendarGridComponent {
 
   public hours = Array.from({length: 24}, (_, i) => i); // 0 to 23
+  public viewShift = false;
 
   private readonly activityWidth = "8rem";
   private readonly shiftWidth = "10rem";
@@ -28,7 +35,9 @@ export class ShiftCalendarGridComponent {
     [venue-c-shift-col-1-end venue-c-shift-col-2-start] ${this.shiftWidth}
     [venue-c-shift-col-2-end venue-c-end venue-c-shift-end]`;
 
-  public getMinuteHeight(durationMinutes: number){
+  private readonly _dialogService = inject(DialogService);
+
+  public getMinuteHeight(durationMinutes: number) {
     return `${durationMinutes * this.minuteHeightRem}rem`;
   }
 }

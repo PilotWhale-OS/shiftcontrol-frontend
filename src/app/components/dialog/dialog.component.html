@@ -1,0 +1,44 @@
+<ng-template cdkPortal>
+  <div [ngClass]="{
+    'border-framing-card' : action === 'normal',
+    'border-framing-default_danger shadow-inner shadow-framing-item_danger' : action === 'danger',
+    'order-framing-default_success shadow-inner shadow-shadow-item_success' : action === 'success'
+  }"
+    class="border-2 rounded-lg p-lg flex flex-col gap-xxl w-full
+bg-background-card">
+
+    <!-- header -->
+    <div class="flex items-center justify-between">
+
+      <!-- title -->
+      <div class="text-lg font-bold">
+        <ng-content select="[dialog-header]"></ng-content>
+      </div>
+
+      <!-- close -->
+      <div class="text-md opacity-60 hover:opacity-100 cursor-pointer font-semibold" tabindex="0"
+        (keydown)="closeDialog.next('close')" (click)="closeDialog.next('close')">Close</div>
+    </div>
+
+    <!-- body -->
+    <div class="grow overflow-auto">
+      <ng-content select="[dialog-body]"></ng-content>
+    </div>
+
+    <!-- confirmation -->
+    @if (success !== undefined || danger !== undefined) {
+
+      <div class="flex flex-row justify-center gap-xl">
+
+        @if(success !== undefined) {
+          <xsb-input-button action="success" (click)="closeDialog.next('success')" [content]="success" />
+        }
+        @if(danger !== undefined) {
+          <xsb-input-button action="danger" (click)="closeDialog.next('danger')"  [content]="danger" />
+        }
+      </div>
+
+    }
+
+  </div>
+</ng-template>

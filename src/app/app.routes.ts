@@ -13,31 +13,31 @@ import {
   BC_PLAN_ONBOARDING
 } from "./breadcrumbs";
 import { breadcrumbsGuard } from "./guards/breadcrumbs/breadcrumbs.guard";
-import {keycloakGuard} from "./guards/keycloak/keycloak.guard";
+import {accessAllowedGuard, notLoggedInGuard} from "./guards/keycloak/keycloak.guard";
 import {AccountComponent} from "./pages/shiftcontrol/account/account.component";
 import {HomeComponent} from "./pages/shiftcontrol/home/home.component";
-import {ShiftPlanDashboardComponent} from "./pages/shiftcontrol/shift-dashboard/shift-plan-dashboard.component";
+import {ShiftPlanDashboardComponent} from "./pages/shiftcontrol/shift-plan-dashboard/shift-plan-dashboard.component";
 import {ShiftCalendarComponent} from "./pages/shiftcontrol/shift-calendar/shift-calendar.component";
 import {ShiftDetailsComponent} from "./pages/shiftcontrol/shift-details/shift-details.component";
 import {PlanOnboardingComponent} from "./pages/shiftcontrol/plan-onboarding/plan-onboarding.component";
 
 export const routes: Routes = ([
-  { path: "", component: HomeComponent, pathMatch: "full", data: {breadcrumbs: BC_HOME}, canActivate: [keycloakGuard] },
-  { path: "login", component: LoginComponent },
+  { path: "", component: HomeComponent, pathMatch: "full", data: {breadcrumbs: BC_HOME}, canActivate: [accessAllowedGuard] },
+  { path: "login", component: LoginComponent, canActivate: [notLoggedInGuard] },
   { path: "me", component: AccountComponent,
-    data: {breadcrumbs: BC_ACCOUNT}, canActivate: [keycloakGuard]},
+    data: {breadcrumbs: BC_ACCOUNT}, canActivate: [accessAllowedGuard]},
   { path: "events", component: EventsComponent,
-    data: {breadcrumbs: BC_EVENTS}, canActivate: [keycloakGuard]},
+    data: {breadcrumbs: BC_EVENTS}, canActivate: [accessAllowedGuard]},
   { path: "events/:eventId", component: ShiftsComponent,
-    data: {breadcrumbs: BC_SHIFTS}, canActivate: [keycloakGuard]},
+    data: {breadcrumbs: BC_SHIFTS}, canActivate: [accessAllowedGuard]},
   { path: "events/:eventId/:shiftId", component: ShiftPlanDashboardComponent,
-    data: { breadcrumbs: BC_SHIFT_DASHBOARD }, canActivate: [keycloakGuard]},
+    data: { breadcrumbs: BC_SHIFT_DASHBOARD }, canActivate: [accessAllowedGuard]},
   { path: "events/:eventId/:shiftPlanId/calendar", component: ShiftCalendarComponent,
-    data: { breadcrumbs: BC_SHIFT_CALENDAR }, canActivate: [keycloakGuard]},
+    data: { breadcrumbs: BC_SHIFT_CALENDAR }, canActivate: [accessAllowedGuard]},
   { path: "events/:eventId/:shiftPlanId/onboarding", component: PlanOnboardingComponent,
-    data: { breadcrumbs: BC_PLAN_ONBOARDING }, canActivate: [keycloakGuard]},
+    data: { breadcrumbs: BC_PLAN_ONBOARDING }, canActivate: [accessAllowedGuard]},
   { path: "events/:eventId/:shiftPlanId/:shiftId", component: ShiftDetailsComponent,
-    data: { breadcrumbs: BC_SHIFT_DETAILS }, canActivate: [keycloakGuard]}
+    data: { breadcrumbs: BC_SHIFT_DETAILS }, canActivate: [accessAllowedGuard]}
 
   /* add breadcrumbs guard to each route definition*/
 ] as Routes).map(
