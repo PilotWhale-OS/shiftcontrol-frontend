@@ -36,6 +36,10 @@
     @apply border-framing-item_success bg-background-item_success hover:border-framing-highlight_success;
   }
 
+  &.eligible {
+    @apply border-framing-item_hint bg-background-item_hint hover:border-framing-highlight_hint;
+  }
+
   > .tag, > .time {
     @apply hidden;
   }
