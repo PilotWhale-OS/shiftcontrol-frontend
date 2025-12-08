@@ -4,7 +4,7 @@
 
   <!-- user management card -->
   <div class="card grid grid-cols-2 w-fit h-fit gap-sm">
-    <h2 class="col-span-2 title signature-gradient-font">Account Information</h2>
+    <h1 class="col-span-2 signature-gradient-font">Account Information</h1>
 
     <span>Given Name:</span>
     <xsb-input-text #givenName name="userGivenName"
@@ -28,17 +28,17 @@
 
   <!-- notification preferences card -->
   <div class="card grid grid-cols-[min-content_auto] gap-sm w-fit h-fit items-baseline">
-    <h2 class="title signature-gradient-font col-span-2">Notifications</h2>
+    <h1 class="col-span-2 signature-gradient-font">Notifications</h1>
 
     <!-- channel settings -->
-    <span class="col-span-2">Channels:</span>
-    <xsb-input-toggle #checked name="userNotificationsEmail"
+    <b class="col-span-2">Channels:</b>
+    <xsb-input-toggle #checked name="me-notifications-email"
                     [formControl]="form.controls.checked"
                     [xsb-typed]="[checked, form.controls.checked]"
     />
     <label class="select-none" for="userNotificationsEmail">Email notifications</label>
 
-    <xsb-input-toggle #checked name="userNotificationsPush"
+    <xsb-input-toggle #checked name="me-notifocations-push"
                       [formControl]="form.controls.checked"
                       [xsb-typed]="[checked, form.controls.checked]"
     />
@@ -48,20 +48,20 @@
     <div class="col-span-2 p-2"></div>
 
     <!-- content settings -->
-    <span class="col-span-2">Topics:</span>
-    <xsb-input-toggle #checked name="userNotificationsAutoAssigned"
+    <b class="col-span-2">Topics:</b>
+    <xsb-input-toggle #checked name="me-topics-ausoassigned"
                       [formControl]="form.controls.checked"
                       [xsb-typed]="[checked, form.controls.checked]"
     />
     <label class="select-none" for="userNotificationsAutoAssigned">Auto-assigned</label>
 
-    <xsb-input-toggle #checked name="userNotificationsTradeAccepted"
+    <xsb-input-toggle #checked name="me-topic-tradeaccepted"
                       [formControl]="form.controls.checked"
                       [xsb-typed]="[checked, form.controls.checked]"
     />
     <label class="select-none" for="userNotificationsTradeAccepted">Trade accepted</label>
 
-    <xsb-input-toggle #checked name="userNotificationsShiftReminder"
+    <xsb-input-toggle #checked name="me-topic-shiftreminder"
                       [formControl]="form.controls.checked"
                       [xsb-typed]="[checked, form.controls.checked]"
     />
@@ -71,17 +71,17 @@
 
   <!-- unavailable time management card -->
   <div class="card grid grid-cols-2 w-fit h-fit">
-    <h2 class="col-span-2 title signature-gradient-font">Unavailability</h2>
+    <h1 class="col-span-2 signature-gradient-font">Unavailability</h1>
 
     <span>Given Name:</span>
-    <xsb-input-text #givenName name="userNotificationsEmail"
+    <xsb-input-text #givenName name=""
                     [disguise]="true"
                     [formControl]="form.controls.givenName"
                     [xsb-typed]="[givenName, form.controls.givenName]"
     />
 
     <span>Last Name:</span>
-    <xsb-input-text #lastName name="userNotificationsEmail"
+    <xsb-input-text #lastName name=""
                     [disguise]="true"
                     [formControl]="form.controls.lastName"
                     [xsb-typed]="[lastName, form.controls.lastName]"

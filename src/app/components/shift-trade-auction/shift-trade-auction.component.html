@@ -7,24 +7,24 @@
     <div class="border-2 border-framing-card bg-background-card rounded-xl p-md grid grid-cols-[2fr_1fr_2fr] gap-sm">
 
       <!-- type -->
-      <div class="font-semibold opacity-50 text-sm col-span-2">Trade</div>
+      <small class="col-span-2">Trade</small>
 
       <!-- owner -->
-      <div class="font-semibold opacity-50 text-sm justify-self-end">request by Paul</div>
+      <small class="justify-self-end col-start-3">request by Paul</small>
 
       <!-- trade: left and right info -->
       <div class="flex flex-col items-end">
-        <div class="font-semibold">Shift 1 @if (showShiftOrigin) { (Pilot Event: Pilot Plan) }</div>
-        <div class="font-semibold">Pilot Position</div>
-        <div class="font-semibold opacity-50 text-sm">01.12.2025 08:00</div>
+        <b>Shift 1 @if (showShiftOrigin) { (Pilot Event: Pilot Plan) }</b>
+        <b>Pilot Position</b>
+        <small>01.12.2025 08:00</small>
       </div>
 
-      <div class="text-center">⟺</div>
+      <div class="text-center content-center">⟺</div>
 
       <div class="flex flex-col items-start">
-        <div class="font-semibold">Shift 2 @if (showShiftOrigin) { (Pilot Event: Pilot Plan) }</div>
-        <div class="font-semibold">Pilot Position</div>
-        <div class="font-semibold opacity-50 text-sm">01.12.2025 08:00</div>
+        <b>Shift 2 @if (showShiftOrigin) { (Pilot Event: Pilot Plan) }</b>
+        <b>Pilot Position</b>
+        <small>01.12.2025 08:00</small>
       </div>
 
       <!-- info  -->
@@ -32,9 +32,9 @@
 
       <!-- actions -->
       <div class="col-span-3 flex flex-row gap-md">
-        <xsb-input-button size="minimal" content="Accept" action="success" />
-        <xsb-input-button size="minimal" content="Decline" action="danger" />
-        <xsb-input-button size="minimal" content="View Details" />
+        <xsb-input-button size="minimal" content="Accept" action="success" name="trade-accept" />
+        <xsb-input-button size="minimal" content="Decline" action="danger" name="trade-decline" />
+        <xsb-input-button size="minimal" content="View Details" name="trade-view-shift" />
       </div>
 
     </div>
@@ -43,15 +43,15 @@
     <div class="border-2 border-framing-card bg-background-card rounded-xl p-md grid grid-cols-[2fr_1fr_2fr] gap-sm">
 
       <!-- type -->
-      <div class="font-semibold opacity-50 text-sm col-span-2">Auction</div>
+      <small class="col-span-2">Auction</small>
 
       <!-- owner -->
-      <div class="font-semibold opacity-50 text-sm justify-self-end">offer by Paul</div>
+      <small class="justify-self-end col-start-3">offer by Paul</small>
 
       <!-- auction: offered shift info -->
-      <div class="flex flex-col">
-        <div class="font-semibold">Shift 1</div>
-        <div class="font-semibold opacity-50 text-sm">01.12.2025 08:00</div>
+      <div class="flex flex-col col-span-3">
+        <b>Shift 1</b>
+        <small>01.12.2025 08:00</small>
       </div>
 
       <!-- info  -->
@@ -59,8 +59,8 @@
 
       <!-- actions -->
       <div class="col-span-3 flex flex-row gap-md">
-        <xsb-input-button size="minimal" content="Claim" action="success" />
-        <xsb-input-button size="minimal" content="View Details" />
+        <xsb-input-button size="minimal" content="Claim" action="success" name="auction-claim" />
+        <xsb-input-button size="minimal" content="View Details" name="auction-view-shift" />
       </div>
 
     </div>

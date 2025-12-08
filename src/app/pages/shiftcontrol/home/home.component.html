@@ -1,7 +1,4 @@
 
-
-
-
 <!-- card grid -->
 <div class="grid grid-cols-[repeat(3,1fr)] grid-rows-[auto_1fr] gap-md h-full">
 
@@ -10,18 +7,18 @@
 
     <div class="basis-full">
       <div class="card w-fit flex flex-col gap-md" >
-        <h1 class="title signature-gradient-font">Welcome back, {{name$ | async}}!</h1>
-        <p class="font-semibold">
+        <h1 class="signature-gradient-font">Welcome back, {{name$ | async}}!</h1>
+        <b>
           The home screen shows your schedule and trades/auctions for all active events and shift plans.<br>
           Additionally, currently active shift plans are shown below.
-        </p>
+        </b>
       </div>
     </div>
 
     @for (card of cards; track card) {
       <div class="card interaction" [routerLink]="card.href">
-        <h1 class="title">{{card.title}}</h1>
-        <p class="font-semibold">{{card.content}}</p>
+        <h1>{{card.title}}</h1>
+        <b>{{card.content}}</b>
       </div>
     }
   </div>
@@ -30,7 +27,7 @@
   <div class="card row-span-2 flex flex-col gap-md overflow-auto">
 
     <!-- title -->
-    <h1 class="title col-span-2 signature-gradient-font">Your Schedule</h1>
+    <h1 class="col-span-2 signature-gradient-font">Your Schedule</h1>
 
     <app-shift-schedule [showShiftOrigin]="true" />
   </div>
@@ -39,10 +36,9 @@
   <div class="card row-span-2 flex flex-col gap-md overflow-auto">
 
     <!-- title -->
-    <h1 class="title col-span-2 signature-gradient-font">Shift Auctions & Trades</h1>
+    <h1 class="col-span-2 signature-gradient-font">Shift Auctions & Trades</h1>
 
     <app-shift-trade-auction [showShiftOrigin]="true" />
-
   </div>
 
 </div>

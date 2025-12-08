@@ -17,8 +17,24 @@
       box-shadow: 0px 0px 8px 2px rgb(25 28 43);
     }
   }
+}
 
-  .title {
-    @apply text-xl font-bold mb-4;
+h1 {
+  @apply text-xl font-bold mb-3;
+
+  &.compact {
+    @apply mb-0;
   }
+}
+
+h2 {
+  @apply text-lg font-semibold mb-2;
+}
+
+b {
+  @apply font-semibold;
+}
+
+small {
+  @apply col-span-2 opacity-50 font-semibold text-sm;
 }
