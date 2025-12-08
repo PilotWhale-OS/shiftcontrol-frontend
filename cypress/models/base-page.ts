@@ -12,6 +12,10 @@ export abstract class BasePage {
     this.pageURL = pageUrl;
   }
 
+  public getPageUrl(): string {
+    return this.pageURL;
+  }
+
   public visitBaseUrl(): void {
     cy.visit(APP_CONFIG.BASE_URL);
     cy.wait(APP_CONFIG.TIMEOUT_S);
@@ -51,4 +55,11 @@ export abstract class BasePage {
       cy.contains('h2, h3, h4', selector).should('exist');
     });
   }
+
+  public navigateOverCards(...steps: Array<[string, BasePage]>) {
+      for (const [heading, page] of steps) {
+        cy.contains('.card', heading).click();
+        cy.location('pathname').should('eq', "/" + page.getPageUrl());
+      }
+    }
 }

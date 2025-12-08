@@ -5,6 +5,10 @@ Feature: User profile page
     When I navigate to the user profile page
     Then I verify the user profile page
 
+  Scenario: Press cards for routing to user profile page
+    Given I navigate to the dashboard page
+    Then I navigate to the user settings page from the dashboard page
+
   Scenario: Profile tiles are visible
     Then The user profile page tiles exist
     And the form should contain the following data on "userProfile"

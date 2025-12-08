@@ -1,6 +1,7 @@
 import {BaseWorkflow} from './base.workflow';
 import {LoginWorkflow} from '../e2e/basic/login/login.workflow';
 import {UserProfileWorkflow} from "../e2e/volunteer/user-profile/user-profile.workflow";
+import {ShiftDashBoardWorkflow} from "../e2e/volunteer/shift-dashboard/shift-dashboard.workflow";
 
 const registry: Record<string, () => BaseWorkflow> = {};
 
@@ -18,3 +19,4 @@ export class WorkflowFactory {
 
 WorkflowFactory.register('login', () => new LoginWorkflow());
 WorkflowFactory.register('userProfile', () => new UserProfileWorkflow());
+WorkflowFactory.register('shiftDashboard', () => new ShiftDashBoardWorkflow());
