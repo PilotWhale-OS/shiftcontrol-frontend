@@ -63,21 +63,10 @@
         This is the description of the position role.
       </p>
 
-      <!-- signup reminder -->
-      <p class="font-bold">
-        You are signed up for this position!
-      </p>
-
       <div class="flex flex-col">
         <span class="flex gap-sm items-center"><span class="font-semibold opacity-50 text-sm">Status:</span> Signed Up</span>
         <span class="flex gap-sm items-center"><span class="font-semibold opacity-50 text-sm">Reward:</span> 10 Points</span>
         <span class="flex gap-sm items-center"><span class="font-semibold opacity-50 text-sm">Positions:</span> 2 / 5 taken</span>
-      </div>
-
-      <!-- trade  -->
-      <div class="mt-sm pt-sm border-t-2 border-framing-card flex flex-col gap-sm">
-        <span class="font-semibold opacity-50 text-sm">Trade Position</span>
-        <span>here goes the dropdown and submit button. locked when already in progress.</span>
       </div>
 
       <!-- auction  -->
@@ -85,6 +74,13 @@
         <span class="font-semibold opacity-50 text-sm">Auction Position</span>
         <span>Auctioned positions can be claimed by all eligible volunteers. </span>
         <xsb-input-button content="Auction this position" size="minimal" action="normal" />
+      </div>
+
+      <!-- remider  -->
+      <div class="mt-sm pt-sm border-t-2 border-framing-card flex flex-col gap-sm">
+        <span class="font-semibold opacity-50 text-sm">Signed Up</span>
+        <span class="font-bold">You are signed up for this position!</span>
+        <span>Attendance is required. If you do not want to participate anymore, you can set this shift up for auction or request a trade for another position.</span>
       </div>
 
     </div>
@@ -114,6 +110,13 @@
         <span class="font-semibold opacity-50 text-sm">Sign Up</span>
         <span>Signing up is binding and cannot be made undone.</span>
         <xsb-input-button content="Sign up for this position" size="minimal" action="success" />
+      </div>
+
+      <!-- trade  -->
+      <div class="mt-sm pt-sm border-t-2 border-framing-card flex flex-col gap-sm">
+        <span class="font-semibold opacity-50 text-sm">Trade Position</span>
+        <span>If you want to swap one of your shifts against this one, you can reques ta trade.</span>
+        <xsb-input-button content="Request a trade" size="minimal" action="success" />
       </div>
 
       <!-- Set preference  -->
@@ -150,6 +153,20 @@
         <span>Signing up is binding and cannot be made undone.</span>
         <xsb-input-button content="Sign up for this position" size="minimal" action="success" />
       </div>
+
+      <!-- trade  -->
+      <div class="mt-sm pt-sm border-t-2 border-framing-card flex flex-col gap-sm">
+        <span class="font-semibold opacity-50 text-sm">Trade Position</span>
+        <span>If you want to swap one of your shifts against this one, you can reques ta trade.</span>
+        <xsb-input-button content="Request a trade" size="minimal" action="success" />
+      </div>
+
+      <!-- Set preference  -->
+      <div class="mt-sm pt-sm border-t-2 border-framing-card flex flex-col gap-sm">
+        <span class="font-semibold opacity-50 text-sm">Preference</span>
+        <span>If slots need to be filled, you may be auto-assigned. You can set you preference here.</span>
+        <span><----------- slider goes here ----------></span>
+      </div>
     </div>
 
     <!-- eligible and taken -->
@@ -170,6 +187,13 @@
         <span class="flex gap-sm items-center"><span class="font-semibold opacity-50 text-sm">Status:</span> No free positions</span>
         <span class="flex gap-sm items-center"><span class="font-semibold opacity-50 text-sm">Reward:</span> 10 Points</span>
         <span class="flex gap-sm items-center"><span class="font-semibold opacity-50 text-sm">Positions:</span> 5 / 5 taken</span>
+      </div>
+
+      <!-- trade  -->
+      <div class="mt-sm pt-sm border-t-2 border-framing-card flex flex-col gap-sm">
+        <span class="font-semibold opacity-50 text-sm">Trade Position</span>
+        <span>If you want to swap one of your shifts against this one, you can request a trade.</span>
+        <xsb-input-button content="Request a trade" size="minimal" action="success" />
       </div>
 
       <!-- Set preference  -->
