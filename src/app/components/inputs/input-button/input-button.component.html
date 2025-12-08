@@ -3,11 +3,11 @@
       'pointer-events-none opacity-60' : lock,
 
       'border-framing-default_danger bg-background-item_danger' : action === 'danger',
-      'border-framing-default_success bg-background-item_success' : action === 'success',
+      'border-framing-default_success bg-background-item_success hover:border-framing-highlight_success' : action === 'success',
       'border-framing-item bg-background-item focus-within:border-framing-highlight hover:border-framing-highlight' : action === 'normal',
 
-      'py-sm px-lg  gap-md font-semibold' : size === 'regular',
-      'py-xs px-sm  gap-sm hover:brightness-125 active:brightness-125' : size === 'minimal',
+      'py-sm px-lg gap-md font-semibold ' : size === 'regular',
+      'py-xs px-sm gap-sm hover:brightness-125 active:brightness-125' : size === 'minimal',
       'gap-[0px]' : content.length === 0
     }">
 

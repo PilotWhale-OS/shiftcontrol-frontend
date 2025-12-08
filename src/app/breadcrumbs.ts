@@ -1,7 +1,7 @@
 export class Breadcrumb {
   private _id;
 
-  constructor(private _name: string, private readonly _href: string, private readonly _parent?: Breadcrumb) {
+  constructor(private _name: string, private _href: string, private readonly _parent?: Breadcrumb) {
     this._id = Symbol(_name);
   }
 
@@ -12,6 +12,10 @@ export class Breadcrumb {
 
   public set name(name: string) {
     this._name = name;
+  }
+
+  public set href(href: string) {
+    this._href = href;
   }
 
   public getPath(): Breadcrumb[] {
@@ -27,6 +31,11 @@ export class Breadcrumb {
     return path;
   }
 
+  public getFullHref(): string {
+    const path = this.getPath();
+    return path.map(bc => bc.href).join("/");
+  }
+
   /**
    * Clone this breadcrumb while preserving the id
    * @private
@@ -38,7 +47,12 @@ export class Breadcrumb {
   }
 }
 
+/* note: name and href should be customized by the component specifically to selected path, if applicable */
 export const BC_HOME = new Breadcrumb("Home", "/");
 export const BC_EVENTS = new Breadcrumb("Events", "events", BC_HOME);
 export const BC_SHIFTS = new Breadcrumb("Shifts", "shifts", BC_EVENTS);
 export const BC_ACCOUNT = new Breadcrumb("Account", "account", BC_HOME);
+export const BC_SHIFT_DASHBOARD = new Breadcrumb("Shift Dashboard", "shift-dashboard", BC_SHIFTS);
+export const BC_SHIFT_CALENDAR = new Breadcrumb("Calendar", "calendar", BC_SHIFT_DASHBOARD);
+export const BC_SHIFT_DETAILS = new Breadcrumb("Shift Details", "shift-details", BC_SHIFT_DASHBOARD);
+export const BC_PLAN_ONBOARDING = new Breadcrumb("Onboarding", "onboarding", BC_SHIFT_DASHBOARD);

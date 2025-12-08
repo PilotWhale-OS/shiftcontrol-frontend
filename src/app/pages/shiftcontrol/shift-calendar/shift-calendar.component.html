@@ -1,0 +1,64 @@
+<!-- wrapper -->
+<div class="flex flex-col gap-md h-full">
+
+  <!-- header with filters-->
+  <div class="card grid grid-cols-[2fr_2fr_1fr_1fr_2fr] grid-rows-[1fr-1fr] gap-sm gap-x-xl">
+
+    <!-- title filter -->
+    <div class="flex flex-col col-start-1 row-start-1">
+      <h1 class="title signature-gradient-font">Filter Shift Calendar</h1>
+    </div>
+
+    <!-- title filter -->
+    <div class="flex gap-sm items-center col-start-1 row-start-2">
+      <label for="filterShift">Shift name:</label>
+      <xsb-input-text #shiftName placeholder="Shift name" name="filterShift" [formControl]="form.controls.shiftName"
+                      [xsb-typed]="[shiftName, form.controls.shiftName]" />
+    </div>
+
+    <!-- date picker -->
+    <div class="col-start-2 row-start-1">
+      <xsb-input-date #datePicker name="filterDate"
+                      [formControl]="form.controls.date"
+                      [xsb-typed]="[datePicker, form.controls.date]" />
+    </div>
+
+    <!-- view mode selection -->
+    <div class="col-start-2 row-start-2">
+      <xsb-input-select #viewMode [options]="viewModeOptions" [formControl]="form.controls.viewMode"
+                        [xsb-typed]="[viewMode, form.controls.viewMode]" [icon]="iconView" />
+    </div>
+
+    <!-- categories multiselects -->
+    <div class="col-start-3 row-start-1">
+      <xsb-input-multiselect #rolesCats naming="Roles" [options]="rolesOptions" [formControl]="form.controls.locationsList"
+                             [xsb-typed]="[rolesCats, form.controls.locationsList]"/>
+    </div>
+    <div class="col-start-4 row-start-1">
+      <xsb-input-multiselect #locationsCats naming="Locations" [options]="locationsOptions" [formControl]="form.controls.rolesList"
+                             [xsb-typed]="[locationsCats, form.controls.locationsList]"/>
+    </div>
+    <div class="col-start-3 row-start-2">
+      <xsb-input-multiselect #tagsCats naming="Tags" [options]="tagsOptions" [formControl]="form.controls.tagsList"
+                             [xsb-typed]="[tagsCats, form.controls.tagsList]"/>
+    </div>
+    <div class="col-start-4 row-start-2">
+      <xsb-input-multiselect #availabilityCats naming="Availabilities" [options]="availabilityOptions" [formControl]="form.controls.availabilityList"
+                             [xsb-typed]="[availabilityCats, form.controls.availabilityList]"/>
+    </div>
+
+    <!-- summary -->
+    <div class="row-span-2 flex flex-col justify-center justify-self-end">
+      <span class="font-semibold opacity-50 text-sm">Results:</span>
+      <span>50 shifts</span>
+      <span>40 hours</span>
+      <span>10 unassigned</span>
+    </div>
+  </div>
+
+  <!-- calendar -->
+  <div class="card compact flex-grow overflow-hidden">
+    <app-shift-calendar-grid />
+  </div>
+
+</div>

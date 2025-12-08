@@ -1,0 +1,11 @@
+.position {
+  @apply w-full h-full flex flex-col gap-xs;
+}
+
+.card.signed-up {
+  @apply border-framing-default_success hover:border-framing-highlight_success transition-colors bg-background-card_success;
+}
+
+.card.not-eligible {
+  @apply opacity-50 cursor-not-allowed;
+}
