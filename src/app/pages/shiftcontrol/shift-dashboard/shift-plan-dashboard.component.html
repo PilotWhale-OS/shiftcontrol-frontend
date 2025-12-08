@@ -50,106 +50,18 @@
   <div class="card row-span-2 flex flex-col gap-md overflow-auto">
 
     <!-- title -->
-    <h1 class="title col-span-2 signature-gradient-font">Your Schedule</h1>
+    <h1 class="title col-span-2 signature-gradient-font">Plan Schedule</h1>
 
-    <!-- schedules by day -->
-    <div class="flex flex-col gap-md grow overflow-auto">
-
-      @for (date of ["Monday, 01.12.2025", "Tuesday, 02.12.2025"]; track date) {
-
-        <!-- date separator -->
-        <span class="col-span-2 opacity-50 font-semibold text-sm">{{date}}</span>
-
-        @for (card of [1,2,3,4,5]; track card) {
-          <div
-            class="border-2 border-framing-item bg-background-item cursor-pointer rounded-xl p-md grid grid-cols-2"
-            [routerLink]="'otherid'"
-          >
-            <div class="font-semibold">Pilot Shift</div>
-            <span class="font-semibold opacity-50 text-sm justify-self-end" >08:00 - 12:00</span>
-            <p class="col-span-2">
-              This is the short description of the shift.
-            </p>
-          </div>
-        }
-      }
-
-    </div>
+    <app-shift-schedule />
   </div>
 
   <!-- auction/trade card-->
   <div class="card row-span-2 flex flex-col gap-md overflow-auto">
 
     <!-- title -->
-    <h1 class="title col-span-2 signature-gradient-font">Shift Auctions & Trades</h1>
+    <h1 class="title col-span-2 signature-gradient-font">Shift Plan Auctions & Trades</h1>
 
-    <!-- list of trades/auctions -->
-    <div class="flex flex-col gap-md grow overflow-auto">
-
-      @for (card of [1,2]; track card) {
-
-        <!-- card for item: trade -->
-        <div class="border-2 border-framing-card bg-background-card rounded-xl p-md grid grid-cols-[2fr_1fr_2fr] gap-sm">
-
-          <!-- type -->
-          <div class="font-semibold opacity-50 text-sm col-span-2">Trade</div>
-
-          <!-- owner -->
-          <div class="font-semibold opacity-50 text-sm justify-self-end">request by Paul</div>
-
-          <!-- trade: left and right info -->
-          <div class="flex flex-col items-end">
-            <div class="font-semibold">Shift 1</div>
-            <div class="font-semibold opacity-50 text-sm">01.12.2025 08:00</div>
-          </div>
-
-          <div class="text-center">⟺</div>
-
-          <div class="flex flex-col items-start">
-            <div class="font-semibold">Shift 2</div>
-            <div class="font-semibold opacity-50 text-sm">01.12.2025 08:00</div>
-          </div>
-
-          <!-- info  -->
-          <span class="col-span-3">Paul wants to trade their shift "Shift 2" against your shift "Shift 1".</span>
-
-          <!-- actions -->
-          <div class="col-span-3 flex flex-row gap-md">
-            <xsb-input-button size="minimal" content="Accept" action="success" />
-            <xsb-input-button size="minimal" content="Decline" action="danger" />
-            <xsb-input-button size="minimal" content="View Details" />
-          </div>
-
-        </div>
-
-        <!-- card for item: auction -->
-        <div class="border-2 border-framing-card bg-background-card rounded-xl p-md grid grid-cols-[2fr_1fr_2fr] gap-sm">
-
-          <!-- type -->
-          <div class="font-semibold opacity-50 text-sm col-span-2">Auction</div>
-
-          <!-- owner -->
-          <div class="font-semibold opacity-50 text-sm justify-self-end">offer by Paul</div>
-
-          <!-- auction: offered shift info -->
-          <div class="flex flex-col">
-            <div class="font-semibold">Shift 1</div>
-            <div class="font-semibold opacity-50 text-sm">01.12.2025 08:00</div>
-          </div>
-
-          <!-- info  -->
-          <span class="col-span-3">Paul offered their shift "Shift 1" for anyone who's interested.</span>
-
-          <!-- actions -->
-          <div class="col-span-3 flex flex-row gap-md">
-            <xsb-input-button size="minimal" content="Claim" action="success" />
-            <xsb-input-button size="minimal" content="View Details" />
-          </div>
-
-        </div>
-      }
-
-    </div>
+    <app-shift-trade-auction />
   </div>
 
 </div>

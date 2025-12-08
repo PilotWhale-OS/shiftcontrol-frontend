@@ -1,0 +1,24 @@
+
+<!-- schedules by day -->
+<div class="flex flex-col gap-md grow overflow-auto">
+
+  @for (date of ["Monday, 01.12.2025", "Tuesday, 02.12.2025"]; track date) {
+
+    <!-- date separator -->
+    <span class="col-span-2 opacity-50 font-semibold text-sm">{{date}}</span>
+
+    @for (card of [1,2,3,4,5]; track card) {
+      <div
+        class="border-2 border-framing-item bg-background-item cursor-pointer rounded-xl p-md grid grid-cols-2"
+        [routerLink]="'otherid'"
+      >
+        <div class="font-semibold">Pilot Shift @if (showShiftOrigin) { (Pilot Event: Pilot Plan) }</div>
+        <span class="font-semibold opacity-50 text-sm justify-self-end" >08:00 - 12:00</span>
+        <p class="col-span-2">
+          This is the short description of the shift.
+        </p>
+      </div>
+    }
+  }
+
+</div>

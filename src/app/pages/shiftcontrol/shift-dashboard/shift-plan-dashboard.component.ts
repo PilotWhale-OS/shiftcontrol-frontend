@@ -2,13 +2,15 @@ import {Component, inject} from "@angular/core";
 import {PageService} from "../../../services/breadcrumbs/page.service";
 import {BC_SHIFT_DASHBOARD, BC_SHIFTS} from "../../../breadcrumbs";
 import {RouterLink} from "@angular/router";
-import {InputButtonComponent} from "../../../components/inputs/input-button/input-button.component";
+import {ShiftTradeAuctionComponent} from "../../../components/shift-trade-auction/shift-trade-auction.component";
+import {ShiftScheduleComponent} from "../../../components/shift-schedule/shift-schedule.component";
 
 @Component({
   selector: "app-shift-dashboard",
   imports: [
     RouterLink,
-    InputButtonComponent
+    ShiftTradeAuctionComponent,
+    ShiftScheduleComponent
   ],
   standalone: true,
   templateUrl: "./shift-plan-dashboard.component.html",
