@@ -1,5 +1,4 @@
-
-import { getElementType } from './form-types.helper';
+import {getElementType} from './form-types.helper';
 import {
   setAutocompleteValue,
   setCheckboxValue,
@@ -11,7 +10,7 @@ import {
   setTextInputValue,
   setWysiwygValue,
 } from './form-input.helper';
-import { getMaterialToggleState, getMatSelectValue, getReadonlyValue, getSelectValue, getWysiwygValue } from './form-read.helper';
+import {getMaterialToggleState, getMatSelectValue, getReadonlyValue, getSelectValue, getWysiwygValue, getXsbTextValue, getXsbToggleState} from './form-read.helper';
 import {APP_CONFIG} from '../../config';
 
 type InputHandler = (selector: string, value: string | boolean) => void;
@@ -43,6 +42,8 @@ const verifyHandlers: Record<string, VerifyHandler> = {
   'material-toggle': (selector, expected) => getMaterialToggleState(selector).should('eq', String(expected)),
   wysiwyg: (selector, expected) => getWysiwygValue(selector).should('eq', String(expected)),
   span: (selector, expected) => getReadonlyValue(selector).should('eq', String(expected)),
+  'xsb-text':    (selector, expected) => getXsbTextValue(selector).should('eq', String(expected)),
+  'xsb-toggle': (selector, expected) => getXsbToggleState(selector).then(actual => String(actual)).should('eq', String(expected)),
 };
 
 /**

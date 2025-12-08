@@ -1,5 +1,4 @@
-
-import { verifySelectorVisibility } from './form.helper';
+import {verifySelectorVisibility} from './form.helper';
 
 /**
  * Retrieves the current value of an input field after ensuring it is visible.
@@ -57,4 +56,19 @@ export function getReadonlyValue(selector: string): Cypress.Chainable<string> {
     .get(selector)
     .invoke('text')
     .then((text) => text.trim());
+}
+
+export function getXsbTextValue(selector: string) {
+  return cy
+    .get(selector)
+    .invoke('text')
+    .then((t) => t.trim());
+}
+
+export function getXsbToggleState(selector: string) {
+  return cy
+    .get(selector)
+    .find('input[type="checkbox"]')
+    .invoke('prop', 'checked')
+    .then((checked) => String(checked)) as Cypress.Chainable<string>;
 }

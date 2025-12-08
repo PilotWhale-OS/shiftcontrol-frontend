@@ -35,6 +35,9 @@ export function getElementType(selector: string) {
           if (tagName === 'mat-checkbox') return 'mat-checkbox';
           if (tagName === 'app-wysiwyg') return 'wysiwyg';
           if (tagName === 'span') return 'span';
+
+          if (tagName === 'xsb-input-text') return 'xsb-text';
+          if (tagName === 'xsb-input-toggle') return 'xsb-toggle';
           return 'unknown';
         });
     });

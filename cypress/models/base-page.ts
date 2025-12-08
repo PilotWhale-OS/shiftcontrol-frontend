@@ -1,4 +1,4 @@
-import { expectPageState, PAGE_STATE, PageState } from '../helper/common/page-state.helper';
+import {expectPageState, PAGE_STATE, PageState} from '../helper/common/page-state.helper';
 import {APP_CONFIG} from '../config';
 import SELECTORS_LOGIN from '../e2e/basic/login/login.selectors';
 
@@ -44,5 +44,11 @@ export abstract class BasePage {
     cy.url({ timeout: this.T }).should('include', this.pageURL);
 
     Object.values(SELECTORS_LOGIN.ERROR_STATE_COMPONENTS).forEach((s) => cy.get(s).should('not.exist'));
+  }
+
+  public verifyTileItemsAreShown(tile: Record<string, string>): void {
+    Object.values(tile).forEach(selector => {
+      cy.contains('h2, h3, h4', selector).should('exist');
+    });
   }
 }
