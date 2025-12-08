@@ -18,11 +18,6 @@
       </div>
     </div>
 
-    <div class="card interaction" routerLink="events/someId/otherId">
-      <h1 class="title">Pilot Plan</h1>
-      <p class="font-semibold">Pilot Event: Currently active</p>
-    </div>
-
     @for (card of cards; track card) {
       <div class="card interaction" [routerLink]="card.href">
         <h1 class="title">{{card.title}}</h1>
