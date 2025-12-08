@@ -16,7 +16,7 @@ import { breadcrumbsGuard } from "./guards/breadcrumbs/breadcrumbs.guard";
 import {accessAllowedGuard, notLoggedInGuard} from "./guards/keycloak/keycloak.guard";
 import {AccountComponent} from "./pages/shiftcontrol/account/account.component";
 import {HomeComponent} from "./pages/shiftcontrol/home/home.component";
-import {ShiftPlanDashboardComponent} from "./pages/shiftcontrol/shift-dashboard/shift-plan-dashboard.component";
+import {ShiftPlanDashboardComponent} from "./pages/shiftcontrol/shift-plan-dashboard/shift-plan-dashboard.component";
 import {ShiftCalendarComponent} from "./pages/shiftcontrol/shift-calendar/shift-calendar.component";
 import {ShiftDetailsComponent} from "./pages/shiftcontrol/shift-details/shift-details.component";
 import {PlanOnboardingComponent} from "./pages/shiftcontrol/plan-onboarding/plan-onboarding.component";
