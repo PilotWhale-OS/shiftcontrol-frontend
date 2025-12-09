@@ -9,8 +9,10 @@ Feature: User profile page
     Given I navigate to the dashboard page
     Then I navigate to the user settings page from the dashboard page
 
-  Scenario: Profile tiles are visible
+  Scenario: The expected Tiles are visible
     Then The user profile page tiles exist
+
+  Scenario: Profile tiles are visible
     And the form should contain the following data on "userProfile"
       | name | surname |
       | Max  | Muster  |

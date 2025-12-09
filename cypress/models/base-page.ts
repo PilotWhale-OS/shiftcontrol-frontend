@@ -52,7 +52,7 @@ export abstract class BasePage {
 
   public verifyTileItemsAreShown(tile: Record<string, string>): void {
     Object.values(tile).forEach(selector => {
-      cy.contains('h2, h3, h4', selector).should('exist');
+      cy.contains('h1, h2, h3, h4', selector).should('exist');
     });
   }
 

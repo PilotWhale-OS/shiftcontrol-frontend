@@ -11,11 +11,11 @@ const SELECTORS_USER_PROFILE = {
     signOut: '[name="me-sign-out"]',
   },
   NOTIFICATION_SETTINGS: {
-    emailNotification: 'xsb-input-toggle[ng-reflect-name="userNotificationsEmail"]',
-    pushNotification: 'xsb-input-toggle[ng-reflect-name="userNotificationsPush"]',
-    autoAssigned: 'xsb-input-toggle[ng-reflect-name="userNotificationsAutoAssigned"]',
-    tradeAccepted: 'xsb-input-toggle[ng-reflect-name="userNotificationsTradeAccepted"]',
-    shiftReminder: 'xsb-input-toggle[ng-reflect-name="userNotificationsShiftReminder"]',
+    emailNotification: 'xsb-input-toggle[ng-reflect-name="me-notifications-email"]',
+    pushNotification: 'xsb-input-toggle[ng-reflect-name="me-notifocations-push"]',
+    autoAssigned: 'xsb-input-toggle[ng-reflect-name="me-notifocations-push"]',
+    tradeAccepted: 'xsb-input-toggle[ng-reflect-name="me-topic-tradeaccepted"]',
+    shiftReminder: 'xsb-input-toggle[ng-reflect-name="me-topic-shiftreminder"]',
   },
   UNAVAILABILITY_SETTINGS: {
     // todo add
