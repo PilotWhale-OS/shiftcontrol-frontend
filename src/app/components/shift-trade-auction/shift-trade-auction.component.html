@@ -34,7 +34,7 @@
       <div class="col-span-3 flex flex-row gap-md">
         <xsb-input-button size="minimal" content="Accept" action="success" name="trade-accept" />
         <xsb-input-button size="minimal" content="Decline" action="danger" name="trade-decline" />
-        <xsb-input-button size="minimal" content="View Details" name="trade-view-shift" />
+        <xsb-input-button size="minimal" content="View Details" name="trade-view-shift" [routerLink]="'/shifts/shiftId'" />
       </div>
 
     </div>
@@ -60,7 +60,7 @@
       <!-- actions -->
       <div class="col-span-3 flex flex-row gap-md">
         <xsb-input-button size="minimal" content="Claim" action="success" name="auction-claim" />
-        <xsb-input-button size="minimal" content="View Details" name="auction-view-shift" />
+        <xsb-input-button size="minimal" content="View Details" name="auction-view-shift" [routerLink]="'/shifts/shiftId'" />
       </div>
 
     </div>

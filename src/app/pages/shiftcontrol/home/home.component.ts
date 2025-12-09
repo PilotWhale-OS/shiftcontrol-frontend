@@ -22,7 +22,7 @@ export class HomeComponent {
   public readonly cards = [
     {title:"Events", content: "Manage your events and shift plans", href: "events"},
     {title:"User Account", content: "Manage your notification settings and unavailable time", href: "me"},
-    {title:"Pilot Plan", content: "Pilot Event: Currently active", href: "events/someId/otherId"}
+    {title:"Pilot Plan", content: "Pilot Event: Currently active", href: "plans/planId"}
   ];
 
   private readonly _userService = inject(UserService);
