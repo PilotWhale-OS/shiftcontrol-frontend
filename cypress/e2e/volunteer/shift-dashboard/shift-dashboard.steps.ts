@@ -11,3 +11,15 @@ Given('I navigate to the dashboard page', () => {
 Given('I navigate to the user settings page from the dashboard page', () => {
   wf.visitUserSettingsPage();
 });
+
+Given('I navigate to the events page from the dashboard page', () => {
+  wf.visitUserSettingsPage();
+});
+
+Given('I navigate to a plan page from the dashboard page', () => {
+  wf.visitUserSettingsPage();
+});
+
+Given('I navigate to a shift page from the dashboard page', () => {
+  wf.visitUserSettingsPage();
+});
