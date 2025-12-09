@@ -6,8 +6,6 @@ class EventPage extends BasePage {
     super(APP_CONFIG.BASE_URL, 'events');
   }
 
-
-
 }
 
 export default new EventPage();

@@ -7,10 +7,6 @@ class UserProfilePage extends BasePage {
     super(APP_CONFIG.BASE_URL, 'me');
   }
 
-  visitUserSettingsPage() {
-    this.visitPageUrl();
-  }
-
   verifyAllCardsAreShown() {
     this.verifyTileItemsAreShown(SELECTORS_USER_PROFILE.CARDS);
   }

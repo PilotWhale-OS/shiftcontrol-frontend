@@ -4,10 +4,10 @@ import {EventWorkflow} from "./event.workflow";
 
 const wf = WorkflowFactory.get<EventWorkflow>('events');
 
-Given('I navigate to a event from the events page', () => {
-
+Given('I navigate to a event page from the events page', () => {
+  wf.visitEventPage();
 });
 
-Given('I navigate to a plan from the event page', () => {
-
+Given('I navigate to a plan page from the event page', () => {
+  wf.visitPlanPage();
 });
