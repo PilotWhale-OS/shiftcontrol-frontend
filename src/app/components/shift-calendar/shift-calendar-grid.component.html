@@ -54,7 +54,10 @@
 
     <!-- sample shift A -->
     <div
-      class="shift"
+      (click)="viewShift = true"
+      (keyup)="viewShift = true"
+      tabindex="0"
+      class="shift eligible"
       style="grid-row: 2/2; grid-column: venue-a-shift-col-1-start / venue-a-shift-col-1-start"
       [style.height]="getMinuteHeight(80)"
       [style.top]="getMinuteHeight(30)"
@@ -66,6 +69,9 @@
 
     <!-- sample shift B -->
     <div
+      (click)="viewShift = true"
+      (keyup)="viewShift = true"
+      tabindex="0"
       class="shift"
       style="grid-row: 2/2; grid-column: venue-a-shift-col-2-start / venue-a-shift-col-2-start"
       [style.height]="getMinuteHeight(120)"
@@ -78,6 +84,9 @@
 
     <!-- sample shift C -->
     <div
+      (click)="viewShift = true"
+      (keyup)="viewShift = true"
+      tabindex="0"
       class="shift signed-up"
       style="grid-row: 2/2; grid-column: venue-a-shift-col-1-start / venue-a-shift-col-1-start"
       [style.height]="getMinuteHeight(120)"
@@ -112,7 +121,10 @@
 
     <!-- sample shift A -->
     <div
-      class="shift"
+      (click)="viewShift = true"
+      (keyup)="viewShift = true"
+      tabindex="0"
+      class="shift eligible"
       style="grid-row: 2/2; grid-column: venue-b-shift-col-1-start / venue-b-shift-col-1-start"
       [style.height]="getMinuteHeight(80)"
       [style.top]="getMinuteHeight(50)"
@@ -124,6 +136,9 @@
 
     <!-- sample shift B -->
     <div
+      (click)="viewShift = true"
+      (keyup)="viewShift = true"
+      tabindex="0"
       class="shift"
       style="grid-row: 2/2; grid-column: venue-b-shift-col-2-start / venue-b-shift-col-2-start"
       [style.height]="getMinuteHeight(400)"
@@ -136,6 +151,9 @@
 
     <!-- sample shift C -->
     <div
+      (click)="viewShift = true"
+      (keyup)="viewShift = true"
+      tabindex="0"
       class="shift"
       style="grid-row: 2/2; grid-column: venue-b-shift-col-2-start / venue-b-shift-col-2-start"
       [style.height]="getMinuteHeight(30)"
@@ -148,6 +166,9 @@
 
     <!-- sample shift C -->
     <div
+      (click)="viewShift = true"
+      (keyup)="viewShift = true"
+      tabindex="0"
       class="shift"
       style="grid-row: 2/2; grid-column: venue-b-shift-col-1-start / venue-b-shift-col-1-start"
       [style.height]="getMinuteHeight(30)"
@@ -160,6 +181,9 @@
 
     <!-- sample shift C -->
     <div
+      (click)="viewShift = true"
+      (keyup)="viewShift = true"
+      tabindex="0"
       class="shift signed-up"
       style="grid-row: 2/2; grid-column: venue-b-shift-col-1-start / venue-b-shift-col-1-start"
       [style.height]="getMinuteHeight(30)"
@@ -172,7 +196,10 @@
 
     <!-- sample shift C -->
     <div
-      class="shift"
+      (click)="viewShift = true"
+      (keyup)="viewShift = true"
+      tabindex="0"
+      class="shift eligible"
       style="grid-row: 2/2; grid-column: venue-b-shift-col-1-start / venue-b-shift-col-1-start"
       [style.height]="getMinuteHeight(170)"
       [style.top]="getMinuteHeight(950)"
@@ -196,6 +223,9 @@
 
     <!-- sample shift C -->
     <div
+      (click)="viewShift = true"
+      (keyup)="viewShift = true"
+      tabindex="0"
       class="shift signed-up"
       style="grid-row: 2/2; grid-column: venue-c-shift-col-2-start / venue-c-shift-col-2-start"
       [style.height]="getMinuteHeight(120)"
@@ -210,3 +240,14 @@
   </div>
 
 </div>
+
+@if (viewShift){
+  <xsb-dialog (closeDialog)="viewShift = false">
+    <ng-container dialog-header>
+      <h1 class="signature-gradient-font">Shift Details</h1>
+    </ng-container>
+    <ng-container dialog-body>
+      <app-shift-details-view></app-shift-details-view>
+    </ng-container>
+  </xsb-dialog>
+}

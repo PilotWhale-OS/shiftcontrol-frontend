@@ -17,4 +17,20 @@ const isAccessAllowed = async (
   return router.parseUrl("/login");
 };
 
-export const keycloakGuard = createAuthGuard<CanActivateFn>(isAccessAllowed);
+const isNotLoggedIn = async (
+  _: ActivatedRouteSnapshot,
+  __: RouterStateSnapshot,
+  authData: AuthGuardData
+): Promise<boolean | UrlTree> => {
+  const { authenticated } = authData;
+
+  if (!authenticated) {
+    return true;
+  }
+
+  const router = inject(Router);
+  return router.parseUrl("/");
+};
+
+export const accessAllowedGuard = createAuthGuard<CanActivateFn>(isAccessAllowed);
+export const notLoggedInGuard = createAuthGuard<CanActivateFn>(isNotLoggedIn);
