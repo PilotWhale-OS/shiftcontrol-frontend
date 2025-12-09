@@ -33,7 +33,19 @@ export class Breadcrumb {
 
   public getFullHref(): string {
     const path = this.getPath();
-    return path.map(bc => bc.href).join("/");
+    const href: string[] = [];
+
+    while(path.length > 0) {
+      const segment = path.pop();
+      if(segment) {
+        href.unshift(segment.href);
+        if(segment.href.startsWith("/")) {
+          break;
+        }
+      }
+    }
+
+    return href.join("/");
   }
 
   /**
@@ -49,10 +61,10 @@ export class Breadcrumb {
 
 /* note: name and href should be customized by the component specifically to selected path, if applicable */
 export const BC_HOME = new Breadcrumb("Home", "/");
-export const BC_EVENTS = new Breadcrumb("Events", "events", BC_HOME);
-export const BC_SHIFTS = new Breadcrumb("Shifts", "shifts", BC_EVENTS);
-export const BC_ACCOUNT = new Breadcrumb("Account", "account", BC_HOME);
-export const BC_SHIFT_DASHBOARD = new Breadcrumb("Shift Dashboard", "shift-dashboard", BC_SHIFTS);
-export const BC_SHIFT_CALENDAR = new Breadcrumb("Calendar", "calendar", BC_SHIFT_DASHBOARD);
-export const BC_SHIFT_DETAILS = new Breadcrumb("Shift Details", "shift-details", BC_SHIFT_DASHBOARD);
-export const BC_PLAN_ONBOARDING = new Breadcrumb("Onboarding", "onboarding", BC_SHIFT_DASHBOARD);
+export const BC_EVENTS = new Breadcrumb("Events", "/events", BC_HOME);
+export const BC_EVENT = new Breadcrumb("Shifts", "event-id", BC_EVENTS);
+export const BC_ACCOUNT = new Breadcrumb("Account", "/account", BC_HOME);
+export const BC_PLAN_DASHBOARD = new Breadcrumb("Shift Dashboard", "plan-id", BC_EVENT);
+export const BC_SHIFT_CALENDAR = new Breadcrumb("Calendar", "calendar", BC_PLAN_DASHBOARD);
+export const BC_SHIFT_DETAILS = new Breadcrumb("Shift Details", "shift-id", BC_PLAN_DASHBOARD);
+export const BC_PLAN_ONBOARDING = new Breadcrumb("Onboarding", "onboarding", BC_PLAN_DASHBOARD);

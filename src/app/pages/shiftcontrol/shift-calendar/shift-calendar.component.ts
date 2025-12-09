@@ -1,6 +1,6 @@
 import {Component, inject} from "@angular/core";
 import {PageService} from "../../../services/breadcrumbs/page.service";
-import {BC_SHIFT_DASHBOARD, BC_SHIFTS} from "../../../breadcrumbs";
+import {BC_PLAN_DASHBOARD, BC_EVENT} from "../../../breadcrumbs";
 import {InputTextComponent} from "../../../components/inputs/input-text/input-text.component";
 import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
 import {TypedFormControlDirective} from "../../../directives/typed-form-control.directive";
@@ -62,8 +62,8 @@ export class ShiftCalendarComponent {
 
   constructor() {
     this._pageService
-      .configureBreadcrumb(BC_SHIFTS, "Pilot Event", "someid")
-      .configureBreadcrumb(BC_SHIFT_DASHBOARD, "Pilot Plan", "otherid");
+      .configureBreadcrumb(BC_EVENT, "Pilot Event", "eventId")
+      .configureBreadcrumb(BC_PLAN_DASHBOARD, "Pilot Plan", "planId");
 
     this.form = this._fb.group({
       shiftName: this._fb.nonNullable.control<string>(""),

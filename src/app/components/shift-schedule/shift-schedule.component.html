@@ -10,7 +10,7 @@
     @for (card of [1,2,3,4,5]; track card) {
       <div
         class="border-2 border-framing-item bg-background-item cursor-pointer rounded-xl p-md grid grid-cols-2"
-        [routerLink]="'otherid'"
+        [routerLink]="'/shifts/shiftId'"
       >
         <b>Pilot Shift @if (showShiftOrigin) { (Pilot Event: Pilot Plan) }</b>
         <small class="justify-self-end" >08:00 - 12:00</small>
