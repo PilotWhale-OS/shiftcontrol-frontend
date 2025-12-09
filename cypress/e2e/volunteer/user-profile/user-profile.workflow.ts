@@ -1,7 +1,6 @@
 import {BaseWorkflow} from '../../../models/base.workflow';
 import SELECTORS_USER_PROFILE from "./user-profile.selectors";
 import userProfilePo from "./user-profile.po";
-import {APP_CONFIG} from "../../../config";
 
 export class UserProfileWorkflow extends BaseWorkflow {
   constructor() {
@@ -9,8 +8,7 @@ export class UserProfileWorkflow extends BaseWorkflow {
   }
 
   visitUserSettingsPage() {
-    userProfilePo.visitUserSettingsPage()
-    cy.wait(APP_CONFIG.TIMEOUT_L);
+    userProfilePo.visitPageUrl();
   }
 
   verifyUserSettingsPage() {

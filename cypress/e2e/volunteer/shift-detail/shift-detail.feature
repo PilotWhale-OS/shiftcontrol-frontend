@@ -1,5 +1,8 @@
 Feature: Shift page
 
+  Background:
+    Given I log in as volunteer
+
   Scenario: I navigate to a specific plan
     Given I navigate to the dashboard page
     Then I navigate to the events page from the dashboard page

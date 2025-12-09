@@ -62,4 +62,14 @@ export abstract class BasePage {
         cy.location('pathname').should('eq', "/" + page.getPageUrl());
       }
     }
+
+  public navigateOverCard(heading: string, param: BasePage | string): void {
+    if (typeof param === 'string') {
+      cy.contains('.card', heading).click();
+      cy.location('pathname').should('eq', param.startsWith('/') ? param : '/' + param);
+    } else {
+      cy.contains('.card', heading).click();
+      cy.location('pathname').should('eq', '/' + param.getPageUrl());
+    }
+  }
 }

@@ -1,6 +1,6 @@
 const SELECTORS_LOGIN = {
   LOGIN: {
-    submit: '[name="submit"]',
+    submit: '[name="login"]',
   },
   IDP: {
     usernameInput: '#username',
