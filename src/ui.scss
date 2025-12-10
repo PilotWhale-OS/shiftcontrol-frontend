@@ -49,5 +49,5 @@ small {
 }
 
 .cdk-overlay-pane.shiftcontrol-dialog {
-  @apply desktop:min-w-[500px] w-[calc(100vw-(2*theme(spacing.lg)))] h-[calc(100vh-(2*theme(spacing.lg)))];
+  @apply desktop:min-w-[500px] max-w-[calc(100vw-(2*theme(spacing.lg)))] max-h-[calc(100vh-(2*theme(spacing.lg)))];
 }
