@@ -2,6 +2,10 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.13.
 
+## Important for generated files
+Generated files should not be committed. Therefore, generated API clients are included in gitignore.  
+The developer is responsible to generating the correct version of the API clients themselves by using the scripts in the package.json.
+
 ## Development server
 
 To start a local development server, run:

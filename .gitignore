@@ -40,3 +40,7 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+## openapi gen files
+src/shiftservice-client
+openapitools.json

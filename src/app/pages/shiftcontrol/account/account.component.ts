@@ -5,6 +5,7 @@ import {InputTextComponent} from "../../../components/inputs/input-text/input-te
 import {TypedFormControlDirective} from "../../../directives/typed-form-control.directive";
 import {InputButtonComponent} from "../../../components/inputs/input-button/input-button.component";
 import {InputToggleComponent} from "../../../components/inputs/input-toggle/input-toggle.component";
+import {UserProfileEndpointService} from "../../../../shiftservice-client";
 
 @Component({
   selector: "app-account",
@@ -23,6 +24,7 @@ export class AccountComponent implements OnDestroy {
   public readonly form;
   private readonly _userService = inject(UserService);
   private readonly _fb = inject(FormBuilder);
+  private readonly _userProfileService = inject(UserProfileEndpointService);
 
   private readonly _profileSubscription;
 
@@ -42,6 +44,8 @@ export class AccountComponent implements OnDestroy {
         });
       }
     });
+
+    this._userProfileService.getCurrentUserProfile().subscribe(profile => {console.log(profile);});
   }
 
   public get user() {
