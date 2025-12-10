@@ -3,21 +3,15 @@ import {RouterLink} from "@angular/router";
 import {PageService} from "../../../services/breadcrumbs/page.service";
 import {BC_EVENT} from "../../../breadcrumbs";
 import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
-import {InputDateComponent} from "../../../components/inputs/input-date/input-date.component";
-import {TypedFormControlDirective} from "../../../directives/typed-form-control.directive";
 import {InputButtonComponent} from "../../../components/inputs/input-button/input-button.component";
-import {InputToggleComponent} from "../../../components/inputs/input-toggle/input-toggle.component";
 import {DialogAddUnavailabilityComponent} from "../../../components/dialog-add-unavailability/dialog-add-unavailability.component";
 
 @Component({
   selector: "app-plans",
   imports: [
     RouterLink,
-    InputDateComponent,
     ReactiveFormsModule,
-    TypedFormControlDirective,
     InputButtonComponent,
-    InputToggleComponent,
     DialogAddUnavailabilityComponent
   ],
   standalone: true,

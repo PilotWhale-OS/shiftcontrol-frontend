@@ -2,7 +2,6 @@ import {Component, EventEmitter, inject, Input, Output} from "@angular/core";
 import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
 import {DialogComponent, dialogResult} from "../dialog/dialog.component";
 import {InputToggleComponent} from "../inputs/input-toggle/input-toggle.component";
-import {InputButtonComponent} from "../inputs/input-button/input-button.component";
 import {InputDateComponent} from "../inputs/input-date/input-date.component";
 import {TypedFormControlDirective} from "../../directives/typed-form-control.directive";
 
@@ -11,7 +10,6 @@ import {TypedFormControlDirective} from "../../directives/typed-form-control.dir
   imports: [
     DialogComponent,
     InputToggleComponent,
-    InputButtonComponent,
     InputDateComponent,
     TypedFormControlDirective,
     ReactiveFormsModule
