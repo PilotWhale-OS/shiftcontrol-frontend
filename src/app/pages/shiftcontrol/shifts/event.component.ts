@@ -1,6 +1,6 @@
 import {Component, inject} from "@angular/core";
 import {RouterLink} from "@angular/router";
-import {PageService} from "../../../services/breadcrumbs/page.service";
+import {PageService} from "../../../services/page/page.service";
 import {BC_EVENT} from "../../../breadcrumbs";
 import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
 import {InputButtonComponent} from "../../../components/inputs/input-button/input-button.component";

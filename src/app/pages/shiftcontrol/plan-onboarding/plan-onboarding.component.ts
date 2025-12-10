@@ -1,5 +1,5 @@
 import {Component, inject} from "@angular/core";
-import {PageService} from "../../../services/breadcrumbs/page.service";
+import {PageService} from "../../../services/page/page.service";
 import {BC_PLAN_DASHBOARD, BC_EVENT} from "../../../breadcrumbs";
 import {InputButtonComponent} from "../../../components/inputs/input-button/input-button.component";
 import {RouterLink} from "@angular/router";

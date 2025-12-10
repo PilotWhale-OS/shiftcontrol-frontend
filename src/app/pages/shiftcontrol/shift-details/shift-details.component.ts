@@ -1,5 +1,5 @@
 import {Component, inject} from "@angular/core";
-import {PageService} from "../../../services/breadcrumbs/page.service";
+import {PageService} from "../../../services/page/page.service";
 import {BC_PLAN_DASHBOARD, BC_SHIFT_DETAILS, BC_EVENT} from "../../../breadcrumbs";
 import {ShiftDetailsViewComponent} from "../../../components/shift-details-view/shift-details-view.component";
 
