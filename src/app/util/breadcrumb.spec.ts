@@ -76,8 +76,8 @@ describe("Breadcrumb", () => {
       expect(clone.href).toBe(event.href);
 
       expect(clone.parent).not.toBe(event.parent);
-      expect(clone.parent!.id).toBe(event.parent!.id);
-      expect(clone.parent!.name).toBe(event.parent!.name);
+      expect(clone.parent?.id).toBe(event.parent?.id);
+      expect(clone.parent?.name).toBe(event.parent?.name);
     });
 
     it("modifying clone should not affect original", () => {
