@@ -5,6 +5,7 @@ import {BC_PLAN_DASHBOARD, BC_SHIFT_DETAILS, BC_EVENT} from "../../breadcrumbs";
 import {DialogShiftAuctionComponent} from "../dialog-shift-auction/dialog-shift-auction.component";
 import {DialogShiftSignupComponent} from "../dialog-shift-signup/dialog-shift-signup.component";
 import {DialogShiftTradeComponent} from "../dialog-shift-trade/dialog-shift-trade.component";
+import {ShiftPreferenceComponent} from "../shift-preference/shift-preference.component";
 
 @Component({
   selector: "app-shift-details-view",
@@ -12,7 +13,8 @@ import {DialogShiftTradeComponent} from "../dialog-shift-trade/dialog-shift-trad
     InputButtonComponent,
     DialogShiftAuctionComponent,
     DialogShiftSignupComponent,
-    DialogShiftTradeComponent
+    DialogShiftTradeComponent,
+    ShiftPreferenceComponent
   ],
   standalone: true,
   templateUrl: "./shift-details-view.component.html",
