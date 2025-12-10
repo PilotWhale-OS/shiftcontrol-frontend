@@ -1,6 +1,6 @@
 import {Component, inject} from "@angular/core";
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
-import {PageService} from "../../services/breadcrumbs/page.service";
+import {PageService} from "../../services/page/page.service";
 import {BC_PLAN_DASHBOARD, BC_SHIFT_DETAILS, BC_EVENT} from "../../breadcrumbs";
 import {DialogShiftAuctionComponent} from "../dialog-shift-auction/dialog-shift-auction.component";
 import {DialogShiftSignupComponent} from "../dialog-shift-signup/dialog-shift-signup.component";

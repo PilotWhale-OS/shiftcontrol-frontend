@@ -1,5 +1,5 @@
 import {Component, inject} from "@angular/core";
-import {PageService} from "../../../services/breadcrumbs/page.service";
+import {PageService} from "../../../services/page/page.service";
 import {BC_PLAN_DASHBOARD, BC_EVENT} from "../../../breadcrumbs";
 import {InputTextComponent} from "../../../components/inputs/input-text/input-text.component";
 import {FormBuilder, ReactiveFormsModule} from "@angular/forms";

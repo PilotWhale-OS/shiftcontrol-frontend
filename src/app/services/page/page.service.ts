@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
-import {Breadcrumb} from "../../breadcrumbs";
+
+import {Breadcrumb} from "../../util/breadcrumb";
 
 @Injectable({
   providedIn: "root"
