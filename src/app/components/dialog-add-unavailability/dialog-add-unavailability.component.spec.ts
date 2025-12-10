@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { DialogAddUnavailabilityComponent } from './dialog-add-unavailability.component';
+import { DialogAddUnavailabilityComponent } from "./dialog-add-unavailability.component";
 
-describe('DialogAddUnavailabilityComponent', () => {
+describe("DialogAddUnavailabilityComponent", () => {
   let component: DialogAddUnavailabilityComponent;
   let fixture: ComponentFixture<DialogAddUnavailabilityComponent>;
 
@@ -17,7 +17,7 @@ describe('DialogAddUnavailabilityComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

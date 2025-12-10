@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { ShiftDetailsComponent } from './shift-details.component';
+import { ShiftDetailsComponent } from "./shift-details.component";
 
-describe('ShiftDetailsComponent', () => {
+describe("ShiftDetailsComponent", () => {
   let component: ShiftDetailsComponent;
   let fixture: ComponentFixture<ShiftDetailsComponent>;
 
@@ -17,7 +17,7 @@ describe('ShiftDetailsComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

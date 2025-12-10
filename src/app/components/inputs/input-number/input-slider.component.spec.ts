@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { InputSliderComponent } from './input-slider.component';
+import { InputSliderComponent } from "./input-slider.component";
 
-describe('InputNumberComponent', () => {
+describe("InputNumberComponent", () => {
   let component: InputSliderComponent;
   let fixture: ComponentFixture<InputSliderComponent>;
 
@@ -15,7 +15,7 @@ describe('InputNumberComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

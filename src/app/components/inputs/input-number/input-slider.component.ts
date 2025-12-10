@@ -1,6 +1,5 @@
 import {Component, HostBinding, inject, Injector, Input, OnInit} from "@angular/core";
 import {FormsModule, NG_VALUE_ACCESSOR, NgControl} from "@angular/forms";
-import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import {TypedControlValueAccessor} from "../../../util/typedControlValueAccessor";
 
 @Component({

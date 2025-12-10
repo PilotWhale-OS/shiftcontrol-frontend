@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { DialogShiftSignupComponent } from './dialog-shift-signup.component';
+import { DialogShiftSignupComponent } from "./dialog-shift-signup.component";
 
-describe('DialogShiftSignupComponent', () => {
+describe("DialogShiftSignupComponent", () => {
   let component: DialogShiftSignupComponent;
   let fixture: ComponentFixture<DialogShiftSignupComponent>;
 
@@ -17,7 +17,7 @@ describe('DialogShiftSignupComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

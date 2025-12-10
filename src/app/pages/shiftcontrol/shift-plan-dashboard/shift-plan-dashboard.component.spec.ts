@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { ShiftPlanDashboardComponent } from './shift-plan-dashboard.component';
+import { ShiftPlanDashboardComponent } from "./shift-plan-dashboard.component";
 
-describe('ShiftDashboardComponent', () => {
+describe("ShiftDashboardComponent", () => {
   let component: ShiftPlanDashboardComponent;
   let fixture: ComponentFixture<ShiftPlanDashboardComponent>;
 
@@ -17,7 +17,7 @@ describe('ShiftDashboardComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

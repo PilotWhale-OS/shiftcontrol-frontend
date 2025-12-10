@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { ShiftTradeAuctionComponent } from './shift-trade-auction.component';
+import { ShiftTradeAuctionComponent } from "./shift-trade-auction.component";
 
-describe('ShiftTradeAuctionComponent', () => {
+describe("ShiftTradeAuctionComponent", () => {
   let component: ShiftTradeAuctionComponent;
   let fixture: ComponentFixture<ShiftTradeAuctionComponent>;
 
@@ -17,7 +17,7 @@ describe('ShiftTradeAuctionComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

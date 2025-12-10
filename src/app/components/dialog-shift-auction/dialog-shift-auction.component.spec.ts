@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { DialogShiftAuctionComponent } from './dialog-shift-auction.component';
+import { DialogShiftAuctionComponent } from "./dialog-shift-auction.component";
 
-describe('DialogShiftAuctionComponent', () => {
+describe("DialogShiftAuctionComponent", () => {
   let component: DialogShiftAuctionComponent;
   let fixture: ComponentFixture<DialogShiftAuctionComponent>;
 
@@ -17,7 +17,7 @@ describe('DialogShiftAuctionComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

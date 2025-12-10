@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { ShiftCalendarGridComponent } from './shift-calendar-grid.component';
+import { ShiftCalendarGridComponent } from "./shift-calendar-grid.component";
 
-describe('ShiftCalendarComponent', () => {
+describe("ShiftCalendarComponent", () => {
   let component: ShiftCalendarGridComponent;
   let fixture: ComponentFixture<ShiftCalendarGridComponent>;
 
@@ -17,7 +17,7 @@ describe('ShiftCalendarComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

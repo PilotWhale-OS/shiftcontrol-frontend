@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { DialogShiftTradeComponent } from './dialog-shift-trade.component';
+import { DialogShiftTradeComponent } from "./dialog-shift-trade.component";
 
-describe('DialogShiftTradeComponent', () => {
+describe("DialogShiftTradeComponent", () => {
   let component: DialogShiftTradeComponent;
   let fixture: ComponentFixture<DialogShiftTradeComponent>;
 
@@ -17,7 +17,7 @@ describe('DialogShiftTradeComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

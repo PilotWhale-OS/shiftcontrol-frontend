@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { ShiftPreferenceComponent } from './shift-preference.component';
+import { ShiftPreferenceComponent } from "./shift-preference.component";
 
-describe('ShiftPreferenceComponent', () => {
+describe("ShiftPreferenceComponent", () => {
   let component: ShiftPreferenceComponent;
   let fixture: ComponentFixture<ShiftPreferenceComponent>;
 
@@ -17,7 +17,7 @@ describe('ShiftPreferenceComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

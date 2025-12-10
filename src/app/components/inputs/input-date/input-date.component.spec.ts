@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { InputDateComponent } from './input-date.component';
+import { InputDateComponent } from "./input-date.component";
 
-describe('InputDateComponent', () => {
+describe("InputDateComponent", () => {
   let component: InputDateComponent;
   let fixture: ComponentFixture<InputDateComponent>;
 
@@ -15,7 +15,7 @@ describe('InputDateComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

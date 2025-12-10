@@ -11,7 +11,7 @@ import {
 } from "@angular/core";
 import {TypedControlValueAccessor} from "../../../util/typedControlValueAccessor";
 import {NG_VALUE_ACCESSOR, NgControl} from "@angular/forms";
-import {faCalendar, faCaretDown, faChevronLeft, faChevronRight, faCircleExclamation} from "@fortawesome/free-solid-svg-icons";
+import {faCalendar, faCaretDown, faChevronLeft, faChevronRight} from "@fortawesome/free-solid-svg-icons";
 import {DateTime} from "luxon";
 import {FlyoutComponent} from "../../flyout/flyout.component";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
