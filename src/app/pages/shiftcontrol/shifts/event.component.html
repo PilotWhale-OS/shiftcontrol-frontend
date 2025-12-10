@@ -56,24 +56,7 @@
       <div>➜ 10.12.2025 08:00 - Event End </div> <b class="unavailability-remove">Remove</b>
     </div>
 
-    <!-- add unavailability -->
-    <div class="grid grid-cols-[auto_1fr] gap-sm gap-x-md items-center col-span-2">
-      <small class="col-span-2">Add unavailable time</small>
-
-      <label for="event-unavailability-from">From:</label>
-      <xsb-input-date #unavailabilityFrom name="event-unavailability-from"
-                      [formControl]="form.controls.unavailabilityFrom"
-                      [xsb-typed]="[unavailabilityFrom, form.controls.unavailabilityFrom]" />
-
-      <label for="event-unavailability-until">Until:</label>
-      <xsb-input-date #unavailabilityUntil name="event-unavailability-until"
-                      [formControl]="form.controls.unavailabilityUntil"
-                      [xsb-typed]="[unavailabilityUntil, form.controls.unavailabilityUntil]" />
-
-      <div class="col-span-2 justify-self-end w-fit">
-        <xsb-input-button action="success" size="minimal" content="Add Unavailability" name="event-unavailability-add"/>
-      </div>
-    </div>
+    <xsb-input-button action="normal" content="Add Unavailability" (click)="showUnavailabilityDialog = true" size="minimal" />
 
   </div>
 
@@ -87,3 +70,5 @@
   }
 
 </div>
+
+<app-dialog-add-unavailability [viewWhen]="showUnavailabilityDialog" (result)="showUnavailabilityDialog = false" />
