@@ -102,7 +102,7 @@ export class InputDateComponent implements TypedControlValueAccessor<Date | null
     this._position = this.value === null ? DateTime.local() : this.value;
   }
 
-  /* hide actual properties from html to prevent accessibility isues */
+  /* hide actual properties from html to prevent accessibility issues */
   @HostBinding("attr.name") get hideNameAttr() { return null; }
   @HostBinding("attr.id") get hideIdAttr() { return null; }
   @HostBinding("attr.value") get hideValueAttr() { return null; }

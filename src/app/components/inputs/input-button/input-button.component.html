@@ -2,7 +2,7 @@
    rounded-lg  border-2" [ngClass]="{
       'pointer-events-none opacity-60' : lock,
 
-      'border-framing-default_danger bg-background-item_danger' : action === 'danger',
+      'border-framing-default_danger bg-background-item_danger hover:border-framing-highlight_danger' : action === 'danger',
       'border-framing-default_success bg-background-item_success hover:border-framing-highlight_success' : action === 'success',
       'border-framing-item bg-background-item focus-within:border-framing-highlight hover:border-framing-highlight' : action === 'normal',
 

@@ -1,18 +1,23 @@
-import {Component, inject} from "@angular/core";
+import {Component, EventEmitter, inject, Output} from "@angular/core";
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
 import {PageService} from "../../services/breadcrumbs/page.service";
 import {BC_PLAN_DASHBOARD, BC_SHIFT_DETAILS, BC_EVENT} from "../../breadcrumbs";
+import {DialogShiftAuctionComponent} from "../dialog-shift-auction/dialog-shift-auction.component";
+import {dialogResult} from "../dialog/dialog.component";
 
 @Component({
   selector: "app-shift-details-view",
   imports: [
-    InputButtonComponent
+    InputButtonComponent,
+    DialogShiftAuctionComponent
   ],
   standalone: true,
   templateUrl: "./shift-details-view.component.html",
   styleUrl: "./shift-details-view.component.scss"
 })
 export class ShiftDetailsViewComponent {
+
+  public showAuctionDialog = false;
 
   private readonly _pageService = inject(PageService);
 

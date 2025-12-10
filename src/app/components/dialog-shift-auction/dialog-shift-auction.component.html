@@ -1,0 +1,37 @@
+@if (viewWhen === true) {
+  <xsb-dialog success="Auction Position" danger="Cancel & Close" (closeDialog)="result.next($event)">
+
+    <ng-container dialog-header>
+      <h1>Auction Shift Position</h1>
+    </ng-container>
+
+    <ng-container dialog-body>
+      <div class="flex flex-col gap-md">
+
+        <div class="grid grid-cols-[auto_1fr] gap-x-md ">
+          <small>Shift Position:</small> <span>Pilot Shift: Pilot Position</span>
+          <small>Date:</small> <span>22.12.2025 08:00 - 22.12.2025 10:00</span>
+          <small>Location:</small> <span>Venue A</span>
+        </div>
+
+        <div>
+          When a shift is set for auction, it will be visible in the auction board, <br>
+          and any other volunteer that meets the requirements can claim it.<br>
+          After a volunteer claimed it, you are no longer assigned to this position.<br>
+          You can always withdraw an auction before someone claims it.
+        </div>
+
+        <div>
+          If you absolutely cannot attend the shift, you can enable "request for unassignment".<br>
+          Administrators will see your request and may manually remove you from this position.
+        </div>
+
+        <b>Do you want to auction your position?</b>
+
+
+      </div>
+    </ng-container>
+
+  </xsb-dialog>
+}
+

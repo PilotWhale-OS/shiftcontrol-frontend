@@ -73,7 +73,7 @@
       <div class="mt-sm pt-sm border-t-2 border-framing-card flex flex-col gap-sm">
         <span class="font-semibold opacity-50 text-sm">Auction Position</span>
         <span>Auctioned positions can be claimed by all eligible volunteers. </span>
-        <xsb-input-button content="Auction this position" size="minimal" action="normal" name="shift-set-auction" />
+        <xsb-input-button content="Auction this position" size="minimal" action="normal" name="shift-set-auction" (click)="showAuctionDialog = true" />
       </div>
 
       <!-- remider  -->
@@ -227,3 +227,5 @@
   </div>
 
 </div>
+
+<app-dialog-shift-auction [viewWhen]="showAuctionDialog" (result)="showAuctionDialog = false" />
