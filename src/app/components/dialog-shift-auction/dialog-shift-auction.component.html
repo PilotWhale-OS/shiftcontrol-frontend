@@ -6,28 +6,36 @@
     </ng-container>
 
     <ng-container dialog-body>
-      <div class="flex flex-col gap-md">
+      <div class="flex flex-col gap-lg">
 
-        <div class="grid grid-cols-[auto_1fr] gap-x-md ">
-          <small>Shift Position:</small> <span>Pilot Shift: Pilot Position</span>
-          <small>Date:</small> <span>22.12.2025 08:00 - 22.12.2025 10:00</span>
-          <small>Location:</small> <span>Venue A</span>
-        </div>
-
-        <div>
-          When a shift is set for auction, it will be visible in the auction board, <br>
+        <div class="max-w-[min(50vw,50rem)]">
+          When a shift is set for auction, it will be visible in the auction board,
           and any other volunteer that meets the requirements can claim it.<br>
           After a volunteer claimed it, you are no longer assigned to this position.<br>
           You can always withdraw an auction before someone claims it.
         </div>
 
-        <div>
+        <div class="max-w-[min(50vw,50rem)]">
           If you absolutely cannot attend the shift, you can enable "request for unassignment".<br>
           Administrators will see your request and may manually remove you from this position.
         </div>
 
-        <b>Do you want to auction your position?</b>
 
+        <div class="grid grid-cols-[auto_1fr] gap-md items-center">
+          <label for="dialog-trade-volunteer">Request for Unassignment:</label>
+          <xsb-input-toggle #requestRemoval [formControl]="form.controls.requestRemoval"
+                            [xsb-typed]="[requestRemoval, form.controls.requestRemoval]" />
+        </div>
+
+        <div class="grid grid-cols-[auto_1fr] gap-x-md ">
+          <small class="col-span-2">Selected Position:</small>
+          <span>Shift Position:</span> <b>Pilot Shift: Pilot Position</b>
+          <span>Date:</span> <b>22.12.2025 08:00 - 22.12.2025 10:00</b>
+          <span>Location:</span> <b>Venue A</b>
+        </div>
+
+
+        <b>Do you want to auction your position?</b>
 
       </div>
     </ng-container>
