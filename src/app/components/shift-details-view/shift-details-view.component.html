@@ -109,7 +109,7 @@
       <div class="mt-sm pt-sm border-t-2 border-framing-card flex flex-col gap-sm">
         <span class="font-semibold opacity-50 text-sm">Sign Up</span>
         <span>Signing up is binding and cannot be made undone.</span>
-        <xsb-input-button content="Sign up for this position" size="minimal" action="success" name="shift-sign-up" />
+        <xsb-input-button content="Sign up for this position" size="minimal" action="success" name="shift-sign-up" (click)="showSignupDialog = true" />
       </div>
 
       <!-- trade  -->
@@ -229,3 +229,4 @@
 </div>
 
 <app-dialog-shift-auction [viewWhen]="showAuctionDialog" (result)="showAuctionDialog = false" />
+<app-dialog-shift-signup [viewWhen]="showSignupDialog" (result)="showSignupDialog = false" />
