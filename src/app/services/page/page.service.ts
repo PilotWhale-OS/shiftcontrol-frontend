@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
-import {Breadcrumb} from "../../breadcrumbs";
+
+import {Breadcrumb} from "../../util/breadcrumb";
 
 @Injectable({
   providedIn: "root"
@@ -28,6 +29,7 @@ export class PageService {
    * Configure one of the current breadcrumbs
    * @param breadcrumb the target breadcrumb to configure
    * @param name the new display name of the breadcrumb
+   * @param href
    */
   public configureBreadcrumb(breadcrumb: Breadcrumb, name: string, href: string): PageService {
     let traverse= this._breadcrumbs;

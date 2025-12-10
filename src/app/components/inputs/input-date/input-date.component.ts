@@ -11,7 +11,7 @@ import {
 } from "@angular/core";
 import {TypedControlValueAccessor} from "../../../util/typedControlValueAccessor";
 import {NG_VALUE_ACCESSOR, NgControl} from "@angular/forms";
-import {faCalendar, faCaretDown, faChevronLeft, faChevronRight, faCircleExclamation} from "@fortawesome/free-solid-svg-icons";
+import {faCalendar, faCaretDown, faChevronLeft, faChevronRight} from "@fortawesome/free-solid-svg-icons";
 import {DateTime} from "luxon";
 import {FlyoutComponent} from "../../flyout/flyout.component";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
@@ -102,7 +102,7 @@ export class InputDateComponent implements TypedControlValueAccessor<Date | null
     this._position = this.value === null ? DateTime.local() : this.value;
   }
 
-  /* hide actual properties from html to prevent accessibility isues */
+  /* hide actual properties from html to prevent accessibility issues */
   @HostBinding("attr.name") get hideNameAttr() { return null; }
   @HostBinding("attr.id") get hideIdAttr() { return null; }
   @HostBinding("attr.value") get hideValueAttr() { return null; }

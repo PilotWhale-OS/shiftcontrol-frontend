@@ -1,0 +1,74 @@
+
+<!-- card grid -->
+<div class="grid grid-cols-[repeat(auto-fit,minmax(15rem,1fr))] gap-md">
+
+  <!-- overview card -->
+  <div class="card col-span-2 row-span-2 grid grid-columns-2 gap-lg h-fit">
+
+    <!-- info caption -->
+    <small class="col-span-2">Event Overview</small>
+
+    <!-- properties -->
+    <h1 class="compact signature-gradient-font">Pilot Event</h1>
+    <b class="justify-self-end">01.12.2025 - 24.12.2025</b>
+    <p class="col-span-2">
+      This is a pilot event for mockup purposes.<br>
+      It does not yet exist in the database. This text right here is the long description of the event.
+    </p>
+
+    <!-- own schedule stats -->
+    <div class="flex flex-col">
+      <small>Your schedule</small>
+      <span>➜ 5 busy days</span>
+      <span>➜ total 10 hours</span>
+    </div>
+
+    <!-- public stats -->
+    <div class="flex flex-col">
+      <small>Public stats</small>
+      <span>➜ 200 hours</span>
+      <span>➜ 30 volunteers</span>
+    </div>
+
+    <!-- rewards-->
+    <span class="col-span-2">
+      <small>Total reward:</small>
+       50 points
+    </span>
+
+  </div>
+
+  <!-- availability times card -->
+  <div class="card col-span-2 row-span-2 grid grid-columns-2 gap-lg h-fit">
+
+    <!-- info -->
+    <h1 class="compact signature-gradient-font">Availability</h1>
+    <p class="col-span-2">
+      For each event, you can set times in which you are unavailable.<br>
+      You will not be assigned to shifts which collide with your availability.<br>
+      The calendar will also mark shifts that do not fit your schedule.
+    </p>
+
+    <!-- set unavailability -->
+    <div class="grid grid-cols-[1fr_auto] col-span-2 gap-xs">
+      <small class="col-span-2">Your unavailable times</small>
+      <div>➜ 05.12.2025 08:00 - 6.12.2025 19:00 </div> <b class="unavailability-remove">Remove</b>
+      <div>➜ 10.12.2025 08:00 - Event End </div> <b class="unavailability-remove">Remove</b>
+    </div>
+
+    <xsb-input-button action="normal" content="Add Unavailability" (click)="showUnavailabilityDialog = true" size="minimal" />
+
+  </div>
+
+  @for (card of [1,2,3,4,5,6,7,8,9]; track card) {
+    <div class="card interaction" [routerLink]="'/plans/planId'">
+      <h1>Pilot Plan</h1>
+      <p>
+        This is the short description of the shift plan.
+      </p>
+    </div>
+  }
+
+</div>
+
+<app-dialog-add-unavailability [viewWhen]="showUnavailabilityDialog" (result)="showUnavailabilityDialog = false" />

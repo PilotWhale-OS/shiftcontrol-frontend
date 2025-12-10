@@ -1,6 +1,6 @@
 import {Component, inject} from "@angular/core";
-import {PageService} from "../../../services/breadcrumbs/page.service";
-import {BC_SHIFT_DASHBOARD, BC_SHIFTS} from "../../../breadcrumbs";
+import {PageService} from "../../../services/page/page.service";
+import {BC_PLAN_DASHBOARD, BC_EVENT} from "../../../breadcrumbs";
 import {RouterLink} from "@angular/router";
 import {ShiftTradeAuctionComponent} from "../../../components/shift-trade-auction/shift-trade-auction.component";
 import {ShiftScheduleComponent} from "../../../components/shift-schedule/shift-schedule.component";
@@ -22,8 +22,8 @@ export class ShiftPlanDashboardComponent {
 
   constructor() {
     this._pageService
-      .configureBreadcrumb(BC_SHIFTS, "Pilot Event", "someid")
-      .configureBreadcrumb(BC_SHIFT_DASHBOARD, "Pilot Plan", "otherid");
+      .configureBreadcrumb(BC_EVENT, "Pilot Event", "eventId")
+      .configureBreadcrumb(BC_PLAN_DASHBOARD, "Pilot Plan", "planId");
   }
 
 }

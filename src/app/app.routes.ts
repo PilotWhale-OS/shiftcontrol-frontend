@@ -1,13 +1,13 @@
 import { Routes } from "@angular/router";
 import { LoginComponent } from "./pages/public/login/login.component";
 import { EventsComponent } from "./pages/shiftcontrol/events/events.component";
-import { ShiftsComponent } from "./pages/shiftcontrol/shifts/shifts.component";
+import { EventComponent } from "./pages/shiftcontrol/shifts/event.component";
 import {
   BC_EVENTS,
-  BC_SHIFTS,
+  BC_EVENT,
   BC_ACCOUNT,
   BC_HOME,
-  BC_SHIFT_DASHBOARD,
+  BC_PLAN_DASHBOARD,
   BC_SHIFT_CALENDAR,
   BC_SHIFT_DETAILS,
   BC_PLAN_ONBOARDING
@@ -28,15 +28,15 @@ export const routes: Routes = ([
     data: {breadcrumbs: BC_ACCOUNT}, canActivate: [accessAllowedGuard]},
   { path: "events", component: EventsComponent,
     data: {breadcrumbs: BC_EVENTS}, canActivate: [accessAllowedGuard]},
-  { path: "events/:eventId", component: ShiftsComponent,
-    data: {breadcrumbs: BC_SHIFTS}, canActivate: [accessAllowedGuard]},
-  { path: "events/:eventId/:shiftId", component: ShiftPlanDashboardComponent,
-    data: { breadcrumbs: BC_SHIFT_DASHBOARD }, canActivate: [accessAllowedGuard]},
-  { path: "events/:eventId/:shiftPlanId/calendar", component: ShiftCalendarComponent,
+  { path: "events/:eventId", component: EventComponent,
+    data: {breadcrumbs: BC_EVENT}, canActivate: [accessAllowedGuard]},
+  { path: "plans/:shiftPlanId", component: ShiftPlanDashboardComponent,
+    data: { breadcrumbs: BC_PLAN_DASHBOARD }, canActivate: [accessAllowedGuard]},
+  { path: "plans/:shiftPlanId/calendar", component: ShiftCalendarComponent,
     data: { breadcrumbs: BC_SHIFT_CALENDAR }, canActivate: [accessAllowedGuard]},
-  { path: "events/:eventId/:shiftPlanId/onboarding", component: PlanOnboardingComponent,
+  { path: "plans/:shiftPlanId/onboarding", component: PlanOnboardingComponent,
     data: { breadcrumbs: BC_PLAN_ONBOARDING }, canActivate: [accessAllowedGuard]},
-  { path: "events/:eventId/:shiftPlanId/:shiftId", component: ShiftDetailsComponent,
+  { path: "shifts/:shiftId", component: ShiftDetailsComponent,
     data: { breadcrumbs: BC_SHIFT_DETAILS }, canActivate: [accessAllowedGuard]}
 
   /* add breadcrumbs guard to each route definition*/

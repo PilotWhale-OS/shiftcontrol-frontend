@@ -10,7 +10,7 @@
       <small class="col-span-2">Trade</small>
 
       <!-- owner -->
-      <small class="justify-self-end col-start-3">request by Paul</small>
+      <small class="justify-self-end">request by Paul</small>
 
       <!-- trade: left and right info -->
       <div class="flex flex-col items-end">
@@ -34,7 +34,7 @@
       <div class="col-span-3 flex flex-row gap-md">
         <xsb-input-button size="minimal" content="Accept" action="success" name="trade-accept" />
         <xsb-input-button size="minimal" content="Decline" action="danger" name="trade-decline" />
-        <xsb-input-button size="minimal" content="View Details" name="trade-view-shift" />
+        <xsb-input-button size="minimal" content="View Details" name="trade-view-shift" [routerLink]="'/shifts/shiftId'" />
       </div>
 
     </div>
@@ -46,7 +46,7 @@
       <small class="col-span-2">Auction</small>
 
       <!-- owner -->
-      <small class="justify-self-end col-start-3">offer by Paul</small>
+      <small class="justify-self-end">offer by Paul</small>
 
       <!-- auction: offered shift info -->
       <div class="flex flex-col col-span-3">
@@ -60,7 +60,7 @@
       <!-- actions -->
       <div class="col-span-3 flex flex-row gap-md">
         <xsb-input-button size="minimal" content="Claim" action="success" name="auction-claim" />
-        <xsb-input-button size="minimal" content="View Details" name="auction-view-shift" />
+        <xsb-input-button size="minimal" content="View Details" name="auction-view-shift" [routerLink]="'/shifts/shiftId'" />
       </div>
 
     </div>

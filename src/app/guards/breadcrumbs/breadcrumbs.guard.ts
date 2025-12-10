@@ -1,7 +1,7 @@
 import { CanActivateFn } from "@angular/router";
-import {Breadcrumb} from "../../breadcrumbs";
 import {inject} from "@angular/core";
-import {PageService} from "../../services/breadcrumbs/page.service";
+import {PageService} from "../../services/page/page.service";
+import {Breadcrumb} from "../../util/breadcrumb";
 
 export const breadcrumbsGuard: CanActivateFn = (route) => {
 

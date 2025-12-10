@@ -1,5 +1,5 @@
 import { Component, inject } from "@angular/core";
-import {PageService} from "../../services/breadcrumbs/page.service";
+import {PageService} from "../../services/page/page.service";
 import {AsyncPipe} from "@angular/common";
 import {RouterLink} from "@angular/router";
 import {UserService} from "../../services/user/user.service";

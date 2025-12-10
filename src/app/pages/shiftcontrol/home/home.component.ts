@@ -22,14 +22,14 @@ export class HomeComponent {
   public readonly cards = [
     {title:"Events", content: "Manage your events and shift plans", href: "events"},
     {title:"User Account", content: "Manage your notification settings and unavailable time", href: "me"},
-    {title:"Pilot Plan", content: "Pilot Event: Currently active", href: "events/someId/otherId"}
+    {title:"Pilot Plan", content: "Pilot Event: Currently active", href: "plans/planId"}
   ];
 
   private readonly _userService = inject(UserService);
 
   public get name$(){
     return this._userService.profile$.pipe(
-      map(user => `${user?.firstName} ${user?.lastName}`)
+      map(user => `${user?.firstName}`)
     );
   }
 }
