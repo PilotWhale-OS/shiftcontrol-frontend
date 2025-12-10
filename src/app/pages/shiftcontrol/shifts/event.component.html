@@ -3,7 +3,7 @@
 <div class="grid grid-cols-[repeat(auto-fit,minmax(15rem,1fr))] gap-md">
 
   <!-- overview card -->
-  <div class="card col-span-2 row-span-2 grid grid-columns-2 gap-lg">
+  <div class="card col-span-2 row-span-2 grid grid-columns-2 gap-lg h-fit">
 
     <!-- info caption -->
     <small class="col-span-2">Event Overview</small>
@@ -35,6 +35,45 @@
       <small>Total reward:</small>
        50 points
     </span>
+
+  </div>
+
+  <!-- availability times card -->
+  <div class="card col-span-2 row-span-2 grid grid-columns-2 gap-lg h-fit">
+
+    <!-- info -->
+    <h1 class="compact signature-gradient-font">Availability</h1>
+    <p class="col-span-2">
+      For each event, you can set times in which you are unavailable.<br>
+      You will not be assigned to shifts which collide with your availability.<br>
+      The calendar will also mark shifts that do not fit your schedule.
+    </p>
+
+    <!-- set unavailability -->
+    <div class="grid grid-cols-[1fr_auto] col-span-2 gap-xs">
+      <small class="col-span-2">Your unavailable times</small>
+      <div>➜ 05.12.2025 08:00 - 6.12.2025 19:00 </div> <b class="unavailability-remove">Remove</b>
+      <div>➜ 10.12.2025 08:00 - Event End </div> <b class="unavailability-remove">Remove</b>
+    </div>
+
+    <!-- add unavailability -->
+    <div class="grid grid-cols-[auto_1fr] gap-sm gap-x-md items-center col-span-2">
+      <small class="col-span-2">Add unavailable time</small>
+
+      <label for="event-unavailability-from">From:</label>
+      <xsb-input-date #unavailabilityFrom name="event-unavailability-from"
+                      [formControl]="form.controls.unavailabilityFrom"
+                      [xsb-typed]="[unavailabilityFrom, form.controls.unavailabilityFrom]" />
+
+      <label for="event-unavailability-until">Until:</label>
+      <xsb-input-date #unavailabilityUntil name="event-unavailability-until"
+                      [formControl]="form.controls.unavailabilityUntil"
+                      [xsb-typed]="[unavailabilityUntil, form.controls.unavailabilityUntil]" />
+
+      <div class="col-span-2 justify-self-end w-fit">
+        <xsb-input-button action="success" size="minimal" content="Add Unavailability" name="event-unavailability-add"/>
+      </div>
+    </div>
 
   </div>
 

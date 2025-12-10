@@ -29,7 +29,7 @@ export class HomeComponent {
 
   public get name$(){
     return this._userService.profile$.pipe(
-      map(user => `${user?.firstName} ${user?.lastName}`)
+      map(user => `${user?.firstName}`)
     );
   }
 }
