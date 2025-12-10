@@ -1,0 +1,48 @@
+@if (viewWhen === true) {
+  <xsb-dialog success="Request Trade" danger="Cancel & Close" (closeDialog)="result.next($event)">
+
+    <ng-container dialog-header>
+      <h1>Request Trade for this Position</h1>
+    </ng-container>
+
+    <ng-container dialog-body>
+      <div class="flex flex-col gap-lg">
+
+        <div class="max-w-[min(50vw,50rem)]">
+          When you request a trade for a position, you are asking another volunteer to swap the selected position with one of your positions.<br>
+          If they accept the trade, the shifts will be exchanged between you and the other volunteer.
+          You can select which of your assigned positions you want to offer for the trade.<br>
+          After the trade is requested, both of you will see the trade in the dashboard and receive status updates.<br>
+          You can withdraw the trade request at any time before it is accepted.
+        </div>
+
+        <div class="grid grid-cols-[auto_1fr] gap-md items-center">
+          <label for="dialog-trade-volunteer">Trade with:</label>
+          <xsb-input-select #volunteer [options]="volunteerOptions" [nullable]="false" [formControl]="form.controls.volunteer"
+                            [xsb-typed]="[volunteer, form.controls.volunteer]" name="dialog-trade-volunteer"  />
+
+          <label for="dialog-trade-volunteer">Traded Position:</label>
+          <xsb-input-select #position [options]="positionOptions" [nullable]="false" [formControl]="form.controls.position"
+                            [xsb-typed]="[position, form.controls.position]" name="dialog-trade-position"  />
+        </div>
+
+        <div class="grid grid-cols-[auto_1fr] gap-x-md ">
+          <small class="col-span-2">Requested Position:</small>
+          <span>Shift Position:</span> <b>Pilot Shift: Pilot Position</b>
+          <span>Date:</span> <b>22.12.2025 08:00 - 22.12.2025 10:00</b>
+          <span>Location:</span> <b>Venue A</b>
+        </div>
+
+        <div class="grid grid-cols-[auto_1fr] gap-x-md ">
+          <small class="col-span-2">Traded Position:</small>
+          <span>Shift Position:</span> <b>Pilot Shift: Pilot Position 1</b>
+          <span>Date:</span> <b>22.12.2025 08:00 - 22.12.2025 10:00</b>
+          <span>Location:</span> <b>Venue A</b>
+        </div>
+
+        <b>Do you want to request a trade for this position?</b>
+      </div>
+    </ng-container>
+
+  </xsb-dialog>
+}

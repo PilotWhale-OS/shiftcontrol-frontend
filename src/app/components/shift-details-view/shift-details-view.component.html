@@ -53,7 +53,7 @@
     <div class="position card signed-up">
 
       <!-- info caption -->
-      <span class="opacity-50 font-semibold text-sm">Shift Role</span>
+      <span class="opacity-50 font-semibold text-sm">Shift Position</span>
 
       <!-- position tile -->
       <h1 class="title signature-gradient-font">Pilot Position</h1>
@@ -76,11 +76,14 @@
         <xsb-input-button content="Auction this position" size="minimal" action="normal" name="shift-set-auction" (click)="showAuctionDialog = true" />
       </div>
 
-      <!-- remider  -->
+      <!-- reminder  -->
       <div class="mt-sm pt-sm border-t-2 border-framing-card flex flex-col gap-sm">
         <span class="font-semibold opacity-50 text-sm">Signed Up</span>
         <span class="font-bold">You are signed up for this position!</span>
-        <span>Attendance is required. If you do not want to participate anymore, you can set this shift up for auction or request a trade for another position.</span>
+        <span>
+          Attendance is required. If you do not want to participate anymore, you can set this shift up for auction or request a trade for another position.<br>
+          To initiate a trade, navigate to the desired position.
+        </span>
       </div>
 
     </div>
@@ -89,7 +92,7 @@
     <div class="position card">
 
       <!-- info caption -->
-      <span class="opacity-50 font-semibold text-sm">Shift Role</span>
+      <span class="opacity-50 font-semibold text-sm">Shift Position</span>
 
       <!-- position tile -->
       <h1 class="title signature-gradient-font">Pilot Position</h1>
@@ -116,7 +119,7 @@
       <div class="mt-sm pt-sm border-t-2 border-framing-card flex flex-col gap-sm">
         <span class="font-semibold opacity-50 text-sm">Trade Position</span>
         <span>If you want to swap one of your shifts against this one, you can request a trade.</span>
-        <xsb-input-button content="Request a trade" size="minimal" action="success" name="shift-request-trade" />
+        <xsb-input-button content="Request a trade" size="minimal" action="success" name="shift-request-trade" (click)="showTradeDialog = true" />
       </div>
 
       <!-- Set preference  -->
@@ -131,7 +134,7 @@
     <div class="position card">
 
       <!-- info caption -->
-      <span class="opacity-50 font-semibold text-sm">Shift Role</span>
+      <span class="opacity-50 font-semibold text-sm">Shift Position</span>
 
       <!-- position tile -->
       <h1 class="title signature-gradient-font">Pilot Position</h1>
@@ -151,14 +154,14 @@
       <div class="mt-sm pt-sm border-t-2 border-framing-card flex flex-col gap-sm">
         <span class="font-semibold opacity-50 text-sm">Sign Up</span>
         <span>Signing up is binding and cannot be made undone.</span>
-        <xsb-input-button content="Sign up for this position" size="minimal" action="success" name="shift-sign-up" />
+        <xsb-input-button content="Sign up for this position" size="minimal" action="success" name="shift-sign-up" (click)="showSignupDialog = true" />
       </div>
 
       <!-- trade  -->
       <div class="mt-sm pt-sm border-t-2 border-framing-card flex flex-col gap-sm">
         <span class="font-semibold opacity-50 text-sm">Trade Position</span>
         <span>If you want to swap one of your shifts against this one, you can request a trade.</span>
-        <xsb-input-button content="Request a trade" size="minimal" action="success" name="shift-request-trade" />
+        <xsb-input-button content="Request a trade" size="minimal" action="success" name="shift-request-trade" (click)="showTradeDialog = true" />
       </div>
 
       <!-- Set preference  -->
@@ -173,7 +176,7 @@
     <div class="position card">
 
       <!-- info caption -->
-      <span class="opacity-50 font-semibold text-sm">Shift Role</span>
+      <span class="opacity-50 font-semibold text-sm">Shift Position</span>
 
       <!-- position tile -->
       <h1 class="title signature-gradient-font">Pilot Position</h1>
@@ -193,7 +196,7 @@
       <div class="mt-sm pt-sm border-t-2 border-framing-card flex flex-col gap-sm">
         <span class="font-semibold opacity-50 text-sm">Trade Position</span>
         <span>If you want to swap one of your shifts against this one, you can request a trade.</span>
-        <xsb-input-button content="Request a trade" size="minimal" action="success" name="shift-request-trade" />
+        <xsb-input-button content="Request a trade" size="minimal" action="success" name="shift-request-trade" (click)="showTradeDialog = true" />
       </div>
 
       <!-- Set preference  -->
@@ -208,7 +211,7 @@
     <div class="position card not-eligible">
 
       <!-- info caption -->
-      <span class="opacity-50 font-semibold text-sm">Shift Role</span>
+      <span class="opacity-50 font-semibold text-sm">Shift Position</span>
 
       <!-- position tile -->
       <h1 class="title signature-gradient-font">Pilot Position</h1>
@@ -230,3 +233,4 @@
 
 <app-dialog-shift-auction [viewWhen]="showAuctionDialog" (result)="showAuctionDialog = false" />
 <app-dialog-shift-signup [viewWhen]="showSignupDialog" (result)="showSignupDialog = false" />
+<app-dialog-shift-trade [viewWhen]="showTradeDialog" (result)="showTradeDialog = false" />
