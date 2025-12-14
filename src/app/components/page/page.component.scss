@@ -7,6 +7,11 @@
   grid-template-rows: auto 1fr;
   @apply bg-background-item;
 
+  .profile {
+    @apply rounded-full aspect-square h-10 bg-blue-400 grid place-content-center select-none cursor-pointer;
+    @apply border-ctr border-framing-item;
+  }
+
   .header {
     grid-row: 1;
     padding: 1em;
@@ -16,18 +21,16 @@
     align-items: center;
 
     .breadcrumbs {
+      @apply border-ctr border-framing-item rounded-xl;
       user-select: none;
       justify-self: start;
       align-items: center;
       display: flex;
       flex-direction: row;
-      gap: .5rem;
 
       .breadcrumb {
         padding: .4rem .6rem;
         @apply border-ctr border-framing-item transition-colors;
-        //border: 2px solid rgb(55 63 101);
-        border-radius: 0.8rem;
         font-weight: 600;
         //box-shadow: 0px 0px 10px 7px rgb(18, 20, 30);
         cursor: pointer;
@@ -40,15 +43,12 @@
         }
 
         &:last-child {
+          @apply rounded-r-lg;
           background: rgba(55, 63, 101, 30%);
         }
 
-        .separator {
-          pointer-events: none;
-          font-weight: 800;
-          scale: 1.5 1.2;
-          color: rgb(55 63 101);
-          user-select: none;
+        &:first-child {
+          @apply rounded-l-lg;
         }
       }
     }

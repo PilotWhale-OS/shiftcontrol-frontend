@@ -10,10 +10,6 @@
         <div class="breadcrumb" [routerLink]="crumb.getFullHref()">
           {{crumb.name}}
         </div>
-
-        @if (i !== breadcrumbs.length - 1) {
-          <span class="separator">/</span>
-        }
       }
 
     </div>
@@ -30,7 +26,7 @@
       @if (profile$ | async; as profile) {
         @if(profile !== null) {
           <div
-            class="rounded-full aspect-square h-10 bg-blue-400 grid place-content-center select-none cursor-pointer"
+            class="profile"
             routerLink="/me"
           >
             <span class="font-bold uppercase text-white">{{getInitials(profile)}}</span>

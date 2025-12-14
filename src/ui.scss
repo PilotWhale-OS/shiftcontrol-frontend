@@ -1,6 +1,5 @@
 .card {
-  @apply bg-background-card border-framing-card border-ctr transition-colors;
-  padding: 2rem;
+  @apply bg-background-card border-framing-card border-ctr transition-colors px-8 py-6;
   border-radius: 1.5rem;
 
   &.compact {
@@ -41,7 +40,7 @@ b {
 }
 
 small {
-  @apply opacity-80 text-base font-semibold;
+  @apply opacity-80 text-base text-sm;
 }
 
 .badge {

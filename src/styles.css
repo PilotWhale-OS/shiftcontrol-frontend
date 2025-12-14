@@ -8,10 +8,14 @@ body {
 }
 
 .signature-gradient-font {
-  background: white;
-  background: linear-gradient(124deg, #c7cbfd 0%, #aea6f3 70%, #c7cbfd 100%);
+  @apply signature-gradient;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+.signature-gradient {
+  background: white;
+  background: linear-gradient(124deg, #c7cbfd 0%, #aea6f3 70%, #c7cbfd 100%);
 }
 
 :root {
