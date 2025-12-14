@@ -17,24 +17,34 @@
     </p>
 
     <!-- own schedule stats -->
-    <div class="flex flex-col">
-      <small>Your schedule</small>
-      <span>➜ 5 busy days</span>
-      <span>➜ total 10 hours</span>
+    <div class="flex flex-col items-start gap-xs">
+      <small>Your stats</small>
+      <div class="badge">
+        <fa-icon [icon]="iconDay" />
+        5 Busy Days
+      </div>
+      <div class="badge">
+        <fa-icon [icon]="iconHours" />
+        1000 Shift Hours
+      </div>
+      <div class="badge success">
+        <fa-icon [icon]="iconRewards" />
+        100 Points Rewarded
+      </div>
     </div>
 
     <!-- public stats -->
-    <div class="flex flex-col">
+    <div class="flex flex-col items-start gap-xs">
       <small>Public stats</small>
-      <span>➜ 200 hours</span>
-      <span>➜ 30 volunteers</span>
+      <div class="badge hint">
+        <fa-icon [icon]="iconVolunteers" />
+        30 Volunteers
+      </div>
+      <div class="badge hint">
+        <fa-icon [icon]="iconHours" />
+        1000 Shift Hours
+      </div>
     </div>
-
-    <!-- rewards-->
-    <span class="col-span-2">
-      <small>Total reward:</small>
-       50 points
-    </span>
 
   </div>
 

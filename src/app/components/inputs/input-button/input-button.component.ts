@@ -1,4 +1,4 @@
-import { Component, HostBinding, Input } from "@angular/core";
+import {Component, EventEmitter, HostBinding, Input, Output} from "@angular/core";
 import { IconDefinition, faGear } from "@fortawesome/free-solid-svg-icons";
 import {NgClass} from "@angular/common";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
@@ -14,6 +14,13 @@ import {FaIconComponent} from "@fortawesome/angular-fontawesome";
   styleUrls: ["./input-button.component.scss"]
 })
 export class InputButtonComponent {
+
+  /**
+   * event when the button had been clicked
+   */
+  @Output()
+  // eslint-disable-next-line @angular-eslint/no-output-native
+  public readonly click = new EventEmitter<MouseEvent>();
 
   @Input()
   size: "minimal" | "regular" = "regular";
@@ -48,5 +55,6 @@ export class InputButtonComponent {
   preventDefault(event: MouseEvent) {
     event.preventDefault();
     event.stopPropagation();
+    this.click.emit(event);
   }
 }

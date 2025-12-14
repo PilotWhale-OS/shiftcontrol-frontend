@@ -1,8 +1,9 @@
-import { Overlay, OverlayConfig } from "@angular/cdk/overlay";
+import {Overlay, OverlayConfig, OverlayRef} from "@angular/cdk/overlay";
 import { CdkPortal } from "@angular/cdk/portal";
 import {AfterViewInit, Component, EventEmitter, inject, Input, OnDestroy, Output, ViewChild, ViewEncapsulation} from "@angular/core";
 import {NgClass} from "@angular/common";
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
+import {Subscription} from "rxjs";
 
 export type dialogResult = "success" | "danger" | "close";
 
@@ -57,20 +58,22 @@ export class DialogComponent implements AfterViewInit, OnDestroy {
   /**
    * reference to the overlay
    */
-  private overlayRef = this._overlay.create(this._overlayConfig);
-  private overlayClickSubscription;
+  private overlayRef?: OverlayRef;
+  private overlayClickSubscription?: Subscription;
 
   constructor() {
-    this.overlayClickSubscription = this.overlayRef.backdropClick()
-      .subscribe(() => {
-        this.closeDialog.next("close");
-      });
+    console.log("hi");
   }
 
   /**
    * attach the portal to the overlay
    */
   public ngAfterViewInit(): void {
+    this.overlayRef = this._overlay.create(this._overlayConfig);
+    this.overlayClickSubscription = this.overlayRef.backdropClick()
+      .subscribe(() => {
+        this.closeDialog.next("close");
+      });
     this.overlayRef.attach(this.portal);
   }
 
@@ -80,6 +83,6 @@ export class DialogComponent implements AfterViewInit, OnDestroy {
   public ngOnDestroy(): void {
     this.overlayRef?.detach();
     this.overlayRef?.dispose();
-    this.overlayClickSubscription.unsubscribe();
+    this.overlayClickSubscription?.unsubscribe();
   }
 }

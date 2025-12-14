@@ -1,4 +1,4 @@
-import {ComponentRef, Directive, ElementRef, HostListener, inject, Input, OnInit} from "@angular/core";
+import {ComponentRef, Directive, ElementRef, HostListener, inject, Input, OnDestroy, OnInit} from "@angular/core";
 import {Overlay, OverlayPositionBuilder, OverlayRef} from "@angular/cdk/overlay";
 import {TooltipComponent} from "../components/tooltip/tooltip.component";
 import {ComponentPortal} from "@angular/cdk/portal";
@@ -8,7 +8,7 @@ import {ComponentPortal} from "@angular/cdk/portal";
   selector: "[app-tooltip]",
   standalone: true
 })
-export class AwesomeTooltipDirective implements OnInit {
+export class AwesomeTooltipDirective implements OnInit, OnDestroy {
 
   @Input("app-tooltip") text = "";
   private overlayRef?: OverlayRef;
@@ -46,5 +46,9 @@ export class AwesomeTooltipDirective implements OnInit {
       }]);
 
     this.overlayRef = this.overlay.create({ positionStrategy });
+  }
+
+  ngOnDestroy() {
+    this.overlayRef?.dispose();
   }
 }
