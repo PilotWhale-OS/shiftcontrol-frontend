@@ -5,7 +5,7 @@ import {BC_EVENT} from "../../../breadcrumbs";
 import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
 import {InputButtonComponent} from "../../../components/inputs/input-button/input-button.component";
 import {DialogAddUnavailabilityComponent} from "../../../components/dialog-add-unavailability/dialog-add-unavailability.component";
-import {faCalendar, faGift, faHourglass, faPeopleGroup} from "@fortawesome/free-solid-svg-icons";
+import {faCalendar, faGift, faHourglass, faPause, faPeopleGroup} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 
 @Component({
@@ -29,6 +29,7 @@ export class EventComponent {
   protected readonly iconHours = faHourglass;
   protected readonly iconDay = faCalendar;
   protected readonly iconRewards = faGift;
+  protected readonly iconUnavailable = faPause;
   private readonly _pageService = inject(PageService);
   private readonly _fb = inject(FormBuilder);
 

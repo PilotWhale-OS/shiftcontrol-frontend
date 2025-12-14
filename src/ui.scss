@@ -16,6 +16,14 @@
       box-shadow: 0px 0px 8px 2px rgb(25 28 43);
       @apply border-framing-highlight;
     }
+
+    &.spotlight {
+      @apply border-framing-item_hint bg-background-item_hint;
+
+      &:hover {
+        @apply border-framing-highlight_hint;
+      }
+    }
   }
 }
 
@@ -56,6 +64,10 @@ small {
 
   &.padding-eq{
     @apply py-xs px-xs;
+  }
+
+  &.big {
+    @apply text-sm py-sm px-md rounded-2xl;
   }
 }
 

@@ -16,30 +16,43 @@
     </p>
 
     <!-- own schedule stats -->
-    <div class="flex flex-col">
-      <small>Your schedule</small>
-      <span>➜ 5 busy days</span>
-      <span>➜ total 10 hours</span>
+    <div class="flex flex-col items-start gap-xs">
+      <small>Your stats</small>
+      <div class="badge">
+        <fa-icon [icon]="iconDay" />
+        5 Busy Days
+      </div>
+      <div class="badge">
+        <fa-icon [icon]="iconHours" />
+        10 Shift Hours
+      </div>
+      <div class="badge success">
+        <fa-icon [icon]="iconRewards" />
+        100 Points Rewarded
+      </div>
     </div>
 
     <!-- public stats -->
-    <div class="flex flex-col">
+    <div class="flex flex-col items-start gap-xs">
       <small>Public stats</small>
-      <span>➜ 200 hours</span>
-      <span>➜ 30 volunteers</span>
+      <div class="badge hint">
+        <fa-icon [icon]="iconVolunteers" />
+        20 Volunteers
+      </div>
+      <div class="badge hint">
+        <fa-icon [icon]="iconHours" />
+        100 Shift Hours
+      </div>
     </div>
-
-    <!-- rewards-->
-    <span class="col-span-2">
-      <small>Total reward:</small>
-       50 points
-    </span>
 
   </div>
 
   <!-- calendar link card -->
-  <div class="card interaction row-start-2 h-fit" routerLink="calendar">
-    <h1>View Shift Calendar</h1>
+  <div class="card interaction spotlight row-start-2 h-fit" routerLink="calendar">
+    <h1>
+      <fa-icon [icon]="iconCalendar" class="icon" />
+      View Shift Calendar
+    </h1>
     <p>
       Click to explore all available shifts in  the calendar.<br>
       Here, you can also sign up to shifts that you want to participate in.
