@@ -10,7 +10,9 @@
     "test-headless": "ng test --watch=false --browsers=ChromeHeadless",
     "lint": "ng lint",
     "cypress:open": "cypress open",
-    "cypress:run": "cypress run"
+    "cypress:run": "cypress run",
+    "generate-shiftservice-client": "openapi-generator-cli generate -g typescript-angular -i http://shiftservice.127.0.0.1.nip.io/v3/api-docs -o ./src/shiftservice-client --additional-properties fileNaming=kebab-case,withInterfaces=true --generate-alias-as-model",
+    "generate-shiftservice-client-ci": "openapi-generator-cli generate -g typescript-angular -i ./openapi.json -o ./src/shiftservice-client --additional-properties fileNaming=kebab-case,withInterfaces=true --generate-alias-as-model"
   },
   "private": true,
   "dependencies": {
@@ -46,6 +48,7 @@
     "@badeball/cypress-cucumber-preprocessor": "^23.2.1",
     "@bahmutov/cypress-esbuild-preprocessor": "^2.2.7",
     "@cypress/angular": "^4.0.0",
+    "@openapitools/openapi-generator-cli": "^2.25.2",
     "@types/jasmine": "~5.1.0",
     "@typescript-eslint/eslint-plugin": "7.11.0",
     "@typescript-eslint/parser": "7.11.0",

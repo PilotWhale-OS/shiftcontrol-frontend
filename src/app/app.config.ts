@@ -1,8 +1,11 @@
-import { ApplicationConfig, provideZoneChangeDetection } from "@angular/core";
+import {ApplicationConfig, inject, provideZoneChangeDetection} from "@angular/core";
 import { provideRouter } from "@angular/router";
 
 import { routes } from "./app.routes";
 import {AutoRefreshTokenService, provideKeycloak, UserActivityService, withAutoRefreshToken} from "keycloak-angular";
+import { provideHttpClient } from "@angular/common/http";
+import {Configuration as ShiftserviceConfiguration} from "../shiftservice-client";
+import Keycloak from "keycloak-js";
 import {provideAnimations} from "@angular/platform-browser/animations";
 
 export const appConfig: ApplicationConfig = {
@@ -22,6 +25,21 @@ export const appConfig: ApplicationConfig = {
         sessionTimeout: 60000 * 30, // 30 minutes
       })
     ],
-    providers: [AutoRefreshTokenService, UserActivityService, provideAnimations()]
+    providers: [AutoRefreshTokenService, UserActivityService, provideAnimations(), provideHttpClient(),
+      {
+        provide: ShiftserviceConfiguration,
+        useFactory: () => {
+          const keycloak = inject(Keycloak);
+
+          return new ShiftserviceConfiguration({
+            basePath: "http://shiftservice.127.0.0.1.nip.io",
+            credentials: {
+              "bearerAuth": () => keycloak.token
+            }
+          });
+        },
+        deps: [Keycloak],
+        multi: false
+      },]
   }),]
 };
