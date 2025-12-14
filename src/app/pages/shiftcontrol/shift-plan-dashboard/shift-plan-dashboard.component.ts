@@ -28,6 +28,7 @@ export class ShiftPlanDashboardComponent {
 
   constructor() {
     this._pageService
+      .configurePageName("Pilot Plan Dashboard")
       .configureBreadcrumb(BC_EVENT, "Pilot Event", "eventId")
       .configureBreadcrumb(BC_PLAN_DASHBOARD, "Pilot Plan", "planId");
   }

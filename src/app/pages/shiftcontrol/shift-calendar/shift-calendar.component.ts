@@ -62,6 +62,7 @@ export class ShiftCalendarComponent {
 
   constructor() {
     this._pageService
+      .configurePageName("Pilot Plan Calendar")
       .configureBreadcrumb(BC_EVENT, "Pilot Event", "eventId")
       .configureBreadcrumb(BC_PLAN_DASHBOARD, "Pilot Plan", "planId");
 

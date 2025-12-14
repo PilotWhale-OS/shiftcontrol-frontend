@@ -26,7 +26,10 @@ export class EventComponent {
   private readonly _fb = inject(FormBuilder);
 
   constructor() {
-    this._pageService.configureBreadcrumb(BC_EVENT, "Pilot Event", "eventId");
+    this._pageService
+      .configurePageName("Pilot Event Dashboard")
+      .configureBreadcrumb(BC_EVENT, "Pilot Event", "eventId");
+
     this.form = this._fb.group({
       unavailabilityFromEventStart: this._fb.nonNullable.control<boolean>(false),
       unavailabilityUntilEventEnd: this._fb.nonNullable.control<boolean>(false),

@@ -24,6 +24,10 @@ export class PageComponent {
     return this._pageService.breadcrumbs?.getPath() ?? [];
   }
 
+  public get pageName() {
+    return this._pageService.pageName;
+  }
+
   public get profile$() {
     return this._userService.profile$;
   }

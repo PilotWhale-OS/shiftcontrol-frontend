@@ -16,7 +16,7 @@ body {
 
 :root {
   --scrollbar-foreground: #232430;
-  --scrollbar-background: rgb(13 13 20);
+  --scrollbar-background: transparent;
 }
 
 /* Default styled scrollbars */

@@ -8,6 +8,7 @@ import {Breadcrumb} from "../../util/breadcrumb";
 export class PageService {
 
   private _breadcrumbs?: Breadcrumb = undefined;
+  private _pageName?: string = undefined;
 
   /**
    * Get the currently registered breadcrumbs
@@ -17,11 +18,19 @@ export class PageService {
   }
 
   /**
+   * Get the current page name
+   */
+  public get pageName() {
+    return this._pageName;
+  }
+
+  /**
    * Set the current breadcrumbs
    * @param breadcrumb
    */
   public withBreadcrumbs(breadcrumb?: Breadcrumb): PageService {
     this._breadcrumbs = breadcrumb?.clone();
+    this._pageName = breadcrumb?.name ?? "ShiftService";
     return this;
   }
 
@@ -42,6 +51,11 @@ export class PageService {
       traverse = traverse.parent;
     }
 
+    return this;
+  }
+
+  public configurePageName(name: string): PageService {
+    this._pageName = name;
     return this;
   }
 }
