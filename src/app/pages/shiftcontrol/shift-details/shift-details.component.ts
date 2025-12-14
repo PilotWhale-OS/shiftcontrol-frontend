@@ -18,10 +18,8 @@ export class ShiftDetailsComponent {
     this._pageService
       .configurePageName("Pilot Shift Details")
       .configureBreadcrumb(BC_EVENT, "Pilot Event", "eventId")
-      .configureBreadcrumb(BC_PLAN_DASHBOARD, "Pilot Plan", "planId")
+      .configureBreadcrumb(BC_PLAN_DASHBOARD, "Pilot Plan", "/plans/planId")
       .configureBreadcrumb(BC_SHIFT_DETAILS, "Pilot Shift", "shiftId");
-
-    console.log(this._pageService.breadcrumbs);
   }
 
 }

@@ -64,7 +64,7 @@ export class ShiftCalendarComponent {
     this._pageService
       .configurePageName("Pilot Plan Calendar")
       .configureBreadcrumb(BC_EVENT, "Pilot Event", "eventId")
-      .configureBreadcrumb(BC_PLAN_DASHBOARD, "Pilot Plan", "planId");
+      .configureBreadcrumb(BC_PLAN_DASHBOARD, "Pilot Plan", "/plans/planId");
 
     this.form = this._fb.group({
       shiftName: this._fb.nonNullable.control<string>(""),
