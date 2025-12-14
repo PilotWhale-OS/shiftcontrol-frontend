@@ -4,37 +4,82 @@
   @for (card of [1,2]; track card) {
 
     <!-- card for item: trade -->
-    <div class="border-ctr border-framing-card bg-background-card rounded-xl p-md grid grid-cols-[2fr_1fr_2fr] gap-sm">
+    <div class="border-ctr border-framing-card bg-background-card rounded-xl p-md flex flex-col gap-md">
+
+      <!-- caption-->
+      <small>Paul wants to trade their shift "Shift 2"</small>
 
       <!-- type -->
-      <small class="col-span-2">Trade</small>
+      <div class="flex flex-wrap gap-sm gap-y-xxs items-center">
 
-      <!-- owner -->
-      <small class="justify-self-end">request by Paul</small>
+        <!-- from user -->
+        <div class="badge hint h-full padding-eq aspect-square" [app-tooltip]="'Requested by \nPaul Spörker'">
+          PS
+        </div>
+
+        @if (showShiftOrigin) {
+
+          <!-- event trade origin badge -->
+          <div class="badge success" [app-tooltip]="'The event\n of Pauls shift'">
+            <fa-icon [icon]="iconEvent" />
+            Pilot Event
+          </div>
+
+          <!-- plan trade origin badge -->
+          <div class="badge success" [app-tooltip]="'The shift plan\n of Pauls shift'">
+            <fa-icon [icon]="iconPlan" />
+            Pilot Plan
+          </div>
+
+          <!-- clear row -->
+          <div style="flex-basis: 100%" class=""></div>
+        }
+
+        <!-- type badge -->
+        <div class="badge" [app-tooltip]="'Trade request to swap their\nshift agains yours'">
+          <fa-icon [icon]="iconTrade" />
+          Trade
+        </div>
+
+        @if (showShiftOrigin) {
+
+          <!-- event origin badge -->
+          <div class="badge" [app-tooltip]="'The event of\n your shift'">
+            <fa-icon [icon]="iconEvent" />
+            Pilot Event
+          </div>
+
+          <!-- plan origin badge -->
+          <div class="badge" [app-tooltip]="'The shift plan\n of your shift'">
+            <fa-icon [icon]="iconPlan" />
+            Pilot Plan
+          </div>
+        }
+      </div>
 
       <!-- trade: left and right info -->
-      <div class="flex flex-col items-end">
-        <b>Shift 1 @if (showShiftOrigin) { (Pilot Event: Pilot Plan) }</b>
-        <b>Pilot Position</b>
-        <small>01.12.2025 08:00</small>
-      </div>
+      <div class="grid grid-cols-[1fr_2rem_1fr] rounded-lg border-framing-item border-ctr">
+        <div class="flex flex-col items-center gap-xs bg-background-item rounded-l-lg p-sm cursor-pointer" [routerLink]="'/shifts/shiftId'">
+          <b>Shift 1</b>
+          <b>Pilot Position</b>
+          <small>01.12.2025 08:00</small>
+          <xsb-input-button size="minimal" content="Keep yours" name="trade-view-shift" />
+        </div>
 
-      <div class="text-center content-center">⟺</div>
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" class="h-full w-full">
+          <!-- Right angle at top-left -->
+          <polygon
+            points="0,0 100,0 0,100"
+            class="fill-background-item"
+          />
+        </svg>
 
-      <div class="flex flex-col items-start">
-        <b>Shift 2 @if (showShiftOrigin) { (Pilot Event: Pilot Plan) }</b>
-        <b>Pilot Position</b>
-        <small>01.12.2025 08:00</small>
-      </div>
-
-      <!-- info  -->
-      <span class="col-span-3">Paul wants to trade their shift "Shift 2" against your shift "Shift 1".</span>
-
-      <!-- actions -->
-      <div class="col-span-3 flex flex-row gap-md">
-        <xsb-input-button size="minimal" content="Accept" action="success" name="trade-accept" />
-        <xsb-input-button size="minimal" content="Decline" action="danger" name="trade-decline" />
-        <xsb-input-button size="minimal" content="View Details" name="trade-view-shift" [routerLink]="'/shifts/shiftId'" />
+        <div class="flex flex-col items-center p-sm gap-xs cursor-pointer" [routerLink]="'/shifts/shiftId'">
+          <b>Shift 2</b>
+          <b>Pilot Position</b>
+          <small>01.12.2025 08:00</small>
+          <xsb-input-button size="minimal" content="Accept Theirs" action="success" name="trade-accept" />
+        </div>
       </div>
 
     </div>

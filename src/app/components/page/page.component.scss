@@ -8,7 +8,7 @@
   @apply bg-background-item;
 
   .profile {
-    @apply rounded-full aspect-square h-10 bg-blue-400 grid place-content-center select-none cursor-pointer;
+    @apply rounded-full aspect-square h-10 bg-framing-highlight_hint grid place-content-center select-none cursor-pointer;
     @apply border-ctr border-framing-item;
   }
 

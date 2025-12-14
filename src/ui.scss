@@ -40,11 +40,23 @@ b {
 }
 
 small {
-  @apply opacity-80 text-base text-sm;
+  @apply opacity-80 text-sm;
 }
 
 .badge {
   @apply bg-framing-item py-xs px-sm rounded-xl text-xs font-semibold flex items-center gap-xs;
+
+  &.hint {
+    @apply bg-framing-highlight_hint;
+  }
+
+  &.success {
+    @apply bg-framing-highlight_success;
+  }
+
+  &.padding-eq{
+    @apply py-xs px-xs;
+  }
 }
 
 .cdk-overlay-wrapper:has(+.cdk-overlay-backdrop.shiftcontrol-dialog) {

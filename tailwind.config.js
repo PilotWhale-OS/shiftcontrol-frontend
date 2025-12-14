@@ -65,8 +65,8 @@ module.exports = {
           item_success: "#2f6d41",
           item_hint: "rgb(4 85 165)",
           highlight_danger: "#ad5959",
-          highlight_success: "#4f9062",
-          highlight_hint: "#517496",
+          highlight_success: "rgb(39 135 67)",
+          highlight_hint: "rgb(42 120 215)",
 
           /* light */
           light: {
