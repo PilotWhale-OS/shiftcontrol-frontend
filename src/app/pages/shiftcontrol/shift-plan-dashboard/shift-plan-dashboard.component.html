@@ -47,21 +47,31 @@
   </div>
 
   <!-- schedule card-->
-  <div class="card row-span-2 flex flex-col gap-md overflow-auto">
+  <div class="card row-span-2 flex flex-col gap-md">
 
     <!-- title -->
-    <h1 class="col-span-2 signature-gradient-font">Plan Schedule</h1>
+    <h1 class="col-span-2 signature-gradient-font">
+      <fa-icon [icon]="iconTasks" class="icon" />
+      Plan Schedule
+    </h1>
 
-    <app-shift-schedule />
+    <div class="grow overflow-auto">
+      <app-shift-schedule [showShiftDescription]="true" [showShiftPersonalDetails]="true" />
+    </div>
   </div>
 
   <!-- auction/trade card-->
-  <div class="card row-span-2 flex flex-col gap-md overflow-auto">
+  <div class="card row-span-2 flex flex-col gap-md ">
 
     <!-- title -->
-    <h1 class="col-span-2 signature-gradient-font">Shift Plan Auctions & Trades</h1>
+    <h1 class="col-span-2 signature-gradient-font">
+      <fa-icon [icon]="iconTrade" class="icon" />
+      Shift Plan Auctions & Trades
+    </h1>
 
-    <app-shift-trade-auction />
+    <div class="grow overflow-auto">
+      <app-shift-trade-auction />
+    </div>
   </div>
 
 </div>

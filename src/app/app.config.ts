@@ -3,6 +3,7 @@ import { provideRouter } from "@angular/router";
 
 import { routes } from "./app.routes";
 import {AutoRefreshTokenService, provideKeycloak, UserActivityService, withAutoRefreshToken} from "keycloak-angular";
+import {provideAnimations} from "@angular/platform-browser/animations";
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideKeycloak({
@@ -21,6 +22,6 @@ export const appConfig: ApplicationConfig = {
         sessionTimeout: 60000 * 30, // 30 minutes
       })
     ],
-    providers: [AutoRefreshTokenService, UserActivityService]
+    providers: [AutoRefreshTokenService, UserActivityService, provideAnimations()]
   }),]
 };

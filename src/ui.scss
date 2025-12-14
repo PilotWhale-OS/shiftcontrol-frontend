@@ -1,5 +1,5 @@
 .card {
-  @apply bg-background-card border-framing-card border-2;
+  @apply bg-background-card border-framing-card border-2 transition-colors;
   padding: 2rem;
   border-radius: 1.5rem;
 
@@ -15,12 +15,17 @@
     @apply cursor-pointer border-framing-item border-2 bg-background-item;
     &:hover {
       box-shadow: 0px 0px 8px 2px rgb(25 28 43);
+      @apply border-framing-highlight;
     }
   }
 }
 
 h1 {
   @apply text-xl font-bold mb-3;
+
+  .icon {
+    @apply pr-md opacity-60;
+  }
 
   &.compact {
     @apply mb-0;
@@ -36,9 +41,12 @@ b {
 }
 
 small {
-  @apply opacity-50 font-semibold text-sm;
+  @apply opacity-80 text-base font-semibold;
 }
 
+.badge {
+  @apply bg-framing-item py-xs px-sm rounded-xl text-xs font-semibold flex items-center gap-xs;
+}
 
 .cdk-overlay-wrapper:has(+.cdk-overlay-backdrop.shiftcontrol-dialog) {
   @apply p-sm desktop:p-0

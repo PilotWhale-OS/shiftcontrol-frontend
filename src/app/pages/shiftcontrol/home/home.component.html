@@ -8,37 +8,47 @@
     <div class="basis-full">
       <div class="card w-fit flex flex-col gap-md" >
         <h1 class="signature-gradient-font">Welcome back, {{name$ | async}}!</h1>
-        <b>
+        <span>
           The home screen shows your schedule and trades/auctions for all active events and shift plans.<br>
           Additionally, currently active shift plans are shown below.
-        </b>
+        </span>
       </div>
     </div>
 
     @for (card of cards; track card) {
       <div class="card interaction" [routerLink]="card.href">
         <h1>{{card.title}}</h1>
-        <b>{{card.content}}</b>
+        <span>{{card.content}}</span>
       </div>
     }
   </div>
 
   <!-- schedule card-->
-  <div class="card row-span-2 flex flex-col gap-md overflow-auto">
+  <div class="card row-span-2 flex flex-col gap-md">
 
     <!-- title -->
-    <h1 class="col-span-2 signature-gradient-font">Your Schedule</h1>
+    <h1 class="col-span-2 signature-gradient-font">
+      <fa-icon [icon]="iconTasks" class="icon" />
+      Your Schedule
+    </h1>
 
-    <app-shift-schedule [showShiftOrigin]="true" />
+    <div class="grow overflow-auto">
+      <app-shift-schedule [showShiftOrigin]="true" />
+    </div>
   </div>
 
   <!-- auction/trade card-->
-  <div class="card row-span-2 flex flex-col gap-md overflow-auto">
+  <div class="card row-span-2 flex flex-col gap-md">
 
     <!-- title -->
-    <h1 class="col-span-2 signature-gradient-font">Shift Auctions & Trades</h1>
+    <h1 class="col-span-2 signature-gradient-font">
+      <fa-icon [icon]="iconTrade" class="icon" />
+      Shift Auctions & Trades
+    </h1>
 
-    <app-shift-trade-auction [showShiftOrigin]="true" />
+    <div class="grow overflow-auto">
+      <app-shift-trade-auction [showShiftOrigin]="true" />
+    </div>
   </div>
 
 </div>

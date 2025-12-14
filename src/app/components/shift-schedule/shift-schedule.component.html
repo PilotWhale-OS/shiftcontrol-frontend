@@ -9,14 +9,45 @@
 
     @for (card of [1,2,3,4,5]; track card) {
       <div
-        class="border-2 border-framing-item bg-background-item cursor-pointer rounded-xl p-md grid grid-cols-2"
+        class="border-2 border-framing-item hover:border-framing-highlight transition-colors bg-background-item cursor-pointer rounded-xl p-md grid grid-cols-2 gap-md"
         [routerLink]="'/shifts/shiftId'"
       >
-        <b>Pilot Shift @if (showShiftOrigin) { (Pilot Event: Pilot Plan) }</b>
+        <b>Pilot Shift</b>
         <small class="justify-self-end" >08:00 - 12:00</small>
-        <p class="col-span-2">
-          This is the short description of the shift.
-        </p>
+
+        @if (showShiftDescription) {
+          <p class="col-span-2">
+            This is the short description of the shift.
+          </p>
+        }
+
+        <!-- origin badges -->
+        @if (showShiftOrigin) {
+          <div class="flex gap-md col-span-2">
+            <div class="badge" [app-tooltip]="'The associated event\n of this shift'">
+              <fa-icon [icon]="iconEvent" />
+              Pilot Event
+            </div>
+            <div class="badge" [app-tooltip]="'The associated plan\n of this shift'">
+              <fa-icon [icon]="iconPlan" />
+              Pilot Plan
+            </div>
+          </div>
+        }
+
+        <!-- personal details badges -->
+        @if (showShiftPersonalDetails) {
+          <div class="flex gap-md col-span-2">
+            <div class="badge" [app-tooltip]="'Your position in this shift'">
+              <fa-icon [icon]="iconRole" />
+              Light tech
+            </div>
+            <div class="badge" [app-tooltip]="'The shift location'">
+              <fa-icon [icon]="iconLocation" />
+              Test Venue
+            </div>
+          </div>
+        }
       </div>
     }
   }

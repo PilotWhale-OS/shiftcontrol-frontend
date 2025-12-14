@@ -32,12 +32,12 @@ module.exports = {
           /* dark */
           base: "rgb(13 13 20)",
           card: "rgb(17 18 28)",
-          item: "rgb(23 24 37)",
+          item: "rgb(23 24 45)",
           card_danger: "#1a141b",
           card_success: "#0e1413",
           card_hint: "#101625",
-          item_danger: "#1a141b",
-          item_success: "#17201e",
+          item_danger: "rgb(46,2,14)",
+          item_success: "rgb(24 41 29)",
           item_hint: "#101625",
 
           /* light */
@@ -53,14 +53,14 @@ module.exports = {
         framing: {
           default: "#232430",
           card: "#282a37",
-          item: "rgb(62 64 97)",
-          highlight: "rgb(75 86 141)",
-          default_danger: "#521e1e",
-          default_success: "#204f2e",
+          item: "rgb(76 81 157)",
+          highlight: "rgb(113,119,193)",
+          default_danger: "rgb(128 19 19)",
+          default_success: "rgb(29 150 64)",
           default_hint: "#20384f",
           item_danger: "#772f2f",
           item_success: "#2f6d41",
-          item_hint: "#294764",
+          item_hint: "rgb(4 85 165)",
           highlight_danger: "#ad5959",
           highlight_success: "#4f9062",
           highlight_hint: "#517496",
@@ -78,7 +78,7 @@ module.exports = {
         },
         text: {
           primary: "rgb(209 213 219)", /* gray-300 */
-          secondary: "rgb(156 163 175)", /* gray-400 */
+          secondary: "rgb(140,160,218)", /* gray-400 */
           danger: "#b94242",
           success: "#42b965",
           hint: "#1e9fdc",

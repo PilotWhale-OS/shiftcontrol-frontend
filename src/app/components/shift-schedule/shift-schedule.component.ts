@@ -1,10 +1,15 @@
 import {Component, Input} from "@angular/core";
 import {RouterLink} from "@angular/router";
+import {faCalendar, faLocationDot, faStar, faWrench} from "@fortawesome/free-solid-svg-icons";
+import {FaIconComponent} from "@fortawesome/angular-fontawesome";
+import {AwesomeTooltipDirective} from "../../directives/tooltip.directive";
 
 @Component({
   selector: "app-shift-schedule",
   imports: [
-    RouterLink
+    RouterLink,
+    FaIconComponent,
+    AwesomeTooltipDirective
   ],
   standalone: true,
   templateUrl: "./shift-schedule.component.html",
@@ -14,5 +19,16 @@ export class ShiftScheduleComponent {
 
   @Input()
   public showShiftOrigin = false;
+
+  @Input()
+  public showShiftDescription = false;
+
+  @Input()
+  public showShiftPersonalDetails = false;
+
+  iconEvent = faStar;
+  iconPlan = faCalendar;
+  iconRole = faWrench;
+  iconLocation = faLocationDot;
 
 }

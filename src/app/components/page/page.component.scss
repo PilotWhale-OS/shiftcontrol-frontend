@@ -25,14 +25,16 @@
 
       .breadcrumb {
         padding: .4rem .6rem;
-        border: 2px solid rgb(55 63 101);
+        @apply border-2 border-framing-item transition-colors;
+        //border: 2px solid rgb(55 63 101);
         border-radius: 0.8rem;
         font-weight: 600;
         //box-shadow: 0px 0px 10px 7px rgb(18, 20, 30);
         cursor: pointer;
 
         &:hover {
-          background: rgba(55, 63, 101, 20%);
+          @apply bg-background-item border-framing-highlight;
+          //background: rgba(55, 63, 101, 20%);
           //transform: scale(0.97);
           transition: 0.1s;
         }
@@ -73,7 +75,7 @@
     border-top-left-radius: 2.5em;
     border-top-right-radius: 2.5em;
     background: linear-gradient(180deg, rgb(13 13 20) 0%, rgb(13 14 22) 100%);
-    box-shadow: 0px 0px 10px 7px rgb(25 28 43), 0px -2px 0px 0px rgb(75 86 141); // framing-default, framing-highlight colors
+    box-shadow: 0px -2px 1px 1px rgb(40 43 87);/*0px 0px 10px 7px rgb(28 32 55), 0px -2px 0px 0px rgb(193 193 209);*/
   }
 
 
