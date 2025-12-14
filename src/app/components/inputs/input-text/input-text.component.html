@@ -7,7 +7,7 @@
       'focus:border-signature-300' : valid || disabled,
       'light:focus:border-framing-light-level_2_danger focus:border-framing-level_2_danger' : !valid && !disabled,
       'rounded-md text-sm' : size === 'minimal',
-      'rounded-lg border-2' : size === 'regular',
+      'rounded-lg border-ctr' : size === 'regular',
     }" [type]="type" [(ngModel)]="value" (ngModelChange)="onChange ? onChange($event) : 0"
            (blur)="onTouched ? onTouched() : 0">
 

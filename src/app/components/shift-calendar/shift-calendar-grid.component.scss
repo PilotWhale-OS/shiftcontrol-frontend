@@ -17,7 +17,7 @@
 }
 
 .activity {
-  @apply absolute w-full grid place-content-center font-semibold border-2 border-framing-card bg-background-card rounded-lg;
+  @apply absolute w-full grid place-content-center font-semibold border-ctr border-framing-card bg-background-card rounded-lg;
   @apply font-semibold text-sm text-opacity-50 text-center;
   container-type: size;
 
@@ -27,7 +27,7 @@
 }
 
 .shift {
-  @apply absolute w-full grid place-content-center font-semibold border-2 border-framing-item bg-background-item rounded-lg;
+  @apply absolute w-full grid place-content-center font-semibold border-ctr border-framing-item bg-background-item rounded-lg;
   @apply hover:border-framing-highlight cursor-pointer transition-colors;
   @apply font-semibold text-sm text-opacity-50 text-center;
   container-type: size;

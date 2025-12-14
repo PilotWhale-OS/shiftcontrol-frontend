@@ -7,6 +7,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      borderWidth: {
+        ctr: "1.2px"
+      },
       screens: {
         'desktop': '1024px',
         // => @media (min-width: 1024px) { ... }
@@ -78,7 +81,7 @@ module.exports = {
         },
         text: {
           primary: "rgb(209 213 219)", /* gray-300 */
-          secondary: "rgb(140,160,218)", /* gray-400 */
+          secondary: "rgb(139,139,139)", /* gray-400 */
           danger: "#b94242",
           success: "#42b965",
           hint: "#1e9fdc",
