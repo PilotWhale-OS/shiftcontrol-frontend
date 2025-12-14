@@ -9,7 +9,7 @@
       <!-- caption-->
       <small>Paul wants to trade their shift "Shift 2"</small>
 
-      <!-- type -->
+      <!-- badges -->
       <div class="flex flex-wrap gap-sm gap-y-xxs items-center">
 
         <!-- from user -->
@@ -63,7 +63,7 @@
           <b>Shift 1</b>
           <b>Pilot Position</b>
           <small>01.12.2025 08:00</small>
-          <xsb-input-button size="minimal" content="Keep yours" name="trade-view-shift" />
+          <xsb-input-button [icon]="iconKeep" size="minimal" content="Keep yours" name="trade-view-shift" />
         </div>
 
         <svg viewBox="0 0 100 100" preserveAspectRatio="none" class="h-full w-full">
@@ -78,34 +78,53 @@
           <b>Shift 2</b>
           <b>Pilot Position</b>
           <small>01.12.2025 08:00</small>
-          <xsb-input-button size="minimal" content="Accept Theirs" action="success" name="trade-accept" />
+          <xsb-input-button [icon]="iconAccept" size="minimal" content="Accept Theirs" action="success" name="trade-accept" />
         </div>
       </div>
 
     </div>
 
     <!-- card for item: auction -->
-    <div class="border-ctr border-framing-card bg-background-card rounded-xl p-md grid grid-cols-[2fr_1fr_2fr] gap-sm">
+    <div class="border-ctr border-framing-card bg-background-card rounded-xl p-md flex flex-col gap-md">
 
-      <!-- type -->
-      <small class="col-span-2">Auction</small>
+      <!-- caption  -->
+      <small class="col-span-3">Paul offered their shift "Shift 1"</small>
 
-      <!-- owner -->
-      <small class="justify-self-end">offer by Paul</small>
+      <!-- badges -->
+      <div class="flex flex-wrap gap-sm gap-y-xxs items-center">
 
-      <!-- auction: offered shift info -->
-      <div class="flex flex-col col-span-3">
-        <b>Shift 1</b>
-        <small>01.12.2025 08:00</small>
+        <!-- from user -->
+        <div class="badge hint h-full padding-eq aspect-square" [app-tooltip]="'Requested by \nPaul Spörker'">
+          PS
+        </div>
+
+        @if (showShiftOrigin) {
+
+          <!-- event trade origin badge -->
+          <div class="badge success" [app-tooltip]="'The event\n of Pauls shift'">
+            <fa-icon [icon]="iconEvent" />
+            Pilot Event
+          </div>
+
+          <!-- plan trade origin badge -->
+          <div class="badge success" [app-tooltip]="'The shift plan\n of Pauls shift'">
+            <fa-icon [icon]="iconPlan" />
+            Pilot Plan
+          </div>
+        }
+
+        <!-- type badge -->
+        <div class="badge" [app-tooltip]="'Auction offer to\nfreely claim shift'">
+          <fa-icon [icon]="iconTrade" />
+          Auction
+        </div>
       </div>
 
-      <!-- info  -->
-      <span class="col-span-3">Paul offered their shift "Shift 1" for anyone who's interested.</span>
-
-      <!-- actions -->
-      <div class="col-span-3 flex flex-row gap-md">
-        <xsb-input-button size="minimal" content="Claim" action="success" name="auction-claim" />
-        <xsb-input-button size="minimal" content="View Details" name="auction-view-shift" [routerLink]="'/shifts/shiftId'" />
+      <!-- auction: offered shift info -->
+      <div class="flex flex-col bg-background-item border-ctr border-framing-item rounded-lg items-center gap-xs p-sm cursor-pointer" [routerLink]="'/shifts/shiftId'">
+        <b>Shift 1: Pilot Position</b>
+        <small>01.12.2025 08:00</small>
+        <xsb-input-button [icon]="iconAccept" size="minimal" content="Claim offer" action="success" name="auction-claim" />
       </div>
 
     </div>

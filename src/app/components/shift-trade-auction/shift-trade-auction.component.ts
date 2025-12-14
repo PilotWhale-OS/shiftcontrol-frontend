@@ -1,7 +1,7 @@
 import {Component, Input} from "@angular/core";
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
 import {RouterLink} from "@angular/router";
-import {faCalendar, faShuffle, faStar} from "@fortawesome/free-solid-svg-icons";
+import {faBan, faCalendar, faCheck, faShuffle, faStar} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {AwesomeTooltipDirective} from "../../directives/tooltip.directive";
 
@@ -25,5 +25,7 @@ export class ShiftTradeAuctionComponent {
   protected readonly iconTrade = faShuffle;
   protected readonly iconEvent = faStar;
   protected readonly iconPlan = faCalendar;
+  protected readonly iconKeep = faBan;
+  protected readonly iconAccept = faCheck;
 
 }
