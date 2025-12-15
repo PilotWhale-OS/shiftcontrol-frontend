@@ -1,11 +1,9 @@
 import {Component, inject} from "@angular/core";
-import {InputButtonComponent} from "../inputs/input-button/input-button.component";
 import {PageService} from "../../services/page/page.service";
 import {BC_PLAN_DASHBOARD, BC_SHIFT_DETAILS, BC_EVENT} from "../../breadcrumbs";
 import {DialogShiftAuctionComponent} from "../dialog-shift-auction/dialog-shift-auction.component";
 import {DialogShiftSignupComponent} from "../dialog-shift-signup/dialog-shift-signup.component";
 import {DialogShiftTradeComponent} from "../dialog-shift-trade/dialog-shift-trade.component";
-import {ShiftPreferenceComponent} from "../shift-preference/shift-preference.component";
 import {faCalendar, faCertificate, faGift, faLocationDot, faLock, faPeopleGroup, faStar} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {TooltipDirective} from "../../directives/tooltip.directive";
@@ -15,11 +13,9 @@ import {ShiftDetailsPositionComponent} from "../shift-details-position/shift-det
 @Component({
   selector: "app-shift-details-view",
   imports: [
-    InputButtonComponent,
     DialogShiftAuctionComponent,
     DialogShiftSignupComponent,
     DialogShiftTradeComponent,
-    ShiftPreferenceComponent,
     FaIconComponent,
     TooltipDirective,
     ShiftDetailsPositionComponent

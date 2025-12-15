@@ -20,6 +20,7 @@ import {NgClass} from "@angular/common";
 })
 export class ShiftDetailsPositionComponent {
 
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input({required: true, alias: "position"})
   public inputPosition?: PositionSlotDto;
 

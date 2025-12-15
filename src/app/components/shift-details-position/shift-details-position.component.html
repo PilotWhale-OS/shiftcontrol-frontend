@@ -55,29 +55,29 @@
       </span>
 
       @if (shiftLocked === true) {
-        <xsb-input-button content="Request Unassign" size="minimal" action="normal" name="shift-request-unassign" />
+        <xsb-input-button content="Request Unassign" size="regular" action="normal" name="shift-request-unassign" />
       } @else {
-        <xsb-input-button content="Unassign" size="minimal" action="normal" name="shift-unassign" />
+        <xsb-input-button content="Unassign" size="regular" action="normal" name="shift-unassign" />
       }
     </div>
 
   } @else if (
-    PositionSlotDto.SignupStateEnum.SignupPossible ||
-    (PositionSlotDto.SignupStateEnum.Full && (tradeAvailable || auctionAvailable))
+    position.signupState === PositionSlotDto.SignupStateEnum.SignupPossible ||
+    (position.signupState !== PositionSlotDto.SignupStateEnum.NotEligible &&
+      position.signupState === PositionSlotDto.SignupStateEnum.Full && (tradeAvailable || auctionAvailable))
     ) {
 
     <!-- reminder user is signed up and unassign options -->
     <div class="mt-sm pt-sm border-t-2 border-framing-card flex flex-col gap-sm">
       <span class="font-semibold opacity-50 text-sm">Sign Up</span>
       <span>
-          You are eligible for this position.<br>
-          Claim your spot!
+          You are eligible for this position. Claim your spot!
       </span>
 
     @if (tradeAvailable || auctionAvailable || !shiftLocked && (position.assignedVolunteers?.length ?? 0) < (position.desiredVolunteerCount ?? 0)) {
-      <xsb-input-button content="Sign Up" size="minimal" action="normal" name="shift-signup" />
+      <xsb-input-button content="Sign Up" size="regular" action="success" name="shift-signup" />
     } @else {
-      <xsb-input-button content="Request Sign Up" size="minimal" action="normal" name="shift-request-signup" />
+      <xsb-input-button content="Request Sign Up" size="regular" action="normal" name="shift-request-signup" />
     }
     </div>
 
