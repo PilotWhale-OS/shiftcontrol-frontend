@@ -20,11 +20,13 @@ import {faCalendar} from "@fortawesome/free-solid-svg-icons";
 export class PlanOnboardingComponent {
 
   protected readonly iconDate = faCalendar;
+
   private readonly _pageService = inject(PageService);
 
   constructor() {
     this._pageService
+      .configurePageName("Pilot Plan Calendar")
       .configureBreadcrumb(BC_EVENT, "Pilot Event", "eventId")
-      .configureBreadcrumb(BC_PLAN_DASHBOARD, "Pilot Plan", "planId");
+      .configureBreadcrumb(BC_PLAN_DASHBOARD, "Pilot Plan", "/plans/planId");
   }
 }

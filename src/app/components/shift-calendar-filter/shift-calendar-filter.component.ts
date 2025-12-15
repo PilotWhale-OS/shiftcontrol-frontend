@@ -1,9 +1,7 @@
 import {Component, inject} from "@angular/core";
 import {faEye, faFilter} from "@fortawesome/free-solid-svg-icons";
 import {InputSelectComponent, SelectOptions} from "../inputs/input-select/input-select.component";
-import {PageService} from "../../services/page/page.service";
 import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
-import {BC_EVENT, BC_PLAN_DASHBOARD} from "../../breadcrumbs";
 import {InputTextComponent} from "../inputs/input-text/input-text.component";
 import {TypedFormControlDirective} from "../../directives/typed-form-control.directive";
 import {InputDateComponent} from "../inputs/input-date/input-date.component";
@@ -62,15 +60,9 @@ export class ShiftCalendarFilterComponent {
 
   protected showFilters = false;
 
-  private readonly _pageService = inject(PageService);
   private readonly _fb = inject(FormBuilder);
 
   constructor() {
-    this._pageService
-      .configurePageName("Pilot Plan Calendar")
-      .configureBreadcrumb(BC_EVENT, "Pilot Event", "eventId")
-      .configureBreadcrumb(BC_PLAN_DASHBOARD, "Pilot Plan", "/plans/planId");
-
     this.form = this._fb.group({
       shiftName: this._fb.nonNullable.control<string>(""),
       date: this._fb.nonNullable.control<Date>(new Date()),
