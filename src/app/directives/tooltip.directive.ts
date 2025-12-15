@@ -8,7 +8,7 @@ import {ComponentPortal} from "@angular/cdk/portal";
   selector: "[app-tooltip]",
   standalone: true
 })
-export class AwesomeTooltipDirective implements OnInit, OnDestroy {
+export class TooltipDirective implements OnInit, OnDestroy {
 
   @Input("app-tooltip") text = "";
   private overlayRef?: OverlayRef;

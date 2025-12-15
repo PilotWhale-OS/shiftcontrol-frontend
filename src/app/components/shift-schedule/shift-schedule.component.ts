@@ -2,14 +2,14 @@ import {Component, Input} from "@angular/core";
 import {RouterLink} from "@angular/router";
 import {faCalendar, faLocationDot, faStar, faWrench} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import {AwesomeTooltipDirective} from "../../directives/tooltip.directive";
+import {TooltipDirective} from "../../directives/tooltip.directive";
 
 @Component({
   selector: "app-shift-schedule",
   imports: [
     RouterLink,
     FaIconComponent,
-    AwesomeTooltipDirective
+    TooltipDirective
   ],
   standalone: true,
   templateUrl: "./shift-schedule.component.html",

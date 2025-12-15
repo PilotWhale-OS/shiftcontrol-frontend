@@ -1,0 +1,96 @@
+<div
+  class="position card"
+  [ngClass]="{
+    'signed-up' : position.signupState === PositionSlotDto.SignupStateEnum.SignedUp,
+    'not-eligible' : position.signupState === PositionSlotDto.SignupStateEnum.NotEligible
+  }"
+>
+
+  <!-- info caption -->
+  <div class="header">
+    <span class="opacity-50 font-semibold text-sm grow">Shift Position</span>
+    <div
+      class="badge success"
+      [ngClass]="{
+        'success': position.signupState === PositionSlotDto.SignupStateEnum.SignedUp
+      }"
+    >
+      <fa-icon [icon]="iconStatus" />
+      {{statusName}}
+    </div>
+  </div>
+
+  <!-- position tile and badges -->
+  <h1 class="title signature-gradient-font">{{position.role.name}}</h1>
+
+  <!-- role description -->
+  <p>
+    {{position.role.description}}
+  </p>
+
+  <!-- info badges -->
+  <div class="flex flex-row gap-sm">
+    <div class="badge w-fit" [app-tooltip]="'The reward\nfor this position'">
+      <fa-icon [icon]="iconReward" />
+      100 points
+    </div>
+    <div class="badge w-fit" [app-tooltip]="'The open slots\nof this position'">
+      <fa-icon [icon]="iconSlots" />
+      {{position.assignedVolunteers?.length ?? 0}} / {{position.desiredVolunteerCount ?? 0}} taken
+    </div>
+    <div class="badge hint w-fit" [app-tooltip]="'The location\nof this position'">
+      <fa-icon [icon]="iconLocation" />
+      {{position.locations.name}}
+    </div>
+  </div>
+
+  @if(position.signupState === PositionSlotDto.SignupStateEnum.SignedUp) {
+
+    <!-- reminder user is signed up and unassign options -->
+    <div class="mt-sm pt-sm border-t-2 border-framing-card flex flex-col gap-sm">
+      <span class="font-semibold opacity-50 text-sm">Signed Up</span>
+      <span class="font-bold">You are signed up for this position!</span>
+      <span>
+          Make sure to show up at the shift location at the specified time.
+      </span>
+
+      @if (shiftLocked === true) {
+        <xsb-input-button content="Request Unassign" size="minimal" action="normal" name="shift-request-unassign" />
+      } @else {
+        <xsb-input-button content="Unassign" size="minimal" action="normal" name="shift-unassign" />
+      }
+    </div>
+
+  } @else if (
+    PositionSlotDto.SignupStateEnum.SignupPossible ||
+    (PositionSlotDto.SignupStateEnum.Full && (tradeAvailable || auctionAvailable))
+    ) {
+
+    <!-- reminder user is signed up and unassign options -->
+    <div class="mt-sm pt-sm border-t-2 border-framing-card flex flex-col gap-sm">
+      <span class="font-semibold opacity-50 text-sm">Sign Up</span>
+      <span>
+          You are eligible for this position.<br>
+          Claim your spot!
+      </span>
+
+    @if (tradeAvailable || auctionAvailable || !shiftLocked && (position.assignedVolunteers?.length ?? 0) < (position.desiredVolunteerCount ?? 0)) {
+      <xsb-input-button content="Sign Up" size="minimal" action="normal" name="shift-signup" />
+    } @else {
+      <xsb-input-button content="Request Sign Up" size="minimal" action="normal" name="shift-request-signup" />
+    }
+    </div>
+
+  } @else {
+
+    <!-- reminder user is signed up and unassign options -->
+    <div class="mt-sm pt-sm border-t-2 border-framing-card flex flex-col gap-sm">
+      <span class="font-semibold opacity-50 text-sm">Not eligible</span>
+      <span>
+          You are not eligible for this position.
+      </span>
+    </div>
+
+  }
+
+</div>

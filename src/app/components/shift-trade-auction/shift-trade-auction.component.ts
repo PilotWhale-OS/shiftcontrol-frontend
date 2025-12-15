@@ -3,7 +3,7 @@ import {InputButtonComponent} from "../inputs/input-button/input-button.componen
 import {RouterLink} from "@angular/router";
 import {faBan, faCalendar, faCheck, faShuffle, faStar} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import {AwesomeTooltipDirective} from "../../directives/tooltip.directive";
+import {TooltipDirective} from "../../directives/tooltip.directive";
 
 @Component({
   selector: "app-shift-trade-auction",
@@ -11,7 +11,7 @@ import {AwesomeTooltipDirective} from "../../directives/tooltip.directive";
     InputButtonComponent,
     RouterLink,
     FaIconComponent,
-    AwesomeTooltipDirective
+    TooltipDirective
   ],
   standalone: true,
   templateUrl: "./shift-trade-auction.component.html",

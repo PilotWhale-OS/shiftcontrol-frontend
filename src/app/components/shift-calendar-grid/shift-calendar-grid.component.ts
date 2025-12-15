@@ -4,15 +4,13 @@ import {ShiftDetailsViewComponent} from "../shift-details-view/shift-details-vie
 import {DialogService} from "../../services/dialog/dialog.service";
 import {faLocationDot} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import {AwesomeTooltipDirective} from "../../directives/tooltip.directive";
 
 @Component({
   selector: "app-shift-calendar-grid",
   imports: [
     DialogComponent,
     ShiftDetailsViewComponent,
-    FaIconComponent,
-    AwesomeTooltipDirective
+    FaIconComponent
   ],
   standalone: true,
   templateUrl: "./shift-calendar-grid.component.html",
