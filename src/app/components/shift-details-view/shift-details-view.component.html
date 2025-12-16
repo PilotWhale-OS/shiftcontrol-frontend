@@ -61,74 +61,83 @@
   <div class="grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] grow gap-md">
 
     <app-shift-details-position
+      [shift]="demoShift"
       [position]="createDemoPosition(
       'Light Technician',
       'This position is assigned. The shift is not locked. signedup && !locked',
-      5, 4, PositionSlotDto.SignupStateEnum.SignedUp)"
+      5, 4, PositionSlotDto.PositionSignupStateEnum.SignedUp)"
       [shiftLocked]="false" [tradeAvailable]="false" [auctionAvailable]="false"
     />
 
     <app-shift-details-position
+      [shift]="demoShift"
       [position]="createDemoPosition(
       'Light Technician',
       'This position is assigned. The shift is locked. signedup && locked',
-      5, 4, PositionSlotDto.SignupStateEnum.SignedUp)"
+      5, 4, PositionSlotDto.PositionSignupStateEnum.SignedUp)"
       [shiftLocked]="true" [tradeAvailable]="false" [auctionAvailable]="false"
     />
 
     <app-shift-details-position
+      [shift]="demoShift"
       [position]="createDemoPosition(
       'Light Technician',
       'This position is a regular signup with free slot. !signedup && !trade && initialphase && slotavailable',
-      5, 4, PositionSlotDto.SignupStateEnum.SignupPossible)"
+      5, 4, PositionSlotDto.PositionSignupStateEnum.SignupPossible)"
       [shiftLocked]="false" [tradeAvailable]="false" [auctionAvailable]="false"
     />
 
     <app-shift-details-position
+      [shift]="demoShift"
       [position]="createDemoPosition(
       'Sound Technician',
       'This position is a signup with trade accept. !signedup && trade',
-      5, 5, PositionSlotDto.SignupStateEnum.SignupPossible)"
+      5, 5, PositionSlotDto.PositionSignupStateEnum.SignupPossible)"
       [shiftLocked]="false" [tradeAvailable]="true" [auctionAvailable]="false"
     />
 
     <app-shift-details-position
+      [shift]="demoShift"
       [position]="createDemoPosition(
       'Bar Staff',
       'This position is a signup with auction accept. !signedup && !trade && auction',
-      5, 1, PositionSlotDto.SignupStateEnum.SignupPossible)"
+      5, 1, PositionSlotDto.PositionSignupStateEnum.SignupPossible)"
       [shiftLocked]="false" [tradeAvailable]="false" [auctionAvailable]="true"
     />
 
     <app-shift-details-position
+      [shift]="demoShift"
       [position]="createDemoPosition(
       'Bar Staff',
       'This position is a signup with auction accept. The shift is locked. !signedup && !trade && locked && auction',
-      5, 1, PositionSlotDto.SignupStateEnum.SignupPossible)"
+      5, 1, PositionSlotDto.PositionSignupStateEnum.SignupPossible)"
       [shiftLocked]="true" [tradeAvailable]="false" [auctionAvailable]="true"
     />
 
     <app-shift-details-position
+      [shift]="demoShift"
       [position]="createDemoPosition(
       'Bar Staff',
       'This position is a signup with trade request. The shift is locked. !signedup && !trade && locked && !auction && full',
-      5, 5, PositionSlotDto.SignupStateEnum.SignupPossible)"
+      5, 5, PositionSlotDto.PositionSignupStateEnum.SignupPossible)"
       [shiftLocked]="true" [tradeAvailable]="false" [auctionAvailable]="false"
     />
 
     <app-shift-details-position
+      [shift]="demoShift"
       [position]="createDemoPosition(
       'Bar Staff',
       'This position is a signup with signup request. The shift is locked. !signedup && !trade && locked && !auction && !full',
-      5, 2, PositionSlotDto.SignupStateEnum.SignupPossible)"
+      5, 2, PositionSlotDto.PositionSignupStateEnum.SignupPossible)"
       [shiftLocked]="true" [tradeAvailable]="false" [auctionAvailable]="false"
     />
 
     <app-shift-details-position
+      [shift]="demoShift"
       [position]="createDemoPosition(
       'Bar Staff',
       'This position is not eligible for the user.',
-      5, 2, PositionSlotDto.SignupStateEnum.NotEligible)"
+      5, 2, PositionSlotDto.PositionSignupStateEnum.NotEligible)"
       [shiftLocked]="true" [tradeAvailable]="false" [auctionAvailable]="false"
     />
 

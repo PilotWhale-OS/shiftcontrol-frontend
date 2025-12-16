@@ -1,8 +1,8 @@
 <div
   class="position card"
   [ngClass]="{
-    'signed-up' : position.signupState === PositionSlotDto.SignupStateEnum.SignedUp,
-    'not-eligible' : position.signupState === PositionSlotDto.SignupStateEnum.NotEligible
+    'signed-up' : position.positionSignupState === PositionSlotDto.PositionSignupStateEnum.SignedUp,
+    'not-eligible' : position.positionSignupState === PositionSlotDto.PositionSignupStateEnum.NotEligible
   }"
 >
 
@@ -12,7 +12,7 @@
     <div
       class="badge success"
       [ngClass]="{
-        'success': position.signupState === PositionSlotDto.SignupStateEnum.SignedUp
+        'success': position.positionSignupState === PositionSlotDto.PositionSignupStateEnum.SignedUp
       }"
     >
       <fa-icon [icon]="iconStatus" />
@@ -32,19 +32,19 @@
   <div class="flex flex-row gap-sm">
     <div class="badge w-fit" [app-tooltip]="'The reward\nfor this position'">
       <fa-icon [icon]="iconReward" />
-      100 points
+      {{position.rewardPoints}} points
     </div>
     <div class="badge w-fit" [app-tooltip]="'The open slots\nof this position'">
       <fa-icon [icon]="iconSlots" />
-      {{position.assignedVolunteers?.length ?? 0}} / {{position.desiredVolunteerCount ?? 0}} taken
+      {{position.assignedVolunteers.length}} / {{position.desiredVolunteerCount}} taken
     </div>
     <div class="badge hint w-fit" [app-tooltip]="'The location\nof this position'">
       <fa-icon [icon]="iconLocation" />
-      {{position.locations.name}}
+      Test Location <!-- TODO get from shift -->
     </div>
   </div>
 
-  @if(position.signupState === PositionSlotDto.SignupStateEnum.SignedUp) {
+  @if(position.positionSignupState === PositionSlotDto.PositionSignupStateEnum.SignedUp) {
 
     <!-- reminder user is signed up and unassign options -->
     <div class="mt-sm pt-sm border-t-2 border-framing-card flex flex-col gap-sm">
@@ -62,9 +62,9 @@
     </div>
 
   } @else if (
-    position.signupState === PositionSlotDto.SignupStateEnum.SignupPossible ||
-    (position.signupState !== PositionSlotDto.SignupStateEnum.NotEligible &&
-      position.signupState === PositionSlotDto.SignupStateEnum.Full && (tradeAvailable || auctionAvailable))
+    position.positionSignupState === PositionSlotDto.PositionSignupStateEnum.SignupPossible ||
+    (position.positionSignupState !== PositionSlotDto.PositionSignupStateEnum.NotEligible &&
+      position.positionSignupState === PositionSlotDto.PositionSignupStateEnum.Full && (tradeAvailable || auctionAvailable))
     ) {
 
     <!-- reminder user is signed up and unassign options -->
@@ -74,7 +74,7 @@
           You are eligible for this position. Claim your spot!
       </span>
 
-    @if (tradeAvailable || auctionAvailable || !shiftLocked && (position.assignedVolunteers?.length ?? 0) < (position.desiredVolunteerCount ?? 0)) {
+    @if (tradeAvailable || auctionAvailable || !shiftLocked && (position.assignedVolunteers.length) < (position.desiredVolunteerCount)) {
       <xsb-input-button content="Sign Up" size="regular" action="success" name="shift-signup" />
     } @else {
       <xsb-input-button content="Request Sign Up" size="regular" action="normal" name="shift-request-signup" />

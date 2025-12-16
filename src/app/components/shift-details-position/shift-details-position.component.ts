@@ -3,7 +3,7 @@ import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
 import {faCertificate, faGift, faLocationDot, faPeopleGroup} from "@fortawesome/free-solid-svg-icons";
 import {TooltipDirective} from "../../directives/tooltip.directive";
-import {PositionSlotDto} from "../../../shiftservice-client";
+import {PositionSlotDto, ShiftDto} from "../../../shiftservice-client";
 import {NgClass} from "@angular/common";
 
 @Component({
@@ -24,6 +24,10 @@ export class ShiftDetailsPositionComponent {
   @Input({required: true, alias: "position"})
   public inputPosition?: PositionSlotDto;
 
+  // eslint-disable-next-line @angular-eslint/no-input-rename
+  @Input({required: true, alias: "shift"})
+  public inputShift?: ShiftDto;
+
   @Input({required: true})
   public shiftLocked?: boolean;
 
@@ -40,20 +44,26 @@ export class ShiftDetailsPositionComponent {
 
   protected readonly PositionSlotDto = PositionSlotDto;
 
-  protected get position(): PositionSlotDto{
+  protected get position(): PositionSlotDto {
     if(this.inputPosition === undefined) {
       throw new Error("Input position required");
     }
     return this.inputPosition;
   }
 
+  protected get shift(): ShiftDto {
+    if(this.inputShift === undefined) {
+      throw new Error("Input shift required");
+    }
+    return this.inputShift;
+  }
+
   protected get statusName() {
-    switch (this.position.signupState) {
-      case PositionSlotDto.SignupStateEnum.SignedUp: return "Signed Up";
-      case PositionSlotDto.SignupStateEnum.SignupPossible: return "Sign Up Possible";
-      case PositionSlotDto.SignupStateEnum.Full: return "Full";
-      case PositionSlotDto.SignupStateEnum.Locked: return "Locked";
-      case PositionSlotDto.SignupStateEnum.NotEligible: return "Not Eligible";
+    switch (this.position.positionSignupState) {
+      case PositionSlotDto.PositionSignupStateEnum.SignedUp: return "Signed Up";
+      case PositionSlotDto.PositionSignupStateEnum.SignupPossible: return "Sign Up Possible";
+      case PositionSlotDto.PositionSignupStateEnum.Full: return "Full";
+      case PositionSlotDto.PositionSignupStateEnum.NotEligible: return "Not Eligible";
       default: throw new Error("Unknown signup state");
     }
   }

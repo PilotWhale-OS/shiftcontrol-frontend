@@ -7,7 +7,7 @@ import {DialogShiftTradeComponent} from "../dialog-shift-trade/dialog-shift-trad
 import {faCalendar, faCertificate, faGift, faLocationDot, faLock, faPeopleGroup, faStar} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {TooltipDirective} from "../../directives/tooltip.directive";
-import {PositionSlotDto, VolunteerDto} from "../../../shiftservice-client";
+import {PositionSlotDto, ShiftDto, VolunteerDto} from "../../../shiftservice-client";
 import {ShiftDetailsPositionComponent} from "../shift-details-position/shift-details-position.component";
 
 @Component({
@@ -34,11 +34,17 @@ export class ShiftDetailsViewComponent {
   protected readonly iconDate = faCalendar;
   protected readonly iconActivity = faStar;
   protected readonly iconReward = faGift;
-  protected readonly iconStatus = faCertificate;
-  protected readonly iconSlots = faPeopleGroup;
   protected readonly iconLockedPhase = faLock;
 
   protected readonly PositionSlotDto = PositionSlotDto;
+  protected readonly demoShift: ShiftDto = {
+    id: "asd",
+    name: "test",
+    startTime: "asdasdasd",
+    endTime: "asdasdasd",
+    relatedActivities: [],
+    positionSlots: [],
+  };
 
   private readonly _pageService = inject(PageService);
 
@@ -50,7 +56,7 @@ export class ShiftDetailsViewComponent {
   }
 
   protected createDemoPosition(name: string, description: string, volCount: number, assCount: number,
-                               state: PositionSlotDto.SignupStateEnum): PositionSlotDto{
+                               state: PositionSlotDto.PositionSignupStateEnum): PositionSlotDto{
     return {
       id: "asdasd",
       associatedShiftId: "asdas",
@@ -59,12 +65,9 @@ export class ShiftDetailsViewComponent {
         description: description,
         id: "asda"
       },
+      rewardPoints: 100,
       assignedVolunteers: Array(assCount) as unknown as VolunteerDto[],
-      locations: {
-        id: 0,
-        name: "Venue A"
-      },
-      signupState: state,
+      positionSignupState: state,
       desiredVolunteerCount: volCount
     };
   }
