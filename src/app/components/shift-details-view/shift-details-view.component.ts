@@ -4,7 +4,7 @@ import {BC_PLAN_DASHBOARD, BC_SHIFT_DETAILS, BC_EVENT} from "../../breadcrumbs";
 import {DialogShiftAuctionComponent} from "../dialog-shift-auction/dialog-shift-auction.component";
 import {DialogShiftSignupComponent} from "../dialog-shift-signup/dialog-shift-signup.component";
 import {DialogShiftTradeComponent} from "../dialog-shift-trade/dialog-shift-trade.component";
-import {faCalendar, faCertificate, faGift, faLocationDot, faLock, faPeopleGroup, faStar} from "@fortawesome/free-solid-svg-icons";
+import {faCalendar, faGift, faLocationDot, faLock, faStar} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {TooltipDirective} from "../../directives/tooltip.directive";
 import {PositionSlotDto, ShiftDto, VolunteerDto} from "../../../shiftservice-client";
