@@ -13,7 +13,7 @@
     "cypress:run": "cypress run",
     "generate-shiftservice-client": "openapi-generator-cli generate -g typescript-angular -i http://shiftservice.127.0.0.1.nip.io/v3/api-docs -o ./src/shiftservice-client --additional-properties fileNaming=kebab-case,withInterfaces=true --generate-alias-as-model && npm run patch-shiftservice-client",
     "generate-shiftservice-client-ci": "openapi-generator-cli generate -g typescript-angular -i ./openapi.json -o ./src/shiftservice-client --additional-properties fileNaming=kebab-case,withInterfaces=true --generate-alias-as-model && npm run patch-shiftservice-client",
-    "patch-shiftservice-client": "git apply ./patch/Fix_InnerEnum_Openapi_generated_file.patch"
+    "patch-shiftservice-client": "git apply --verbose ./patch/Fix_InnerEnum_Openapi_generated_file.patch"
   },
   "private": true,
   "dependencies": {
