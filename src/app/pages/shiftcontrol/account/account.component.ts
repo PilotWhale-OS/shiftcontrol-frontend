@@ -17,6 +17,7 @@ import {UserProfileEndpointService} from "../../../../shiftservice-client";
     InputToggleComponent
   ],
   templateUrl: "./account.component.html",
+  standalone: true,
   styleUrl: "./account.component.scss"
 })
 export class AccountComponent implements OnDestroy {

@@ -5,6 +5,8 @@ import {BC_EVENT} from "../../../breadcrumbs";
 import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
 import {InputButtonComponent} from "../../../components/inputs/input-button/input-button.component";
 import {DialogAddUnavailabilityComponent} from "../../../components/dialog-add-unavailability/dialog-add-unavailability.component";
+import {faCalendar, faGift, faHourglass, faPause, faPeopleGroup} from "@fortawesome/free-solid-svg-icons";
+import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 
 @Component({
   selector: "app-plans",
@@ -12,7 +14,8 @@ import {DialogAddUnavailabilityComponent} from "../../../components/dialog-add-u
     RouterLink,
     ReactiveFormsModule,
     InputButtonComponent,
-    DialogAddUnavailabilityComponent
+    DialogAddUnavailabilityComponent,
+    FaIconComponent
   ],
   standalone: true,
   templateUrl: "./event.component.html",
@@ -22,11 +25,19 @@ export class EventComponent {
 
   public readonly form;
   public showUnavailabilityDialog = false;
+  protected readonly iconVolunteers = faPeopleGroup;
+  protected readonly iconHours = faHourglass;
+  protected readonly iconDay = faCalendar;
+  protected readonly iconRewards = faGift;
+  protected readonly iconUnavailable = faPause;
   private readonly _pageService = inject(PageService);
   private readonly _fb = inject(FormBuilder);
 
   constructor() {
-    this._pageService.configureBreadcrumb(BC_EVENT, "Pilot Event", "eventId");
+    this._pageService
+      .configurePageName("Pilot Event Dashboard")
+      .configureBreadcrumb(BC_EVENT, "Pilot Event", "eventId");
+
     this.form = this._fb.group({
       unavailabilityFromEventStart: this._fb.nonNullable.control<boolean>(false),
       unavailabilityUntilEventEnd: this._fb.nonNullable.control<boolean>(false),

@@ -26,29 +26,54 @@
       }
     </div>
 
+    <!-- time grid row markers for every other hour -->
+    @for (hour of hours; track hour) {
+      @if (hour % 1 === 0){
+        <div
+          class="hour-marker"
+          style="grid-column: 1 / -1; grid-row: 2 / 2"
+          [style.top]="getMinuteHeight(hour * 60)"
+        ></div>
+      }
+    }
+
     <!-- sample venue A -->
     <div class="venue" style="grid-row: 1/1; grid-column: venue-a-start / venue-a-end">
+      <fa-icon [icon]="iconLocation" class="text-sm" />
       <span>Freihaus</span>
     </div>
 
+    <!-- venue a gap -->
+    <div
+      class="venue-gap"
+      style="grid-column: venue-a-gap-start / venue-a-gap-end; grid-row: 1/-1;"
+    > </div>
+
     <!-- sample venue B -->
     <div class="venue" style="grid-row: 1/1; grid-column: venue-b-start / venue-b-end">
+      <fa-icon [icon]="iconLocation" class="text-sm" />
       <span>Audimax</span>
     </div>
 
+    <!-- venue b gap -->
+    <div
+      class="venue-gap"
+      style="grid-column: venue-b-gap-start / venue-b-gap-end; grid-row: 1/-1;"
+    > </div>
+
     <!-- sample venue C -->
     <div class="venue" style="grid-row: 1/1; grid-column: venue-c-start / venue-c-end">
+      <fa-icon [icon]="iconLocation" class="text-sm" />
       <span>Resselpark</span>
     </div>
 
     <!-- sample activity -->
     <div
       class="activity"
-      style="grid-row: 2/2; grid-column: venue-a-activity-start / venue-a-activity-end"
+      style="grid-row: 2/2; grid-column: venue-a-activity-start / venue-a-end"
       [style.height]="getMinuteHeight(200)"
       [style.top]="getMinuteHeight(60)"
     >
-      <span class="tag">Activity</span>
       <span>Tee des Tages</span>
     </div>
 
@@ -62,7 +87,7 @@
       [style.height]="getMinuteHeight(80)"
       [style.top]="getMinuteHeight(30)"
     >
-      <span class="tag ">Eligible</span>
+      <span class="tag">Eligible</span>
       <span class="time">22.30 - 23.30</span>
       <span>Teebeutel füllen</span>
     </div>
@@ -101,21 +126,19 @@
     <!-- sample activity -->
     <div
       class="activity"
-      style="grid-row: 2/2; grid-column: venue-b-activity-start / venue-b-activity-end"
+      style="grid-row: 2/2; grid-column: venue-b-activity-start / venue-b-end"
       [style.height]="getMinuteHeight(900)"
       [style.top]="getMinuteHeight(100)"
     >
-      <span class="tag">Activity</span>
       <span>LOTR Marathon</span>
     </div>
 
     <div
       class="activity"
-      style="grid-row: 2/2; grid-column: venue-b-activity-start / venue-b-activity-end"
+      style="grid-row: 2/2; grid-column: venue-b-activity-start / venue-b-end"
       [style.height]="getMinuteHeight(120)"
       [style.top]="getMinuteHeight(1010)"
     >
-      <span class="tag">Activity</span>
       <span>Post Movie Talk</span>
     </div>
 
@@ -213,11 +236,10 @@
     <!-- sample activity -->
     <div
       class="activity"
-      style="grid-row: 2/2; grid-column: venue-c-activity-start / venue-c-activity-end"
+      style="grid-row: 2/2; grid-column: venue-c-activity-start / venue-c-end"
       [style.height]="getMinuteHeight(24*60)"
       [style.top]="getMinuteHeight(10)"
     >
-      <span class="tag">Activity</span>
       <span>Resselpark Ratten Worship</span>
     </div>
 

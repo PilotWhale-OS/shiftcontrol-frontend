@@ -6,6 +6,7 @@ import {AutoRefreshTokenService, provideKeycloak, UserActivityService, withAutoR
 import { provideHttpClient } from "@angular/common/http";
 import {Configuration as ShiftserviceConfiguration} from "../shiftservice-client";
 import Keycloak from "keycloak-js";
+import {provideAnimations} from "@angular/platform-browser/animations";
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideKeycloak({
@@ -24,7 +25,7 @@ export const appConfig: ApplicationConfig = {
         sessionTimeout: 60000 * 30, // 30 minutes
       })
     ],
-    providers: [AutoRefreshTokenService, UserActivityService, provideHttpClient(),
+    providers: [AutoRefreshTokenService, UserActivityService, provideAnimations(), provideHttpClient(),
       {
         provide: ShiftserviceConfiguration,
         useFactory: () => {

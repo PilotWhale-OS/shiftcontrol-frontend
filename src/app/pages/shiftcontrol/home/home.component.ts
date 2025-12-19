@@ -5,6 +5,8 @@ import {AsyncPipe} from "@angular/common";
 import {map} from "rxjs";
 import {ShiftTradeAuctionComponent} from "../../../components/shift-trade-auction/shift-trade-auction.component";
 import {ShiftScheduleComponent} from "../../../components/shift-schedule/shift-schedule.component";
+import {faBarsProgress, faShuffle} from "@fortawesome/free-solid-svg-icons";
+import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 
 @Component({
   selector: "app-home",
@@ -12,7 +14,8 @@ import {ShiftScheduleComponent} from "../../../components/shift-schedule/shift-s
     RouterLink,
     AsyncPipe,
     ShiftTradeAuctionComponent,
-    ShiftScheduleComponent
+    ShiftScheduleComponent,
+    FaIconComponent
   ],
   templateUrl: "./home.component.html",
   styleUrl: "./home.component.scss"
@@ -24,6 +27,8 @@ export class HomeComponent {
     {title:"User Account", content: "Manage your notification settings and unavailable time", href: "me"},
     {title:"Pilot Plan", content: "Pilot Event: Currently active", href: "plans/planId"}
   ];
+  public readonly iconTasks = faBarsProgress;
+  public readonly iconTrade = faShuffle;
 
   private readonly _userService = inject(UserService);
 
@@ -32,4 +37,5 @@ export class HomeComponent {
       map(user => `${user?.firstName}`)
     );
   }
+
 }

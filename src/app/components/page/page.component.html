@@ -10,17 +10,13 @@
         <div class="breadcrumb" [routerLink]="crumb.getFullHref()">
           {{crumb.name}}
         </div>
-
-        @if (i !== breadcrumbs.length - 1) {
-          <span class="separator">/</span>
-        }
       }
 
     </div>
 
     <!-- header in the middle -->
     <div class="title signature-gradient-font">
-      <h1>Shift Control</h1>
+      <h1 class="compact">{{pageName}}</h1>
     </div>
 
     <!-- quick links at the right side -->
@@ -30,7 +26,7 @@
       @if (profile$ | async; as profile) {
         @if(profile !== null) {
           <div
-            class="rounded-full aspect-square h-10 bg-blue-400 grid place-content-center select-none cursor-pointer"
+            class="profile"
             routerLink="/me"
           >
             <span class="font-bold uppercase text-white">{{getInitials(profile)}}</span>

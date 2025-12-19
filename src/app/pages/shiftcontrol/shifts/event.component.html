@@ -17,24 +17,34 @@
     </p>
 
     <!-- own schedule stats -->
-    <div class="flex flex-col">
-      <small>Your schedule</small>
-      <span>➜ 5 busy days</span>
-      <span>➜ total 10 hours</span>
+    <div class="flex flex-col items-start gap-xs">
+      <small>Your stats</small>
+      <div class="badge">
+        <fa-icon [icon]="iconDay" />
+        5 Busy Days
+      </div>
+      <div class="badge">
+        <fa-icon [icon]="iconHours" />
+        10 Shift Hours
+      </div>
+      <div class="badge success">
+        <fa-icon [icon]="iconRewards" />
+        100 Points Rewarded
+      </div>
     </div>
 
     <!-- public stats -->
-    <div class="flex flex-col">
+    <div class="flex flex-col items-start gap-xs">
       <small>Public stats</small>
-      <span>➜ 200 hours</span>
-      <span>➜ 30 volunteers</span>
+      <div class="badge hint">
+        <fa-icon [icon]="iconVolunteers" />
+        30 Volunteers
+      </div>
+      <div class="badge hint">
+        <fa-icon [icon]="iconHours" />
+        1000 Shift Hours
+      </div>
     </div>
-
-    <!-- rewards-->
-    <span class="col-span-2">
-      <small>Total reward:</small>
-       50 points
-    </span>
 
   </div>
 
@@ -44,19 +54,32 @@
     <!-- info -->
     <h1 class="compact signature-gradient-font">Availability</h1>
     <p class="col-span-2">
-      For each event, you can set times in which you are unavailable.<br>
-      You will not be assigned to shifts which collide with your availability.<br>
-      The calendar will also mark shifts that do not fit your schedule.
+      Set your availability for conflict hints and preferred auto-assignment.
     </p>
 
     <!-- set unavailability -->
     <div class="grid grid-cols-[1fr_auto] col-span-2 gap-xs">
       <small class="col-span-2">Your unavailable times</small>
-      <div>➜ 05.12.2025 08:00 - 6.12.2025 19:00 </div> <b class="unavailability-remove">Remove</b>
-      <div>➜ 10.12.2025 08:00 - Event End </div> <b class="unavailability-remove">Remove</b>
+      <div class="flex gap-sm items-center">
+        <div class="badge">
+          <fa-icon [icon]="iconUnavailable" />
+          1 day
+        </div>
+        05.12.2025 08:00 - 6.12.2025 19:00
+      </div>
+      <xsb-input-button action="normal" content="Remove Range" size="minimal" />
+
+      <div class="flex gap-sm items-center">
+        <div class="badge">
+          <fa-icon [icon]="iconUnavailable" />
+          10 days
+        </div>
+        10.12.2025 08:00 - Event End
+      </div>
+      <xsb-input-button action="normal" content="Remove Range" size="minimal" />
     </div>
 
-    <xsb-input-button action="normal" content="Add Unavailability" (click)="showUnavailabilityDialog = true" size="minimal" />
+    <xsb-input-button action="success" content="Add Unavailability" (click)="showUnavailabilityDialog = true" size="minimal" class="w-fit" />
 
   </div>
 

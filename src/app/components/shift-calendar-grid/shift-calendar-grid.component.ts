@@ -2,12 +2,15 @@ import {Component, inject} from "@angular/core";
 import {DialogComponent} from "../dialog/dialog.component";
 import {ShiftDetailsViewComponent} from "../shift-details-view/shift-details-view.component";
 import {DialogService} from "../../services/dialog/dialog.service";
+import {faLocationDot} from "@fortawesome/free-solid-svg-icons";
+import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 
 @Component({
   selector: "app-shift-calendar-grid",
   imports: [
     DialogComponent,
-    ShiftDetailsViewComponent
+    ShiftDetailsViewComponent,
+    FaIconComponent
   ],
   standalone: true,
   templateUrl: "./shift-calendar-grid.component.html",
@@ -18,8 +21,11 @@ export class ShiftCalendarGridComponent {
   public hours = Array.from({length: 24}, (_, i) => i); // 0 to 23
   public viewShift = false;
 
-  private readonly activityWidth = "8rem";
+  protected readonly iconLocation = faLocationDot;
+
+  private readonly activityWidth = "2rem";
   private readonly shiftWidth = "10rem";
+  private readonly venueGapWidth = "1rem";
   private readonly minuteHeightRem = 0.05;
 
   // eslint-disable-next-line max-len, @typescript-eslint/member-ordering
@@ -27,13 +33,16 @@ export class ShiftCalendarGridComponent {
     `[time-start] 5rem [time-end venue-a-start venue-a-activity-start] ${this.activityWidth}
     [venue-a-activity-end venue-a-shift-start venue-a-shift-col-1-start] ${this.shiftWidth}
     [venue-a-shift-col-1-end venue-a-shift-col-2-start] ${this.shiftWidth}
-    [venue-a-shift-col-2-end venue-a-end venue-a-shift-end venue-b-start venue-b-activity-start] ${this.activityWidth}
+    [venue-a-shift-col-2-end venue-a-end venue-a-shift-end venue-a-gap-start] ${this.venueGapWidth}
+    [venue-a-gap-end venue-b-start venue-b-activity-start] ${this.activityWidth}
     [venue-b-activity-end venue-b-shift-start venue-b-shift-col-1-start] ${this.shiftWidth}
     [venue-b-shift-col-1-end venue-b-shift-col-2-start] ${this.shiftWidth}
-    [venue-b-shift-col-2-end venue-b-end venue-b-shift-end venue-c-start venue-c-activity-start] ${this.activityWidth}
+    [venue-b-shift-col-2-end venue-b-end venue-b-shift-end venue-b-gap-start] ${this.venueGapWidth}
+    [venue-b-gap-end venue-c-start venue-c-activity-start] ${this.activityWidth}
     [venue-c-activity-end venue-c-shift-start venue-c-shift-col-1-start] ${this.shiftWidth}
     [venue-c-shift-col-1-end venue-c-shift-col-2-start] ${this.shiftWidth}
-    [venue-c-shift-col-2-end venue-c-end venue-c-shift-end]`;
+    [venue-c-shift-col-2-end venue-c-end venue-c-shift-end venue-c-gap-start] ${this.venueGapWidth}
+    [venue-c-gap-end]`;
 
   private readonly _dialogService = inject(DialogService);
 

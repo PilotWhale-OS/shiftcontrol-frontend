@@ -5,43 +5,54 @@
   <!-- overview card -->
   <div class="card grid grid-columns-2 gap-lg w-[30rem] h-fit">
 
-    <!-- info caption -->
-    <span class="opacity-50 font-semibold text-sm">Shift Overview</span>
-    <p class="opacity-50 font-semibold text-sm justify-self-end">01.12.2025</p>
-
     <!-- properties -->
     <h1 class="compact signature-gradient-font">Pilot Shift</h1>
-    <p class="font-semibold justify-self-end">09:00 - 12:30</p>
+    <div class="badge success w-fit justify-self-end">
+      <fa-icon [icon]="iconDate" />
+      01.12.2025 09:00 - 12:30
+    </div>
     <p class="col-span-2">
       This is a pilot shift for mockup purposes.<br>
       It does not yet exist in the database. This text right here is the long description of the shift.
     </p>
 
     <!-- activity info -->
-    <div class="flex flex-col">
+    <div class="flex flex-col gap-y-xs">
       <span class="font-semibold opacity-50 text-sm">Related Activities</span>
-      <span>Pilot activity</span>
-      <span>Other activity</span>
+      <div class="badge w-fit">
+        <fa-icon [icon]="iconActivity" />
+        Some Activity
+      </div>
+      <div class="badge w-fit">
+        <fa-icon [icon]="iconActivity" />
+        Other Activity
+      </div>
     </div>
 
     <!-- location info -->
-    <div class="flex flex-col">
-      <span class="font-semibold opacity-50 text-sm">Location</span>
-      <span>Venue A (main)</span>
-      <span>Venue B</span>
+    <div class="flex flex-col gap-y-xs">
+      <span class="font-semibold opacity-50 text-sm">Locations</span>
+      <div class="badge w-fit">
+        <fa-icon [icon]="iconLocation" />
+        Venue A
+      </div>
+      <div class="badge w-fit">
+        <fa-icon [icon]="iconLocation" />
+        Venue B
+      </div>
     </div>
 
-    <!-- info text-->
-    <p class="col-span-2 font-semibold opacity-50 text-sm">
-      If you want to participate in this shift, select one of the applicable positions.
-      You can also select a preference for being auto-assigned to each position.
-    </p>
-
-    <!-- rewards-->
-    <span class="col-span-2">
-      <span class="font-semibold opacity-50 text-sm">Shift reward:</span>
-       10 points
-    </span>
+    <!-- other badges-->
+    <div class="flex gap-sm">
+      <div class="badge hint" [app-tooltip]="'Self-assignment require \napproval or a trade'">
+        <fa-icon [icon]="iconLockedPhase" />
+        Assignments locked
+      </div>
+      <div class="badge success" [app-tooltip]="'The accumulated reward\nof your positions'">
+        <fa-icon [icon]="iconReward" />
+        100 points
+      </div>
+    </div>
 
   </div>
 
@@ -49,184 +60,87 @@
   <!-- sample positions -->
   <div class="grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] grow gap-md">
 
-    <!-- eligible and signed up -->
-    <div class="position card signed-up">
+    <app-shift-details-position
+      [shift]="demoShift"
+      [position]="createDemoPosition(
+      'Light Technician',
+      'This position is assigned. The shift is not locked. signedup && !locked',
+      5, 4, PositionSlotDto.PositionSignupStateEnum.SignedUp)"
+      [shiftLocked]="false" [tradeAvailable]="false" [auctionAvailable]="false"
+    />
 
-      <!-- info caption -->
-      <span class="opacity-50 font-semibold text-sm">Shift Position</span>
+    <app-shift-details-position
+      [shift]="demoShift"
+      [position]="createDemoPosition(
+      'Light Technician',
+      'This position is assigned. The shift is locked. signedup && locked',
+      5, 4, PositionSlotDto.PositionSignupStateEnum.SignedUp)"
+      [shiftLocked]="true" [tradeAvailable]="false" [auctionAvailable]="false"
+    />
 
-      <!-- position tile -->
-      <h1 class="title signature-gradient-font">Pilot Position</h1>
+    <app-shift-details-position
+      [shift]="demoShift"
+      [position]="createDemoPosition(
+      'Light Technician',
+      'This position is a regular signup with free slot. !signedup && !trade && initialphase && slotavailable',
+      5, 4, PositionSlotDto.PositionSignupStateEnum.SignupPossible)"
+      [shiftLocked]="false" [tradeAvailable]="false" [auctionAvailable]="false"
+    />
 
-      <!-- role description -->
-      <p>
-        This is the description of the position role.
-      </p>
+    <app-shift-details-position
+      [shift]="demoShift"
+      [position]="createDemoPosition(
+      'Sound Technician',
+      'This position is a signup with trade accept. !signedup && trade',
+      5, 5, PositionSlotDto.PositionSignupStateEnum.SignupPossible)"
+      [shiftLocked]="false" [tradeAvailable]="true" [auctionAvailable]="false"
+    />
 
-      <div class="flex flex-col">
-        <span class="flex gap-sm items-center"><span class="font-semibold opacity-50 text-sm">Status:</span> Signed Up</span>
-        <span class="flex gap-sm items-center"><span class="font-semibold opacity-50 text-sm">Reward:</span> 10 Points</span>
-        <span class="flex gap-sm items-center"><span class="font-semibold opacity-50 text-sm">Positions:</span> 2 / 5 taken</span>
-      </div>
+    <app-shift-details-position
+      [shift]="demoShift"
+      [position]="createDemoPosition(
+      'Bar Staff',
+      'This position is a signup with auction accept. !signedup && !trade && auction',
+      5, 1, PositionSlotDto.PositionSignupStateEnum.SignupPossible)"
+      [shiftLocked]="false" [tradeAvailable]="false" [auctionAvailable]="true"
+    />
 
-      <!-- auction  -->
-      <div class="mt-sm pt-sm border-t-2 border-framing-card flex flex-col gap-sm">
-        <span class="font-semibold opacity-50 text-sm">Auction Position</span>
-        <span>Auctioned positions can be claimed by all eligible volunteers. </span>
-        <xsb-input-button content="Auction this position" size="minimal" action="normal" name="shift-set-auction" (click)="showAuctionDialog = true" />
-      </div>
+    <app-shift-details-position
+      [shift]="demoShift"
+      [position]="createDemoPosition(
+      'Bar Staff',
+      'This position is a signup with auction accept. The shift is locked. !signedup && !trade && locked && auction',
+      5, 1, PositionSlotDto.PositionSignupStateEnum.SignupPossible)"
+      [shiftLocked]="true" [tradeAvailable]="false" [auctionAvailable]="true"
+    />
 
-      <!-- reminder  -->
-      <div class="mt-sm pt-sm border-t-2 border-framing-card flex flex-col gap-sm">
-        <span class="font-semibold opacity-50 text-sm">Signed Up</span>
-        <span class="font-bold">You are signed up for this position!</span>
-        <span>
-          Attendance is required. If you do not want to participate anymore, you can set this shift up for auction or request a trade for another position.<br>
-          To initiate a trade, navigate to the desired position.
-        </span>
-      </div>
+    <app-shift-details-position
+      [shift]="demoShift"
+      [position]="createDemoPosition(
+      'Bar Staff',
+      'This position is a signup with trade request. The shift is locked. !signedup && !trade && locked && !auction && full',
+      5, 5, PositionSlotDto.PositionSignupStateEnum.SignupPossible)"
+      [shiftLocked]="true" [tradeAvailable]="false" [auctionAvailable]="false"
+    />
 
-    </div>
+    <app-shift-details-position
+      [shift]="demoShift"
+      [position]="createDemoPosition(
+      'Bar Staff',
+      'This position is a signup with signup request. The shift is locked. !signedup && !trade && locked && !auction && !full',
+      5, 2, PositionSlotDto.PositionSignupStateEnum.SignupPossible)"
+      [shiftLocked]="true" [tradeAvailable]="false" [auctionAvailable]="false"
+    />
 
-    <!-- eligible and free -->
-    <div class="position card">
+    <app-shift-details-position
+      [shift]="demoShift"
+      [position]="createDemoPosition(
+      'Bar Staff',
+      'This position is not eligible for the user.',
+      5, 2, PositionSlotDto.PositionSignupStateEnum.NotEligible)"
+      [shiftLocked]="true" [tradeAvailable]="false" [auctionAvailable]="false"
+    />
 
-      <!-- info caption -->
-      <span class="opacity-50 font-semibold text-sm">Shift Position</span>
-
-      <!-- position tile -->
-      <h1 class="title signature-gradient-font">Pilot Position</h1>
-
-      <!-- role description -->
-      <p>
-        This is the description of the position role.
-      </p>
-
-      <div class="flex flex-col">
-        <span class="flex gap-sm items-center"><span class="font-semibold opacity-50 text-sm">Status:</span> Eligible</span>
-        <span class="flex gap-sm items-center"><span class="font-semibold opacity-50 text-sm">Reward:</span> 10 Points</span>
-        <span class="flex gap-sm items-center"><span class="font-semibold opacity-50 text-sm">Positions:</span> 2 / 5 taken</span>
-      </div>
-
-      <!-- signup  -->
-      <div class="mt-sm pt-sm border-t-2 border-framing-card flex flex-col gap-sm">
-        <span class="font-semibold opacity-50 text-sm">Sign Up</span>
-        <span>Signing up is binding and cannot be made undone.</span>
-        <xsb-input-button content="Sign up for this position" size="minimal" action="success" name="shift-sign-up" (click)="showSignupDialog = true" />
-      </div>
-
-      <!-- trade  -->
-      <div class="mt-sm pt-sm border-t-2 border-framing-card flex flex-col gap-sm">
-        <span class="font-semibold opacity-50 text-sm">Trade Position</span>
-        <span>If you want to swap one of your shifts against this one, you can request a trade.</span>
-        <xsb-input-button content="Request a trade" size="minimal" action="success" name="shift-request-trade" (click)="showTradeDialog = true" />
-      </div>
-
-      <!-- Set preference  -->
-      <div class="mt-sm pt-sm border-t-2 border-framing-card flex flex-col gap-sm">
-        <span class="font-semibold opacity-50 text-sm">Preference</span>
-        <span>If slots need to be filled, you may be auto-assigned. You can set your preference here.</span>
-        <app-shift-preference />
-      </div>
-    </div>
-
-    <!-- eligible and full/auction -->
-    <div class="position card">
-
-      <!-- info caption -->
-      <span class="opacity-50 font-semibold text-sm">Shift Position</span>
-
-      <!-- position tile -->
-      <h1 class="title signature-gradient-font">Pilot Position</h1>
-
-      <!-- role description -->
-      <p>
-        This is the description of the position role.
-      </p>
-
-      <div class="flex flex-col">
-        <span class="flex gap-sm items-center"><span class="font-semibold opacity-50 text-sm">Status:</span> Eligible</span>
-        <span class="flex gap-sm items-center"><span class="font-semibold opacity-50 text-sm">Reward:</span> 10 Points</span>
-        <span class="flex gap-sm items-center"><span class="font-semibold opacity-50 text-sm">Positions:</span> 5 / 5 taken (1 auctioned)</span>
-      </div>
-
-      <!-- signup  -->
-      <div class="mt-sm pt-sm border-t-2 border-framing-card flex flex-col gap-sm">
-        <span class="font-semibold opacity-50 text-sm">Sign Up</span>
-        <span>Signing up is binding and cannot be made undone.</span>
-        <xsb-input-button content="Sign up for this position" size="minimal" action="success" name="shift-sign-up" (click)="showSignupDialog = true" />
-      </div>
-
-      <!-- trade  -->
-      <div class="mt-sm pt-sm border-t-2 border-framing-card flex flex-col gap-sm">
-        <span class="font-semibold opacity-50 text-sm">Trade Position</span>
-        <span>If you want to swap one of your shifts against this one, you can request a trade.</span>
-        <xsb-input-button content="Request a trade" size="minimal" action="success" name="shift-request-trade" (click)="showTradeDialog = true" />
-      </div>
-
-      <!-- Set preference  -->
-      <div class="mt-sm pt-sm border-t-2 border-framing-card flex flex-col gap-sm">
-        <span class="font-semibold opacity-50 text-sm">Preference</span>
-        <span>If slots need to be filled, you may be auto-assigned. You can set your preference here.</span>
-        <app-shift-preference />
-      </div>
-    </div>
-
-    <!-- eligible and taken -->
-    <div class="position card">
-
-      <!-- info caption -->
-      <span class="opacity-50 font-semibold text-sm">Shift Position</span>
-
-      <!-- position tile -->
-      <h1 class="title signature-gradient-font">Pilot Position</h1>
-
-      <!-- role description -->
-      <p>
-        This is the description of the position role.
-      </p>
-
-      <div class="flex flex-col">
-        <span class="flex gap-sm items-center"><span class="font-semibold opacity-50 text-sm">Status:</span> No free positions</span>
-        <span class="flex gap-sm items-center"><span class="font-semibold opacity-50 text-sm">Reward:</span> 10 Points</span>
-        <span class="flex gap-sm items-center"><span class="font-semibold opacity-50 text-sm">Positions:</span> 5 / 5 taken</span>
-      </div>
-
-      <!-- trade  -->
-      <div class="mt-sm pt-sm border-t-2 border-framing-card flex flex-col gap-sm">
-        <span class="font-semibold opacity-50 text-sm">Trade Position</span>
-        <span>If you want to swap one of your shifts against this one, you can request a trade.</span>
-        <xsb-input-button content="Request a trade" size="minimal" action="success" name="shift-request-trade" (click)="showTradeDialog = true" />
-      </div>
-
-      <!-- Set preference  -->
-      <div class="mt-sm pt-sm border-t-2 border-framing-card flex flex-col gap-sm">
-        <span class="font-semibold opacity-50 text-sm">Preference</span>
-        <span>If slots need to be filled, you may be auto-assigned. You can set your preference here.</span>
-        <app-shift-preference />
-      </div>
-    </div>
-
-    <!-- requirements not met -->
-    <div class="position card not-eligible">
-
-      <!-- info caption -->
-      <span class="opacity-50 font-semibold text-sm">Shift Position</span>
-
-      <!-- position tile -->
-      <h1 class="title signature-gradient-font">Pilot Position</h1>
-
-      <!-- role description -->
-      <p>
-        This is the description of the position role.
-      </p>
-
-      <div class="flex flex-col">
-        <span class="flex gap-sm items-center"><span class="font-semibold opacity-50 text-sm">Status:</span> Requirements not met.</span>
-        <span class="flex gap-sm items-center"><span class="font-semibold opacity-50 text-sm">Reward:</span> 50 Points</span>
-        <span class="flex gap-sm items-center"><span class="font-semibold opacity-50 text-sm">Positions:</span> 2 / 5 taken</span>
-      </div>
-    </div>
   </div>
 
 </div>
