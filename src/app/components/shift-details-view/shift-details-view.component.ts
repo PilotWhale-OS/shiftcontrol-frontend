@@ -44,6 +44,7 @@ export class ShiftDetailsViewComponent {
     endTime: "asdasdasd",
     relatedActivities: [],
     positionSlots: [],
+    lockStatus: ShiftDto.LockStatusEnum.SelfAssignable
   };
 
   private readonly _pageService = inject(PageService);
