@@ -11,6 +11,7 @@ import {TypedControlValueAccessor} from "../util/typedControlValueAccessor";
  * @example <app-ngf-input-select #selection [xsb-typed]="[selection, form.controls.option]" [formControl]="form.controls.option" />
  */
 @Directive({
+  standalone: true,
   selector: "[xsb-typed]"
 })
 export class TypedFormControlDirective<TData> {
