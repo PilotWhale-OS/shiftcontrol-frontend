@@ -69,7 +69,9 @@ export class ShiftDetailsViewComponent {
       rewardPoints: 100,
       assignedVolunteers: Array(assCount) as unknown as VolunteerDto[],
       positionSignupState: state,
-      desiredVolunteerCount: volCount
+      desiredVolunteerCount: volCount,
+      tradeInfoDtos: [],
+      auctions: []
     };
   }
 }
