@@ -6,6 +6,9 @@ import {ShiftTradeAuctionComponent} from "../../../components/shift-trade-auctio
 import {ShiftScheduleComponent} from "../../../components/shift-schedule/shift-schedule.component";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {faBarsProgress, faCalendar, faGift, faHourglass, faPeopleGroup, faShuffle} from "@fortawesome/free-solid-svg-icons";
+import {DashboardOverviewDto, ShiftPlanEndpointService} from "../../../../shiftservice-client";
+import {Observable, tap} from "rxjs";
+import {AsyncPipe} from "@angular/common";
 
 @Component({
   selector: "app-shift-dashboard",
@@ -13,13 +16,16 @@ import {faBarsProgress, faCalendar, faGift, faHourglass, faPeopleGroup, faShuffl
     RouterLink,
     ShiftTradeAuctionComponent,
     ShiftScheduleComponent,
-    FaIconComponent
+    FaIconComponent,
+    AsyncPipe
   ],
   standalone: true,
   templateUrl: "./shift-plan-dashboard.component.html",
   styleUrl: "./shift-plan-dashboard.component.scss"
 })
 export class ShiftPlanDashboardComponent {
+
+  public dashboard$: Observable<DashboardOverviewDto>;
 
   protected readonly iconTasks = faBarsProgress;
   protected readonly iconTrade = faShuffle;
@@ -30,11 +36,16 @@ export class ShiftPlanDashboardComponent {
   protected readonly iconCalendar = faCalendar;
 
   private readonly _pageService = inject(PageService);
+  private readonly _planService = inject(ShiftPlanEndpointService);
 
   constructor() {
-    this._pageService
-      .configurePageName("Pilot Plan Dashboard")
-      .configureBreadcrumb(BC_EVENT, "Pilot Event", "eventId")
-      .configureBreadcrumb(BC_PLAN_DASHBOARD, "Pilot Plan", "planId");
+    this.dashboard$ = this._planService.getShiftPlanDashboard("1").pipe(
+      tap(dashboard => {
+        this._pageService
+          .configurePageName(`${dashboard.shiftPlan.name} Dashboard`)
+          .configureBreadcrumb(BC_EVENT, dashboard.eventOverview.name, dashboard.eventOverview.id)
+          .configureBreadcrumb(BC_PLAN_DASHBOARD, dashboard.shiftPlan.name, `/plans/${dashboard.shiftPlan.id}`);
+      })
+    );
   }
 }
