@@ -1,4 +1,4 @@
-import {ApplicationConfig, inject, provideZoneChangeDetection} from "@angular/core";
+import {ApplicationConfig, inject, LOCALE_ID, provideZoneChangeDetection} from "@angular/core";
 import { provideRouter } from "@angular/router";
 
 import { routes } from "./app.routes";
@@ -26,6 +26,7 @@ export const appConfig: ApplicationConfig = {
       })
     ],
     providers: [AutoRefreshTokenService, UserActivityService, provideAnimations(), provideHttpClient(),
+      {provide: LOCALE_ID, useValue: "de-AT" },
       {
         provide: ShiftserviceConfiguration,
         useFactory: () => {

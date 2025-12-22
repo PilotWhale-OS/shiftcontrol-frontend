@@ -10,8 +10,12 @@ import {ComponentPortal} from "@angular/cdk/portal";
 })
 export class TooltipDirective implements OnInit, OnDestroy {
 
+  @Input()
+  public tooltipMaxWidth?: string;
+
   @Input("app-tooltip") text = "";
   private overlayRef?: OverlayRef;
+
 
   private readonly overlay = inject(Overlay);
   private readonly overlayPositionBuilder = inject(OverlayPositionBuilder);
@@ -27,6 +31,7 @@ export class TooltipDirective implements OnInit, OnDestroy {
     const tooltipRef: ComponentRef<TooltipComponent>
       = this.overlayRef.attach(new ComponentPortal(TooltipComponent));
     tooltipRef.instance.text = this.text;
+    tooltipRef.instance.maxWidth = this.tooltipMaxWidth;
   }
 
   @HostListener("pointerleave")

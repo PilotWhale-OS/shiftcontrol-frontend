@@ -7,11 +7,17 @@
     <div class="card grid grid-columns-2 gap-lg">
 
       <!-- info caption -->
-      <small class="col-span-2">Plan Overview</small>
+      <small>Plan Overview</small>
+      <div class="badge w-fit justify-self-end"
+           tooltipMaxWidth="30ex"
+           [app-tooltip]="'Event dates of ' + dashboard.eventOverview.name"
+      >
+        <fa-icon [icon]="iconDate" />
+        {{dashboard.eventOverview.startTime | date:"mediumDate"}} - {{dashboard.eventOverview.endTime | date:"mediumDate"}}
+      </div>
 
       <!-- properties -->
       <h1 class="col-span-2 compact signature-gradient-font">
-        {{dashboard.eventOverview.name}}: <br>
         {{dashboard.shiftPlan.name}}
       </h1>
       <p class="col-span-2">
@@ -21,15 +27,24 @@
       <!-- own schedule stats -->
       <div class="flex flex-col items-start gap-xs">
         <small>Your stats</small>
-        <div class="badge">
+        <div class="badge"
+             tooltipMaxWidth="30ex"
+             [app-tooltip]="'Days where you signed up for shifts in this plan'"
+        >
           <fa-icon [icon]="iconDay" />
           {{dashboard.ownShiftPlanStatistics.busyDays}} Busy Days
         </div>
-        <div class="badge">
+        <div class="badge"
+             tooltipMaxWidth="30ex"
+             [app-tooltip]="'Sum of signed up shifts in this plan'"
+        >
           <fa-icon [icon]="iconHours" />
           {{dashboard.ownShiftPlanStatistics.totalHours}} Shift Hours
         </div>
-        <div class="badge success">
+        <div class="badge success"
+             tooltipMaxWidth="30ex"
+             [app-tooltip]="'Reward points earned during this plan'"
+        >
           <fa-icon [icon]="iconRewards" />
           {{dashboard.rewardPoints}} Points Rewarded
         </div>
@@ -38,11 +53,17 @@
       <!-- public stats -->
       <div class="flex flex-col items-start gap-xs">
         <small>Overall stats</small>
-        <div class="badge hint">
+        <div class="badge hint"
+             tooltipMaxWidth="30ex"
+             [app-tooltip]="'Volunteers participating in this shift plan'"
+        >
           <fa-icon [icon]="iconVolunteers" />
           {{dashboard.overallShiftPlanStatistics.volunteerCount}} Volunteers
         </div>
-        <div class="badge hint">
+        <div class="badge hint"
+             tooltipMaxWidth="30ex"
+             [app-tooltip]="'Duration of shifts in this shift plan'"
+        >
           <fa-icon [icon]="iconHours" />
           {{dashboard.overallShiftPlanStatistics.totalHours}} Shift Hours
         </div>
