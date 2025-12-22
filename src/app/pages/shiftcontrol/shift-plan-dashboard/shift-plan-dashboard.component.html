@@ -1,90 +1,115 @@
+@if (dashboard$ | async; as dashboard) {
 
-<!-- card grid -->
-<div class="grid grid-cols-[repeat(3,1fr)] grid-rows-[auto_1fr] gap-md h-full">
+  <!-- card grid -->
+  <div class="grid grid-cols-[repeat(3,1fr)] grid-rows-[auto_1fr] gap-md h-full">
 
-  <!-- overview card -->
-  <div class="card grid grid-columns-2 gap-lg">
+    <!-- overview card -->
+    <div class="card grid grid-columns-2 gap-lg">
 
-    <!-- info caption -->
-    <small class="col-span-2">Plan Overview</small>
-
-    <!-- properties -->
-    <h1 class="col-span-2 compact signature-gradient-font">Pilot Event: Pilot Plan</h1>
-    <p class="col-span-2">
-      This is a pilot event shift plan for mockup purposes.<br>
-      It does not yet exist in the database. This text right here is the long description of the shift plan.
-    </p>
-
-    <!-- own schedule stats -->
-    <div class="flex flex-col items-start gap-xs">
-      <small>Your stats</small>
-      <div class="badge">
-        <fa-icon [icon]="iconDay" />
-        5 Busy Days
+      <!-- info caption -->
+      <small>Plan Overview</small>
+      <div class="badge w-fit justify-self-end"
+           tooltipMaxWidth="30ex"
+           [app-tooltip]="'Event dates of ' + dashboard.eventOverview.name"
+      >
+        <fa-icon [icon]="iconDate" />
+        {{dashboard.eventOverview.startTime | date:"mediumDate"}} - {{dashboard.eventOverview.endTime | date:"mediumDate"}}
       </div>
-      <div class="badge">
-        <fa-icon [icon]="iconHours" />
-        10 Shift Hours
+
+      <!-- properties -->
+      <h1 class="col-span-2 compact signature-gradient-font">
+        {{dashboard.shiftPlan.name}}
+      </h1>
+      <p class="col-span-2">
+        {{dashboard.shiftPlan.longDescription}}
+      </p>
+
+      <!-- own schedule stats -->
+      <div class="flex flex-col items-start gap-xs">
+        <small>Your stats</small>
+        <div class="badge"
+             tooltipMaxWidth="30ex"
+             [app-tooltip]="'Days where you signed up for shifts in this plan'"
+        >
+          <fa-icon [icon]="iconDay" />
+          {{dashboard.ownShiftPlanStatistics.busyDays}} Busy Days
+        </div>
+        <div class="badge"
+             tooltipMaxWidth="30ex"
+             [app-tooltip]="'Sum of signed up shifts in this plan'"
+        >
+          <fa-icon [icon]="iconHours" />
+          {{dashboard.ownShiftPlanStatistics.totalHours}} Shift Hours
+        </div>
+        <div class="badge success"
+             tooltipMaxWidth="30ex"
+             [app-tooltip]="'Reward points earned during this plan'"
+        >
+          <fa-icon [icon]="iconRewards" />
+          {{dashboard.rewardPoints}} Points Rewarded
+        </div>
       </div>
-      <div class="badge success">
-        <fa-icon [icon]="iconRewards" />
-        100 Points Rewarded
+
+      <!-- public stats -->
+      <div class="flex flex-col items-start gap-xs">
+        <small>Overall stats</small>
+        <div class="badge hint"
+             tooltipMaxWidth="30ex"
+             [app-tooltip]="'Volunteers participating in this shift plan'"
+        >
+          <fa-icon [icon]="iconVolunteers" />
+          {{dashboard.overallShiftPlanStatistics.volunteerCount}} Volunteers
+        </div>
+        <div class="badge hint"
+             tooltipMaxWidth="30ex"
+             [app-tooltip]="'Duration of shifts in this shift plan'"
+        >
+          <fa-icon [icon]="iconHours" />
+          {{dashboard.overallShiftPlanStatistics.totalHours}} Shift Hours
+        </div>
+      </div>
+
+    </div>
+
+    <!-- calendar link card -->
+    <div class="card interaction spotlight row-start-2 h-fit" routerLink="calendar">
+      <h1>
+        <fa-icon [icon]="iconCalendar" class="icon" />
+        View Shift Calendar
+      </h1>
+      <p>
+        Click to explore all available shifts in  the calendar.<br>
+        Here, you can also sign up to shifts that you want to participate in.
+      </p>
+    </div>
+
+    <!-- schedule card-->
+    <div class="card row-span-2 flex flex-col gap-md">
+
+      <!-- title -->
+      <h1 class="col-span-2 signature-gradient-font">
+        <fa-icon [icon]="iconTasks" class="icon" />
+        Plan Schedule
+      </h1>
+
+      <div class="grow overflow-auto">
+        <app-shift-schedule [showShiftDescription]="true" [showShiftPersonalDetails]="true" />
       </div>
     </div>
 
-    <!-- public stats -->
-    <div class="flex flex-col items-start gap-xs">
-      <small>Public stats</small>
-      <div class="badge hint">
-        <fa-icon [icon]="iconVolunteers" />
-        20 Volunteers
-      </div>
-      <div class="badge hint">
-        <fa-icon [icon]="iconHours" />
-        100 Shift Hours
+    <!-- auction/trade card-->
+    <div class="card row-span-2 flex flex-col gap-md ">
+
+      <!-- title -->
+      <h1 class="col-span-2 signature-gradient-font">
+        <fa-icon [icon]="iconTrade" class="icon" />
+        Shift Plan Auctions & Trades
+      </h1>
+
+      <div class="grow overflow-auto">
+        <app-shift-trade-auction />
       </div>
     </div>
 
   </div>
-
-  <!-- calendar link card -->
-  <div class="card interaction spotlight row-start-2 h-fit" routerLink="calendar">
-    <h1>
-      <fa-icon [icon]="iconCalendar" class="icon" />
-      View Shift Calendar
-    </h1>
-    <p>
-      Click to explore all available shifts in  the calendar.<br>
-      Here, you can also sign up to shifts that you want to participate in.
-    </p>
-  </div>
-
-  <!-- schedule card-->
-  <div class="card row-span-2 flex flex-col gap-md">
-
-    <!-- title -->
-    <h1 class="col-span-2 signature-gradient-font">
-      <fa-icon [icon]="iconTasks" class="icon" />
-      Plan Schedule
-    </h1>
-
-    <div class="grow overflow-auto">
-      <app-shift-schedule [showShiftDescription]="true" [showShiftPersonalDetails]="true" />
-    </div>
-  </div>
-
-  <!-- auction/trade card-->
-  <div class="card row-span-2 flex flex-col gap-md ">
-
-    <!-- title -->
-    <h1 class="col-span-2 signature-gradient-font">
-      <fa-icon [icon]="iconTrade" class="icon" />
-      Shift Plan Auctions & Trades
-    </h1>
-
-    <div class="grow overflow-auto">
-      <app-shift-trade-auction />
-    </div>
-  </div>
-
-</div>
+}

@@ -39,4 +39,6 @@ import { animate, style, transition, trigger } from "@angular/animations";
 export class TooltipComponent {
 
   @Input() text?: string;
+
+  @Input() maxWidth?: string;
 }

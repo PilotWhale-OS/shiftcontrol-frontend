@@ -2,13 +2,18 @@
 <!-- card list -->
 <div class="grid grid-cols-[repeat(auto-fit,minmax(0,max(40%,25rem)))] gap-md">
 
-  @for (card of [1,1,1,1,1]; track card) {
-    <div class="card interaction grid grid-columns-2 gap-2" [routerLink]="'/events/eventId'">
-      <h1>Pilot Event</h1>
-      <small>01.12.2025 - 24.12.2025</small>
+  @for (event of (events$ | async); track event) {
+    <div class="card interaction grid grid-columns-2 gap-2" [routerLink]="'/events/' + event.id">
+      <h1>{{event.name}}</h1>
+      <div class="badge w-fit"
+           tooltipMaxWidth="30ex"
+           [app-tooltip]="'The event dates of ' + event.name"
+      >
+        <fa-icon [icon]="iconDate" />
+        {{event.startTime | date:"mediumDate"}} - {{event.endTime | date:"mediumDate"}}
+      </div>
       <p>
-        This is a pilot event for mockup purposes.<br>
-        It does not yet exist in the database. This text right here is the long description of the event.
+        {{event.shortDescription}}
       </p>
     </div>
   }

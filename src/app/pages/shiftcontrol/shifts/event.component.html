@@ -1,97 +1,120 @@
+@if (event$ | async; as event) {
 
-<!-- card grid -->
-<div class="grid grid-cols-[repeat(auto-fit,minmax(15rem,1fr))] gap-md">
+  <!-- card grid -->
+  <div class="grid grid-cols-[repeat(auto-fit,minmax(15rem,1fr))] gap-md">
 
-  <!-- overview card -->
-  <div class="card col-span-2 row-span-2 grid grid-columns-2 gap-lg h-fit">
+    <!-- overview card -->
+    <div class="card col-span-2 row-span-2 grid grid-columns-2 gap-lg h-fit">
 
-    <!-- info caption -->
-    <small class="col-span-2">Event Overview</small>
-
-    <!-- properties -->
-    <h1 class="compact signature-gradient-font">Pilot Event</h1>
-    <b class="justify-self-end">01.12.2025 - 24.12.2025</b>
-    <p class="col-span-2">
-      This is a pilot event for mockup purposes.<br>
-      It does not yet exist in the database. This text right here is the long description of the event.
-    </p>
-
-    <!-- own schedule stats -->
-    <div class="flex flex-col items-start gap-xs">
-      <small>Your stats</small>
-      <div class="badge">
+      <!-- info caption -->
+      <small>Event Overview</small>
+      <div class="badge w-fit justify-self-end"
+           tooltipMaxWidth="30ex"
+           [app-tooltip]="'Event dates of ' + event.eventOverview.name"
+      >
         <fa-icon [icon]="iconDay" />
-        5 Busy Days
+        {{event.eventOverview.startTime | date:"shortDate"}} - {{event.eventOverview.endTime | date:"shortDate"}}
       </div>
-      <div class="badge">
-        <fa-icon [icon]="iconHours" />
-        10 Shift Hours
-      </div>
-      <div class="badge success">
-        <fa-icon [icon]="iconRewards" />
-        100 Points Rewarded
-      </div>
-    </div>
 
-    <!-- public stats -->
-    <div class="flex flex-col items-start gap-xs">
-      <small>Public stats</small>
-      <div class="badge hint">
-        <fa-icon [icon]="iconVolunteers" />
-        30 Volunteers
-      </div>
-      <div class="badge hint">
-        <fa-icon [icon]="iconHours" />
-        1000 Shift Hours
-      </div>
-    </div>
-
-  </div>
-
-  <!-- availability times card -->
-  <div class="card col-span-2 row-span-2 grid grid-columns-2 gap-lg h-fit">
-
-    <!-- info -->
-    <h1 class="compact signature-gradient-font">Availability</h1>
-    <p class="col-span-2">
-      Set your availability for conflict hints and preferred auto-assignment.
-    </p>
-
-    <!-- set unavailability -->
-    <div class="grid grid-cols-[1fr_auto] col-span-2 gap-xs">
-      <small class="col-span-2">Your unavailable times</small>
-      <div class="flex gap-sm items-center">
-        <div class="badge">
-          <fa-icon [icon]="iconUnavailable" />
-          1 day
-        </div>
-        05.12.2025 08:00 - 6.12.2025 19:00
-      </div>
-      <xsb-input-button action="normal" content="Remove Range" size="minimal" />
-
-      <div class="flex gap-sm items-center">
-        <div class="badge">
-          <fa-icon [icon]="iconUnavailable" />
-          10 days
-        </div>
-        10.12.2025 08:00 - Event End
-      </div>
-      <xsb-input-button action="normal" content="Remove Range" size="minimal" />
-    </div>
-
-    <xsb-input-button action="success" content="Add Unavailability" (click)="showUnavailabilityDialog = true" size="minimal" class="w-fit" />
-
-  </div>
-
-  @for (card of [1,2,3,4,5,6,7,8,9]; track card) {
-    <div class="card interaction" [routerLink]="'/plans/planId'">
-      <h1>Pilot Plan</h1>
-      <p>
-        This is the short description of the shift plan.
+      <!-- properties -->
+      <h1 class="compact signature-gradient-font col-span-2">{{event.eventOverview.name}}</h1>
+      <p class="col-span-2">
+        {{event.eventOverview.longDescription}}
       </p>
+
+      <!-- own schedule stats -->
+      <div class="flex flex-col items-start gap-xs">
+        <small>Your stats</small>
+        <div class="badge"
+             tooltipMaxWidth="30ex"
+             [app-tooltip]="'Days where you signed up for shifts in this event'"
+        >
+          <fa-icon [icon]="iconDay" />
+          {{event.ownEventStatistics.busyDays}} Busy Days
+        </div>
+        <div class="badge"
+             tooltipMaxWidth="30ex"
+             [app-tooltip]="'Sum of signed up shifts in this event'"
+        >
+          <fa-icon [icon]="iconHours" />
+          {{event.ownEventStatistics.totalHours}} Shift Hours
+        </div>
+        <div class="badge success"
+             tooltipMaxWidth="30ex"
+             [app-tooltip]="'Reward points earned during this event'"
+        >
+          <fa-icon [icon]="iconRewards" />
+          {{event.rewardPoints}} Points Rewarded
+        </div>
+      </div>
+
+      <!-- public stats -->
+      <div class="flex flex-col items-start gap-xs">
+        <small>Public stats</small>
+        <div class="badge hint"
+             tooltipMaxWidth="30ex"
+             [app-tooltip]="'Volunteers participating in this event'"
+        >
+          <fa-icon [icon]="iconVolunteers" />
+          {{event.overallEventStatistics.volunteerCount}} Volunteers
+        </div>
+        <div class="badge hint"
+             tooltipMaxWidth="30ex"
+             [app-tooltip]="'Duration of shifts during this event'"
+        >
+          <fa-icon [icon]="iconHours" />
+          {{event.overallEventStatistics.totalHours}} Shift Hours
+        </div>
+      </div>
+
     </div>
-  }
 
-</div>
+    <!-- availability times card -->
+    <div class="card col-span-2 row-span-2 grid grid-columns-2 gap-lg h-fit">
 
-<app-dialog-add-unavailability [viewWhen]="showUnavailabilityDialog" (result)="showUnavailabilityDialog = false" />
+      <!-- info -->
+      <h1 class="compact signature-gradient-font">Availability</h1>
+      <p class="col-span-2">
+        Set your availability for conflict hints and preferred auto-assignment.
+      </p>
+
+      <!-- set unavailability -->
+      <div class="grid grid-cols-[1fr_auto] col-span-2 gap-xs">
+        <small class="col-span-2">Your unavailable times</small>
+        <div class="flex gap-sm items-center">
+          <div class="badge">
+            <fa-icon [icon]="iconUnavailable" />
+            1 day
+          </div>
+          05.12.2025 08:00 - 6.12.2025 19:00
+        </div>
+        <xsb-input-button action="normal" content="Remove Range" size="minimal" />
+
+        <div class="flex gap-sm items-center">
+          <div class="badge">
+            <fa-icon [icon]="iconUnavailable" />
+            10 days
+          </div>
+          10.12.2025 08:00 - Event End
+        </div>
+        <xsb-input-button action="normal" content="Remove Range" size="minimal" />
+      </div>
+
+      <xsb-input-button action="success" content="Add Unavailability" (click)="showUnavailabilityDialog = true" size="minimal" class="w-fit" />
+
+    </div>
+
+    @for (plan of event.shiftPlans; track plan) {
+      <div class="card interaction" [routerLink]="'/plans/' + plan.id">
+        <h1>{{plan.name}}</h1>
+        <p>
+          {{plan.shortDescription}}
+        </p>
+      </div>
+    }
+
+  </div>
+
+  <app-dialog-add-unavailability [viewWhen]="showUnavailabilityDialog" (result)="showUnavailabilityDialog = false" />
+}
+
