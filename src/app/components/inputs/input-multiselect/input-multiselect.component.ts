@@ -67,6 +67,12 @@ export class InputMultiselectComponent<TData> implements TypedControlValueAccess
   naming!: string;
 
   /**
+   * empty naming for display
+   */
+  @Input()
+  emptyNaming?: string;
+
+  /**
    * prohibit ID attribute on input
    */
   @Input()
@@ -112,7 +118,7 @@ export class InputMultiselectComponent<TData> implements TypedControlValueAccess
    */
   get currentValueName() {
     const opt = this.options.filter(o => this.value?.some(v => v === o.value));
-    return opt.length === 0 ? " - " : opt.length === 1 ? opt[0].name : `${opt.length} ${this.naming}`;
+    return opt.length === 0 ? (this.emptyNaming ?? `No ${this.naming}`) : opt.length === 1 ? opt[0].name : `${opt.length} ${this.naming}`;
   }
 
   /**

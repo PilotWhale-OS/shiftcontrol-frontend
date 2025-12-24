@@ -47,6 +47,7 @@ export class ShiftPlanDashboardComponent {
   constructor() {
     const shiftPlanId = this._route.snapshot.paramMap.get("shiftPlanId");
     if(shiftPlanId === null) {
+      this._router.navigateByUrl("/");
       throw new Error("Shift Plan ID is required");
     }
 
