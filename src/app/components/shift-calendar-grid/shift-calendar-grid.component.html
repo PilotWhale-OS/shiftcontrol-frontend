@@ -32,11 +32,14 @@
         }
       </div>
 
+      <!-- background for venue headers -->
+      <div class="venue-bg" style="grid-column: 1 / -1; grid-row: 1"></div>
+
       <!-- time grid row markers for every hour -->
       @for (hour of getHours(); track hour) {
         <div
           class="hour-marker"
-          [ngClass]="{ 'new-day': hour % 24 === 0 }"
+          [ngClass]="{ 'new-day': hour !== 0 && hour % 24 === 0 }"
           style="grid-column: 1 / -1; grid-row: 2 / 2"
           [style.top]="getMinuteHeight(hour * 60)"
         ></div>

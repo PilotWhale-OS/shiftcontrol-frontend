@@ -108,8 +108,8 @@ export class ShiftCalendarComponent {
       if(filterData === undefined || filterData === null || calendar === undefined) {
         return;
       }
-      calendar.startDate = filterData.firstDate ? new Date(filterData.firstDate) : undefined;
-      calendar.endDate = filterData.lastDate ? new Date(filterData.lastDate) : undefined;
+      calendar.startDate = filterData.firstDate ? new Date(filterData.firstDate + "T00:00:00") : undefined;
+      calendar.endDate = filterData.lastDate ? new Date(filterData.lastDate + "T00:00:00") : undefined;
     });
 
     /* update calendar on changes */

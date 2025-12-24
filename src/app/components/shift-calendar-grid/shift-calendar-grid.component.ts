@@ -81,7 +81,7 @@ export class ShiftCalendarGridComponent {
           this.venueGapWidth
         } [venue-${locationName}-gap-end`;
       }).join(" ")
-    }]`;
+    } blank-start] 1fr [blank-end]`;
   }
 
   /**
@@ -103,12 +103,12 @@ export class ShiftCalendarGridComponent {
    * @protected
    */
   protected getItemMinutesFromStart(shift: ShiftDto | ActivityDto){
-      if(this.startDate === undefined) {
-        throw new Error("startDate input is required to calculate shift position");
-      }
-      const shiftStart = new Date(shift.startTime);
-      const durationMs = shiftStart.getTime() - this.startDate.getTime();
-      return Math.floor(durationMs / 60000); // convert ms to minutes
+    if(this.startDate === undefined) {
+      throw new Error("startDate input is required to calculate shift position");
+    }
+    const shiftStart = new Date(shift.startTime);
+    const durationMs = shiftStart.getTime() - this.startDate.getTime();
+    return Math.floor(durationMs / 60000); // convert ms to minutes
   }
 
   /**
