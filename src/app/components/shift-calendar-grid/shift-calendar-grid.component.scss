@@ -8,11 +8,19 @@
 
   > .hour {
     @apply absolute w-full grid justify-center align-top text-sm opacity-50;
+
+    &.new-day {
+      @apply opacity-100;
+    }
   }
 }
 
 .hour-marker {
   @apply border-b-framing-default border-opacity-70 border-b-ctr absolute w-full z-0;
+
+  &.new-day {
+    @apply border-b-framing-card border-opacity-100 border-b-2;
+  }
 }
 
 .venue {

@@ -10,5 +10,5 @@ export const mapValue = {
       return undefined;
     }
     return value.toISOString().split("T")[0];
-  }
+  },
 };

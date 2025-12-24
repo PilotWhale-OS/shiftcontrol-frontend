@@ -4,7 +4,7 @@ import {ShiftDetailsViewComponent} from "../shift-details-view/shift-details-vie
 import {DialogService} from "../../services/dialog/dialog.service";
 import {faLocationDot} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import {PositionSlotDto, ShiftDto, ShiftPlanScheduleDto} from "../../../shiftservice-client";
+import {ActivityDto, PositionSlotDto, ShiftDto, ShiftPlanScheduleDto} from "../../../shiftservice-client";
 import {DatePipe, NgClass} from "@angular/common";
 
 @Component({
@@ -25,7 +25,13 @@ export class ShiftCalendarGridComponent {
   @Input()
   public schedule?: ShiftPlanScheduleDto;
 
-  protected hours = Array.from({length: 24}, (_, i) => i); // 0 to 23
+  @Input()
+  public startDate?: Date;
+
+  @Input()
+  public endDate?: Date;
+
+  /* protected hours = Array.from({length: 24}, (_, i) => i); // 0 to 23*/
   protected viewShift = false;
 
   protected readonly iconLocation = faLocationDot;
@@ -35,26 +41,29 @@ export class ShiftCalendarGridComponent {
   private readonly venueGapWidth = "1rem";
   private readonly minuteHeightRem = 0.05;
 
-  // eslint-disable-next-line max-len, @typescript-eslint/member-ordering
-  public readonly gridColumns =
-    `[time-start] 5rem [time-end venue-a-start venue-a-activity-start] ${this.activityWidth}
-    [venue-a-activity-end venue-a-shift-start venue-a-shift-col-1-start] ${this.shiftWidth}
-    [venue-a-shift-col-1-end venue-a-shift-col-2-start] ${this.shiftWidth}
-    [venue-a-shift-col-2-end venue-a-end venue-a-shift-end venue-a-gap-start] ${this.venueGapWidth}
-    [venue-a-gap-end venue-b-start venue-b-activity-start] ${this.activityWidth}
-    [venue-b-activity-end venue-b-shift-start venue-b-shift-col-1-start] ${this.shiftWidth}
-    [venue-b-shift-col-1-end venue-b-shift-col-2-start] ${this.shiftWidth}
-    [venue-b-shift-col-2-end venue-b-end venue-b-shift-end venue-b-gap-start] ${this.venueGapWidth}
-    [venue-b-gap-end venue-c-start venue-c-activity-start] ${this.activityWidth}
-    [venue-c-activity-end venue-c-shift-start venue-c-shift-col-1-start] ${this.shiftWidth}
-    [venue-c-shift-col-1-end venue-c-shift-col-2-start] ${this.shiftWidth}
-    [venue-c-shift-col-2-end venue-c-end venue-c-shift-end venue-c-gap-start] ${this.venueGapWidth}
-    [venue-c-gap-end]`;
-
   private readonly _dialogService = inject(DialogService);
+
+  public getHours() {
+    if(this.startDate === undefined || this.endDate === undefined) {
+      throw new Error("startDate and endDate inputs are required to calculate hours");
+    }
+
+    const totalHours = Math.ceil(
+      (this.endDate.getTime() - (this.startDate.getTime())) / (1000 * 60 * 60)
+    ) + 24; // since end is inclusive
+    return Array.from({length: totalHours}, (_, i) => i);
+  }
 
   public getMinuteHeight(durationMinutes: number) {
     return `${durationMinutes * this.minuteHeightRem}rem`;
+  }
+
+  public getDayOfHour(hourIndex: number) {
+    if(this.startDate === undefined) {
+      throw new Error("startDate input is required to calculate day of hour");
+    }
+    const date = new Date(this.startDate.getTime() + hourIndex * 60 * 60 * 1000);
+    return date;
   }
 
   protected getGridColumns(schedule: ShiftPlanScheduleDto){
@@ -75,18 +84,38 @@ export class ShiftCalendarGridComponent {
     }]`;
   }
 
-  protected getShiftMinutesDuration(shift: ShiftDto){
+  /**
+   * Get the duration of a shift in minutes
+   * @param shift
+   * @protected
+   */
+  protected getItemMinutesDuration(shift: ShiftDto | ActivityDto){
       const start = new Date(shift.startTime);
       const end = new Date(shift.endTime);
       const durationMs = end.getTime() - start.getTime();
       return Math.floor(durationMs / 60000); // convert ms to minutes
   }
 
-  protected getShiftMinutesFromStart(shift: ShiftDto){
-      const start = new Date(shift.startTime); // TODO subtract calendar start date
-      return start.getHours() * 60 + start.getMinutes();
+  /**
+   * Get the minutes from the start of the calendar day to the shift start time
+   * @param shift
+   * @param startTimestamp
+   * @protected
+   */
+  protected getItemMinutesFromStart(shift: ShiftDto | ActivityDto){
+      if(this.startDate === undefined) {
+        throw new Error("startDate input is required to calculate shift position");
+      }
+      const shiftStart = new Date(shift.startTime);
+      const durationMs = shiftStart.getTime() - this.startDate.getTime();
+      return Math.floor(durationMs / 60000); // convert ms to minutes
   }
 
+  /**
+   * Get the display/color category for a shift based on signup state
+   * @param shift
+   * @protected
+   */
   protected getShiftDisplayCategory(shift: ShiftDto): "eligible" | "signed-up" | undefined {
     if(shift.positionSlots.some(slot => slot.positionSignupState ===  PositionSlotDto.PositionSignupStateEnum.SignedUp)){
       return "signed-up";
@@ -101,6 +130,11 @@ export class ShiftCalendarGridComponent {
     return undefined;
   }
 
+  /**
+   * Get the caption/tag for a shift based on signup state
+   * @param shift
+   * @protected
+   */
   protected getShiftDisplayTag(shift: ShiftDto): string {
     if(shift.positionSlots.some(slot => slot.positionSignupState ===  PositionSlotDto.PositionSignupStateEnum.SignedUp)){
       return "Signed Up";

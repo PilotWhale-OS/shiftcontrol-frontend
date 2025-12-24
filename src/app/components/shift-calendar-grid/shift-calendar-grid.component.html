@@ -3,9 +3,9 @@
 
     <!-- calendar grid: x -> grid columns, scrollable venues; y: continuous big row, time axis, growing by date range, position by top -->
     <div
-      class="relative grid gap-md gap-y-0 grid-rows-[auto_1fr]"
+      class="relative grid gap-md gap-y-0 "
       [style.grid-template-columns]="getGridColumns(schedule)"
-      [style.height]="getMinuteHeight(24*60)"
+      [style.grid-template-rows]="'auto ' + getMinuteHeight(getHours().length * 60)"
     >
 
       <!-- date side -->
@@ -16,26 +16,30 @@
       <!-- timeline side -->
       <div style="grid-row: 2 / 2; grid-column: time-start / time-end" class="timestamp">
 
-        @for (hour of hours; track hour) {
+        @for (hour of getHours(); track hour) {
           <div
             class="hour"
+            [ngClass]="{ 'new-day': hour % 24 === 0 }"
             [style.top]="getMinuteHeight(hour * 60)"
             [style.height]="getMinuteHeight(60)"
           >
-            {{ hour.toString().padStart(2, "0") }}:00
+            @if (hour % 24 === 0){
+              {{ getDayOfHour(hour) | date:"shortDate" }}
+            } @else {
+              {{ (hour % 24).toString().padStart(2, "0") }}:00
+            }
           </div>
         }
       </div>
 
-      <!-- time grid row markers for every other hour -->
-      @for (hour of hours; track hour) {
-        @if (hour % 1 === 0){
-          <div
-            class="hour-marker"
-            style="grid-column: 1 / -1; grid-row: 2 / 2"
-            [style.top]="getMinuteHeight(hour * 60)"
-          ></div>
-        }
+      <!-- time grid row markers for every hour -->
+      @for (hour of getHours(); track hour) {
+        <div
+          class="hour-marker"
+          [ngClass]="{ 'new-day': hour % 24 === 0 }"
+          style="grid-column: 1 / -1; grid-row: 2 / 2"
+          [style.top]="getMinuteHeight(hour * 60)"
+        ></div>
       }
 
       <!-- venue data -->
@@ -61,15 +65,29 @@
             tabindex="0"
             class="shift"
             [ngClass]="getShiftDisplayCategory(shift.shiftDto)"
-            style="grid-row: 2/2; grid-column: venue-{{venue.location.id}}-shift-col-{{shift.columnIndex + 1}}-start / venue-{{venue.location.id}}-shift-col-{{shift.columnIndex +  1}}-start"
-            [style.height]="getMinuteHeight(getShiftMinutesDuration(shift.shiftDto))"
-            [style.top]="getMinuteHeight(getShiftMinutesFromStart(shift.shiftDto))"
+            style="grid-row: 2/2; grid-column: venue-{{venue.location.id}}-shift-col-{{shift.columnIndex + 1}}-start / venue-{{venue.location.id}}-shift-col-{{shift.columnIndex +  1}}-end"
+            [style.height]="getMinuteHeight(getItemMinutesDuration(shift.shiftDto))"
+            [style.top]="getMinuteHeight(getItemMinutesFromStart(shift.shiftDto))"
           >
             <span class="tag">{{getShiftDisplayTag(shift.shiftDto)}}</span>
             <span class="time">
               {{shift.shiftDto.startTime | date:"shortTime"}} - {{shift.shiftDto.endTime | date:"shortTime"}}
             </span>
             <span>{{shift.shiftDto.name}}</span>
+          </div>
+        }
+
+
+
+        <!-- venue activities -->
+        @for (activity of venue.activities; track activity.id) {
+          <div
+            class="activity"
+            style="grid-row: 2/2; grid-column: venue-{{venue.location.id}}-activity-start / venue-{{venue.location.id}}-end"
+            [style.height]="getMinuteHeight(getItemMinutesDuration(activity))"
+            [style.top]="getMinuteHeight(getItemMinutesFromStart(activity))"
+          >
+            <span>{{activity.name}}</span>
           </div>
         }
       }
