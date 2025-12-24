@@ -1,16 +1,20 @@
-import {Component, inject} from "@angular/core";
+import {Component, inject, Input} from "@angular/core";
 import {DialogComponent} from "../dialog/dialog.component";
 import {ShiftDetailsViewComponent} from "../shift-details-view/shift-details-view.component";
 import {DialogService} from "../../services/dialog/dialog.service";
 import {faLocationDot} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
+import {PositionSlotDto, ShiftDto, ShiftPlanScheduleDto} from "../../../shiftservice-client";
+import {DatePipe, NgClass} from "@angular/common";
 
 @Component({
   selector: "app-shift-calendar-grid",
   imports: [
     DialogComponent,
     ShiftDetailsViewComponent,
-    FaIconComponent
+    FaIconComponent,
+    DatePipe,
+    NgClass
   ],
   standalone: true,
   templateUrl: "./shift-calendar-grid.component.html",
@@ -18,8 +22,11 @@ import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 })
 export class ShiftCalendarGridComponent {
 
-  public hours = Array.from({length: 24}, (_, i) => i); // 0 to 23
-  public viewShift = false;
+  @Input()
+  public schedule?: ShiftPlanScheduleDto;
+
+  protected hours = Array.from({length: 24}, (_, i) => i); // 0 to 23
+  protected viewShift = false;
 
   protected readonly iconLocation = faLocationDot;
 
@@ -48,5 +55,63 @@ export class ShiftCalendarGridComponent {
 
   public getMinuteHeight(durationMinutes: number) {
     return `${durationMinutes * this.minuteHeightRem}rem`;
+  }
+
+  protected getGridColumns(schedule: ShiftPlanScheduleDto){
+    return `[time-start] 5rem [time-end ${
+      schedule.locations?.map(locationColumn => {
+        const locationName = locationColumn.location.id;
+        return `venue-${locationName}-start venue-${locationName}-activity-start] ${
+          this.activityWidth
+        } [venue-${locationName}-activity-end venue-${locationName}-shift-start ${
+          Array(locationColumn.requiredShiftColumns).fill(undefined).map((_, index) =>
+            `venue-${locationName}-shift-col-${index + 1}-start] ${
+              this.shiftWidth
+            } [venue-${locationName}-shift-col-${index + 1}-end`).join(" ")
+        } venue-${locationName}-shift-end venue-${locationName}-end venue-${locationName}-gap-start] ${
+          this.venueGapWidth
+        } [venue-${locationName}-gap-end`;
+      }).join(" ")
+    }]`;
+  }
+
+  protected getShiftMinutesDuration(shift: ShiftDto){
+      const start = new Date(shift.startTime);
+      const end = new Date(shift.endTime);
+      const durationMs = end.getTime() - start.getTime();
+      return Math.floor(durationMs / 60000); // convert ms to minutes
+  }
+
+  protected getShiftMinutesFromStart(shift: ShiftDto){
+      const start = new Date(shift.startTime); // TODO subtract calendar start date
+      return start.getHours() * 60 + start.getMinutes();
+  }
+
+  protected getShiftDisplayCategory(shift: ShiftDto): "eligible" | "signed-up" | undefined {
+    if(shift.positionSlots.some(slot => slot.positionSignupState ===  PositionSlotDto.PositionSignupStateEnum.SignedUp)){
+      return "signed-up";
+    }
+    if(shift.positionSlots.some(slot =>
+      slot.positionSignupState ===  PositionSlotDto.PositionSignupStateEnum.SignupViaAuction ||
+      slot.positionSignupState ===  PositionSlotDto.PositionSignupStateEnum.SignupViaTrade
+    )){
+      return "eligible";
+    }
+
+    return undefined;
+  }
+
+  protected getShiftDisplayTag(shift: ShiftDto): string {
+    if(shift.positionSlots.some(slot => slot.positionSignupState ===  PositionSlotDto.PositionSignupStateEnum.SignedUp)){
+      return "Signed Up";
+    }
+    if(shift.positionSlots.some(slot =>
+      slot.positionSignupState ===  PositionSlotDto.PositionSignupStateEnum.SignupViaAuction ||
+      slot.positionSignupState ===  PositionSlotDto.PositionSignupStateEnum.SignupViaTrade
+    )){
+      return "Eligible";
+    }
+
+    return "";
   }
 }

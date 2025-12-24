@@ -1,5 +1,5 @@
 import {Component, inject} from "@angular/core";
-import {ActivatedRoute, RouterLink} from "@angular/router";
+import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {PageService} from "../../../services/page/page.service";
 import {BC_EVENT} from "../../../breadcrumbs";
 import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
@@ -44,11 +44,13 @@ export class EventComponent {
   private readonly _pageService = inject(PageService);
   private readonly _fb = inject(FormBuilder);
   private readonly _route = inject(ActivatedRoute);
+  private readonly _router = inject(Router);
   private readonly _eventService = inject(EventEndpointService);
 
   constructor() {
     const eventId = this._route.snapshot.paramMap.get("eventId");
     if(eventId === null) {
+      this._router.navigateByUrl("/");
       throw new Error("Event ID is required");
     }
 
