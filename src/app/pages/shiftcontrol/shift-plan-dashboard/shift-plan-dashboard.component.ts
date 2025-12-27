@@ -6,7 +6,7 @@ import {ShiftTradeAuctionComponent} from "../../../components/shift-trade-auctio
 import {ShiftScheduleComponent} from "../../../components/shift-schedule/shift-schedule.component";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {faBarsProgress, faCalendar, faCalendarDays, faGift, faHourglass, faPeopleGroup, faShuffle} from "@fortawesome/free-solid-svg-icons";
-import {DashboardOverviewDto, ShiftPlanEndpointService} from "../../../../shiftservice-client";
+import {ShiftPlanDashboardOverviewDto, ShiftPlanEndpointService} from "../../../../shiftservice-client";
 import {Observable, tap} from "rxjs";
 import {AsyncPipe, DatePipe} from "@angular/common";
 import {TooltipDirective} from "../../../directives/tooltip.directive";
@@ -28,7 +28,7 @@ import {TooltipDirective} from "../../../directives/tooltip.directive";
 })
 export class ShiftPlanDashboardComponent {
 
-  public dashboard$: Observable<DashboardOverviewDto>;
+  public dashboard$: Observable<ShiftPlanDashboardOverviewDto>;
 
   protected readonly iconTasks = faBarsProgress;
   protected readonly iconTrade = faShuffle;
