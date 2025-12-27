@@ -1,64 +1,67 @@
-@if (schedule !== undefined){
-  <div class="h-full w-full overflow-auto no-scrollbar">
+<div class="h-full w-full overflow-auto no-scrollbar" #calendarParent (scroll)="scrolled$.next($event)">
 
-    <!-- calendar grid: x -> grid columns, scrollable venues; y: continuous big row, time axis, growing by date range, position by top -->
-    <div
-      class="relative grid gap-md gap-y-0 "
-      [style.grid-template-columns]="getGridColumns(schedule)"
-      [style.grid-template-rows]="'auto ' + getMinuteHeight(getHours().length * 60)"
-    >
+  <!-- calendar grid: x -> grid columns, scrollable venues; y: continuous big row, time axis, growing by date range, position by top -->
+  <div
+    class="relative grid gap-md gap-y-0 "
+    [style.grid-template-columns]="getGridColumns(locations$ | async)"
+    [style.grid-template-rows]="'auto ' + getMinuteHeight(getHours().length * 60)"
+  >
 
-      <!-- date side -->
-      <div style="grid-row: 1 / 1; grid-column: time-start / time-end" class="date">
-        12.12.2025
-      </div>
+    <!-- date side -->
+    <div style="grid-row: 1 / 1; grid-column: time-start / time-end" class="date">
+      {{ navigatedDate$ | async | date:"shortDate" }}
+    </div>
 
-      <!-- timeline side -->
-      <div style="grid-row: 2 / 2; grid-column: time-start / time-end" class="timestamp">
+    <!-- timeline side -->
+    <div style="grid-row: 2 / 2; grid-column: time-start / time-end" class="timestamp">
 
-        @for (hour of getHours(); track hour) {
-          <div
-            class="hour"
-            [ngClass]="{ 'new-day': hour % 24 === 0 }"
-            [style.top]="getMinuteHeight(hour * 60)"
-            [style.height]="getMinuteHeight(60)"
-          >
-            @if (hour % 24 === 0){
-              {{ getDayOfHour(hour) | date:"shortDate" }}
-            } @else {
-              {{ (hour % 24).toString().padStart(2, "0") }}:00
-            }
-          </div>
-        }
-      </div>
-
-      <!-- background for venue headers -->
-      <div class="venue-bg" style="grid-column: 1 / -1; grid-row: 1"></div>
-
-      <!-- time grid row markers for every hour -->
       @for (hour of getHours(); track hour) {
         <div
-          class="hour-marker"
-          [ngClass]="{ 'new-day': hour !== 0 && hour % 24 === 0 }"
-          style="grid-column: 1 / -1; grid-row: 2 / 2"
+          class="hour"
+          [ngClass]="{ 'new-day': hour % 24 === 0 }"
           [style.top]="getMinuteHeight(hour * 60)"
-        ></div>
-      }
-
-      <!-- venue data -->
-      @for (venue of schedule.locations; track venue.location.id) {
-
-        <!-- venue header -->
-        <div class="venue" style="grid-row: 1/1; grid-column: venue-{{venue.location.id}}-start / venue-{{venue.location.id}}-end">
-          <fa-icon [icon]="iconLocation" class="text-sm" />
-          <span>{{venue.location.name}}</span>
+          [style.height]="getMinuteHeight(60)"
+        >
+          @if (hour % 24 === 0){
+            {{ getDayOfHour(hour) | date:"shortDate" }}
+          } @else {
+            {{ (hour % 24).toString().padStart(2, "0") }}:00
+          }
         </div>
+      }
+    </div>
 
-        <!-- venue header gap -->
-        <div
-          class="venue-gap"
-          style="grid-column: venue-{{venue.location.id}}-gap-start / venue-{{venue.location.id}}-gap-end; grid-row: 1/-1;"
-        ></div>
+    <!-- background for venue headers -->
+    <div class="venue-bg" style="grid-column: 1 / -1; grid-row: 1"></div>
+
+    <!-- time grid row markers for every hour -->
+    @for (hour of getHours(); track hour) {
+      <div
+        class="hour-marker"
+        [ngClass]="{ 'new-day': hour !== 0 && hour % 24 === 0 }"
+        style="grid-column: 1 / -1; grid-row: 2 / 2"
+        [style.top]="getMinuteHeight(hour * 60)"
+      ></div>
+    }
+
+    @for (venue of (locations$ | async); track venue.location.id) {
+
+      <!-- venue header -->
+      <div class="venue" style="grid-row: 1/1; grid-column: venue-{{venue.location.id}}-start / venue-{{venue.location.id}}-end">
+        <fa-icon [icon]="iconLocation" class="text-sm" />
+        <span>{{venue.location.name}}</span>
+      </div>
+
+      <!-- venue header gap -->
+      <div
+        class="venue-gap"
+        style="grid-column: venue-{{venue.location.id}}-gap-start / venue-{{venue.location.id}}-gap-end; grid-row: 1/-1;"
+      ></div>
+    }
+
+    <!-- venue data -->
+    @for(schedule of (schedules$ | async); track schedule.date) {
+      @for (venue of schedule.locations; track venue.location.id) {
 
         <!-- venue shifts -->
         @for (shift of venue.shiftColumns; track shift.shiftDto.id) {
@@ -74,14 +77,11 @@
           >
             <span class="tag">{{getShiftDisplayTag(shift.shiftDto)}}</span>
             <span class="time">
-              {{shift.shiftDto.startTime | date:"shortTime"}} - {{shift.shiftDto.endTime | date:"shortTime"}}
-            </span>
+            {{shift.shiftDto.startTime | date:"shortTime"}} - {{shift.shiftDto.endTime | date:"shortTime"}}
+          </span>
             <span>{{shift.shiftDto.name}}</span>
           </div>
         }
-
-
-
         <!-- venue activities -->
         @for (activity of venue.activities; track activity.id) {
           <div
@@ -94,11 +94,12 @@
           </div>
         }
       }
+    }
 
-    </div>
 
   </div>
-}
+
+</div>
 
 @if (viewShift){
   <xsb-dialog (closeDialog)="viewShift = false">

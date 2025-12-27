@@ -5,8 +5,21 @@ import {PageService} from "../../../services/page/page.service";
 import {BC_EVENT, BC_PLAN_DASHBOARD} from "../../../breadcrumbs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ShiftPlanEndpointService} from "../../../../shiftservice-client";
-import {catchError, debounceTime, of} from "rxjs";
-import {toSignal} from "@angular/core/rxjs-interop";
+import {
+  catchError,
+  combineLatestWith,
+  debounceTime, distinctUntilChanged,
+  EMPTY,
+  filter,
+  map,
+  of,
+  shareReplay,
+  startWith,
+  switchMap,
+  tap,
+  withLatestFrom
+} from "rxjs";
+import {toObservable, toSignal} from "@angular/core/rxjs-interop";
 import {mapValue} from "../../../util/value-maps";
 
 @Component({
@@ -36,7 +49,85 @@ export class ShiftCalendarComponent {
       throw new Error("Shift Plan ID is required");
     }
 
-    this.setupWithSignals(shiftPlanId);
+    this.setupWithObservables(shiftPlanId);
+  }
+
+  setupWithObservables(planId: string){
+    const plan$ = this._planService.getShiftPlanDashboard(planId).pipe(
+      catchError(() => {
+        this._router.navigateByUrl("/");
+        return EMPTY;
+      }),
+      tap(data => console.log("plan$ emitted", data)),
+      shareReplay()
+    );
+    const filters$ = toObservable(this._filterComponent).pipe(
+      switchMap(component => component?.searchForm?.valueChanges ?? of(undefined)),
+      filter(data => data !== undefined),
+      debounceTime(500),
+      startWith({} as Partial<ShiftCalendarFilterComponent["searchForm"]["value"]>),
+    tap(data => console.log("filters$ emitted", data)),
+    );
+    const calendar$ = toObservable(this._shiftPlanSchedule).pipe(
+      filter(calendar => calendar !== undefined),
+      tap(data => console.log("calendar$ emitted", data)),
+    );
+    const calendarDate$ = calendar$.pipe(
+      switchMap(calendar => calendar.navigatedDate$),
+      distinctUntilChanged((prev, curr) => prev.getDay() === curr.getDay()),
+      tap(data => console.log("calendarDate$ emitted", data)),
+    );
+    const filterData$ = this._planService.getShiftPlanScheduleFilterValues(planId).pipe(
+      shareReplay(),
+      tap(data => console.log("filterData$ emitted", data)),
+    );
+
+    // Update page properties
+    plan$.subscribe(dashboard => {
+      this._pageService
+        .configurePageName(`${dashboard.shiftPlan.name} Calendar`)
+        .configureBreadcrumb(
+          BC_EVENT,
+          dashboard.eventOverview.name,
+          dashboard.eventOverview.id
+        )
+        .configureBreadcrumb(
+          BC_PLAN_DASHBOARD,
+          dashboard.shiftPlan.name,
+          `/plans/${dashboard.shiftPlan.id}`
+        );
+    });
+
+    // set calendar bounds
+    filterData$.pipe(
+      combineLatestWith(calendar$)
+    ).subscribe(([filterData, calendar]) => {
+      console.log("setting calendar bounds", filterData);
+      const startDate = mapValue.datetimeAsLocalDate(filterData.firstDate ? new Date(filterData.firstDate) : new Date());
+      const endDate = mapValue.datetimeAsLocalDate(filterData.lastDate ? new Date(filterData.lastDate) : new Date());
+      calendar.startDate = startDate;
+      calendar.endDate = endDate;
+
+      const initDate = Math.min(Math.max(startDate.getTime(), new Date().getTime()), endDate.getTime());
+      calendar.jumpToDate(new Date(initDate));
+    });
+
+    // update calendar on changes
+    filters$.pipe(
+      combineLatestWith(calendar$, filterData$, calendarDate$),
+      switchMap(([filters, calendar, , date]) => {
+        console.log(mapValue.datetimeAsLocalDate(date));
+        return this._planService.getShiftPlanSchedule(planId, {
+          date: mapValue.undefinedIfEmptyLocalDate(mapValue.datetimeAsLocalDate(date)),
+          shiftName: mapValue.undefinedIfEmptyString(filters?.shiftName),
+        }).pipe(
+          map(schedule => ({calendar, schedule, date}))
+        );
+      })
+    ).subscribe(({calendar, schedule, date}) => {
+      console.log("updating calendar with schedule for date", date, schedule);
+      calendar.addScheduleDay(date, schedule);
+    });
   }
 
   setupWithSignals(planId: string){
@@ -66,7 +157,6 @@ export class ShiftCalendarComponent {
       ),
       { initialValue: undefined }
     );
-
 
     /* signal containing the result of the available filter data */
     const filterDataSignal = toSignal(
@@ -122,10 +212,11 @@ export class ShiftCalendarComponent {
       }
 
       const sub = this._planService.getShiftPlanSchedule(planId, {
-        date: mapValue.undefinedIfEmptyLocalDate(filters?.date),
+        date: "2025-09-12",  // mapValue.undefinedIfEmptyLocalDate(filters?.date),
         shiftName: mapValue.undefinedIfEmptyString(filters?.shiftName),
       }).subscribe(schedule => {
-        calendar.schedule = schedule;
+        /* calendar.schedule = schedule;*/
+        calendar.addScheduleDay(new Date(schedule.date ?? ""), schedule);
       });
       onCleanup(() => sub.unsubscribe());
     });

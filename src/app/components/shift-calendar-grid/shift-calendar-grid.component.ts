@@ -1,11 +1,13 @@
-import {Component, inject, Input} from "@angular/core";
+import {Component, ElementRef, inject, Input, Output, viewChild, ViewChild} from "@angular/core";
 import {DialogComponent} from "../dialog/dialog.component";
 import {ShiftDetailsViewComponent} from "../shift-details-view/shift-details-view.component";
 import {DialogService} from "../../services/dialog/dialog.service";
 import {faLocationDot} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import {ActivityDto, PositionSlotDto, ShiftDto, ShiftPlanScheduleDto} from "../../../shiftservice-client";
-import {DatePipe, NgClass} from "@angular/common";
+import {ActivityDto, LocationScheduleDto, PositionSlotDto, ShiftDto, ShiftPlanScheduleDto} from "../../../shiftservice-client";
+import {AsyncPipe, DatePipe, NgClass} from "@angular/common";
+import {BehaviorSubject, combineLatest, combineLatestWith, debounceTime, filter, map, Observable, Subject} from "rxjs";
+import {toObservable} from "@angular/core/rxjs-interop";
 
 @Component({
   selector: "app-shift-calendar-grid",
@@ -14,7 +16,8 @@ import {DatePipe, NgClass} from "@angular/common";
     ShiftDetailsViewComponent,
     FaIconComponent,
     DatePipe,
-    NgClass
+    NgClass,
+    AsyncPipe
   ],
   standalone: true,
   templateUrl: "./shift-calendar-grid.component.html",
@@ -22,8 +25,8 @@ import {DatePipe, NgClass} from "@angular/common";
 })
 export class ShiftCalendarGridComponent {
 
-  @Input()
-  public schedule?: ShiftPlanScheduleDto;
+  @Output()
+  public readonly navigatedDate$: Observable<Date>;
 
   @Input()
   public startDate?: Date;
@@ -31,19 +34,85 @@ export class ShiftCalendarGridComponent {
   @Input()
   public endDate?: Date;
 
-  /* protected hours = Array.from({length: 24}, (_, i) => i); // 0 to 23*/
+
   protected viewShift = false;
 
   protected readonly iconLocation = faLocationDot;
+
+  protected readonly scrolled$ = new Subject<Event>();
+  protected readonly loadedDays$ = new BehaviorSubject<Map<string, ShiftPlanScheduleDto>>(new Map());
+  protected readonly locations$ = this.loadedDays$.pipe(
+    map(dayMap => {
+      const anyDay = dayMap.size > 0 ? [...dayMap.values()][0] : null;
+      return anyDay?.locations ?? [];
+    })
+  );
+  protected readonly schedules$ = this.loadedDays$.pipe(
+    map(dayMap => dayMap.size > 0 ? [...dayMap.values()] : [])
+  );
 
   private readonly activityWidth = "2rem";
   private readonly shiftWidth = "10rem";
   private readonly venueGapWidth = "1rem";
   private readonly minuteHeightRem = 0.05;
 
+  private readonly _calendarParent = viewChild<ElementRef<HTMLButtonElement>>("calendarParent");
+  private readonly _navigatedDate$ = new Subject<Date>();
+  private readonly _jumpDate$ = new Subject<Date>();
   private readonly _dialogService = inject(DialogService);
 
-  public getHours() {
+  constructor() {
+    this.navigatedDate$ = this._navigatedDate$.asObservable();
+
+    this.scrolled$.pipe(
+      debounceTime(10),
+      map(event => {
+        if (this.startDate === undefined || this.endDate === undefined) {
+          return undefined;
+        }
+
+        const target = event.target as HTMLElement;
+        const scrollPercent = target.scrollTop / target.scrollHeight;
+        const scrollTime = (this.endDate.getTime() - this.startDate.getTime() + 24 * 60 * 60 * 1000) * scrollPercent; // inclusive end
+        const scrolledDate = this.startDate.getTime() + scrollTime;
+        return new Date(scrolledDate);
+      }),
+      filter(date => date !== undefined)
+    ).subscribe(date => {
+      this._navigatedDate$.next(date as Date);
+    });
+
+    this._jumpDate$.pipe(
+      combineLatestWith(toObservable(this._calendarParent).pipe(
+        map((parent => parent?.nativeElement as HTMLElement))
+      )),
+      filter(([, parent]) => parent !== undefined),
+    ).subscribe(([date, parent]) => {
+      this._navigatedDate$.next(date);
+
+      if(this.startDate === undefined || this.endDate === undefined) {
+        throw new Error("startDate and endDate inputs are required to jump to date");
+      }
+
+      const totalMinutes = (this.endDate.getTime() - this.startDate.getTime()) / (1000 * 60) + 1440; // inclusive end
+      const targetMinutes = (date.getTime() - this.startDate.getTime()) / (1000 * 60);
+      const scrollPercent = targetMinutes / totalMinutes;
+      setTimeout(() => parent.scrollTo(parent.scrollHeight * scrollPercent, parent.scrollHeight),10); // TODO fix? some timing issue?
+    });
+  }
+
+  public addScheduleDay(date: Date, schedule: ShiftPlanScheduleDto) {
+    const key = date.toISOString().split("T")[0];
+    const currentMap = this.loadedDays$.getValue();
+    currentMap.set(key, schedule);
+    this.loadedDays$.next(currentMap);
+  }
+
+  public jumpToDate(date: Date) {
+    this._jumpDate$.next(date);
+  }
+
+  protected getHours() {
     if(this.startDate === undefined || this.endDate === undefined) {
       throw new Error("startDate and endDate inputs are required to calculate hours");
     }
@@ -54,11 +123,11 @@ export class ShiftCalendarGridComponent {
     return Array.from({length: totalHours}, (_, i) => i);
   }
 
-  public getMinuteHeight(durationMinutes: number) {
+  protected getMinuteHeight(durationMinutes: number) {
     return `${durationMinutes * this.minuteHeightRem}rem`;
   }
 
-  public getDayOfHour(hourIndex: number) {
+  protected getDayOfHour(hourIndex: number) {
     if(this.startDate === undefined) {
       throw new Error("startDate input is required to calculate day of hour");
     }
@@ -66,9 +135,10 @@ export class ShiftCalendarGridComponent {
     return date;
   }
 
-  protected getGridColumns(schedule: ShiftPlanScheduleDto){
+  protected getGridColumns(locations: LocationScheduleDto[] | null){
+
     return `[time-start] 5rem [time-end ${
-      schedule.locations?.map(locationColumn => {
+      (locations ?? []).map(locationColumn => {
         const locationName = locationColumn.location.id;
         return `venue-${locationName}-start venue-${locationName}-activity-start] ${
           this.activityWidth

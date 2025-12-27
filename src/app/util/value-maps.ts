@@ -9,6 +9,14 @@ export const mapValue = {
     if(value === null || value === undefined) {
       return undefined;
     }
-    return value.toISOString().split("T")[0];
+    return `${value.getFullYear()}-${(value.getMonth()+1).toString().padStart(2,"0")}-${value.getDate().toString().padStart(2,"0")}`;
   },
+  datetimeAsLocalDate(date: Date){
+    return new Date(
+      date.getFullYear()
+      + "-" + (date.getMonth() + 1).toString().padStart(2,"0") + "-"
+      + date.getDate().toString().padStart(2,"0")
+      + "T00:00:00"
+    );
+  }
 };
