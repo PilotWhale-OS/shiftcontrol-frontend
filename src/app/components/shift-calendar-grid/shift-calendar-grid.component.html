@@ -62,41 +62,39 @@
       }
 
       <!-- venue data -->
-      @for(schedule of (schedules$ | async); track schedule) {
+      @if (schedule$ | async; as schedule) {
 
-        @for (venue of schedule.scheduleContentDtos; track venue.location.id) {
-
-          <!-- venue shifts -->
-          @for (shift of venue.shiftColumns; track shift.shiftDto.id) {
+          <!-- shifts -->
+          @for (shiftItem of schedule.shifts; track shiftItem.shift.shiftDto.id) {
             <div
               (click)="viewShift = true"
               (keyup)="viewShift = true"
               tabindex="0"
               class="shift"
-              [ngClass]="getShiftDisplayCategory(shift.shiftDto)"
-              style="grid-row: 2/2; grid-column: venue-{{venue.location.id}}-shift-col-{{shift.columnIndex + 1}}-start / venue-{{venue.location.id}}-shift-col-{{shift.columnIndex +  1}}-end"
-              [style.height]="getMinuteHeight(getItemMinutesDuration(shift.shiftDto))"
-              [style.top]="getMinuteHeight(getItemMinutesFromStart(shift.shiftDto, config))"
+              [ngClass]="getShiftDisplayCategory(shiftItem.shift.shiftDto)"
+              style="grid-row: 2/2; grid-column: venue-{{shiftItem.location.id}}-shift-col-{{shiftItem.shift.columnIndex + 1}}-start / venue-{{shiftItem.location.id}}-shift-col-{{shiftItem.shift.columnIndex +  1}}-end"
+              [style.height]="getMinuteHeight(getItemMinutesDuration(shiftItem.shift.shiftDto))"
+              [style.top]="getMinuteHeight(getItemMinutesFromStart(shiftItem.shift.shiftDto, config))"
             >
-              <span class="tag">{{getShiftDisplayTag(shift.shiftDto)}}</span>
+              <span class="tag">{{getShiftDisplayTag(shiftItem.shift.shiftDto)}}</span>
               <span class="time">
-            {{shift.shiftDto.startTime | date:"shortTime"}} - {{shift.shiftDto.endTime | date:"shortTime"}}
+            {{shiftItem.shift.shiftDto.startTime | date:"shortTime"}} - {{shiftItem.shift.shiftDto.endTime | date:"shortTime"}}
           </span>
-              <span>{{shift.shiftDto.name}}</span>
+              <span>{{shiftItem.shift.shiftDto.name}}</span>
             </div>
           }
-          <!-- venue activities -->
-          @for (activity of venue.activities; track activity.id) {
+
+          <!-- activities -->
+          @for (activityItem of schedule.activities; track activityItem.activity.id) {
             <div
               class="activity"
-              style="grid-row: 2/2; grid-column: venue-{{venue.location.id}}-activity-start / venue-{{venue.location.id}}-end"
-              [style.height]="getMinuteHeight(getItemMinutesDuration(activity))"
-              [style.top]="getMinuteHeight(getItemMinutesFromStart(activity, config))"
+              style="grid-row: 2/2; grid-column: venue-{{activityItem.location.id}}-activity-start / venue-{{activityItem.location.id}}-end"
+              [style.height]="getMinuteHeight(getItemMinutesDuration(activityItem.activity))"
+              [style.top]="getMinuteHeight(getItemMinutesFromStart(activityItem.activity, config))"
             >
-              <span>{{activity.name}}</span>
+              <span>{{activityItem.activity.name}}</span>
             </div>
           }
-        }
       }
 
     </div>

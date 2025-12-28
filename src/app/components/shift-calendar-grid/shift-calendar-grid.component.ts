@@ -4,9 +4,16 @@ import {ShiftDetailsViewComponent} from "../shift-details-view/shift-details-vie
 import {DialogService} from "../../services/dialog/dialog.service";
 import {faLocationDot} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import {ActivityDto, PositionSlotDto, ScheduleLayoutDto, ShiftDto, ShiftPlanScheduleContentDto} from "../../../shiftservice-client";
+import {
+  ActivityDto,
+  PositionSlotDto,
+  ScheduleLayoutDto,
+  ShiftColumnDto,
+  ShiftDto,
+  ShiftPlanScheduleContentDto
+} from "../../../shiftservice-client";
 import {AsyncPipe, DatePipe, NgClass} from "@angular/common";
-import {BehaviorSubject, combineLatestWith, debounceTime, filter, map, Observable, Subject, withLatestFrom} from "rxjs";
+import {BehaviorSubject, combineLatestWith, debounceTime, filter, map, Observable, shareReplay, Subject, withLatestFrom} from "rxjs";
 import {toObservable} from "@angular/core/rxjs-interop";
 
 export interface calendarConfig {
@@ -51,11 +58,35 @@ export class ShiftCalendarGridComponent {
   protected readonly config$ = new BehaviorSubject<calendarConfig | undefined>(undefined);
 
   /**
-   * The list of loaded schedule days in no relevant order
+   * The list of shifts and activities across all loaded days,
+   * duplicates removed, joined with their locations
    * @protected
    */
-  protected readonly schedules$ = this.loadedDays$.pipe(
-    map(dayMap => dayMap.size > 0 ? [...dayMap.values()] : [])
+  protected readonly schedule$ = this.loadedDays$.pipe(
+    map(dayMap => dayMap.size > 0 ? [...dayMap.values()] : []),
+    map(days => {
+      const activities = days
+        .flatMap(day => day.scheduleContentDtos)
+        .flatMap(schedule => schedule.activities.map(activity => ({
+          activity,
+          location: schedule.location
+        })));
+      const activityMap = new Map(activities.map(activityItem => [activityItem.activity.id, activityItem]));
+
+      const shifts = days
+        .flatMap(day => day.scheduleContentDtos)
+        .flatMap(schedule => schedule.shiftColumns.map(shift => ({
+          shift,
+          location: schedule.location
+        })));
+      const shiftMap = new Map(shifts.map(shiftItem => [shiftItem.shift.shiftDto.id, shiftItem]));
+
+      return {
+        activities: [...activityMap.values()],
+        shifts: [...shiftMap.values()]
+      };
+    }),
+    shareReplay()
   );
 
   private readonly activityWidth = "2rem";
