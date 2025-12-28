@@ -3,11 +3,15 @@
   @apply sticky left-0 top-0 h-full border-r-2 border-framing-card bg-background-card z-50 font-semibold border-b-2 pb-xs flex flex-row gap-sm items-center justify-center;
 }
 
+.filter {
+  @apply sticky right-0 top-0 h-full bg-background-card z-50 font-semibold pb-xs flex flex-row items-center justify-center;
+}
+
 .timestamp {
   @apply sticky left-0 h-full border-r-2 border-framing-card bg-background-card z-40;
 
   > .hour {
-    @apply absolute w-full grid justify-center align-top text-sm opacity-50;
+    @apply absolute w-full grid place-content-center align-top text-sm opacity-50;
 
     &.new-day {
       @apply opacity-100;

@@ -1,5 +1,5 @@
 import {Component, inject, Input} from "@angular/core";
-import {faEye, faFilter} from "@fortawesome/free-solid-svg-icons";
+import {faEye} from "@fortawesome/free-solid-svg-icons";
 import {InputSelectComponent, SelectOptions} from "../inputs/input-select/input-select.component";
 import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
 import {InputTextComponent} from "../inputs/input-text/input-text.component";
@@ -24,7 +24,6 @@ export enum ShiftCalendarViewMode {
     InputDateComponent,
     InputSelectComponent,
     InputMultiselectComponent,
-    InputButtonComponent,
     NgClass
   ],
   standalone: true,
@@ -34,7 +33,11 @@ export enum ShiftCalendarViewMode {
 export class ShiftCalendarFilterComponent {
 
   @Input()
-  public statistics?: ScheduleStatisticsDto;
+  public statistics?: ScheduleStatisticsDto = {
+    totalShifts: 0,
+    unassignedCount: 0,
+    totalHours: 0
+  };
 
   @Input()
   public rolesOptions: SelectOptions<string> = [];
@@ -56,10 +59,9 @@ export class ShiftCalendarFilterComponent {
   public readonly searchForm;
   public readonly viewForm;
 
-  protected showFilters = false;
+  public showFilters = false;
 
   protected iconView = faEye;
-  protected iconFilter = faFilter;
 
   private readonly _fb = inject(FormBuilder);
 
@@ -76,7 +78,6 @@ export class ShiftCalendarFilterComponent {
       shiftName: this._fb.nonNullable.control<string>(""),
       rolesList: this._fb.nonNullable.control<string[]>([]),
       locationsList: this._fb.nonNullable.control<string[]>([]),
-      tagsList: this._fb.nonNullable.control<string[]>([]),
       availabilityList: this._fb.nonNullable.control<ShiftPlanScheduleFilterDto.ScheduleViewTypeEnum[]>([])
     });
     this.viewForm = this._fb.group({

@@ -196,6 +196,16 @@ export class ShiftCalendarComponent implements OnDestroy {
       }
     }));
 
+    /* toggle filters when clicked in calendar */
+    subs.push(calendar$.pipe(
+      switchMap(calendar => calendar.filterToggled$),
+      withLatestFrom(toObservable(this._filterComponent))
+    ).subscribe(([,filterComponent]) => {
+      if(filterComponent !== undefined) {
+        filterComponent.showFilters = !filterComponent.showFilters;
+      }
+    }));
+
     /* load schedule when filter or navigated date changes */
     subs.push(filters$.pipe(
       combineLatestWith(calendar$, filterData$, calendarNavigation$),

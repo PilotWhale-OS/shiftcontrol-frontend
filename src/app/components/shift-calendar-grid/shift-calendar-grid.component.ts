@@ -1,7 +1,7 @@
 import {Component, ElementRef, viewChild} from "@angular/core";
 import {DialogComponent} from "../dialog/dialog.component";
 import {ShiftDetailsViewComponent} from "../shift-details-view/shift-details-view.component";
-import {faCalendarDay, faLocationDot} from "@fortawesome/free-solid-svg-icons";
+import {faCalendarDay, faFilter, faLocationDot} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {
   ActivityDto,
@@ -20,10 +20,11 @@ import {
   Observable,
   shareReplay,
   Subject,
-  take, tap,
+  take,
   withLatestFrom
 } from "rxjs";
 import {toObservable} from "@angular/core/rxjs-interop";
+import {InputButtonComponent} from "../inputs/input-button/input-button.component";
 
 /**
  * Configuration for the shift calendar grid component.
@@ -71,7 +72,8 @@ export interface calendarNavigation {
     FaIconComponent,
     DatePipe,
     NgClass,
-    AsyncPipe
+    AsyncPipe,
+    InputButtonComponent
   ],
   standalone: true,
   templateUrl: "./shift-calendar-grid.component.html",
@@ -92,6 +94,7 @@ export class ShiftCalendarGridComponent {
   protected viewShift = false;
   protected readonly iconLocation = faLocationDot;
   protected readonly iconDay = faCalendarDay;
+  protected readonly iconFilter = faFilter;
   protected readonly scrolled$ = new Subject<Event>();
   protected readonly bodyInitialized$ = new BehaviorSubject<boolean>(false);
 
@@ -148,6 +151,7 @@ export class ShiftCalendarGridComponent {
   private readonly _calendarParent = viewChild<ElementRef<HTMLButtonElement>>("calendarParent");
   private readonly _visibleDates$ = new BehaviorSubject<Date[]>([]);
   private readonly _jumpDate$ = new Subject<Date>();
+  private readonly _filterToggled$ = new Subject<void>();
   private readonly _scrolling$ = new BehaviorSubject<boolean>(false);
 
   constructor() {
@@ -217,7 +221,7 @@ export class ShiftCalendarGridComponent {
       const scrollPercent = targetMinutes / totalMinutes;
 
       setTimeout(() => parent.scrollTo({
-        left: 0,
+        left: parent.scrollLeft,
         top: parent.scrollHeight * scrollPercent,
         behavior: "smooth"
       }),10); // TODO fix? some timing issue?
@@ -234,6 +238,13 @@ export class ShiftCalendarGridComponent {
     return this._scrolling$.pipe(
       distinctUntilChanged()
     );
+  }
+
+  /**
+   * Event emitted when the filter panel is toggled
+   */
+  public get filterToggled$(): Observable<void> {
+    return this._filterToggled$.asObservable();
   }
 
   /**
@@ -288,6 +299,14 @@ export class ShiftCalendarGridComponent {
    */
   public jumpToDate(date: Date) {
     this._jumpDate$.next(date);
+  }
+
+  /**
+   * Handle when the filter toggle button is clicked
+   * @protected
+   */
+  protected filterToggleClicked() {
+    this._filterToggled$.next();
   }
 
   /**
@@ -362,7 +381,7 @@ export class ShiftCalendarGridComponent {
           this.venueGapWidth
         } [venue-${locationName}-gap-end`;
       }).join(" ")
-    } blank-start] 1fr [blank-end]`;
+    } blank-start] 1fr [blank-end filter-start]  ${this.dateWidth} [filter-end]`;
   }
 
   /**

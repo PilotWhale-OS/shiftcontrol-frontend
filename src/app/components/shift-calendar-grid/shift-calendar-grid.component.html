@@ -18,6 +18,12 @@
         <span>{{ headDay$ | async | date:"shortDate" }}</span>
       </div>
 
+
+      <!-- filter side -->
+      <div style="grid-row: 1 / 1; grid-column: filter-start / filter-end" class="filter">
+        <xsb-input-button [icon]="iconFilter" size="minimal" content="Filter" (click)="filterToggleClicked()" />
+      </div>
+
       <div class="absolute hidden">
         {{bodyInitialized$.next(true)}}
       </div>
