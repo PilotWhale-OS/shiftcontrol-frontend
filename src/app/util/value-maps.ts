@@ -5,15 +5,19 @@ export const mapValue = {
     }
     return value;
   },
-  localDateAsString(value: Date): string {
+  datetimeToUtcDateString(value: Date){
     return `${value.getFullYear()}-${(value.getMonth()+1).toString().padStart(2,"0")}-${value.getDate().toString().padStart(2,"0")}`;
   },
-  datetimeAsLocalDate(date: Date){
+  dateStringAsEndOfDayDatetime(value: string){
     return new Date(
-      date.getFullYear()
-      + "-" + (date.getMonth() + 1).toString().padStart(2,"0") + "-"
-      + date.getDate().toString().padStart(2,"0")
-      + "T00:00:00"
+      value
+      + "T23:59:59.999Z"
+    );
+  },
+  dateStringAsStartOfDayDatetime(value: string){
+    return new Date(
+      value
+      + "T00:00:00.000Z"
     );
   }
 };

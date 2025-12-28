@@ -15,7 +15,7 @@ import {
   of,
   shareReplay,
   startWith, Subscription,
-  switchMap
+  switchMap,
 } from "rxjs";
 import {toObservable} from "@angular/core/rxjs-interop";
 import {mapValue} from "../../../util/value-maps";
@@ -97,7 +97,8 @@ export class ShiftCalendarComponent implements OnDestroy {
     const calendarNavigation$ = calendar$.pipe(
       switchMap(calendar => calendar.navigation$),
       distinctUntilChanged((prev, curr) =>
-        prev.visibleDates.map(d => d.getDay()).join(",") === curr.visibleDates.map(d => d.getDay()).join(",")
+        prev.visibleDates.map(d => d.getTime()).join(",") === curr.visibleDates.map(d => d.getTime()).join(",")
+        && prev.cachedDates.map(d => d.getTime()).join(",") === curr.cachedDates.map(d => d.getTime()).join(",")
       )
     );
 
@@ -128,8 +129,17 @@ export class ShiftCalendarComponent implements OnDestroy {
     subs.push(filterData$.pipe(
       combineLatestWith(calendar$, layout$),
     ).subscribe(([filterData, calendar, layout]) => {
-      const startDate = mapValue.datetimeAsLocalDate(filterData.firstDate ? new Date(filterData.firstDate) : new Date());
-      const endDate = mapValue.datetimeAsLocalDate(filterData.lastDate ? new Date(filterData.lastDate) : new Date());
+
+      /*
+      start date parsed from utc date, begin of day
+      */
+      const startDate = filterData.firstDate ?
+        mapValue.dateStringAsStartOfDayDatetime(filterData.firstDate) : new Date();
+
+      /* end date parsed from utc date, end of day */
+      const endDate = filterData.lastDate ?
+        mapValue.dateStringAsEndOfDayDatetime(filterData.lastDate) : new Date();
+
       const config: calendarConfig = {
         startDate,
         endDate,
@@ -143,11 +153,10 @@ export class ShiftCalendarComponent implements OnDestroy {
     subs.push(filters$.pipe(
       combineLatestWith(calendar$, filterData$, calendarNavigation$),
       switchMap(([filters, calendar, , navigation]) =>{
-
         const newDays = navigation.visibleDates.filter(visible =>
           !navigation.cachedDates.some(cached => cached.getTime() === visible.getTime())
         ).map(date => this._planService.getShiftPlanScheduleContent(planId, {
-            date: mapValue.localDateAsString(mapValue.datetimeAsLocalDate(date)),
+            date: mapValue.datetimeToUtcDateString(date),
             shiftName: mapValue.undefinedIfEmptyString(filters?.shiftName),
           })
         );
@@ -157,10 +166,7 @@ export class ShiftCalendarComponent implements OnDestroy {
         );
       })
     ).subscribe(({calendar, schedules}) => {
-      console.log("updating calendar with new schedule for dates", schedules);
-      for(const schedule of schedules) {
-        calendar.addScheduleDay(schedule);
-      }
+      calendar.addScheduleDays(...schedules);
     }));
 
     return subs;

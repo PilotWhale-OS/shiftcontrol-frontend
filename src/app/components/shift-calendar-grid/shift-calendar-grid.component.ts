@@ -11,16 +11,53 @@ import {
   ShiftPlanScheduleContentDto
 } from "../../../shiftservice-client";
 import {AsyncPipe, DatePipe, NgClass} from "@angular/common";
-import {BehaviorSubject, combineLatestWith, debounceTime, filter, map, Observable, shareReplay, Subject, take, withLatestFrom} from "rxjs";
+import {
+  BehaviorSubject,
+  combineLatestWith,
+  debounceTime,
+  filter,
+  map,
+  Observable,
+  shareReplay,
+  Subject,
+  take,
+  withLatestFrom
+} from "rxjs";
 import {toObservable} from "@angular/core/rxjs-interop";
-import {mapValue} from "../../util/value-maps";
 
+/**
+ * Configuration for the shift calendar grid component.
+ * DateTimes are in UTC; calendar needs to calculate necessary date range
+ * in order to display whole days starting from 00:00:00
+ */
 export interface calendarConfig {
   startDate: Date;
   endDate: Date;
   locationLayouts: ScheduleLayoutDto[];
 }
 
+/**
+ * Extended calendar configuration with adjusted start and end dates,
+ * to ensure full days are displayed to cover full UTC time shift
+ */
+interface calendarAdjustedConfig extends calendarConfig {
+  /**
+   * @deprecated use adjusted startDate instead
+   */
+  startDate: Date;
+
+  /**
+   * @deprecated use adjusted endDate instead
+   */
+  endDate: Date;
+  adjustedStartDate: Date;
+  adjustedEndDate: Date;
+}
+
+/**
+ * The navigation state of the calendar.
+ * DateTimes are in UTC; in the user timezone, they are at 00:00:00
+ */
 export interface calendarNavigation {
   visibleDates: Date[];
   cachedDates: Date[];
@@ -48,7 +85,7 @@ export class ShiftCalendarGridComponent {
   public readonly navigation$: Observable<calendarNavigation>;
 
   /**
-   * The date of the topmost visible day in the calendar
+   * The UTC DateTime of the current topmost visible calendar time
    */
   public readonly headDay$: Observable<Date>;
 
@@ -67,7 +104,7 @@ export class ShiftCalendarGridComponent {
    * The calendar configuration (externally) based on current filters
    * @protected
    */
-  protected readonly config$ = new BehaviorSubject<calendarConfig | undefined>(undefined);
+  protected readonly config$ = new BehaviorSubject<calendarAdjustedConfig | undefined>(undefined);
 
   /**
    * The list of shifts and activities across all loaded days,
@@ -111,25 +148,20 @@ export class ShiftCalendarGridComponent {
   private readonly _jumpDate$ = new Subject<Date>();
 
   constructor() {
-    this.headDay$ = this._visibleDates$.pipe(
-      map(dates => dates.length > 0 ? dates[0] : undefined),
-      filter((date): date is Date => date !== undefined)
-    );
-
     this.navigation$ = this._visibleDates$.pipe(
       combineLatestWith(this.loadedDays$),
       withLatestFrom(this.bodyInitialized$),
       filter(([, initialized]) => initialized),
       map(([[visibleDates, loadedDays]]) => {
         const navigation: calendarNavigation = {
-          cachedDates: Array.from(loadedDays.keys()).map(dateStr => new Date(dateStr + "T00:00:00")),
+          cachedDates: Array.from(loadedDays.keys()).map(dateStr => new Date(dateStr + "T00:00:00Z")),
           visibleDates
         };
         return navigation;
       })
     );
 
-    /* calculate the currently navigated day based on scroll position */
+    /* calculate the currently visible days based on scroll position */
     this.scrolled$.pipe(
       debounceTime(10),
       withLatestFrom(this.config$),
@@ -138,12 +170,26 @@ export class ShiftCalendarGridComponent {
           return undefined;
         }
 
-        return this.getVisibleDays(event.target as HTMLDivElement, config);
+        return this.getVisibleValidDays(event.target as HTMLDivElement, config);
       }),
       filter(date => date !== undefined)
     ).subscribe(dates => {
       this._visibleDates$.next(dates);
     });
+
+    /* calculate the currently navigated day based on scroll position */
+    this.headDay$ = this.scrolled$.pipe(
+      debounceTime(10),
+      withLatestFrom(this.config$),
+      map(([event, config]) => {
+        if (config === undefined) {
+          return undefined;
+        }
+
+        return this.getScrolledDate(event.target as HTMLDivElement, config);
+      }),
+      filter(date => date !== undefined)
+    );
 
     /* jump to date when requested by changing the scroll position of the container */
     this._jumpDate$.pipe(
@@ -164,19 +210,21 @@ export class ShiftCalendarGridComponent {
         throw new Error("startDate and endDate inputs are required to jump to date");
       }
 
-      const totalMinutes = (config.endDate.getTime() - config.startDate.getTime()) / (1000 * 60) + 1440; // inclusive end
-      const targetMinutes = (date.getTime() - config.startDate.getTime()) / (1000 * 60);
+      const totalMinutes = (config.adjustedEndDate.getTime() - config.adjustedStartDate.getTime()) / (1000 * 60);
+      const targetMinutes = (date.getTime() - config.adjustedStartDate.getTime()) / (1000 * 60);
       const scrollPercent = targetMinutes / totalMinutes;
       setTimeout(() => parent.scrollTo(parent.scrollHeight * scrollPercent, parent.scrollHeight),10); // TODO fix? some timing issue?
 
-      const visibleDays = this.getVisibleDays(parent as HTMLDivElement, config);
+      const visibleDays = this.getVisibleValidDays(parent as HTMLDivElement, config);
       this._visibleDates$.next(visibleDays);
     });
   }
 
-  public addScheduleDay(schedule: ShiftPlanScheduleContentDto) {
+  public addScheduleDays(...schedules: ShiftPlanScheduleContentDto[]) {
     const currentMap = this.loadedDays$.getValue();
-    currentMap.set(schedule.date, schedule);
+    for (const schedule of schedules) {
+      currentMap.set(schedule.date, schedule);
+    }
     this.loadedDays$.next(currentMap);
   }
 
@@ -188,9 +236,36 @@ export class ShiftCalendarGridComponent {
   public setConfig(config: calendarConfig) {
     this.bodyInitialized$.next(false);
     this.loadedDays$.next(new Map());
-    this.config$.next(config);
+
+    const adjustedConfig: calendarAdjustedConfig = {
+      ... config,
+      adjustedStartDate: new Date(config.startDate.getTime()),
+      adjustedEndDate: new Date(config.endDate.getTime())
+    };
+
+    // adjustedConfig.adjustedStartDate.setUTCDate(config.startDate.getDate());
+    adjustedConfig.adjustedStartDate.setHours(
+      config.startDate.getUTCHours(),
+      config.startDate.getUTCMinutes(),
+      config.startDate.getUTCSeconds(),
+      config.startDate.getUTCMilliseconds()
+    );
+
+    // adjustedConfig.adjustedEndDate.setUTCDate(config.endDate.getDate());
+    adjustedConfig.adjustedEndDate.setHours(
+      config.endDate.getUTCHours(),
+      config.endDate.getUTCMinutes(),
+      config.endDate.getUTCSeconds(),
+      config.endDate.getUTCMilliseconds()
+    );
+
+    this.config$.next(adjustedConfig);
   }
 
+  /**
+   * Jump to a specific date in the calendar
+   * @param date a datetime in UTC, should represent 00:00:00 in the user timezone
+   */
   public jumpToDate(date: Date) {
     this._jumpDate$.next(date);
   }
@@ -200,10 +275,10 @@ export class ShiftCalendarGridComponent {
    * @param config
    * @protected
    */
-  protected getHours(config: calendarConfig) {
+  protected getHours(config: calendarAdjustedConfig) {
     const totalHours = Math.ceil(
-      (config.endDate.getTime() - (config.startDate.getTime())) / (1000 * 60 * 60)
-    ) + 24; // since end is inclusive
+      (config.adjustedEndDate.getTime() - (config.adjustedStartDate.getTime())) / (1000 * 60 * 60)
+    );
     return Array.from({length: totalHours}, (_, i) => i);
   }
 
@@ -222,8 +297,8 @@ export class ShiftCalendarGridComponent {
    * @param config
    * @protected
    */
-  protected getDayOfHour(hourIndex: number, config: calendarConfig) {
-    return new Date(config.startDate.getTime() + hourIndex * 60 * 60 * 1000);
+  protected getDayOfHour(hourIndex: number, config: calendarAdjustedConfig) {
+    return new Date(config.adjustedStartDate.getTime() + hourIndex * 60 * 60 * 1000);
   }
 
   /**
@@ -232,7 +307,7 @@ export class ShiftCalendarGridComponent {
    * @param config
    * @protected
    */
-  protected getGridColumns(config: calendarConfig){
+  protected getGridColumns(config: calendarAdjustedConfig){
 
     return `[time-start] 5rem [time-end ${
       (config.locationLayouts ?? []).sort((a,b) => {
@@ -279,9 +354,9 @@ export class ShiftCalendarGridComponent {
    * @param config
    * @protected
    */
-  protected getItemMinutesFromStart(shift: ShiftDto | ActivityDto, config: calendarConfig) {
+  protected getItemMinutesFromStart(shift: ShiftDto | ActivityDto, config: calendarAdjustedConfig) {
     const shiftStart = new Date(shift.startTime);
-    const durationMs = shiftStart.getTime() - config.startDate.getTime();
+    const durationMs = shiftStart.getTime() - config.adjustedStartDate.getTime();
     return Math.floor(durationMs / 60000); // convert ms to minutes
   }
 
@@ -323,31 +398,49 @@ export class ShiftCalendarGridComponent {
     return "";
   }
 
+  protected addTimezoneOffset(date: Date | null) {
+    if(date === null) {
+      return null;
+    }
+    const timezoneOffset = date.getTimezoneOffset() * -60000;
+    return new Date(date.getTime() + timezoneOffset);
+  }
+
+  private getScrolledDate(container: HTMLDivElement, config: calendarAdjustedConfig) {
+    const scrollPercent = container.scrollTop / container.scrollHeight;
+    const scrollTime = (config.adjustedEndDate.getTime() - config.adjustedStartDate.getTime()) * scrollPercent;
+    return new Date(config.adjustedStartDate.getTime() + scrollTime);
+  }
+
   /**
    * Get the currently visible days based on scroll position
+   * DateTimes are in UTC, should represent 00:00:00 in user timezone.
+   * Days that are only visible to display whole days for user timezone shifts,
+   * but are outside of the UTC schedule bounds, are not included.
    * @param container
    * @param config
    * @private
    */
-  private getVisibleDays(container: HTMLDivElement, config: calendarConfig) {
+  private getVisibleValidDays(container: HTMLDivElement, config: calendarAdjustedConfig) {
     const scrollPercent = container.scrollTop / container.scrollHeight;
-    const scrollTime = (config.endDate.getTime() - config.startDate.getTime() + 24 * 60 * 60 * 1000) * scrollPercent; // inclusive end
-    const scrolledDate = config.startDate.getTime() + scrollTime;
+    const scrollTime = (config.adjustedEndDate.getTime() - config.adjustedStartDate.getTime()) * scrollPercent;
+    const scrolledDate = config.adjustedStartDate.getTime() + scrollTime;
 
     const elementHeight = container.getBoundingClientRect().height;
     const visiblePercent = elementHeight / container.scrollHeight;
-    const visibleTime = (config.endDate.getTime() - config.startDate.getTime() + 24 * 60 * 60 * 1000) * visiblePercent; // inclusive end
-    let visibleHours = visibleTime / (1000 * 60 * 60);
+    const visibleTime = (config.adjustedEndDate.getTime() - config.adjustedStartDate.getTime()) * visiblePercent;
+    const visibleHours = visibleTime / (1000 * 60 * 60);
 
-    const dates = [scrolledDate];
+    const dates = [new Date(scrolledDate).setUTCHours(0,0,0,0)];
 
-    while(visibleHours > 24) {
-      visibleHours -= 24;
+    let addRemainderHours = visibleHours + (scrolledDate - dates[0]) / (1000 * 60 * 60);
+    while(addRemainderHours > 24) {
+      addRemainderHours -= 24;
       dates.push(dates[dates.length - 1] + 24 * 60 * 60 * 1000);
     }
 
     return dates
-      .map(time => mapValue.datetimeAsLocalDate(new Date(time)))
-      .filter(date => date.getTime() <= config.endDate.getTime() && date.getTime() >= config.startDate.getTime());
+      .map(time => new Date(time))
+      .filter(date => date.getTime() <= config.adjustedEndDate.getTime() && date.getTime() >= config.adjustedStartDate.getTime());
   }
 }
