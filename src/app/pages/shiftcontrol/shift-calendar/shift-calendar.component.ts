@@ -15,7 +15,7 @@ import {
   of,
   shareReplay,
   startWith, Subscription,
-  switchMap, tap, withLatestFrom,
+  switchMap, withLatestFrom,
 } from "rxjs";
 import {toObservable} from "@angular/core/rxjs-interop";
 import {mapValue} from "../../../util/value-maps";
@@ -67,8 +67,14 @@ export class ShiftCalendarComponent implements OnDestroy {
       shareReplay()
     );
 
+    /* observable based on the filter component view child signal */
+    const filterComponent$ = toObservable(this._filterComponent).pipe(
+      filter(filterComponent => filterComponent !== undefined),
+      shareReplay()
+    );
+
     /* observable containing form filter values */
-    const filters$ = toObservable(this._filterComponent).pipe(
+    const filters$ = filterComponent$.pipe(
       switchMap(component => component?.searchForm?.valueChanges ?? of(undefined)),
       filter(data => data !== undefined),
       debounceTime(500),
@@ -76,7 +82,7 @@ export class ShiftCalendarComponent implements OnDestroy {
     );
 
     /* observable containing form view options values */
-    const viewOptions$ = toObservable(this._filterComponent).pipe(
+    const viewOptions$ = filterComponent$.pipe(
       map(component => component?.viewForm ?? undefined),
       startWith(undefined)
     );
@@ -95,12 +101,12 @@ export class ShiftCalendarComponent implements OnDestroy {
     );
 
     /* observable based on the calendar view child signal */
-    const calendar$ = toObservable(this._shiftPlanSchedule).pipe(
+    const calendarComponent$ = toObservable(this._shiftPlanSchedule).pipe(
       filter(calendar => calendar !== undefined)
     );
 
     /* observable containing the currently navigated-to date of the calendar */
-    const calendarNavigation$ = calendar$.pipe(
+    const calendarNavigation$ = calendarComponent$.pipe(
       switchMap(calendar => calendar.navigation$),
       distinctUntilChanged((prev, curr) =>
         prev.visibleDates.map(d => d.getTime()).join(",") === curr.visibleDates.map(d => d.getTime()).join(",")
@@ -131,9 +137,18 @@ export class ShiftCalendarComponent implements OnDestroy {
         );
     }));
 
+    /* set filter values with api data */
+    subs.push(filterComponent$.pipe(
+      combineLatestWith(filterData$)
+    ).subscribe(([filterComponent, filterData]) => {
+      filterComponent.rolesOptions = []; // TODO when implemented in backend
+      // filterData.roles.map(role => ({name: role.name, value: role.id}));
+      filterComponent.locationsOptions = filterData.locations.map(location => ({name: location.name, value: location.id}));
+    }));
+
     /* react to calendar config and set in component */
     subs.push(filterData$.pipe(
-      combineLatestWith(calendar$, layout$),
+      combineLatestWith(calendarComponent$, layout$),
       withLatestFrom(calendarNavigation$.pipe(
         startWith({visibleDates: [], cachedDates: []})
       ))
@@ -183,7 +198,7 @@ export class ShiftCalendarComponent implements OnDestroy {
       withLatestFrom(calendarNavigation$.pipe(
         map(nav => [...nav.visibleDates].shift()),
         startWith(undefined)
-      ), calendar$, calendar$.pipe(
+      ), calendarComponent$, calendarComponent$.pipe(
         switchMap(calendar => calendar?.scrolling$ ?? of(false))
       ))
     ).subscribe(([pickerDate, currentDate, calendar, scrolling]) => {
@@ -197,7 +212,7 @@ export class ShiftCalendarComponent implements OnDestroy {
     }));
 
     /* toggle filters when clicked in calendar */
-    subs.push(calendar$.pipe(
+    subs.push(calendarComponent$.pipe(
       switchMap(calendar => calendar.filterToggled$),
       withLatestFrom(toObservable(this._filterComponent))
     ).subscribe(([,filterComponent]) => {
@@ -208,13 +223,16 @@ export class ShiftCalendarComponent implements OnDestroy {
 
     /* load schedule when filter or navigated date changes */
     subs.push(filters$.pipe(
-      combineLatestWith(calendar$, filterData$, calendarNavigation$),
+      combineLatestWith(calendarComponent$, filterData$, calendarNavigation$),
       switchMap(([filters, calendar, , navigation]) =>{
         const newDays = navigation.visibleDates.filter(visible =>
           !navigation.cachedDates.some(cached => cached.getTime() === visible.getTime())
         ).map(date => this._planService.getShiftPlanScheduleContent(planId, {
             date: mapValue.datetimeToUtcDateString(date),
             shiftName: mapValue.undefinedIfEmptyString(filters?.shiftName),
+            locations: filters?.locationsList,
+            roleNames: filters?.rolesList, // TODO rename to roleIds when backend supports?
+            // TODO when backend supports availabilityTypes: filters?.availabilityList
           })
         );
 

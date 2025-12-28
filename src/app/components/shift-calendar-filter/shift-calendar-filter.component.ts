@@ -6,7 +6,6 @@ import {InputTextComponent} from "../inputs/input-text/input-text.component";
 import {TypedFormControlDirective} from "../../directives/typed-form-control.directive";
 import {InputDateComponent} from "../inputs/input-date/input-date.component";
 import {InputMultiselectComponent} from "../inputs/input-multiselect/input-multiselect.component";
-import {InputButtonComponent} from "../inputs/input-button/input-button.component";
 import {NgClass} from "@angular/common";
 import {ScheduleStatisticsDto, ShiftPlanScheduleFilterDto} from "../../../shiftservice-client";
 
@@ -33,7 +32,7 @@ export enum ShiftCalendarViewMode {
 export class ShiftCalendarFilterComponent {
 
   @Input()
-  public statistics?: ScheduleStatisticsDto = {
+  public statistics?: ScheduleStatisticsDto = { // TODO use from calendar cached aggregate
     totalShifts: 0,
     unassignedCount: 0,
     totalHours: 0
@@ -43,10 +42,7 @@ export class ShiftCalendarFilterComponent {
   public rolesOptions: SelectOptions<string> = [];
 
   @Input()
-  public readonly locationsOptions: SelectOptions<string> = [];
-
-  @Input()
-  public readonly tagsOptions: SelectOptions<string> = [];
+  public locationsOptions: SelectOptions<string> = [];
 
   public readonly availabilityOptions: SelectOptions<ShiftPlanScheduleFilterDto.ScheduleViewTypeEnum> = [
     {name: "Your Shifts", value: ShiftPlanScheduleFilterDto.ScheduleViewTypeEnum.MyShifts},

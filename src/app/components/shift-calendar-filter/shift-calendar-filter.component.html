@@ -28,11 +28,11 @@
 
   <!-- categories multiselects -->
   <div class="col-start-4 row-start-2">
-    <xsb-input-multiselect #rolesCats naming="Roles" emptyNaming="All Roles" [options]="rolesOptions" [formControl]="searchForm.controls.locationsList"
-                           [xsb-typed]="[rolesCats, searchForm.controls.locationsList]" name="calendar-filter-roles"/>
+    <xsb-input-multiselect #rolesCats naming="Roles" emptyNaming="All Roles" [options]="rolesOptions" [formControl]="searchForm.controls.rolesList"
+                           [xsb-typed]="[rolesCats, searchForm.controls.rolesList]" name="calendar-filter-roles"/>
   </div>
   <div class="col-start-4 row-start-1">
-    <xsb-input-multiselect #locationsCats naming="Locations" emptyNaming="All Locations" [options]="locationsOptions" [formControl]="searchForm.controls.rolesList"
+    <xsb-input-multiselect #locationsCats naming="Locations" emptyNaming="All Locations" [options]="locationsOptions" [formControl]="searchForm.controls.locationsList"
                            [xsb-typed]="[locationsCats, searchForm.controls.locationsList]" name="calendar-filter-locations"/>
   </div>
   <div class="col-start-3 row-start-2">
