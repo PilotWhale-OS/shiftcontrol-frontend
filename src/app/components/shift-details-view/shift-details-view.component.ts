@@ -68,7 +68,8 @@ export class ShiftDetailsViewComponent {
       role: {
         name: name,
         description: description,
-        id: "asda"
+        id: "asda",
+        selfAssignable: false,
       },
       rewardPoints: 100,
       assignedVolunteers: Array(assCount) as unknown as VolunteerDto[],
