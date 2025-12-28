@@ -5,10 +5,7 @@ export const mapValue = {
     }
     return value;
   },
-  undefinedIfEmptyLocalDate(value: Date | null | undefined): string | undefined {
-    if(value === null || value === undefined) {
-      return undefined;
-    }
+  localDateAsString(value: Date): string {
     return `${value.getFullYear()}-${(value.getMonth()+1).toString().padStart(2,"0")}-${value.getDate().toString().padStart(2,"0")}`;
   },
   datetimeAsLocalDate(date: Date){

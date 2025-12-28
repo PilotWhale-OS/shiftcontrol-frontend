@@ -1,13 +1,20 @@
-import {Component, ElementRef, inject, Input, Output, viewChild, ViewChild} from "@angular/core";
+import {Component, ElementRef, inject, viewChild} from "@angular/core";
 import {DialogComponent} from "../dialog/dialog.component";
 import {ShiftDetailsViewComponent} from "../shift-details-view/shift-details-view.component";
 import {DialogService} from "../../services/dialog/dialog.service";
 import {faLocationDot} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import {ActivityDto, LocationScheduleDto, PositionSlotDto, ShiftDto, ShiftPlanScheduleDto} from "../../../shiftservice-client";
+import {ActivityDto, PositionSlotDto, ScheduleLayoutDto, ShiftDto, ShiftPlanScheduleContentDto} from "../../../shiftservice-client";
 import {AsyncPipe, DatePipe, NgClass} from "@angular/common";
-import {BehaviorSubject, combineLatest, combineLatestWith, debounceTime, filter, map, Observable, Subject} from "rxjs";
+import {BehaviorSubject, combineLatestWith, debounceTime, filter, map, Observable, Subject, withLatestFrom} from "rxjs";
 import {toObservable} from "@angular/core/rxjs-interop";
+
+export interface calendarConfig {
+  startDate: Date;
+  endDate: Date;
+  initDate: Date;
+  locationLayouts: ScheduleLayoutDto[];
+}
 
 @Component({
   selector: "app-shift-calendar-grid",
@@ -25,28 +32,28 @@ import {toObservable} from "@angular/core/rxjs-interop";
 })
 export class ShiftCalendarGridComponent {
 
-  @Output()
   public readonly navigatedDate$: Observable<Date>;
 
-  @Input()
-  public startDate?: Date;
-
-  @Input()
-  public endDate?: Date;
-
-
   protected viewShift = false;
-
   protected readonly iconLocation = faLocationDot;
-
   protected readonly scrolled$ = new Subject<Event>();
-  protected readonly loadedDays$ = new BehaviorSubject<Map<string, ShiftPlanScheduleDto>>(new Map());
-  protected readonly locations$ = this.loadedDays$.pipe(
-    map(dayMap => {
-      const anyDay = dayMap.size > 0 ? [...dayMap.values()][0] : null;
-      return anyDay?.locations ?? [];
-    })
-  );
+
+  /**
+   * The lazily loaded schedule days mapped by date string
+   * @protected
+   */
+  protected readonly loadedDays$ = new BehaviorSubject<Map<string, ShiftPlanScheduleContentDto>>(new Map());
+
+  /**
+   * The calendar configuration (externally) based on current filters
+   * @protected
+   */
+  protected readonly config$ = new BehaviorSubject<calendarConfig | undefined>(undefined);
+
+  /**
+   * The list of loaded schedule days in no relevant order
+   * @protected
+   */
   protected readonly schedules$ = this.loadedDays$.pipe(
     map(dayMap => dayMap.size > 0 ? [...dayMap.values()] : [])
   );
@@ -64,17 +71,19 @@ export class ShiftCalendarGridComponent {
   constructor() {
     this.navigatedDate$ = this._navigatedDate$.asObservable();
 
+    /* calculate the currently navigated day based on scroll position */
     this.scrolled$.pipe(
       debounceTime(10),
-      map(event => {
-        if (this.startDate === undefined || this.endDate === undefined) {
+      withLatestFrom(this.config$),
+      map(([event, config]) => {
+        if (config === undefined) {
           return undefined;
         }
 
         const target = event.target as HTMLElement;
         const scrollPercent = target.scrollTop / target.scrollHeight;
-        const scrollTime = (this.endDate.getTime() - this.startDate.getTime() + 24 * 60 * 60 * 1000) * scrollPercent; // inclusive end
-        const scrolledDate = this.startDate.getTime() + scrollTime;
+        const scrollTime = (config.endDate.getTime() - config.startDate.getTime() + 24 * 60 * 60 * 1000) * scrollPercent; // inclusive end
+        const scrolledDate = config.startDate.getTime() + scrollTime;
         return new Date(scrolledDate);
       }),
       filter(date => date !== undefined)
@@ -82,63 +91,95 @@ export class ShiftCalendarGridComponent {
       this._navigatedDate$.next(date as Date);
     });
 
+    /* jump to date when requested by changing the scroll position of the container */
     this._jumpDate$.pipe(
       combineLatestWith(toObservable(this._calendarParent).pipe(
         map((parent => parent?.nativeElement as HTMLElement))
       )),
       filter(([, parent]) => parent !== undefined),
-    ).subscribe(([date, parent]) => {
+      withLatestFrom(this.config$),
+    ).subscribe(([[date, parent], config]) => {
       this._navigatedDate$.next(date);
 
-      if(this.startDate === undefined || this.endDate === undefined) {
+      if(config === undefined) {
         throw new Error("startDate and endDate inputs are required to jump to date");
       }
 
-      const totalMinutes = (this.endDate.getTime() - this.startDate.getTime()) / (1000 * 60) + 1440; // inclusive end
-      const targetMinutes = (date.getTime() - this.startDate.getTime()) / (1000 * 60);
+      const totalMinutes = (config.endDate.getTime() - config.startDate.getTime()) / (1000 * 60) + 1440; // inclusive end
+      const targetMinutes = (date.getTime() - config.startDate.getTime()) / (1000 * 60);
       const scrollPercent = targetMinutes / totalMinutes;
       setTimeout(() => parent.scrollTo(parent.scrollHeight * scrollPercent, parent.scrollHeight),10); // TODO fix? some timing issue?
     });
   }
 
-  public addScheduleDay(date: Date, schedule: ShiftPlanScheduleDto) {
-    const key = date.toISOString().split("T")[0];
+  public addScheduleDay(schedule: ShiftPlanScheduleContentDto) {
     const currentMap = this.loadedDays$.getValue();
-    currentMap.set(key, schedule);
+    currentMap.set(schedule.date, schedule);
     this.loadedDays$.next(currentMap);
   }
 
-  public jumpToDate(date: Date) {
-    this._jumpDate$.next(date);
+  /**
+   * Set the calendar configuration,
+   * clearing any previously loaded days
+   * @param config
+   */
+  public setConfig(config: calendarConfig) {
+    this.loadedDays$.next(new Map());
+    this.config$.next(config);
+    this._jumpDate$.next(config.initDate);
   }
 
-  protected getHours() {
-    if(this.startDate === undefined || this.endDate === undefined) {
-      throw new Error("startDate and endDate inputs are required to calculate hours");
-    }
-
+  /**
+   * Generate the list of hours to display based on the calendar config
+   * @param config
+   * @protected
+   */
+  protected getHours(config: calendarConfig) {
     const totalHours = Math.ceil(
-      (this.endDate.getTime() - (this.startDate.getTime())) / (1000 * 60 * 60)
+      (config.endDate.getTime() - (config.startDate.getTime())) / (1000 * 60 * 60)
     ) + 24; // since end is inclusive
     return Array.from({length: totalHours}, (_, i) => i);
   }
 
+  /**
+   * Get the CSS height for a duration in minutes
+   * @param durationMinutes
+   * @protected
+   */
   protected getMinuteHeight(durationMinutes: number) {
     return `${durationMinutes * this.minuteHeightRem}rem`;
   }
 
-  protected getDayOfHour(hourIndex: number) {
-    if(this.startDate === undefined) {
-      throw new Error("startDate input is required to calculate day of hour");
-    }
-    const date = new Date(this.startDate.getTime() + hourIndex * 60 * 60 * 1000);
-    return date;
+  /**
+   * Get the Date object for a given hour index based on the calendar config
+   * @param hourIndex
+   * @param config
+   * @protected
+   */
+  protected getDayOfHour(hourIndex: number, config: calendarConfig) {
+    return new Date(config.startDate.getTime() + hourIndex * 60 * 60 * 1000);
   }
 
-  protected getGridColumns(locations: LocationScheduleDto[] | null){
+  /**
+   * Generate a grid layout based on the calendar (layout) config,
+   * containing locations and shift columns consistent across all days
+   * @param config
+   * @protected
+   */
+  protected getGridColumns(config: calendarConfig){
 
     return `[time-start] 5rem [time-end ${
-      (locations ?? []).map(locationColumn => {
+      (config.locationLayouts ?? []).sort((a,b) => {
+        const aId = a.location.id.toLowerCase();
+        const bId = b.location.id.toLowerCase();
+        if(aId < bId) {
+          return -1;
+        }
+        if(aId > bId) {
+          return 1;
+        }
+        return 0;
+      }).map(locationColumn => {
         const locationName = locationColumn.location.id;
         return `venue-${locationName}-start venue-${locationName}-activity-start] ${
           this.activityWidth
@@ -169,15 +210,12 @@ export class ShiftCalendarGridComponent {
   /**
    * Get the minutes from the start of the calendar day to the shift start time
    * @param shift
-   * @param startTimestamp
+   * @param config
    * @protected
    */
-  protected getItemMinutesFromStart(shift: ShiftDto | ActivityDto){
-    if(this.startDate === undefined) {
-      throw new Error("startDate input is required to calculate shift position");
-    }
+  protected getItemMinutesFromStart(shift: ShiftDto | ActivityDto, config: calendarConfig) {
     const shiftStart = new Date(shift.startTime);
-    const durationMs = shiftStart.getTime() - this.startDate.getTime();
+    const durationMs = shiftStart.getTime() - config.startDate.getTime();
     return Math.floor(durationMs / 60000); // convert ms to minutes
   }
 

@@ -8,7 +8,7 @@ import {InputDateComponent} from "../inputs/input-date/input-date.component";
 import {InputMultiselectComponent} from "../inputs/input-multiselect/input-multiselect.component";
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
 import {NgClass} from "@angular/common";
-import {ScheduleStatisticsDto, ShiftPlanScheduleSearchDto} from "../../../shiftservice-client";
+import {ScheduleStatisticsDto, ShiftPlanScheduleFilterDto} from "../../../shiftservice-client";
 
 export enum ShiftCalendarViewMode {
   Calendar = "calendar",
@@ -45,9 +45,9 @@ export class ShiftCalendarFilterComponent {
   @Input()
   public readonly tagsOptions: SelectOptions<string> = [];
 
-  public readonly availabilityOptions: SelectOptions<ShiftPlanScheduleSearchDto.ScheduleViewTypeEnum> = [
-    {name: "Your Shifts", value: ShiftPlanScheduleSearchDto.ScheduleViewTypeEnum.MyShifts},
-    {name: "Signup Possible", value: ShiftPlanScheduleSearchDto.ScheduleViewTypeEnum.SignupPossible}
+  public readonly availabilityOptions: SelectOptions<ShiftPlanScheduleFilterDto.ScheduleViewTypeEnum> = [
+    {name: "Your Shifts", value: ShiftPlanScheduleFilterDto.ScheduleViewTypeEnum.MyShifts},
+    {name: "Signup Possible", value: ShiftPlanScheduleFilterDto.ScheduleViewTypeEnum.SignupPossible}
   ];
   public readonly viewModeOptions: SelectOptions<ShiftCalendarViewMode> = [
     {name: "Calendar", value: ShiftCalendarViewMode.Calendar},
@@ -78,7 +78,7 @@ export class ShiftCalendarFilterComponent {
       rolesList: this._fb.nonNullable.control<string[]>([]),
       locationsList: this._fb.nonNullable.control<string[]>([]),
       tagsList: this._fb.nonNullable.control<string[]>([]),
-      availabilityList: this._fb.nonNullable.control<ShiftPlanScheduleSearchDto.ScheduleViewTypeEnum[]>([])
+      availabilityList: this._fb.nonNullable.control<ShiftPlanScheduleFilterDto.ScheduleViewTypeEnum[]>([])
     });
     this.viewForm = this._fb.group({
       viewMode: this._fb.nonNullable.control<ShiftCalendarViewMode>(ShiftCalendarViewMode.Calendar),
