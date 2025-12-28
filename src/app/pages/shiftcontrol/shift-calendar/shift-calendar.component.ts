@@ -1,4 +1,4 @@
-import {Component, effect, inject, signal, viewChild} from "@angular/core";
+import {Component, inject, OnDestroy, viewChild} from "@angular/core";
 import {calendarConfig, ShiftCalendarGridComponent} from "../../../components/shift-calendar-grid/shift-calendar-grid.component";
 import {ShiftCalendarFilterComponent} from "../../../components/shift-calendar-filter/shift-calendar-filter.component";
 import {PageService} from "../../../services/page/page.service";
@@ -10,15 +10,14 @@ import {
   combineLatestWith,
   debounceTime, distinctUntilChanged,
   EMPTY,
-  filter,
+  filter, forkJoin,
   map,
   of,
   shareReplay,
-  startWith,
-  switchMap,
-  tap
+  startWith, Subscription,
+  switchMap
 } from "rxjs";
-import {toObservable, toSignal} from "@angular/core/rxjs-interop";
+import {toObservable} from "@angular/core/rxjs-interop";
 import {mapValue} from "../../../util/value-maps";
 
 @Component({
@@ -31,10 +30,12 @@ import {mapValue} from "../../../util/value-maps";
   templateUrl: "./shift-calendar.component.html",
   styleUrl: "./shift-calendar.component.scss"
 })
-export class ShiftCalendarComponent {
+export class ShiftCalendarComponent implements OnDestroy {
 
   private readonly _shiftPlanSchedule = viewChild(ShiftCalendarGridComponent);
   private readonly _filterComponent = viewChild(ShiftCalendarFilterComponent);
+
+  private readonly _subscriptions: Subscription[];
 
   private readonly _pageService = inject(PageService);
   private readonly _planService = inject(ShiftPlanEndpointService);
@@ -48,10 +49,16 @@ export class ShiftCalendarComponent {
       throw new Error("Shift Plan ID is required");
     }
 
-    this.setupWithObservables(shiftPlanId);
+    this._subscriptions = this.setupWithObservables(shiftPlanId);
   }
 
-  setupWithObservables(planId: string){
+  ngOnDestroy() {
+    this._subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
+
+  setupWithObservables(planId: string): Subscription[]{
+
+    /* details about the selected shift plan */
     const plan$ = this._planService.getShiftPlanDashboard(planId).pipe(
       catchError(() => {
         this._router.navigateByUrl("/");
@@ -59,12 +66,16 @@ export class ShiftCalendarComponent {
       }),
       shareReplay()
     );
+
+    /* observable containing form filter values */
     const filters$ = toObservable(this._filterComponent).pipe(
       switchMap(component => component?.searchForm?.valueChanges ?? of(undefined)),
       filter(data => data !== undefined),
       debounceTime(500),
       startWith({} as Partial<ShiftCalendarFilterComponent["searchForm"]["value"]>)
     );
+
+    /* observable containing the current calendar layout config */
     const layout$ = filters$.pipe(
       switchMap(filters =>
         this._planService.getShiftPlanScheduleLayout(planId, {
@@ -76,19 +87,29 @@ export class ShiftCalendarComponent {
       }),
       shareReplay()
     );
+
+    /* observable based on the calendar view child signal */
     const calendar$ = toObservable(this._shiftPlanSchedule).pipe(
       filter(calendar => calendar !== undefined)
     );
-    const calendarDate$ = calendar$.pipe(
-      switchMap(calendar => calendar.navigatedDate$),
-      distinctUntilChanged((prev, curr) => prev.getDay() === curr.getDay())
+
+    /* observable containing the currently navigated-to date of the calendar */
+    const calendarNavigation$ = calendar$.pipe(
+      switchMap(calendar => calendar.navigation$),
+      distinctUntilChanged((prev, curr) =>
+        prev.visibleDates.map(d => d.getDay()).join(",") === curr.visibleDates.map(d => d.getDay()).join(",")
+      )
     );
+
+    /* observable containing the filter component configuration */
     const filterData$ = this._planService.getShiftPlanScheduleFilterValues(planId).pipe(
       shareReplay()
     );
 
-    // Update page properties
-    plan$.subscribe(dashboard => {
+    const subs: Subscription[] = [];
+
+    /* Update page properties */
+    subs.push(plan$.subscribe(dashboard => {
       this._pageService
         .configurePageName(`${dashboard.shiftPlan.name} Calendar`)
         .configureBreadcrumb(
@@ -101,10 +122,10 @@ export class ShiftCalendarComponent {
           dashboard.shiftPlan.name,
           `/plans/${dashboard.shiftPlan.id}`
         );
-    });
+    }));
 
-    // set calendar config
-    filterData$.pipe(
+    /* react to calendar config and set in component */
+    subs.push(filterData$.pipe(
       combineLatestWith(calendar$, layout$),
     ).subscribe(([filterData, calendar, layout]) => {
       const startDate = mapValue.datetimeAsLocalDate(filterData.firstDate ? new Date(filterData.firstDate) : new Date());
@@ -112,25 +133,36 @@ export class ShiftCalendarComponent {
       const config: calendarConfig = {
         startDate,
         endDate,
-        initDate: new Date(Math.min(Math.max(startDate.getTime(), new Date().getTime()), endDate.getTime())),
         locationLayouts: layout.scheduleLayoutDtos
       };
       calendar.setConfig(config);
-    });
+      calendar.jumpToDate(new Date(Math.min(Math.max(startDate.getTime(), new Date().getTime()), endDate.getTime())));
+    }));
 
-    // update calendar on changes
-    filters$.pipe(
-      combineLatestWith(calendar$, filterData$, calendarDate$),
-      switchMap(([filters, calendar, , date]) =>
-        this._planService.getShiftPlanScheduleContent(planId, {
-          date: mapValue.localDateAsString(mapValue.datetimeAsLocalDate(date)),
-          shiftName: mapValue.undefinedIfEmptyString(filters?.shiftName),
-        }).pipe(
-          map(schedule => ({calendar, schedule}))
-        ))
-    ).subscribe(({calendar, schedule}) => {
-      console.log("updating calendar with schedule for date", schedule, schedule.date);
-      calendar.addScheduleDay(schedule);
-    });
+    /* load schedule when filter or navigated date changes */
+    subs.push(filters$.pipe(
+      combineLatestWith(calendar$, filterData$, calendarNavigation$),
+      switchMap(([filters, calendar, , navigation]) =>{
+
+        const newDays = navigation.visibleDates.filter(visible =>
+          !navigation.cachedDates.some(cached => cached.getTime() === visible.getTime())
+        ).map(date => this._planService.getShiftPlanScheduleContent(planId, {
+            date: mapValue.localDateAsString(mapValue.datetimeAsLocalDate(date)),
+            shiftName: mapValue.undefinedIfEmptyString(filters?.shiftName),
+          })
+        );
+
+        return forkJoin(newDays).pipe(
+          map(schedules => ({calendar, schedules}))
+        );
+      })
+    ).subscribe(({calendar, schedules}) => {
+      console.log("updating calendar with new schedule for dates", schedules);
+      for(const schedule of schedules) {
+        calendar.addScheduleDay(schedule);
+      }
+    }));
+
+    return subs;
   }
 }

@@ -11,7 +11,11 @@
 
       <!-- date side -->
       <div style="grid-row: 1 / 1; grid-column: time-start / time-end" class="date">
-        {{ navigatedDate$ | async | date:"shortDate" }}
+        {{ headDay$ | async | date:"shortDate" }}
+      </div>
+
+      <div class="absolute hidden">
+        {{bodyInitialized$.next(true)}}
       </div>
 
       <!-- timeline side -->
