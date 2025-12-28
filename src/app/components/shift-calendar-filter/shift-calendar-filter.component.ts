@@ -74,13 +74,13 @@ export class ShiftCalendarFilterComponent {
 
     this.searchForm = this._fb.group({
       shiftName: this._fb.nonNullable.control<string>(""),
-      date: this._fb.nonNullable.control<Date>(new Date()),
       rolesList: this._fb.nonNullable.control<string[]>([]),
       locationsList: this._fb.nonNullable.control<string[]>([]),
       tagsList: this._fb.nonNullable.control<string[]>([]),
       availabilityList: this._fb.nonNullable.control<ShiftPlanScheduleFilterDto.ScheduleViewTypeEnum[]>([])
     });
     this.viewForm = this._fb.group({
+      date: this._fb.nonNullable.control<Date>(new Date()),
       viewMode: this._fb.nonNullable.control<ShiftCalendarViewMode>(ShiftCalendarViewMode.Calendar),
     });
   }

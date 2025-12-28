@@ -1,6 +1,6 @@
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
+  ChangeDetectionStrategy, ChangeDetectorRef,
   Component,
   ElementRef,
   HostBinding, inject,
@@ -96,6 +96,7 @@ export class InputDateComponent implements TypedControlValueAccessor<Date | null
   private _position: DateTime;
   private _value: DateTime | null;
   private _injector = inject(Injector);
+  private _changeDetectorRef = inject(ChangeDetectorRef);
 
   constructor() {
     this._value = this.nullable ? null : DateTime.local();
@@ -211,6 +212,7 @@ export class InputDateComponent implements TypedControlValueAccessor<Date | null
   writeValue(value: Date | null): void {
     this.value = value === null ? null : DateTime.fromJSDate(value);
     this.position = this.value === null ? DateTime.local() : this.value;
+    this._changeDetectorRef.markForCheck();
   }
 
   /**

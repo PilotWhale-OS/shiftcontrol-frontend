@@ -15,7 +15,7 @@ import {
   of,
   shareReplay,
   startWith, Subscription,
-  switchMap,
+  switchMap, tap, withLatestFrom,
 } from "rxjs";
 import {toObservable} from "@angular/core/rxjs-interop";
 import {mapValue} from "../../../util/value-maps";
@@ -75,6 +75,12 @@ export class ShiftCalendarComponent implements OnDestroy {
       startWith({} as Partial<ShiftCalendarFilterComponent["searchForm"]["value"]>)
     );
 
+    /* observable containing form view options values */
+    const viewOptions$ = toObservable(this._filterComponent).pipe(
+      map(component => component?.viewForm ?? undefined),
+      startWith(undefined)
+    );
+
     /* observable containing the current calendar layout config */
     const layout$ = filters$.pipe(
       switchMap(filters =>
@@ -128,7 +134,10 @@ export class ShiftCalendarComponent implements OnDestroy {
     /* react to calendar config and set in component */
     subs.push(filterData$.pipe(
       combineLatestWith(calendar$, layout$),
-    ).subscribe(([filterData, calendar, layout]) => {
+      withLatestFrom(calendarNavigation$.pipe(
+        startWith({visibleDates: [], cachedDates: []})
+      ))
+    ).subscribe(([[filterData, calendar, layout], navigation]) => {
 
       /*
       start date parsed from utc date, begin of day
@@ -145,8 +154,46 @@ export class ShiftCalendarComponent implements OnDestroy {
         endDate,
         locationLayouts: layout.scheduleLayoutDtos
       };
+      const calendarViewInited = navigation.visibleDates.length > 0;
       calendar.setConfig(config);
-      calendar.jumpToDate(new Date(Math.min(Math.max(startDate.getTime(), new Date().getTime()), endDate.getTime())));
+
+      if(!calendarViewInited) {
+        calendar.jumpToDate(new Date(Math.min(Math.max(startDate.getTime(), new Date().getTime()), endDate.getTime())));
+      }
+    }));
+
+    /* set date picker to date when changed */
+    subs.push(calendarNavigation$.pipe(
+      withLatestFrom(viewOptions$)
+    ).subscribe(([navigation, viewOptions]) => {
+      if(viewOptions === undefined) {
+        return;
+      }
+      const firstDay = [...navigation.visibleDates].shift();
+      if(firstDay === undefined) {
+        return;
+      }
+
+      viewOptions.controls.date.setValue(firstDay);
+    }));
+
+    /* subscribe to date picker changes and jump to date in calendar */
+    subs.push(viewOptions$.pipe(
+      switchMap(view => view ? view.controls.date.valueChanges : of(null)),
+      withLatestFrom(calendarNavigation$.pipe(
+        map(nav => [...nav.visibleDates].shift()),
+        startWith(undefined)
+      ), calendar$, calendar$.pipe(
+        switchMap(calendar => calendar?.scrolling$ ?? of(false))
+      ))
+    ).subscribe(([pickerDate, currentDate, calendar, scrolling]) => {
+      if(pickerDate === null || currentDate === undefined || scrolling) {
+        return;
+      }
+
+      if(pickerDate.getTime() !== currentDate.getTime()) {
+        calendar.jumpToDate(pickerDate);
+      }
     }));
 
     /* load schedule when filter or navigated date changes */

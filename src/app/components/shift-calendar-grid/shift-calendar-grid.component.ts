@@ -1,7 +1,7 @@
 import {Component, ElementRef, viewChild} from "@angular/core";
 import {DialogComponent} from "../dialog/dialog.component";
 import {ShiftDetailsViewComponent} from "../shift-details-view/shift-details-view.component";
-import {faLocationDot} from "@fortawesome/free-solid-svg-icons";
+import {faCalendarDay, faLocationDot} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {
   ActivityDto,
@@ -14,13 +14,13 @@ import {AsyncPipe, DatePipe, NgClass} from "@angular/common";
 import {
   BehaviorSubject,
   combineLatestWith,
-  debounceTime,
+  debounceTime, delayWhen, distinctUntilChanged,
   filter,
   map,
   Observable,
   shareReplay,
   Subject,
-  take,
+  take, tap,
   withLatestFrom
 } from "rxjs";
 import {toObservable} from "@angular/core/rxjs-interop";
@@ -91,6 +91,7 @@ export class ShiftCalendarGridComponent {
 
   protected viewShift = false;
   protected readonly iconLocation = faLocationDot;
+  protected readonly iconDay = faCalendarDay;
   protected readonly scrolled$ = new Subject<Event>();
   protected readonly bodyInitialized$ = new BehaviorSubject<boolean>(false);
 
@@ -139,6 +140,7 @@ export class ShiftCalendarGridComponent {
   );
 
   private readonly activityWidth = "2rem";
+  private readonly dateWidth = "6rem";
   private readonly shiftWidth = "10rem";
   private readonly venueGapWidth = "1rem";
   private readonly minuteHeightRem = 0.05;
@@ -146,13 +148,14 @@ export class ShiftCalendarGridComponent {
   private readonly _calendarParent = viewChild<ElementRef<HTMLButtonElement>>("calendarParent");
   private readonly _visibleDates$ = new BehaviorSubject<Date[]>([]);
   private readonly _jumpDate$ = new Subject<Date>();
+  private readonly _scrolling$ = new BehaviorSubject<boolean>(false);
 
   constructor() {
     this.navigation$ = this._visibleDates$.pipe(
-      combineLatestWith(this.loadedDays$),
       withLatestFrom(this.bodyInitialized$),
       filter(([, initialized]) => initialized),
-      map(([[visibleDates, loadedDays]]) => {
+      combineLatestWith(this.loadedDays$),
+      map(([[visibleDates], loadedDays]) => {
         const navigation: calendarNavigation = {
           cachedDates: Array.from(loadedDays.keys()).map(dateStr => new Date(dateStr + "T00:00:00Z")),
           visibleDates
@@ -194,17 +197,16 @@ export class ShiftCalendarGridComponent {
     /* jump to date when requested by changing the scroll position of the container */
     this._jumpDate$.pipe(
       combineLatestWith(toObservable(this._calendarParent).pipe(
-        map((parent => parent?.nativeElement as HTMLElement))
+        map((parent => parent?.nativeElement as HTMLElement)),
       )),
       filter(([, parent]) => parent !== undefined),
       withLatestFrom(this.config$),
-      combineLatestWith(
-        this.bodyInitialized$.pipe(
+      delayWhen(() => this.bodyInitialized$.pipe(
           filter(initialized => initialized),
           take(1)
         )
       )
-    ).subscribe(([[[date, parent], config]]) => {
+    ).subscribe(([[date, parent], config]) => {
 
       if(config === undefined) {
         throw new Error("startDate and endDate inputs are required to jump to date");
@@ -213,13 +215,31 @@ export class ShiftCalendarGridComponent {
       const totalMinutes = (config.adjustedEndDate.getTime() - config.adjustedStartDate.getTime()) / (1000 * 60);
       const targetMinutes = (date.getTime() - config.adjustedStartDate.getTime()) / (1000 * 60);
       const scrollPercent = targetMinutes / totalMinutes;
-      setTimeout(() => parent.scrollTo(parent.scrollHeight * scrollPercent, parent.scrollHeight),10); // TODO fix? some timing issue?
+
+      setTimeout(() => parent.scrollTo({
+        left: 0,
+        top: parent.scrollHeight * scrollPercent,
+        behavior: "smooth"
+      }),10); // TODO fix? some timing issue?
 
       const visibleDays = this.getVisibleValidDays(parent as HTMLDivElement, config);
       this._visibleDates$.next(visibleDays);
     });
   }
 
+  /**
+   * Observable indicating whether the user is currently scrolling the calendar
+   */
+  public get scrolling$(): Observable<boolean> {
+    return this._scrolling$.pipe(
+      distinctUntilChanged()
+    );
+  }
+
+  /**
+   * Add schedule data to the calendar
+   * @param schedules
+   */
   public addScheduleDays(...schedules: ShiftPlanScheduleContentDto[]) {
     const currentMap = this.loadedDays$.getValue();
     for (const schedule of schedules) {
@@ -235,7 +255,6 @@ export class ShiftCalendarGridComponent {
    */
   public setConfig(config: calendarConfig) {
     this.bodyInitialized$.next(false);
-    this.loadedDays$.next(new Map());
 
     const adjustedConfig: calendarAdjustedConfig = {
       ... config,
@@ -260,6 +279,7 @@ export class ShiftCalendarGridComponent {
     );
 
     this.config$.next(adjustedConfig);
+    this.loadedDays$.next(new Map());
   }
 
   /**
@@ -280,6 +300,15 @@ export class ShiftCalendarGridComponent {
       (config.adjustedEndDate.getTime() - (config.adjustedStartDate.getTime())) / (1000 * 60 * 60)
     );
     return Array.from({length: totalHours}, (_, i) => i);
+  }
+
+  /**
+   * Set whether the calendar is currently scrolling
+   * @param scrolling
+   * @protected
+   */
+  protected setScrolling(scrolling: boolean) {
+    this._scrolling$.next(scrolling);
   }
 
   /**
@@ -309,7 +338,7 @@ export class ShiftCalendarGridComponent {
    */
   protected getGridColumns(config: calendarAdjustedConfig){
 
-    return `[time-start] 5rem [time-end ${
+    return `[time-start] ${this.dateWidth} [time-end ${
       (config.locationLayouts ?? []).sort((a,b) => {
         const aId = a.location.id.toLowerCase();
         const bId = b.location.id.toLowerCase();

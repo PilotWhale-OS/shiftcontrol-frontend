@@ -1,4 +1,7 @@
-<div class="h-full w-full overflow-auto no-scrollbar" #calendarParent (scroll)="scrolled$.next($event)">
+<div class="h-full w-full overflow-auto no-scrollbar" #calendarParent
+     (scroll)="scrolled$.next($event); setScrolling(true)"
+     (scrollend)="setScrolling(false)"
+>
 
   @if (config$ | async; as config) {
 
@@ -11,7 +14,8 @@
 
       <!-- date side -->
       <div style="grid-row: 1 / 1; grid-column: time-start / time-end" class="date">
-        {{ headDay$ | async | date:"shortDate" }}
+        <fa-icon [icon]="iconDay" class="text-sm" />
+        <span>{{ headDay$ | async | date:"shortDate" }}</span>
       </div>
 
       <div class="absolute hidden">
