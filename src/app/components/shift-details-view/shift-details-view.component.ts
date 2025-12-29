@@ -42,7 +42,7 @@ export class ShiftDetailsViewComponent {
     name: "test",
     startTime: "asdasdasd",
     endTime: "asdasdasd",
-    relatedActivities: [],
+    relatedActivity: undefined,
     positionSlots: [],
     lockStatus: ShiftDto.LockStatusEnum.SelfAssignable,
     location: {

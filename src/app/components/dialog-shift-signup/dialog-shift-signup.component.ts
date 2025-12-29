@@ -7,6 +7,7 @@ import {DialogComponent, dialogResult} from "../dialog/dialog.component";
     DialogComponent
   ],
   templateUrl: "./dialog-shift-signup.component.html",
+  standalone: true,
   styleUrl: "./dialog-shift-signup.component.scss"
 })
 export class DialogShiftSignupComponent {

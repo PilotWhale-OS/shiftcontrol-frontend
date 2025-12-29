@@ -17,6 +17,7 @@ import {TooltipDirective} from "../../../directives/tooltip.directive";
     TooltipDirective
   ],
   templateUrl: "./events.component.html",
+  standalone: true,
   styleUrl: "./events.component.scss"
 })
 export class EventsComponent {
