@@ -44,7 +44,7 @@ export class ShiftDetailsViewComponent {
     endTime: "asdasdasd",
     relatedActivity: undefined,
     positionSlots: [],
-    lockStatus: ShiftDto.LockStatusEnum.SelfAssignable,
+    lockStatus: ShiftDto.LockStatusEnum.SelfSignup,
     location: {
       id: "asdff",
       name: "Stage 1"
