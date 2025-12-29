@@ -1,266 +1,119 @@
-<div class="h-full w-full overflow-auto no-scrollbar">
+<div class="h-full w-full overflow-auto no-scrollbar" #calendarParent
+     (scroll)="scrolled$.next($event); setScrolling(true)"
+     (scrollend)="setScrolling(false)"
+>
 
-  <!-- calendar grid: x -> grid columns, scrollable venues; y: continuous big row, time axis, growing by date range, position by top -->
-  <div
-    class="relative grid gap-md gap-y-0 grid-rows-[auto_1fr]"
-    [style.grid-template-columns]="gridColumns"
-    [style.height]="getMinuteHeight(24*60)"
-  >
+  @if (config$ | async; as config) {
 
-    <!-- date side -->
-    <div style="grid-row: 1 / 1; grid-column: time-start / time-end" class="date">
-      12.12.2025
-    </div>
+    <!-- calendar grid: x -> grid columns, scrollable venues; y: continuous big row, time axis, growing by date range, position by top -->
+    <div
+      class="relative grid gap-md gap-y-0 "
+      [style.grid-template-columns]="getGridColumns(config)"
+      [style.grid-template-rows]="'auto ' + getMinuteHeight(getHours(config).length * 60)"
+    >
 
-    <!-- timeline side -->
-    <div style="grid-row: 2 / 2; grid-column: time-start / time-end" class="timestamp">
+      <!-- date side -->
+      <div style="grid-row: 1 / 1; grid-column: time-start / time-end" class="date">
+        <fa-icon [icon]="iconDay" class="text-sm" />
+        <span>{{ headDay$ | async | date:"shortDate" }}</span>
+      </div>
 
-      @for (hour of hours; track hour) {
-        <div
-          class="hour"
-          [style.top]="getMinuteHeight(hour * 60)"
-          [style.height]="getMinuteHeight(60)"
-        >
-          {{ hour.toString().padStart(2, "0") }}:00
-        </div>
-      }
-    </div>
 
-    <!-- time grid row markers for every other hour -->
-    @for (hour of hours; track hour) {
-      @if (hour % 1 === 0){
+      <!-- filter side -->
+      <div style="grid-row: 1 / 1; grid-column: filter-start / filter-end" class="filter">
+        <xsb-input-button [icon]="iconFilter" size="minimal" content="Filter" (click)="filterToggleClicked()" />
+      </div>
+
+      <div class="absolute hidden">
+        {{bodyInitialized$.next(true)}}
+      </div>
+
+      <!-- timeline side -->
+      <div style="grid-row: 2 / 2; grid-column: time-start / time-end" class="timestamp">
+
+        @for (hour of getHours(config); track hour) {
+          <div
+            class="hour"
+            [ngClass]="{ 'new-day': hour % 24 === 0 }"
+            [style.top]="getMinuteHeight(hour * 60)"
+            [style.height]="getMinuteHeight(60)"
+          >
+            @if (hour % 24 === 0){
+              {{ getDayOfHour(hour, config) | date:"shortDate" }}
+            } @else {
+              {{ (hour % 24).toString().padStart(2, "0") }}:00
+            }
+          </div>
+        }
+      </div>
+
+      <!-- background for venue headers -->
+      <div class="venue-bg" style="grid-column: 1 / -1; grid-row: 1"></div>
+
+      <!-- time grid row markers for every hour -->
+      @for (hour of getHours(config); track hour) {
         <div
           class="hour-marker"
+          [ngClass]="{ 'new-day': hour !== 0 && hour % 24 === 0 }"
           style="grid-column: 1 / -1; grid-row: 2 / 2"
           [style.top]="getMinuteHeight(hour * 60)"
         ></div>
       }
-    }
 
-    <!-- sample venue A -->
-    <div class="venue" style="grid-row: 1/1; grid-column: venue-a-start / venue-a-end">
-      <fa-icon [icon]="iconLocation" class="text-sm" />
-      <span>Freihaus</span>
+      @for (venue of config.locationLayouts; track venue.location.id) {
+
+        <!-- venue header -->
+        <div class="venue" style="grid-row: 1/1; grid-column: venue-{{venue.location.id}}-start / venue-{{venue.location.id}}-end">
+          <fa-icon [icon]="iconLocation" class="text-sm" />
+          <span>{{venue.location.name}}</span>
+        </div>
+
+        <!-- venue header gap -->
+        <div
+          class="venue-gap"
+          style="grid-column: venue-{{venue.location.id}}-gap-start / venue-{{venue.location.id}}-gap-end; grid-row: 1/-1;"
+        ></div>
+      }
+
+      <!-- venue data -->
+      @if (schedule$ | async; as schedule) {
+
+          <!-- shifts -->
+          @for (shiftItem of schedule.shifts; track shiftItem.shift.shiftDto.id) {
+            <div
+              (click)="viewShift = true"
+              (keyup)="viewShift = true"
+              tabindex="0"
+              class="shift"
+              [ngClass]="getShiftDisplayCategory(shiftItem.shift.shiftDto)"
+              style="grid-row: 2/2; grid-column: venue-{{shiftItem.location.id}}-shift-col-{{shiftItem.shift.columnIndex + 1}}-start / venue-{{shiftItem.location.id}}-shift-col-{{shiftItem.shift.columnIndex +  1}}-end"
+              [style.height]="getMinuteHeight(getItemMinutesDuration(shiftItem.shift.shiftDto))"
+              [style.top]="getMinuteHeight(getItemMinutesFromStart(shiftItem.shift.shiftDto, config))"
+            >
+              <span class="tag">{{getShiftDisplayTag(shiftItem.shift.shiftDto)}}</span>
+              <span class="time">
+            {{shiftItem.shift.shiftDto.startTime | date:"shortTime"}} - {{shiftItem.shift.shiftDto.endTime | date:"shortTime"}}
+          </span>
+              <span>{{shiftItem.shift.shiftDto.name}}</span>
+            </div>
+          }
+
+          <!-- activities -->
+          @for (activityItem of schedule.activities; track activityItem.activity.id) {
+            <div
+              class="activity"
+              style="grid-row: 2/2; grid-column: venue-{{activityItem.location.id}}-activity-start / venue-{{activityItem.location.id}}-end"
+              [style.height]="getMinuteHeight(getItemMinutesDuration(activityItem.activity))"
+              [style.top]="getMinuteHeight(getItemMinutesFromStart(activityItem.activity, config))"
+            >
+              <span>{{activityItem.activity.name}}</span>
+            </div>
+          }
+      }
+
     </div>
 
-    <!-- venue a gap -->
-    <div
-      class="venue-gap"
-      style="grid-column: venue-a-gap-start / venue-a-gap-end; grid-row: 1/-1;"
-    > </div>
-
-    <!-- sample venue B -->
-    <div class="venue" style="grid-row: 1/1; grid-column: venue-b-start / venue-b-end">
-      <fa-icon [icon]="iconLocation" class="text-sm" />
-      <span>Audimax</span>
-    </div>
-
-    <!-- venue b gap -->
-    <div
-      class="venue-gap"
-      style="grid-column: venue-b-gap-start / venue-b-gap-end; grid-row: 1/-1;"
-    > </div>
-
-    <!-- sample venue C -->
-    <div class="venue" style="grid-row: 1/1; grid-column: venue-c-start / venue-c-end">
-      <fa-icon [icon]="iconLocation" class="text-sm" />
-      <span>Resselpark</span>
-    </div>
-
-    <!-- sample activity -->
-    <div
-      class="activity"
-      style="grid-row: 2/2; grid-column: venue-a-activity-start / venue-a-end"
-      [style.height]="getMinuteHeight(200)"
-      [style.top]="getMinuteHeight(60)"
-    >
-      <span>Tee des Tages</span>
-    </div>
-
-    <!-- sample shift A -->
-    <div
-      (click)="viewShift = true"
-      (keyup)="viewShift = true"
-      tabindex="0"
-      class="shift eligible"
-      style="grid-row: 2/2; grid-column: venue-a-shift-col-1-start / venue-a-shift-col-1-start"
-      [style.height]="getMinuteHeight(80)"
-      [style.top]="getMinuteHeight(30)"
-    >
-      <span class="tag">Eligible</span>
-      <span class="time">22.30 - 23.30</span>
-      <span>Teebeutel füllen</span>
-    </div>
-
-    <!-- sample shift B -->
-    <div
-      (click)="viewShift = true"
-      (keyup)="viewShift = true"
-      tabindex="0"
-      class="shift"
-      style="grid-row: 2/2; grid-column: venue-a-shift-col-2-start / venue-a-shift-col-2-start"
-      [style.height]="getMinuteHeight(120)"
-      [style.top]="getMinuteHeight(60)"
-    >
-      <span class="tag">Conflict</span>
-      <span class="time">22.30 - 23.30</span>
-      <span>Häferl austeilen</span>
-    </div>
-
-    <!-- sample shift C -->
-    <div
-      (click)="viewShift = true"
-      (keyup)="viewShift = true"
-      tabindex="0"
-      class="shift signed-up"
-      style="grid-row: 2/2; grid-column: venue-a-shift-col-1-start / venue-a-shift-col-1-start"
-      [style.height]="getMinuteHeight(120)"
-      [style.top]="getMinuteHeight(150)"
-    >
-      <span class="tag">Signed Up</span>
-      <span class="time">22.30 - 23.30</span>
-      <span>Häferl abwaschen</span>
-    </div>
-
-
-    <!-- sample activity -->
-    <div
-      class="activity"
-      style="grid-row: 2/2; grid-column: venue-b-activity-start / venue-b-end"
-      [style.height]="getMinuteHeight(900)"
-      [style.top]="getMinuteHeight(100)"
-    >
-      <span>LOTR Marathon</span>
-    </div>
-
-    <div
-      class="activity"
-      style="grid-row: 2/2; grid-column: venue-b-activity-start / venue-b-end"
-      [style.height]="getMinuteHeight(120)"
-      [style.top]="getMinuteHeight(1010)"
-    >
-      <span>Post Movie Talk</span>
-    </div>
-
-    <!-- sample shift A -->
-    <div
-      (click)="viewShift = true"
-      (keyup)="viewShift = true"
-      tabindex="0"
-      class="shift eligible"
-      style="grid-row: 2/2; grid-column: venue-b-shift-col-1-start / venue-b-shift-col-1-start"
-      [style.height]="getMinuteHeight(80)"
-      [style.top]="getMinuteHeight(50)"
-    >
-      <span class="tag">Eligible</span>
-      <span class="time">22.30 - 23.30</span>
-      <span>Beamer Setup</span>
-    </div>
-
-    <!-- sample shift B -->
-    <div
-      (click)="viewShift = true"
-      (keyup)="viewShift = true"
-      tabindex="0"
-      class="shift"
-      style="grid-row: 2/2; grid-column: venue-b-shift-col-2-start / venue-b-shift-col-2-start"
-      [style.height]="getMinuteHeight(400)"
-      [style.top]="getMinuteHeight(200)"
-    >
-      <span class="tag">Conflict</span>
-      <span class="time">22.30 - 23.30</span>
-      <span>Snack Prep</span>
-    </div>
-
-    <!-- sample shift C -->
-    <div
-      (click)="viewShift = true"
-      (keyup)="viewShift = true"
-      tabindex="0"
-      class="shift"
-      style="grid-row: 2/2; grid-column: venue-b-shift-col-2-start / venue-b-shift-col-2-start"
-      [style.height]="getMinuteHeight(30)"
-      [style.top]="getMinuteHeight(100)"
-    >
-      <span class="tag">Eligible</span>
-      <span class="time">22.30 - 23.30</span>
-      <span>Part 1 Setup</span>
-    </div>
-
-    <!-- sample shift C -->
-    <div
-      (click)="viewShift = true"
-      (keyup)="viewShift = true"
-      tabindex="0"
-      class="shift"
-      style="grid-row: 2/2; grid-column: venue-b-shift-col-1-start / venue-b-shift-col-1-start"
-      [style.height]="getMinuteHeight(30)"
-      [style.top]="getMinuteHeight(350)"
-    >
-      <span class="tag">Eligible</span>
-      <span class="time">22.30 - 23.30</span>
-      <span>Part 2 Setup</span>
-    </div>
-
-    <!-- sample shift C -->
-    <div
-      (click)="viewShift = true"
-      (keyup)="viewShift = true"
-      tabindex="0"
-      class="shift signed-up"
-      style="grid-row: 2/2; grid-column: venue-b-shift-col-1-start / venue-b-shift-col-1-start"
-      [style.height]="getMinuteHeight(30)"
-      [style.top]="getMinuteHeight(700)"
-    >
-      <span class="tag">Signed Up</span>
-      <span class="time">22.30 - 23.30</span>
-      <span>Part 3 Setup</span>
-    </div>
-
-    <!-- sample shift C -->
-    <div
-      (click)="viewShift = true"
-      (keyup)="viewShift = true"
-      tabindex="0"
-      class="shift eligible"
-      style="grid-row: 2/2; grid-column: venue-b-shift-col-1-start / venue-b-shift-col-1-start"
-      [style.height]="getMinuteHeight(170)"
-      [style.top]="getMinuteHeight(950)"
-    >
-      <span class="tag">Eligible</span>
-      <span class="time">22.30 - 23.30</span>
-      <span>Peter Jackson & Cast Security</span>
-    </div>
-
-
-    <!-- sample activity -->
-    <div
-      class="activity"
-      style="grid-row: 2/2; grid-column: venue-c-activity-start / venue-c-end"
-      [style.height]="getMinuteHeight(24*60)"
-      [style.top]="getMinuteHeight(10)"
-    >
-      <span>Resselpark Ratten Worship</span>
-    </div>
-
-    <!-- sample shift C -->
-    <div
-      (click)="viewShift = true"
-      (keyup)="viewShift = true"
-      tabindex="0"
-      class="shift signed-up"
-      style="grid-row: 2/2; grid-column: venue-c-shift-col-2-start / venue-c-shift-col-2-start"
-      [style.height]="getMinuteHeight(120)"
-      [style.top]="getMinuteHeight(1300)"
-    >
-      <span class="tag">Signed Up</span>
-      <span class="time">22.30 - 23.30</span>
-      <span>Ratten füttern</span>
-    </div>
-
-
-  </div>
-
+  }
 </div>
 
 @if (viewShift){
