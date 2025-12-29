@@ -1,66 +1,53 @@
 <div
-  class="card compact grid grid-cols-[2fr_2fr_1fr_1fr_1fr_auto] grid-rows-[1fr-1fr] gap-sm gap-x-xl"
-  [ngClass]="{'grid-cols-[1fr] ghost': !showFilters}"
+  class="card compact grid grid-cols-[0_auto_auto_auto_auto_1fr] grid-rows-[1fr-1fr] gap-sm gap-x-xl w-fit justify-self-end items-center"
+  [ngClass]="{'hidden': !showFilters}"
 >
 
-  <!-- filter contents -->
-  @if (showFilters) {
+  <!--<div class="flex flex-col col-start-1 row-start-1">
+    <h1 class="signature-gradient-font text-center">Filter Shift Calendar</h1>
+  </div>-->
 
-    <!-- title filter -->
-    <div class="flex flex-col col-start-1 row-start-1">
-      <h1 class="signature-gradient-font text-center">Filter Shift Calendar</h1>
-    </div>
+  <!-- date picker -->
+  <div class="col-start-2 row-start-1">
+    <xsb-input-date #datePicker name="calendar-filter-date"
+                    [formControl]="viewForm.controls.date"
+                    [xsb-typed]="[datePicker, viewForm.controls.date]" />
+  </div>
 
-    <!-- title filter -->
-    <div class="flex gap-sm items-center col-start-1 row-start-2">
-      <label for="calendar-filter-name">Shift name:</label>
-      <xsb-input-text #shiftName placeholder="Shift name" name="calendar-filter-name" [formControl]="form.controls.shiftName"
-                      [xsb-typed]="[shiftName, form.controls.shiftName]" />
-    </div>
+  <!-- view mode selection -->
+  <div class="col-start-2 row-start-2">
+    <xsb-input-select #viewMode [options]="viewModeOptions" [formControl]="viewForm.controls.viewMode"
+                      [xsb-typed]="[viewMode, viewForm.controls.viewMode]" [icon]="iconView" name="calendar-view-mode" />
+  </div>
 
-    <!-- date picker -->
-    <div class="col-start-2 row-start-1">
-      <xsb-input-date #datePicker name="calendar-filter-date"
-                      [formControl]="form.controls.date"
-                      [xsb-typed]="[datePicker, form.controls.date]" />
-    </div>
+  <!-- title filter -->
+  <div class="flex gap-sm items-center col-start-3 row-start-1">
+    <xsb-input-text class="w-full" #shiftName placeholder="Shift name" name="calendar-filter-name" [formControl]="searchForm.controls.shiftName"
+                    [xsb-typed]="[shiftName, searchForm.controls.shiftName]" />
+  </div>
 
-    <!-- view mode selection -->
-    <div class="col-start-2 row-start-2">
-      <xsb-input-select #viewMode [options]="viewModeOptions" [formControl]="form.controls.viewMode"
-                        [xsb-typed]="[viewMode, form.controls.viewMode]" [icon]="iconView" name="calendar-view-mode" />
-    </div>
+  <!-- categories multiselects -->
+  <div class="col-start-4 row-start-2">
+    <xsb-input-multiselect #rolesCats naming="Roles" emptyNaming="All Roles" [options]="rolesOptions" [formControl]="searchForm.controls.rolesList"
+                           [xsb-typed]="[rolesCats, searchForm.controls.rolesList]" name="calendar-filter-roles"/>
+  </div>
+  <div class="col-start-4 row-start-1">
+    <xsb-input-multiselect #locationsCats naming="Locations" emptyNaming="All Locations" [options]="locationsOptions" [formControl]="searchForm.controls.locationsList"
+                           [xsb-typed]="[locationsCats, searchForm.controls.locationsList]" name="calendar-filter-locations"/>
+  </div>
+  <div class="col-start-3 row-start-2">
+    <xsb-input-multiselect #availabilityCats emptyNaming="All Availabilities" naming="Availabilities" [options]="availabilityOptions" [formControl]="searchForm.controls.availabilityList"
+                           [xsb-typed]="[availabilityCats, searchForm.controls.availabilityList]" name="calendar-filter-availability"/>
+  </div>
 
-    <!-- categories multiselects -->
-    <div class="col-start-3 row-start-1">
-      <xsb-input-multiselect #rolesCats naming="Roles" [options]="rolesOptions" [formControl]="form.controls.locationsList"
-                             [xsb-typed]="[rolesCats, form.controls.locationsList]" name="calendar-filter-roles"/>
-    </div>
-    <div class="col-start-4 row-start-1">
-      <xsb-input-multiselect #locationsCats naming="Locations" [options]="locationsOptions" [formControl]="form.controls.rolesList"
-                             [xsb-typed]="[locationsCats, form.controls.locationsList]" name="calendar-filter-locations"/>
-    </div>
-    <div class="col-start-3 row-start-2">
-      <xsb-input-multiselect #tagsCats naming="Tags" [options]="tagsOptions" [formControl]="form.controls.tagsList"
-                             [xsb-typed]="[tagsCats, form.controls.tagsList]" name="calendar-filter-tags"/>
-    </div>
-    <div class="col-start-4 row-start-2">
-      <xsb-input-multiselect #availabilityCats naming="Availabilities" [options]="availabilityOptions" [formControl]="form.controls.availabilityList"
-                             [xsb-typed]="[availabilityCats, form.controls.availabilityList]" name="calendar-filter-availability"/>
-    </div>
-
-    <!-- summary -->
-    <div class="row-span-2 flex flex-col justify-center justify-self-end">
+  <!-- summary -->
+  <div class="col-start-5 row-span-2 flex flex-col justify-center justify-self-end px-lg">
+    @if(statistics !== undefined) {
       <small>Results:</small>
-      <span>50 shifts</span>
-      <span>40 hours</span>
-      <span>10 unassigned</span>
-    </div>
-  }
-
-  <!-- toggle -->
-  <div class="-col-start-1 flex justify-end">
-    <xsb-input-button content="Toggle Filters" size="minimal" [icon]="iconFilter" (click)="showFilters = !showFilters" />
+      <span>{{statistics.totalShifts}} shifts</span>
+      <span>{{statistics.totalHours}} hours</span>
+      <span>{{statistics.unassignedCount}} unassigned</span>
+    }
   </div>
 
 </div>

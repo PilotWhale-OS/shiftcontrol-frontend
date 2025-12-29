@@ -1,13 +1,18 @@
-import {Component, inject} from "@angular/core";
-import {faEye, faFilter} from "@fortawesome/free-solid-svg-icons";
+import {Component, inject, Input} from "@angular/core";
+import {faEye} from "@fortawesome/free-solid-svg-icons";
 import {InputSelectComponent, SelectOptions} from "../inputs/input-select/input-select.component";
 import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
 import {InputTextComponent} from "../inputs/input-text/input-text.component";
 import {TypedFormControlDirective} from "../../directives/typed-form-control.directive";
 import {InputDateComponent} from "../inputs/input-date/input-date.component";
 import {InputMultiselectComponent} from "../inputs/input-multiselect/input-multiselect.component";
-import {InputButtonComponent} from "../inputs/input-button/input-button.component";
 import {NgClass} from "@angular/common";
+import {ScheduleStatisticsDto, ShiftPlanScheduleFilterDto} from "../../../shiftservice-client";
+
+export enum ShiftCalendarViewMode {
+  Calendar = "calendar",
+  Table = "table"
+}
 
 @Component({
   selector: "app-shift-calendar-filter",
@@ -18,7 +23,6 @@ import {NgClass} from "@angular/common";
     InputDateComponent,
     InputSelectComponent,
     InputMultiselectComponent,
-    InputButtonComponent,
     NgClass
   ],
   standalone: true,
@@ -27,52 +31,54 @@ import {NgClass} from "@angular/common";
 })
 export class ShiftCalendarFilterComponent {
 
-  iconView = faEye;
-  iconFilter = faFilter;
+  @Input()
+  public statistics?: ScheduleStatisticsDto = { // TODO use from calendar cached aggregate
+    totalShifts: 0,
+    unassignedCount: 0,
+    totalHours: 0
+  };
 
-  public readonly viewModeOptions: SelectOptions<"calendar" | "table"> = [
-    {name: "Calendar", value: "calendar"},
-    {name: "Table", value: "table"}
-  ];
-  public readonly rolesOptions: SelectOptions<string> = [
-    {name: "ID Checker", value: "idcheck"},
-    {name: "Light Technician", value: "lighttech"},
-    {name: "Sound Technician", value: "soundtech"}
-  ];
-  public readonly locationsOptions: SelectOptions<string> = [
-    {name: "Venue A", value: "va"},
-    {name: "Venue B", value: "vb"},
-    {name: "Outdoor", value: "od"}
-  ];
-  public readonly tagsOptions: SelectOptions<string> = [
-    {name: "Guard", value: "guard"},
-    {name: "Management", value: "mgm"},
-    {name: "Catering", value: "cat"}
-  ];
-  public readonly availabilityOptions: SelectOptions<"unassigned" | "assigned" | "own" | "auction" | "trade"> = [
-    {name: "Unassigned", value: "unassigned"},
-    {name: "Assigned", value: "assigned"},
-    {name: "Own Shifts", value: "own"},
-    {name: "Auctioned", value: "auction"},
-    {name: "Trade", value: "trade"}
-  ];
-  public readonly form;
+  @Input()
+  public rolesOptions: SelectOptions<string> = [];
 
-  protected showFilters = false;
+  @Input()
+  public locationsOptions: SelectOptions<string> = [];
+
+  public readonly availabilityOptions: SelectOptions<ShiftPlanScheduleFilterDto.ScheduleViewTypeEnum> = [
+    {name: "Your Shifts", value: ShiftPlanScheduleFilterDto.ScheduleViewTypeEnum.MyShifts},
+    {name: "Signup Possible", value: ShiftPlanScheduleFilterDto.ScheduleViewTypeEnum.SignupPossible}
+  ];
+  public readonly viewModeOptions: SelectOptions<ShiftCalendarViewMode> = [
+    {name: "Calendar", value: ShiftCalendarViewMode.Calendar},
+    {name: "Table", value: ShiftCalendarViewMode.Table}
+  ];
+  public readonly searchForm;
+  public readonly viewForm;
+
+  public showFilters = false;
+
+  protected iconView = faEye;
 
   private readonly _fb = inject(FormBuilder);
 
   constructor() {
-    this.form = this._fb.group({
+
+    /*
+    Selecting all filter options does not mean no filtering is applied:
+    [ ] -> No filters selected; all values shown
+    [ some items ] -> Some filters selected; only matching values shown
+    [ all items ] -> All filters selected; only matching values shown
+    */
+
+    this.searchForm = this._fb.group({
       shiftName: this._fb.nonNullable.control<string>(""),
+      rolesList: this._fb.nonNullable.control<string[]>([]),
+      locationsList: this._fb.nonNullable.control<string[]>([]),
+      availabilityList: this._fb.nonNullable.control<ShiftPlanScheduleFilterDto.ScheduleViewTypeEnum[]>([])
+    });
+    this.viewForm = this._fb.group({
       date: this._fb.nonNullable.control<Date>(new Date()),
-      viewMode: this._fb.nonNullable.control<"calendar" | "table">("calendar"),
-      rolesList: this._fb.nonNullable.control<string[]>(this.rolesOptions.map((role) => role.value)),
-      locationsList: this._fb.nonNullable.control<string[]>(this.locationsOptions.map((location) => location.value)),
-      tagsList: this._fb.nonNullable.control<string[]>(this.tagsOptions.map((tag) => tag.value)),
-      availabilityList: this._fb.nonNullable.control<("unassigned" | "assigned" | "own" | "auction" | "trade")[]>(
-        this.availabilityOptions.map((availability) => availability.value)
-      )
+      viewMode: this._fb.nonNullable.control<ShiftCalendarViewMode>(ShiftCalendarViewMode.Calendar),
     });
   }
 
