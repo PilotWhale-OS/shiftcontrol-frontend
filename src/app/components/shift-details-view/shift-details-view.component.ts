@@ -1,6 +1,6 @@
 import {Component, inject} from "@angular/core";
 import {PageService} from "../../services/page/page.service";
-import {BC_PLAN_DASHBOARD, BC_SHIFT_DETAILS, BC_EVENT} from "../../breadcrumbs";
+import {BC_EVENT, BC_PLAN_DASHBOARD, BC_SHIFT_DETAILS} from "../../breadcrumbs";
 import {DialogShiftAuctionComponent} from "../dialog-shift-auction/dialog-shift-auction.component";
 import {DialogShiftSignupComponent} from "../dialog-shift-signup/dialog-shift-signup.component";
 import {DialogShiftTradeComponent} from "../dialog-shift-trade/dialog-shift-trade.component";
@@ -70,6 +70,7 @@ export class ShiftDetailsViewComponent {
         description: description,
         id: "asda"
       },
+      preferenceValue: 0,
       rewardPoints: 100,
       assignedVolunteers: Array(assCount) as unknown as VolunteerDto[],
       positionSignupState: state,
