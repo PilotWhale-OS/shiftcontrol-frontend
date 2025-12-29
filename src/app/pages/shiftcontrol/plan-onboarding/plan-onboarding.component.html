@@ -1,28 +1,60 @@
 <div class="grid w-full h-full place-content-center">
 
-  <div class="card flex flex-col gap-md w-[30rem]">
-    <div class="flex">
-      <h1 class="signature-gradient-font grow">Pilot Event: Pilot Plan</h1>
-      <div class="badge h-fit">
-        <fa-icon [icon]="iconDate" />
-        01.12.2025 - 24.12.2025
+  @if(invite$ | async; as invite) {
+
+    @if(invite !== null && invite !== "INVALID") {
+      <div class="card flex flex-col gap-md">
+        <div class="flex gap-sm">
+          <h1 class="signature-gradient-font grow pr-lg">{{invite.inviteDto.shiftPlanDto.name}}</h1>
+          <div class="badge h-fit" [app-tooltip]="'Start & end date\n of the event'">
+            <fa-icon [icon]="iconDate" />
+            {{ invite.eventDto.startTime | date:"shortDate" }} - {{ invite.eventDto.endTime | date:"shortDate" }}
+          </div>
+
+          <div class="badge hint h-fit" [app-tooltip]="'Associated event\n of this shift plan'">
+            <fa-icon [icon]="iconEvent" />
+            Pilot Event
+          </div>
+        </div>
+
+        <p class="max-w-[30rem]">
+          <small>About the event</small><br>
+          {{invite.inviteDto.shiftPlanDto.longDescription ?? invite.inviteDto.shiftPlanDto.shortDescription}}<br>
+        </p>
+
+        <div class="max-w-[30rem]">
+          <b>{{invite.attendingVolunteerCount}} other people</b> have joined this plan on ShiftControl.<br>
+          Be one of them and make the event happen!
+        </div>
+
+        <div class="flex flex-col gap-sm justify-center items-center pt-lg">
+          @if(!invite.joined) {
+            <xsb-input-button action="success" content="Join Event as Volunteer" (click)="joinShiftPlan(invite.inviteDto)" name="onboarding-join" />
+          }
+          @else {
+            <small>You have already joined this plan.</small>
+            <xsb-input-button class="w-fit" action="success" content="View Shift Plan" [routerLink]="'/plans/' + invite.inviteDto.shiftPlanDto.id" name="onboarding-view" />
+          }
+        </div>
       </div>
-    </div>
+    }
+    @else if(invite === "INVALID") {
+      <div class="card flex flex-col gap-md">
+        <div class="flex gap-sm">
+          <h1 class="signature-gradient-font grow pr-lg">Invalid Invite</h1>
+        </div>
 
-    <p>
-      <small>About the event</small><br>
-      This is the long event description. It contains some stuff that the administrator thinks is relevant.<br>
-    </p>
+        <div class="max-w-[30rem]">
+          The invite link you used is invalid.<br> Please ask for a new invite from an event organizer.
+        </div>
 
-    <div>
-      <b>150 other people</b> have volunteered on ShiftControl.<br>
-      Be one of them and make the event happen!
-    </div>
+        <div class="flex flex-col gap-sm justify-center items-center pt-lg">
+            <xsb-input-button class="w-fit" action="normal" content="Go Home" routerLink="/" name="onboarding-home" />
+        </div>
 
-    <div class="flex flex-row justify-center">
-      <xsb-input-button action="success" content="Join Event as Volunteer" routerLink="/plans/planId" name="onboarding-join" />
-    </div>
+      </div>
+    }
+  }
 
-  </div>
 
 </div>
