@@ -1,13 +1,12 @@
 import { Component, OnDestroy, inject } from "@angular/core";
 import {UserService} from "../../../services/user/user.service";
-import {FormBuilder, FormControl, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FormBuilder, FormControl, ReactiveFormsModule} from "@angular/forms";
 import {InputTextComponent} from "../../../components/inputs/input-text/input-text.component";
 import {TypedFormControlDirective} from "../../../directives/typed-form-control.directive";
 import {InputButtonComponent} from "../../../components/inputs/input-button/input-button.component";
-import {InputToggleComponent} from "../../../components/inputs/input-toggle/input-toggle.component";
 import {NotificationSettingsDto, UserProfileEndpointService} from "../../../../shiftservice-client";
 import {InputMultiToggleComponent, MultiToggleOptions} from "../../../components/inputs/input-multitoggle/input-multi-toggle.component";
-import {BehaviorSubject, catchError, forkJoin, pairwise, startWith, Subscription, switchMap, tap} from "rxjs";
+import {BehaviorSubject, catchError, forkJoin, pairwise, startWith, Subscription, switchMap} from "rxjs";
 import {AsyncPipe} from "@angular/common";
 
 type notificationToggleValue = NotificationSettingsDto.ChannelsEnum | "ALL";
@@ -19,7 +18,6 @@ type notificationToggleValue = NotificationSettingsDto.ChannelsEnum | "ALL";
     ReactiveFormsModule,
     TypedFormControlDirective,
     InputButtonComponent,
-    InputToggleComponent,
     InputMultiToggleComponent,
     AsyncPipe
   ],
