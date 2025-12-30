@@ -93,7 +93,9 @@
       </h1>
 
       <div class="grow overflow-auto">
-        <app-shift-schedule [showShiftDescription]="true" [showShiftPersonalDetails]="true" />
+        @if(shiftsWithOrigin$ | async; as shifts) {
+          <app-shift-schedule [showShiftDescription]="true" [showShiftPersonalDetails]="true" [shifts]="shifts" />
+        }
       </div>
     </div>
 

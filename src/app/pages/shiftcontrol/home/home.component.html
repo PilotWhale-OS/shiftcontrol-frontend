@@ -32,9 +32,11 @@
       Your Schedule
     </h1>
 
-    <div class="grow overflow-auto">
-      <app-shift-schedule [showShiftOrigin]="true" />
-    </div>
+    @if(shiftsWithOrigin$ | async; as shifts) {
+      <div class="grow overflow-auto">
+        <app-shift-schedule [showShiftOrigin]="true" [shifts]="shifts"  />
+      </div>
+    }
   </div>
 
   <!-- auction/trade card-->

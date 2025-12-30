@@ -3,11 +3,11 @@ import {PageService} from "../../../services/page/page.service";
 import {BC_PLAN_DASHBOARD, BC_EVENT} from "../../../breadcrumbs";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {ShiftTradeAuctionComponent} from "../../../components/shift-trade-auction/shift-trade-auction.component";
-import {ShiftScheduleComponent} from "../../../components/shift-schedule/shift-schedule.component";
+import {ShiftScheduleComponent, shiftWithOrigin} from "../../../components/shift-schedule/shift-schedule.component";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {faBarsProgress, faCalendar, faCalendarDays, faGift, faHourglass, faPeopleGroup, faShuffle} from "@fortawesome/free-solid-svg-icons";
 import {ShiftPlanDashboardOverviewDto, ShiftPlanEndpointService} from "../../../../shiftservice-client";
-import {Observable, tap} from "rxjs";
+import {map, Observable, tap} from "rxjs";
 import {AsyncPipe, DatePipe} from "@angular/common";
 import {TooltipDirective} from "../../../directives/tooltip.directive";
 
@@ -28,7 +28,8 @@ import {TooltipDirective} from "../../../directives/tooltip.directive";
 })
 export class ShiftPlanDashboardComponent {
 
-  public dashboard$: Observable<ShiftPlanDashboardOverviewDto>;
+  protected dashboard$: Observable<ShiftPlanDashboardOverviewDto>;
+  protected shiftsWithOrigin$: Observable<shiftWithOrigin[]>;
 
   protected readonly iconTasks = faBarsProgress;
   protected readonly iconTrade = faShuffle;
@@ -62,5 +63,17 @@ export class ShiftPlanDashboardComponent {
         this._router.navigateByUrl("/");
       }})
     );
+
+    this.shiftsWithOrigin$ = this.dashboard$.pipe(
+      map(dashboard => this.mapShiftsWithOrigin(dashboard))
+    );
+  }
+
+  protected mapShiftsWithOrigin(dashboard: ShiftPlanDashboardOverviewDto) {
+    return dashboard.shifts.map(shift => ({
+        shift: shift,
+        originEvent: dashboard.eventOverview,
+        originPlan: dashboard.shiftPlan
+      }));
   }
 }

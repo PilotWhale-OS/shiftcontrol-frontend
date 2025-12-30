@@ -2,53 +2,57 @@
 <!-- schedules by day -->
 <div class="flex flex-col gap-md grow overflow-auto">
 
-  @for (date of ["Monday, 01.12.2025", "Tuesday, 02.12.2025"]; track date) {
+  @if(shifts$ | async; as shifts) {
+    @for (day of shifts.entries(); track day[0]) {
 
-    <!-- date separator -->
-    <small class="col-span-2">{{date}}</small>
+      <!-- date separator -->
+      <small class="col-span-2">{{day[0] | date:"longDate"}}</small>
 
-    @for (card of [1,2,3,4,5]; track card) {
-      <div
-        class="border-ctr border-framing-item hover:border-framing-highlight transition-colors bg-background-item cursor-pointer rounded-xl p-md grid grid-cols-2 gap-md"
-        [routerLink]="'/shifts/shiftId'"
-      >
-        <b>Pilot Shift</b>
-        <small class="justify-self-end" >08:00 - 12:00</small>
+      @for (shift of day[1]; track shift.shift.id) {
+        <div
+          class="border-ctr border-framing-item hover:border-framing-highlight transition-colors bg-background-item cursor-pointer rounded-xl p-md grid grid-cols-2 gap-md"
+          [routerLink]="'/shifts/shiftId'"
+        >
+          <b>{{shift.shift.name}}</b>
+          <small class="justify-self-end" >{{shift.shift.startTime | date:"shortTime"}} - {{shift.shift.endTime | date:"shortTime"}}</small>
 
-        @if (showShiftDescription) {
-          <p class="col-span-2">
-            This is the short description of the shift.
-          </p>
-        }
+          @if (showShiftDescription) {
+            <p class="col-span-2">
+              {{shift.shift.shortDescription ?? "No  Description"}}
+            </p>
+          }
 
-        <!-- origin badges -->
-        @if (showShiftOrigin) {
-          <div class="flex gap-md col-span-2">
-            <div class="badge hint" [app-tooltip]="'The associated event\n of this shift'">
-              <fa-icon [icon]="iconEvent" />
-              Pilot Event
+          <!-- origin badges -->
+          @if (showShiftOrigin) {
+            <div class="flex gap-md col-span-2">
+              <div class="badge hint" [app-tooltip]="'The associated event\n of this shift'">
+                <fa-icon [icon]="iconEvent" />
+                {{shift.originEvent.name}}
+              </div>
+              <div class="badge hint" [app-tooltip]="'The associated plan\n of this shift'">
+                <fa-icon [icon]="iconPlan" />
+                {{shift.originPlan.name}}
+              </div>
             </div>
-            <div class="badge hint" [app-tooltip]="'The associated plan\n of this shift'">
-              <fa-icon [icon]="iconPlan" />
-              Pilot Plan
-            </div>
-          </div>
-        }
+          }
 
-        <!-- personal details badges -->
-        @if (showShiftPersonalDetails) {
-          <div class="flex gap-md col-span-2">
-            <div class="badge" [app-tooltip]="'Your position in this shift'">
-              <fa-icon [icon]="iconRole" />
-              Light tech
+          <!-- personal details badges -->
+          @if (showShiftPersonalDetails) {
+            <div class="flex gap-md col-span-2">
+              @for(slot of getAssignedPositionSlots(shift.shift); track slot.id) {
+                <div class="badge" [app-tooltip]="'Your position in this shift'">
+                  <fa-icon [icon]="iconRole" />
+                  {{slot.role.name}} <!-- TODO change to slot name? -->
+                </div>
+              }
+              <div class="badge" [app-tooltip]="'The shift location'">
+                <fa-icon [icon]="iconLocation" />
+                {{shift.shift.location.name}}
+              </div>
             </div>
-            <div class="badge" [app-tooltip]="'The shift location'">
-              <fa-icon [icon]="iconLocation" />
-              Test Venue
-            </div>
-          </div>
-        }
-      </div>
+          }
+        </div>
+      }
     }
   }
 
