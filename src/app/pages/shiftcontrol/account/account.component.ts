@@ -1,11 +1,15 @@
 import { Component, OnDestroy, inject } from "@angular/core";
 import {UserService} from "../../../services/user/user.service";
-import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
+import {FormBuilder, FormControl, ReactiveFormsModule} from "@angular/forms";
 import {InputTextComponent} from "../../../components/inputs/input-text/input-text.component";
 import {TypedFormControlDirective} from "../../../directives/typed-form-control.directive";
 import {InputButtonComponent} from "../../../components/inputs/input-button/input-button.component";
-import {InputToggleComponent} from "../../../components/inputs/input-toggle/input-toggle.component";
-import {UserProfileEndpointService} from "../../../../shiftservice-client";
+import {NotificationSettingsDto, UserProfileEndpointService} from "../../../../shiftservice-client";
+import {InputMultiToggleComponent, MultiToggleOptions} from "../../../components/inputs/input-multitoggle/input-multi-toggle.component";
+import {BehaviorSubject, catchError, forkJoin, pairwise, startWith, Subscription, switchMap} from "rxjs";
+import {AsyncPipe} from "@angular/common";
+
+type notificationToggleValue = NotificationSettingsDto.ChannelsEnum | "ALL";
 
 @Component({
   selector: "app-account",
@@ -14,7 +18,8 @@ import {UserProfileEndpointService} from "../../../../shiftservice-client";
     ReactiveFormsModule,
     TypedFormControlDirective,
     InputButtonComponent,
-    InputToggleComponent
+    InputMultiToggleComponent,
+    AsyncPipe
   ],
   templateUrl: "./account.component.html",
   standalone: true,
@@ -23,14 +28,26 @@ import {UserProfileEndpointService} from "../../../../shiftservice-client";
 export class AccountComponent implements OnDestroy {
 
   public readonly form;
+
+  protected testOptions: MultiToggleOptions<notificationToggleValue> = [
+    {name: "All", value: "ALL"},
+    {name: "Email", value: NotificationSettingsDto.ChannelsEnum.Email},
+    {name: "Push", value: NotificationSettingsDto.ChannelsEnum.Push}
+  ];
+  protected readonly notificationFormControls$ = new BehaviorSubject<undefined | Map<
+      NotificationSettingsDto.TypeEnum, FormControl<null | notificationToggleValue>
+    >>(undefined);
+
   private readonly _userService = inject(UserService);
   private readonly _fb = inject(FormBuilder);
   private readonly _userProfileService = inject(UserProfileEndpointService);
 
   private readonly _profileSubscription;
+  private _notificationChangesSubscription?: Subscription;
 
   constructor() {
     this.form = this._fb.group({
+      notification: this._fb.control<string | null>(null),
       givenName: this._fb.nonNullable.control<string>(""),
       lastName: this._fb.nonNullable.control<string>(""),
       checked: this._fb.nonNullable.control<boolean>(false)
@@ -41,12 +58,45 @@ export class AccountComponent implements OnDestroy {
         this.form.setValue({
           givenName: profile.firstName ?? "",
           lastName: profile.lastName ?? "",
-          checked: false
+          checked: false,
+          notification: null
         });
       }
     });
 
-    this._userProfileService.getCurrentUserProfile().subscribe(profile => {console.log(profile);});
+    this._userProfileService.getCurrentUserProfile().subscribe(profile => {
+      console.log(profile);
+
+      const map = new Map(profile.notifications
+        .map(notification => {
+          const currentValue = notification.channels.length === 2 ? "ALL" :
+            notification.channels.length === 1 ? Array.from(notification.channels)[0] : null;
+          const control = this._fb.control<null | notificationToggleValue>(currentValue);
+          return [notification.type, control] as const;
+        })
+        .sort((a,b) => a[0].localeCompare(b[0]))
+      );
+
+      const subscription = forkJoin([...map.entries()].map(([type, control]) => control.valueChanges.pipe(
+          startWith(control.value),
+          pairwise(),
+          switchMap(([oldValue, newValue]) => this._userProfileService.updateNotificationSettings({
+              type: type,
+              channels: newValue === "ALL" ? [NotificationSettingsDto.ChannelsEnum.Email, NotificationSettingsDto.ChannelsEnum.Push] :
+                newValue ? [newValue] : []
+            }).pipe(
+              catchError(() => {
+                // on error, revert the change
+                control.setValue(oldValue, {emitEvent: false});
+                return [];
+              })
+            ))
+        ))).subscribe();
+
+      this._notificationChangesSubscription = subscription;
+
+      this.notificationFormControls$.next(map);
+    });
   }
 
   public get user() {
@@ -55,6 +105,7 @@ export class AccountComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this._profileSubscription.unsubscribe();
+    this._notificationChangesSubscription?.unsubscribe();
   }
 
   /**
@@ -66,5 +117,18 @@ export class AccountComponent implements OnDestroy {
 
   signOut() {
     this._userService.logout();
+  }
+
+  protected getNotificationKindName(type: NotificationSettingsDto.TypeEnum): string {
+    switch (type) {
+      case NotificationSettingsDto.TypeEnum.AutoAssigned:
+        return "Auto Assigned";
+      case NotificationSettingsDto.TypeEnum.TradeAcceptedDeclined:
+        return "Trade Status";
+      case NotificationSettingsDto.TypeEnum.TradeRequested:
+        return "Trade Requested";
+      case NotificationSettingsDto.TypeEnum.ShiftReminder:
+        return "Shift Reminder";
+    }
   }
 }
