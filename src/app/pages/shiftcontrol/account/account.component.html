@@ -27,45 +27,19 @@
   </div>
 
   <!-- notification preferences card -->
-  <div class="card grid grid-cols-[min-content_auto] gap-sm w-fit h-fit items-baseline">
+  <div class="card grid grid-cols-[auto_1fr] gap-y-sm gap-x-lg w-fit h-fit items-baseline">
     <h1 class="col-span-2 signature-gradient-font">Notifications</h1>
 
-    <!-- channel settings -->
-    <b class="col-span-2">Channels:</b>
-    <xsb-input-toggle #checked name="me-notifications-email"
-                    [formControl]="form.controls.checked"
-                    [xsb-typed]="[checked, form.controls.checked]"
-    />
-    <label class="select-none" for="userNotificationsEmail">Email notifications</label>
+    @if(notificationFormControls$ | async; as notificationControls){
 
-    <xsb-input-toggle #checked name="me-notifocations-push"
-                      [formControl]="form.controls.checked"
-                      [xsb-typed]="[checked, form.controls.checked]"
-    />
-    <label class="select-none" for="">Push notifications (this device)</label>
-
-    <!-- spacer-->
-    <div class="col-span-2 p-2"></div>
-
-    <!-- content settings -->
-    <b class="col-span-2">Topics:</b>
-    <xsb-input-toggle #checked name="me-topics-ausoassigned"
-                      [formControl]="form.controls.checked"
-                      [xsb-typed]="[checked, form.controls.checked]"
-    />
-    <label class="select-none" for="userNotificationsAutoAssigned">Auto-assigned</label>
-
-    <xsb-input-toggle #checked name="me-topic-tradeaccepted"
-                      [formControl]="form.controls.checked"
-                      [xsb-typed]="[checked, form.controls.checked]"
-    />
-    <label class="select-none" for="userNotificationsTradeAccepted">Trade accepted</label>
-
-    <xsb-input-toggle #checked name="me-topic-shiftreminder"
-                      [formControl]="form.controls.checked"
-                      [xsb-typed]="[checked, form.controls.checked]"
-    />
-    <label class="select-none" for="userNotificationsShiftReminder">Shift reminder</label>
+      @for (item of notificationControls.entries(); track item[0]){
+        <label for="me-notifications-{{item[0]}}">{{getNotificationKindName(item[0])}}:</label>
+        <xsb-input-multitoggle #notification name="me-notifications-{{item[0]}}"
+                               [formControl]="item[1]" [options]="testOptions" [nullable]="true" nullName="None"
+                               [xsb-typed]="[notification, item[1]]"
+        />
+      }
+    }
 
   </div>
 </div>

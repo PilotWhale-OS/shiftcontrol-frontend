@@ -11,8 +11,8 @@
     "lint": "ng lint",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "generate-shiftservice-client": "openapi-generator-cli generate -g typescript-angular -i http://shiftservice.127.0.0.1.nip.io/v3/api-docs -o ./src/shiftservice-client --additional-properties fileNaming=kebab-case,withInterfaces=true --generate-alias-as-model",
-    "generate-shiftservice-client-ci": "openapi-generator-cli generate -g typescript-angular -i ./openapi.json -o ./src/shiftservice-client --additional-properties fileNaming=kebab-case,withInterfaces=true --generate-alias-as-model"
+    "generate-shiftservice-client": "openapi-generator-cli generate -g typescript-angular -i http://shiftservice.127.0.0.1.nip.io/v3/api-docs -o ./src/shiftservice-client --additional-properties fileNaming=kebab-case,withInterfaces=true --generate-alias-as-model --type-mappings set=Array",
+    "generate-shiftservice-client-ci": "openapi-generator-cli generate -g typescript-angular -i ./openapi.json -o ./src/shiftservice-client --additional-properties fileNaming=kebab-case,withInterfaces=true --generate-alias-as-model --type-mappings set=Array"
   },
   "private": true,
   "dependencies": {
