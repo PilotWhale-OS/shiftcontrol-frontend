@@ -44,9 +44,9 @@ export class ShiftCalendarFilterComponent {
   @Input()
   public locationsOptions: SelectOptions<string> = [];
 
-  public readonly availabilityOptions: SelectOptions<ShiftPlanScheduleFilterDto.ScheduleViewTypeEnum> = [
-    {name: "Your Shifts", value: ShiftPlanScheduleFilterDto.ScheduleViewTypeEnum.MyShifts},
-    {name: "Signup Possible", value: ShiftPlanScheduleFilterDto.ScheduleViewTypeEnum.SignupPossible}
+  public readonly availabilityOptions: SelectOptions<ShiftPlanScheduleFilterDto.ShiftRelevancesEnum> = [
+    {name: "Your Shifts", value: ShiftPlanScheduleFilterDto.ShiftRelevancesEnum.MyShifts},
+    {name: "Signup Possible", value: ShiftPlanScheduleFilterDto.ShiftRelevancesEnum.SignupPossible}
   ];
   public readonly viewModeOptions: SelectOptions<ShiftCalendarViewMode> = [
     {name: "Calendar", value: ShiftCalendarViewMode.Calendar},
@@ -74,7 +74,7 @@ export class ShiftCalendarFilterComponent {
       shiftName: this._fb.nonNullable.control<string>(""),
       rolesList: this._fb.nonNullable.control<string[]>([]),
       locationsList: this._fb.nonNullable.control<string[]>([]),
-      availabilityList: this._fb.nonNullable.control<ShiftPlanScheduleFilterDto.ScheduleViewTypeEnum[]>([])
+      relevanceList: this._fb.nonNullable.control<ShiftPlanScheduleFilterDto.ShiftRelevancesEnum[]>([])
     });
     this.viewForm = this._fb.group({
       date: this._fb.nonNullable.control<Date>(new Date()),

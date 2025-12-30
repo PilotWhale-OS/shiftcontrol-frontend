@@ -91,7 +91,10 @@ export class ShiftCalendarComponent implements OnDestroy {
     const layout$ = filters$.pipe(
       switchMap(filters =>
         this._planService.getShiftPlanScheduleLayout(planId, {
-          shiftName: mapValue.undefinedIfEmptyString(filters?.shiftName)
+          shiftName: mapValue.undefinedIfEmptyString(filters?.shiftName),
+          locationIds: filters?.locationsList,
+          roleIds: filters?.rolesList,
+          shiftRelevances: filters?.relevanceList
         })),
       catchError(() => {
         this._router.navigateByUrl("/");
@@ -230,9 +233,9 @@ export class ShiftCalendarComponent implements OnDestroy {
         ).map(date => this._planService.getShiftPlanScheduleContent(planId, {
             date: mapValue.datetimeToUtcDateString(date),
             shiftName: mapValue.undefinedIfEmptyString(filters?.shiftName),
-            locations: filters?.locationsList,
-            roleNames: filters?.rolesList, // TODO rename to roleIds when backend supports?
-            // TODO when backend supports availabilityTypes: filters?.availabilityList
+            locationIds: filters?.locationsList,
+            roleIds: filters?.rolesList,
+            shiftRelevances: filters?.relevanceList
           })
         );
 
