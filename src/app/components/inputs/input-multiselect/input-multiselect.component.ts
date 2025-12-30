@@ -149,16 +149,11 @@ export class InputMultiselectComponent<TData> implements TypedControlValueAccess
    * @param value new value
    */
   writeValue(value: TData[] | null): void {
-    const matches = (value ?? []).filter(v => this.options.some(o => o.value === v));
-    if (matches.length > 0) {
-      this.value = matches;
+    this.value = value?.filter(v => this.options.some(o => o.value === v)) ?? null;
+    if (this.onChange !== undefined) {
+      this.onChange(this.value);
     } else {
-      this.value = this.nullable || this.options.length === 0 ? null : [this.options[0].value];
-      if (this.onChange !== undefined) {
-        this.onChange(this.value);
-      } else {
-        this.initModified = this.value;
-      }
+      this.initModified = this.value;
     }
   }
 

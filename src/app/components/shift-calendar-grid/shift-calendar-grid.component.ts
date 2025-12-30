@@ -220,11 +220,11 @@ export class ShiftCalendarGridComponent {
       const targetMinutes = (date.getTime() - config.adjustedStartDate.getTime()) / (1000 * 60);
       const scrollPercent = targetMinutes / totalMinutes;
 
-      setTimeout(() => parent.scrollTo({
+      parent.scrollTo({
         left: parent.scrollLeft,
         top: parent.scrollHeight * scrollPercent,
         behavior: "smooth"
-      }),10); // TODO fix? some timing issue?
+      });
 
       const visibleDays = this.getVisibleValidDays(parent as HTMLDivElement, config);
       this._visibleDates$.next(visibleDays);
@@ -273,7 +273,6 @@ export class ShiftCalendarGridComponent {
       adjustedEndDate: new Date(config.endDate.getTime())
     };
 
-    // adjustedConfig.adjustedStartDate.setUTCDate(config.startDate.getDate());
     adjustedConfig.adjustedStartDate.setHours(
       config.startDate.getUTCHours(),
       config.startDate.getUTCMinutes(),
@@ -281,7 +280,6 @@ export class ShiftCalendarGridComponent {
       config.startDate.getUTCMilliseconds()
     );
 
-    // adjustedConfig.adjustedEndDate.setUTCDate(config.endDate.getDate());
     adjustedConfig.adjustedEndDate.setHours(
       config.endDate.getUTCHours(),
       config.endDate.getUTCMinutes(),
