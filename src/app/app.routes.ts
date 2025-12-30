@@ -34,7 +34,8 @@ export const routes: Routes = ([
     data: { breadcrumbs: BC_PLAN_DASHBOARD }, canActivate: [accessAllowedGuard]},
   { path: "plans/:shiftPlanId/calendar", component: ShiftCalendarComponent,
     data: { breadcrumbs: BC_SHIFT_CALENDAR }, canActivate: [accessAllowedGuard]},
-  { path: "plans/:shiftPlanId/onboarding", component: PlanOnboardingComponent,
+  { path: "join/:shiftPlanInvite", redirectTo: "onboarding/:shiftPlanInvite", pathMatch: "full" },
+  { path: "onboarding/:shiftPlanInvite", component: PlanOnboardingComponent,
     data: { breadcrumbs: BC_PLAN_ONBOARDING }, canActivate: [accessAllowedGuard]},
   { path: "shifts/:shiftId", component: ShiftDetailsComponent,
     data: { breadcrumbs: BC_SHIFT_DETAILS }, canActivate: [accessAllowedGuard]}
