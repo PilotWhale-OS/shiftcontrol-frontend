@@ -32,11 +32,7 @@ export enum ShiftCalendarViewMode {
 export class ShiftCalendarFilterComponent {
 
   @Input()
-  public statistics?: ScheduleStatisticsDto = { // TODO use from calendar cached aggregate
-    totalShifts: 0,
-    unassignedCount: 0,
-    totalHours: 0
-  };
+  public statistics?: ScheduleStatisticsDto;
 
   @Input()
   public rolesOptions: SelectOptions<string> = [];

@@ -151,11 +151,11 @@ export class ShiftCalendarComponent implements OnDestroy {
 
     /* react to calendar config and set in component */
     subs.push(filterData$.pipe(
-      combineLatestWith(calendarComponent$, layout$),
+      combineLatestWith(calendarComponent$, layout$, filterComponent$),
       withLatestFrom(calendarNavigation$.pipe(
         startWith({visibleDates: [], cachedDates: []})
       ))
-    ).subscribe(([[filterData, calendar, layout], navigation]) => {
+    ).subscribe(([[filterData, calendar, layout, filterComponent], navigation]) => {
 
       /*
       start date parsed from utc date, begin of day
@@ -174,6 +174,8 @@ export class ShiftCalendarComponent implements OnDestroy {
       };
       const calendarViewInited = navigation.visibleDates.length > 0;
       calendar.setConfig(config);
+
+      filterComponent.statistics = layout.scheduleStatistics;
 
       if(!calendarViewInited) {
         calendar.jumpToDate(new Date(Math.min(Math.max(startDate.getTime(), new Date().getTime()), endDate.getTime())));
