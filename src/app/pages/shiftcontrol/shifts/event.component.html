@@ -73,18 +73,18 @@
     <div class="card col-span-2 row-span-2 grid grid-columns-2 gap-lg h-fit">
 
       <!-- info -->
-      <h1 class="compact signature-gradient-font">Availability</h1>
+      <h1 class="compact signature-gradient-font">Absence</h1>
       <p class="col-span-2">
-        Set your availability for calendar filtering and better shift suggestions.
+        Set your absence times for calendar filtering and better shift suggestions.
       </p>
 
       <!-- set unavailability -->
       <div class="grid grid-cols-[1fr_auto] col-span-2 gap-xs">
-        <small class="col-span-2">Your unavailable times</small>
+        <small class="col-span-2">Your absence times</small>
 
         @if(timeConstraints$ | async; as timeConstraints) {
           @if (timeConstraints.length === 0) {
-            <p class="col-span-2">You have not set any unavailability for this event.</p>
+            <p class="col-span-2">You have not set any absence for this event.</p>
           }
 
           @for (constraint of timeConstraints; track constraint.id) {
@@ -118,29 +118,10 @@
             <xsb-input-button action="normal" content="Remove {{constraint.type === 'EMERGENCY' ? 'Emergency' : 'Time'}}" size="minimal" (click)="removeUnavailability(constraint, event)" />
           }
         }
-
-        <div class="flex gap-sm items-center">
-          <div class="badge success">
-            <fa-icon [icon]="iconUnavailable" />
-            1 day
-          </div>
-          05.12.2025 08:00 - 6.12.2025 19:00
-        </div>
-        <xsb-input-button action="normal" content="Remove Time" size="minimal" />
-
-        <div class="flex gap-sm items-center">
-          <div class="badge hint">
-            <fa-icon [icon]="iconUnavailable" />
-            Emergency
-          </div>
-
-          22.08.2001
-        </div>
-        <xsb-input-button action="normal" content="Remove Emergency" size="minimal" />
       </div>
 
       <div class="flex gap-sm">
-        <xsb-input-button content="Add Unavailability" (click)="showUnavailabilityDialog = true" size="minimal" class="w-fit" />
+        <xsb-input-button content="Add Absence" (click)="showUnavailabilityDialog = true" size="minimal" class="w-fit" />
         <xsb-input-button content="Set Emergency" (click)="showEmergencyDialog = true" size="minimal" class="w-fit" />
       </div>
 

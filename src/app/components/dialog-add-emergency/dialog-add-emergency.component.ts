@@ -39,6 +39,7 @@ export class DialogAddEmergencyComponent {
   closed(result: dialogResult) {
     if (result === "success") {
       const date = this.form.controls.emergencyDate.value;
+      date.setUTCHours(0,0,0,0);
       this.result.emit(date);
       this.form.reset();
     } else {
