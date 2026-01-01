@@ -9,7 +9,7 @@
          hover:border-framing-highlight focus-within:border-framing-highlight active:border-framing-highlight"
          [xsb-flyout]="optionsFlyout" [ngClass]="{
       'border-ctr' : size !== 'minimal',
-      'pointer-events-none opacity-60' : disabled
+      'pointer-events-none opacity-60' : ngControl?.disabled
     }">
 
       <!-- icon -->

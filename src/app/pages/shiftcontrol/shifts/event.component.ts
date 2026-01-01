@@ -4,10 +4,19 @@ import {PageService} from "../../../services/page/page.service";
 import {BC_EVENT} from "../../../breadcrumbs";
 import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
 import {InputButtonComponent} from "../../../components/inputs/input-button/input-button.component";
-import {DialogAddUnavailabilityComponent} from "../../../components/dialog-add-unavailability/dialog-add-unavailability.component";
+import {
+  addUnavailabilityInput,
+  DialogAddUnavailabilityComponent
+} from "../../../components/dialog-add-unavailability/dialog-add-unavailability.component";
 import {faCalendar, faCalendarDays, faGift, faHourglass, faPause, faPeopleGroup} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import {EventEndpointService, EventShiftPlansOverviewDto} from "../../../../shiftservice-client";
+import {
+  EventDto,
+  EventEndpointService,
+  EventShiftPlansOverviewDto,
+  TimeConstraintCreateDto,
+  TimeConstraintDto
+} from "../../../../shiftservice-client";
 import {Observable, tap} from "rxjs";
 import {AsyncPipe, DatePipe} from "@angular/common";
 import {TooltipDirective} from "../../../directives/tooltip.directive";
@@ -30,9 +39,10 @@ import {TooltipDirective} from "../../../directives/tooltip.directive";
 })
 export class EventComponent {
 
-  public readonly form;
-  public showUnavailabilityDialog = false;
-  public event$: Observable<EventShiftPlansOverviewDto>;
+  protected readonly form;
+  protected showUnavailabilityDialog = false;
+  protected event$: Observable<EventShiftPlansOverviewDto>;
+  protected timeConstraints$: Observable<TimeConstraintDto[]>;
 
   protected readonly iconVolunteers = faPeopleGroup;
   protected readonly iconHours = faHourglass;
@@ -68,5 +78,36 @@ export class EventComponent {
           .configureBreadcrumb(BC_EVENT, event.eventOverview.name, event.eventOverview.id);
       })
     );
+
+    this.timeConstraints$ = this._eventService.getTimeConstraints(eventId);
+  }
+
+  unavailabilitySubmitted(input: addUnavailabilityInput | undefined, event: EventShiftPlansOverviewDto){
+    this.showUnavailabilityDialog = false;
+    if(input === undefined) {
+      return;
+    }
+
+    this._eventService.createTimeConstraint(event.eventOverview.id, {
+      from: input.start ? input.start.toISOString() : event.eventOverview.startTime,
+      to: input.end ? input.end.toISOString() : event.eventOverview.endTime,
+      type: TimeConstraintCreateDto.TypeEnum.Unavailable
+    }).subscribe(() => {
+      this.timeConstraints$ = this._eventService.getTimeConstraints(event.eventOverview.id);
+    });
+  }
+
+  removeUnavailability(constraint: TimeConstraintDto, event: EventShiftPlansOverviewDto) {
+    this._eventService.deleteTimeConstraint(event.eventOverview.id, constraint.id).subscribe(() => {
+      this.timeConstraints$ = this._eventService.getTimeConstraints(event.eventOverview.id);
+    });
+  }
+
+  getUnavailabilityDayLength(constraint: TimeConstraintDto): string {
+    const from = new Date(constraint.from);
+    const to = new Date(constraint.to);
+    const diffTime = Math.abs(to.getTime() - from.getTime());
+    const days = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return `${days} day${days > 1 ? "s" : ""}`;
   }
 }

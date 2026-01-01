@@ -5,7 +5,7 @@ import {
   ElementRef,
   HostBinding, inject,
   Injector,
-  Input,
+  Input, OnDestroy,
   OnInit,
   ViewChild
 } from "@angular/core";
@@ -17,6 +17,7 @@ import {FlyoutComponent} from "../../flyout/flyout.component";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {NgClass} from "@angular/common";
 import {FlyoutTriggerDirective} from "../../../directives/flyout-trigger.directive";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: "xsb-input-date",
@@ -36,9 +37,9 @@ import {FlyoutTriggerDirective} from "../../../directives/flyout-trigger.directi
     FaIconComponent,
     NgClass
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InputDateComponent implements TypedControlValueAccessor<Date | null>, OnInit, AfterViewInit {
+export class InputDateComponent implements TypedControlValueAccessor<Date | null>, OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild("wrapper", { static: false })
   wrapper?: ElementRef<HTMLDivElement>;
@@ -97,6 +98,7 @@ export class InputDateComponent implements TypedControlValueAccessor<Date | null
   private _value: DateTime | null;
   private _injector = inject(Injector);
   private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _changeSubscription?: Subscription;
 
   constructor() {
     this._value = this.nullable ? null : DateTime.local();
@@ -182,6 +184,11 @@ export class InputDateComponent implements TypedControlValueAccessor<Date | null
    */
   ngOnInit(): void {
     this.ngControl = this._injector.get(NgControl);
+    this._changeSubscription = this.ngControl.statusChanges?.subscribe(status => this._changeDetectorRef.markForCheck());
+  }
+
+  ngOnDestroy() {
+    this._changeSubscription?.unsubscribe();
   }
 
   ngAfterViewInit(): void {
