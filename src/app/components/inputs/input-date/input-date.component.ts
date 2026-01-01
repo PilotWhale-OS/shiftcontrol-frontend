@@ -184,7 +184,7 @@ export class InputDateComponent implements TypedControlValueAccessor<Date | null
    */
   ngOnInit(): void {
     this.ngControl = this._injector.get(NgControl);
-    this._changeSubscription = this.ngControl.statusChanges?.subscribe(status => this._changeDetectorRef.markForCheck());
+    this._changeSubscription = this.ngControl.statusChanges?.subscribe(() => this._changeDetectorRef.markForCheck());
   }
 
   ngOnDestroy() {

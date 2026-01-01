@@ -11,7 +11,6 @@ import {
 import {faCalendar, faCalendarDays, faGift, faHourglass, faPause, faPeopleGroup} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {
-  EventDto,
   EventEndpointService,
   EventShiftPlansOverviewDto,
   TimeConstraintCreateDto,
