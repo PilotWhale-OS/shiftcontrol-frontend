@@ -42,7 +42,7 @@
               @for(slot of getAssignedPositionSlots(shift.shift); track slot.id) {
                 <div class="badge" [app-tooltip]="'Your position in this shift'">
                   <fa-icon [icon]="iconRole" />
-                  {{slot.role.name}} <!-- TODO change to slot name? -->
+                  {{slot.name}}
                 </div>
               }
               <div class="badge" [app-tooltip]="'The shift location'">
