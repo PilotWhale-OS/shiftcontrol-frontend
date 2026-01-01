@@ -92,10 +92,23 @@ export class DialogAddUnavailabilityComponent {
   closed(result: dialogResult) {
     if (result === "success") {
       const values = this.form.value;
+
+      const start = values.unavailabilityFrom ? new Date(values.unavailabilityFrom.getTime()) : undefined;
+      const fromTime = values.unavailabilityFromTime;
+      if(start !== undefined && fromTime !== undefined) {
+        start.setHours(fromTime.hour, fromTime.minute, 0, 0);
+      }
+
+      const end = values.unavailabilityUntil ? new Date(values.unavailabilityUntil.getTime()) : undefined;
+      const untilTime = values.unavailabilityUntilTime;
+      if(end !== undefined && untilTime !== undefined) {
+        end.setHours(untilTime.hour, untilTime.minute, 0, 0);
+      }
+
       /* disabled controls are automatically undefined */
       this.result.emit({
-        start: values.unavailabilityFrom,
-        end: values.unavailabilityUntil,
+        start,
+        end
       });
 
       this.form.reset();

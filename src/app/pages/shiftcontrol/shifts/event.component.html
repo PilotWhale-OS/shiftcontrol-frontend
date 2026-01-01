@@ -63,7 +63,7 @@
              [app-tooltip]="'Duration of shifts during this event'"
         >
           <fa-icon [icon]="iconHours" />
-          {{event.overallEventStatistics.totalHours}} Shift Hours
+          {{event.overallEventStatistics.totalHours | number:"1.0-0"}} Shift Hours
         </div>
       </div>
 
@@ -102,7 +102,7 @@
               }
 
               @else {
-                <div class="badge">
+                <div class="badge success">
                   <fa-icon [icon]="iconUnavailable" />
                   {{ getUnavailabilityDayLength(constraint) }}
                 </div>
@@ -120,7 +120,7 @@
         }
 
         <div class="flex gap-sm items-center">
-          <div class="badge">
+          <div class="badge success">
             <fa-icon [icon]="iconUnavailable" />
             1 day
           </div>
@@ -138,7 +138,11 @@
         </div>
         <xsb-input-button action="normal" content="Remove Emergency" size="minimal" />
       </div>
-      <xsb-input-button action="success" content="Add Unavailability" (click)="showUnavailabilityDialog = true" size="minimal" class="w-fit" />
+
+      <div class="flex gap-sm">
+        <xsb-input-button content="Add Unavailability" (click)="showUnavailabilityDialog = true" size="minimal" class="w-fit" />
+        <xsb-input-button content="Set Emergency" (click)="showEmergencyDialog = true" size="minimal" class="w-fit" />
+      </div>
 
     </div>
 
@@ -154,5 +158,6 @@
   </div>
 
   <app-dialog-add-unavailability [viewWhen]="showUnavailabilityDialog" (result)="unavailabilitySubmitted($event, event)" />
+  <app-dialog-add-emergency [viewWhen]="showEmergencyDialog" (result)="emergencySubmitted($event, event)" />
 }
 

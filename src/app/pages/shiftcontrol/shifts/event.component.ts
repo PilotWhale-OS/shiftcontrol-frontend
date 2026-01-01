@@ -15,11 +15,12 @@ import {
   EventEndpointService,
   EventShiftPlansOverviewDto,
   TimeConstraintCreateDto,
-  TimeConstraintDto
+  TimeConstraintDto, TimeConstraintEndpointService
 } from "../../../../shiftservice-client";
 import {Observable, tap} from "rxjs";
-import {AsyncPipe, DatePipe} from "@angular/common";
+import {AsyncPipe, DatePipe, DecimalPipe} from "@angular/common";
 import {TooltipDirective} from "../../../directives/tooltip.directive";
+import {DialogAddEmergencyComponent} from "../../../components/dialog-add-emergency/dialog-add-emergency.component";
 
 @Component({
   selector: "app-plans",
@@ -31,7 +32,9 @@ import {TooltipDirective} from "../../../directives/tooltip.directive";
     FaIconComponent,
     AsyncPipe,
     DatePipe,
-    TooltipDirective
+    TooltipDirective,
+    DialogAddEmergencyComponent,
+    DecimalPipe
   ],
   standalone: true,
   templateUrl: "./event.component.html",
@@ -41,6 +44,7 @@ export class EventComponent {
 
   protected readonly form;
   protected showUnavailabilityDialog = false;
+  protected showEmergencyDialog = false;
   protected event$: Observable<EventShiftPlansOverviewDto>;
   protected timeConstraints$: Observable<TimeConstraintDto[]>;
 
@@ -56,6 +60,7 @@ export class EventComponent {
   private readonly _route = inject(ActivatedRoute);
   private readonly _router = inject(Router);
   private readonly _eventService = inject(EventEndpointService);
+  private readonly _timeConstraintService = inject(TimeConstraintEndpointService);
 
   constructor() {
     const eventId = this._route.snapshot.paramMap.get("eventId");
@@ -79,7 +84,7 @@ export class EventComponent {
       })
     );
 
-    this.timeConstraints$ = this._eventService.getTimeConstraints(eventId);
+    this.timeConstraints$ = this._timeConstraintService.getTimeConstraints(eventId);
   }
 
   unavailabilitySubmitted(input: addUnavailabilityInput | undefined, event: EventShiftPlansOverviewDto){
@@ -88,18 +93,33 @@ export class EventComponent {
       return;
     }
 
-    this._eventService.createTimeConstraint(event.eventOverview.id, {
+    this._timeConstraintService.createTimeConstraint(event.eventOverview.id, {
       from: input.start ? input.start.toISOString() : event.eventOverview.startTime,
       to: input.end ? input.end.toISOString() : event.eventOverview.endTime,
       type: TimeConstraintCreateDto.TypeEnum.Unavailable
     }).subscribe(() => {
-      this.timeConstraints$ = this._eventService.getTimeConstraints(event.eventOverview.id);
+      this.timeConstraints$ = this._timeConstraintService.getTimeConstraints(event.eventOverview.id);
+    });
+  }
+
+  emergencySubmitted(emergencyDate: Date | undefined, event: EventShiftPlansOverviewDto) {
+    this.showEmergencyDialog = false;
+    if (emergencyDate === undefined) {
+      return;
+    }
+
+    this._timeConstraintService.createTimeConstraint(event.eventOverview.id, {
+      from: emergencyDate.toISOString(),
+      to: emergencyDate.toISOString(),
+      type: TimeConstraintCreateDto.TypeEnum.Emergency
+    }).subscribe(() => {
+      this.timeConstraints$ = this._timeConstraintService.getTimeConstraints(event.eventOverview.id);
     });
   }
 
   removeUnavailability(constraint: TimeConstraintDto, event: EventShiftPlansOverviewDto) {
-    this._eventService.deleteTimeConstraint(event.eventOverview.id, constraint.id).subscribe(() => {
-      this.timeConstraints$ = this._eventService.getTimeConstraints(event.eventOverview.id);
+    this._timeConstraintService.deleteTimeConstraint(event.eventOverview.id, constraint.id).subscribe(() => {
+      this.timeConstraints$ = this._timeConstraintService.getTimeConstraints(event.eventOverview.id);
     });
   }
 
