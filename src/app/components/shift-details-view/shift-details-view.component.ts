@@ -63,6 +63,9 @@ export class ShiftDetailsViewComponent {
                                state: PositionSlotDto.PositionSignupStateEnum): PositionSlotDto{
     return {
       id: "asdasd",
+      name: "asdas",
+      description: "asdasd",
+      skipAutoAssignment: false,
       associatedShiftId: "asdas",
       role: {
         name: name,
