@@ -1,6 +1,6 @@
 {
   "root": true,
-  "ignorePatterns": ["projects/**/*", "src/shiftservice-client/*"],
+  "ignorePatterns": ["projects/**/*", "src/shiftservice-client/*", "src/notificationservice-client/*"],
   "overrides": [
     {
       "files": ["*.ts"],

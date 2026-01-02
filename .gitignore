@@ -43,5 +43,5 @@ Thumbs.db
 
 ## openapi gen files
 src/shiftservice-client
-src/notificationservice-client
+# src/notificationservice-client TODO build in CI/CD
 openapitools.json
