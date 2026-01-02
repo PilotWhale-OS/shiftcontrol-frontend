@@ -1,12 +1,12 @@
 import {Component, inject} from "@angular/core";
 import {PageService} from "../../../services/page/page.service";
-import {BC_PLAN_DASHBOARD, BC_EVENT} from "../../../breadcrumbs";
+import {BC_EVENT, BC_PLAN_DASHBOARD} from "../../../breadcrumbs";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {ShiftTradeAuctionComponent} from "../../../components/shift-trade-auction/shift-trade-auction.component";
 import {ShiftScheduleComponent, shiftWithOrigin} from "../../../components/shift-schedule/shift-schedule.component";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {faBarsProgress, faCalendar, faCalendarDays, faGift, faHourglass, faPeopleGroup, faShuffle} from "@fortawesome/free-solid-svg-icons";
-import {ShiftPlanDashboardOverviewDto, ShiftPlanEndpointService} from "../../../../shiftservice-client";
+import {ShiftPlanDashboardOverviewDto, ShiftPlanItemEndpointService} from "../../../../shiftservice-client";
 import {map, Observable, tap} from "rxjs";
 import {AsyncPipe, DatePipe} from "@angular/common";
 import {TooltipDirective} from "../../../directives/tooltip.directive";
@@ -43,7 +43,7 @@ export class ShiftPlanDashboardComponent {
   private readonly _route = inject(ActivatedRoute);
   private readonly _router = inject(Router);
   private readonly _pageService = inject(PageService);
-  private readonly _planService = inject(ShiftPlanEndpointService);
+  private readonly _planService = inject(ShiftPlanItemEndpointService);
 
   constructor() {
     const shiftPlanId = this._route.snapshot.paramMap.get("shiftPlanId");

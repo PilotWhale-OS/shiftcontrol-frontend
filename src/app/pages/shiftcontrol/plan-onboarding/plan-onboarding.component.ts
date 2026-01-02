@@ -5,7 +5,7 @@ import {InputButtonComponent} from "../../../components/inputs/input-button/inpu
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {faCalendar, faStar} from "@fortawesome/free-solid-svg-icons";
-import {ShiftPlanEndpointService, ShiftPlanInviteDto, ShiftPlanJoinOverviewDto} from "../../../../shiftservice-client";
+import {ShiftPlanInviteDto, ShiftPlanInviteEndpointService, ShiftPlanJoinOverviewDto} from "../../../../shiftservice-client";
 import {BehaviorSubject} from "rxjs";
 import {AsyncPipe, DatePipe} from "@angular/common";
 import {TooltipDirective} from "../../../directives/tooltip.directive";
@@ -31,7 +31,7 @@ export class PlanOnboardingComponent {
   protected readonly invite$ = new BehaviorSubject<ShiftPlanJoinOverviewDto | null | "INVALID">(null);
 
   private readonly _pageService = inject(PageService);
-  private readonly _planService = inject(ShiftPlanEndpointService);
+  private readonly _planService = inject(ShiftPlanInviteEndpointService);
   private readonly _activatedRoute = inject(ActivatedRoute);
   private readonly _router = inject(Router);
 
