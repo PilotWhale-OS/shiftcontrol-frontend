@@ -1,15 +1,19 @@
 import { effect, Injectable, Signal, inject } from "@angular/core";
 import {KEYCLOAK_EVENT_SIGNAL, KeycloakEvent, KeycloakEventType, ReadyArgs, typeEventArgs} from "keycloak-angular";
 import Keycloak, {KeycloakProfile} from "keycloak-js";
-import {BehaviorSubject, Observable} from "rxjs";
+import {BehaviorSubject, map, Observable, of, switchMap} from "rxjs";
+import {AccountInfoDto, UserProfileEndpointService} from "../../../shiftservice-client";
+import UserTypeEnum = AccountInfoDto.UserTypeEnum;
 
 @Injectable({
   providedIn: "root"
 })
 export class UserService {
   private readonly keycloak = inject(Keycloak);
+  private readonly userService = inject(UserProfileEndpointService);
 
   private _profile$ = new BehaviorSubject<KeycloakProfile | null>(null);
+  private _userType$ = new BehaviorSubject<UserTypeEnum | null>(null);
 
   constructor() {
     const eventSignal = inject<Signal<KeycloakEvent>>(KEYCLOAK_EVENT_SIGNAL);
@@ -36,6 +40,11 @@ export class UserService {
         }
       }
     });
+
+    this._profile$.pipe(
+      switchMap(profile => profile === null ? of(null) : this.userService.getCurrentUserProfile()),
+      map(profile => profile === null ? null : profile.account.userType)
+    ).subscribe(this._userType$);
   }
 
   /**
@@ -44,6 +53,10 @@ export class UserService {
    */
   public get profile$(): Observable<KeycloakProfile | null> {
     return this._profile$.asObservable();
+  }
+
+  public get userType$() {
+    return this._userType$.asObservable();
   }
 
   /**

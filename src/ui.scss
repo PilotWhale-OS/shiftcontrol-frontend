@@ -57,7 +57,7 @@ small {
 }
 
 .badge {
-  @apply bg-framing-item py-xs px-sm rounded-xl text-xs font-semibold flex items-center gap-xs;
+  @apply bg-framing-item py-xs px-sm rounded-xl text-sm font-semibold flex items-center gap-xs;
 
   &.hint {
     @apply bg-framing-highlight_hint;
@@ -81,7 +81,7 @@ small {
 }
 
 .cdk-overlay-backdrop.shiftcontrol-dialog {
-  background-color: rgba(0, 0, 0, 0.24);
+  background-color: rgba(0, 0, 0, 0.52);
 }
 
 .cdk-overlay-pane.shiftcontrol-dialog {

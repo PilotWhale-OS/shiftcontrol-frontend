@@ -1,6 +1,6 @@
 
 <!-- card list -->
-<div class="grid grid-cols-[repeat(auto-fit,minmax(0,max(40%,25rem)))] gap-md">
+<div class="grid grid-cols-[repeat(auto-fit,min(100%,30rem))] gap-md">
 
   @for (event of (events$ | async); track event) {
     <div class="card interaction grid grid-columns-2 gap-2" [routerLink]="'/events/' + event.id">
@@ -10,12 +10,24 @@
            [app-tooltip]="'The event dates of ' + event.name"
       >
         <fa-icon [icon]="iconDate" />
-        {{event.startTime | date:"mediumDate"}} - {{event.startTime | date:"mediumDate"}}
+        {{event.startTime | date:"mediumDate"}} - {{event.endTime | date:"mediumDate"}}
       </div>
       <p>
         {{event.shortDescription}}
       </p>
     </div>
+  }
+
+  @if (userType$ | async; as userType) {
+    @if (userType === 'ADMIN') {
+      <div class="card spotlight interaction grid place-items-center p-lg"
+           [routerLink]="'/events/create'">
+        <h2>
+          <fa-icon [icon]="iconCreate" class="pr-sm" />
+          Create new event
+        </h2>
+      </div>
+    }
   }
 
 </div>

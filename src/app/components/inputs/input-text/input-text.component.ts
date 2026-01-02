@@ -1,9 +1,10 @@
-import { Component, HostBinding, Injector, Input, OnInit, inject } from "@angular/core";
+import {Component, HostBinding, Injector, Input, OnInit, inject, ChangeDetectorRef, OnDestroy} from "@angular/core";
 import {FormsModule, NG_VALUE_ACCESSOR, NgControl} from "@angular/forms";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import {TypedControlValueAccessor} from "../../../util/typedControlValueAccessor";
 import {NgClass} from "@angular/common";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: "xsb-input-text",
@@ -23,7 +24,7 @@ import {FaIconComponent} from "@fortawesome/angular-fontawesome";
     }
   ]
 })
-export class InputTextComponent implements TypedControlValueAccessor<string>, OnInit {
+export class InputTextComponent implements TypedControlValueAccessor<string>, OnInit, OnDestroy {
 
 
   /**
@@ -80,7 +81,9 @@ export class InputTextComponent implements TypedControlValueAccessor<string>, On
   /** self form control to access validity state */
   ngControl?: NgControl;
 
-  private injector = inject(Injector);
+  private _injector = inject(Injector);
+  private _changeDetector = inject(ChangeDetectorRef);
+  private _statusSubscription?: Subscription;
 
   /* hide actual properties from html to prevent accessibility issues */
   @HostBinding("attr.name") get hideNameAttr() { return null; }
@@ -100,7 +103,13 @@ export class InputTextComponent implements TypedControlValueAccessor<string>, On
    * get the form control (self) avoiding circular deps
    */
   ngOnInit(): void {
-    this.ngControl = this.injector.get(NgControl);
+    this.ngControl = this._injector.get(NgControl);
+
+    this._statusSubscription = this.ngControl.statusChanges?.subscribe(() => this._changeDetector.detectChanges());
+  }
+
+  ngOnDestroy() {
+    this._statusSubscription?.unsubscribe();
   }
 
   /**
@@ -110,6 +119,7 @@ export class InputTextComponent implements TypedControlValueAccessor<string>, On
    */
   writeValue(value: string): void {
     this.value = value;
+    this._changeDetector.markForCheck();
   }
 
   /**
