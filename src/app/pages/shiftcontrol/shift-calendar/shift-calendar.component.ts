@@ -4,18 +4,22 @@ import {ShiftCalendarFilterComponent} from "../../../components/shift-calendar-f
 import {PageService} from "../../../services/page/page.service";
 import {BC_EVENT, BC_PLAN_DASHBOARD} from "../../../breadcrumbs";
 import {ActivatedRoute, Router} from "@angular/router";
-import {ShiftPlanEndpointService} from "../../../../shiftservice-client";
+import {ShiftPlanItemEndpointService, ShiftPlanScheduleEndpointService} from "../../../../shiftservice-client";
 import {
   catchError,
   combineLatestWith,
-  debounceTime, distinctUntilChanged,
+  debounceTime,
+  distinctUntilChanged,
   EMPTY,
-  filter, forkJoin,
+  filter,
+  forkJoin,
   map,
   of,
   shareReplay,
-  startWith, Subscription,
-  switchMap, withLatestFrom,
+  startWith,
+  Subscription,
+  switchMap,
+  withLatestFrom,
 } from "rxjs";
 import {toObservable} from "@angular/core/rxjs-interop";
 import {mapValue} from "../../../util/value-maps";
@@ -38,7 +42,8 @@ export class ShiftCalendarComponent implements OnDestroy {
   private readonly _subscriptions: Subscription[];
 
   private readonly _pageService = inject(PageService);
-  private readonly _planService = inject(ShiftPlanEndpointService);
+  private readonly _planSceduleService = inject(ShiftPlanScheduleEndpointService);
+  private readonly _planItemService = inject(ShiftPlanItemEndpointService);
   private readonly _route = inject(ActivatedRoute);
   private readonly _router = inject(Router);
 
@@ -59,7 +64,7 @@ export class ShiftCalendarComponent implements OnDestroy {
   setupWithObservables(planId: string): Subscription[]{
 
     /* details about the selected shift plan */
-    const plan$ = this._planService.getShiftPlanDashboard(planId).pipe(
+    const plan$ = this._planItemService.getShiftPlanDashboard(planId).pipe(
       catchError(() => {
         this._router.navigateByUrl("/");
         return EMPTY;
@@ -90,7 +95,7 @@ export class ShiftCalendarComponent implements OnDestroy {
     /* observable containing the current calendar layout config */
     const layout$ = filters$.pipe(
       switchMap(filters =>
-        this._planService.getShiftPlanScheduleLayout(planId, {
+        this._planSceduleService.getShiftPlanScheduleLayout(planId, {
           shiftName: mapValue.undefinedIfEmptyString(filters?.shiftName),
           locationIds: filters?.locationsList,
           roleIds: filters?.rolesList,
@@ -118,7 +123,7 @@ export class ShiftCalendarComponent implements OnDestroy {
     );
 
     /* observable containing the filter component configuration */
-    const filterData$ = this._planService.getShiftPlanScheduleFilterValues(planId).pipe(
+    const filterData$ = this._planSceduleService.getShiftPlanScheduleFilterValues(planId).pipe(
       shareReplay()
     );
 
@@ -232,7 +237,7 @@ export class ShiftCalendarComponent implements OnDestroy {
       switchMap(([filters, calendar, , navigation]) =>{
         const newDays = navigation.visibleDates.filter(visible =>
           !navigation.cachedDates.some(cached => cached.getTime() === visible.getTime())
-        ).map(date => this._planService.getShiftPlanScheduleContent(planId, {
+        ).map(date => this._planSceduleService.getShiftPlanScheduleContent(planId, {
             date: mapValue.datetimeToUtcDateString(date),
             shiftName: mapValue.undefinedIfEmptyString(filters?.shiftName),
             locationIds: filters?.locationsList,
