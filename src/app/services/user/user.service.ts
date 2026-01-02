@@ -54,6 +54,10 @@ export class UserService {
     return `${baseUrl}?referrer=${window.location.origin}&referrer_uri=${window.location.origin}`;
   }
 
+  public get token() {
+    return this.keycloak.token;
+  }
+
   /**
    * Initialize keycloak login process
    */
