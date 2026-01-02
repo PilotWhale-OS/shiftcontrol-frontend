@@ -55,7 +55,7 @@ export class ManageEventComponent {
     this.eventId = this._route.snapshot.paramMap.get("eventId") ?? undefined;
 
     if(this.eventId !== undefined) {
-      this._eventService.getAllEvents().pipe(
+      this._eventService.getAllEvents().pipe( // TODO get by id when backend available
         map(events => events.find(e => e.id === this.eventId))
       ).subscribe(event => {
         if (event === undefined) {throw new Error("No event found");}

@@ -8,7 +8,7 @@ import {
   addUnavailabilityInput,
   DialogAddUnavailabilityComponent
 } from "../../../components/dialog-add-unavailability/dialog-add-unavailability.component";
-import {faCalendar, faCalendarDays, faGift, faHourglass, faPause, faPeopleGroup} from "@fortawesome/free-solid-svg-icons";
+import {faCalendar, faCalendarDays, faGift, faHourglass, faPause, faPeopleGroup, faPlusCircle} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {
   EventEndpointService,
@@ -20,6 +20,7 @@ import {Observable, tap} from "rxjs";
 import {AsyncPipe, DatePipe, DecimalPipe} from "@angular/common";
 import {TooltipDirective} from "../../../directives/tooltip.directive";
 import {DialogAddEmergencyComponent} from "../../../components/dialog-add-emergency/dialog-add-emergency.component";
+import {UserService} from "../../../services/user/user.service";
 
 @Component({
   selector: "app-plans",
@@ -53,6 +54,7 @@ export class EventComponent {
   protected readonly iconDate = faCalendarDays;
   protected readonly iconRewards = faGift;
   protected readonly iconUnavailable = faPause;
+  protected readonly iconCreate = faPlusCircle;
 
   private readonly _pageService = inject(PageService);
   private readonly _fb = inject(FormBuilder);
@@ -60,6 +62,7 @@ export class EventComponent {
   private readonly _router = inject(Router);
   private readonly _eventService = inject(EventEndpointService);
   private readonly _timeConstraintService = inject(TimeConstraintEndpointService);
+  private _userService = inject(UserService);
 
   constructor() {
     const eventId = this._route.snapshot.paramMap.get("eventId");
@@ -84,6 +87,10 @@ export class EventComponent {
     );
 
     this.timeConstraints$ = this._timeConstraintService.getTimeConstraints(eventId);
+  }
+
+  public get userType$() {
+    return this._userService.userType$;
   }
 
   unavailabilitySubmitted(input: addUnavailabilityInput | undefined, event: EventShiftPlansOverviewDto){
