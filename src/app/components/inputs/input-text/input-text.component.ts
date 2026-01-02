@@ -37,7 +37,7 @@ export class InputTextComponent implements TypedControlValueAccessor<string>, On
    * HTML type of the input element
    */
   @Input()
-  type: "text" | "email" | "password" = "text";
+  type: "text" | "email" | "password" | "area" = "text";
 
   /**
    * the native html for attribute for accessibility

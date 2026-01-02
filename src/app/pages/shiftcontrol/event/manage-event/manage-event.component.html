@@ -1,58 +1,55 @@
 <div class="flex flex-row gap-lg">
 
   <!-- manage details -->
-  <div class="card grid grid-cols-2 gap-y-sm gap-x-xl w-fit h-fit">
+  <div class="card grid grid-cols-2 gap-y-sm gap-x-xl gap-y-lg w-fit h-fit">
 
     <h1 class="col-span-2 signature-gradient-font">Event Details</h1>
 
-    <div class="flex flex-col gap-lg">
-      <div class="flex flex-col gap-sm">
-        <small><fa-icon [icon]="iconName" class="pr-sm" />Event Name</small>
-        <label for="event-manage-name">Expressive name for the event</label>
-        <xsb-input-text #name
-                        [formControl]="form.controls.name"
-                        [xsb-typed]="[name, form.controls.name]"
-                        name="event-manage-name" placeholder="Event name"
-        />
-      </div>
-
-      <div class="flex flex-col gap-sm">
-        <small><fa-icon [icon]="iconCaption" class="pr-sm" />Caption</small>
-        <label for="event-manage-caption"> A short description, shown in the event preview</label>
-        <xsb-input-text #shortDescription
-                        [formControl]="form.controls.shortDescription"
-                        [xsb-typed]="[shortDescription, form.controls.shortDescription]"
-                        name="event-manage-caption" placeholder="Event caption"
-        />
-      </div>
-
-      <div class="flex flex-col gap-sm">
-        <small><fa-icon [icon]="iconDescription" class="pr-sm" />Description</small>
-        <label for="event-manage-description">Detailed description, shown in the event overview</label>
-        <xsb-input-text #longDescription
-                        [formControl]="form.controls.longDescription"
-                        [xsb-typed]="[longDescription, form.controls.longDescription]"
-                        name="event-manage-description" placeholder="Event description"
-        />
-      </div>
+    <div class="flex flex-col gap-sm col-start-1 row-start-2">
+      <small><fa-icon [icon]="iconName" class="pr-sm" />Event Name</small>
+      <label for="event-manage-name">Expressive name for the event</label>
+      <xsb-input-text #name
+                      [formControl]="form.controls.name"
+                      [xsb-typed]="[name, form.controls.name]"
+                      name="event-manage-name" placeholder="Event name"
+      />
     </div>
 
-    <div class="flex flex-col gap-lg">
-      <div class="flex flex-col gap-sm">
-        <small><fa-icon [icon]="iconStartDate" class="pr-sm" />Start Date</small>
-        <label for="event-manage-from">First whole day, in your timezone</label>
-        <xsb-input-date #startDate name="event-manage-from"
-                        [formControl]="form.controls.startDate"
-                        [xsb-typed]="[startDate, form.controls.startDate]" />
-      </div>
+    <div class="flex flex-col gap-sm col-start-1 row-start-3">
+      <small><fa-icon [icon]="iconCaption" class="pr-sm" />Caption</small>
+      <label for="event-manage-caption"> A short description, shown in the event preview</label>
+      <xsb-input-text #shortDescription
+                      [formControl]="form.controls.shortDescription"
+                      [xsb-typed]="[shortDescription, form.controls.shortDescription]"
+                      name="event-manage-caption" placeholder="Event caption"
+      />
+    </div>
 
-      <div class="flex flex-col gap-sm">
-        <small><fa-icon [icon]="iconEndDate" class="pr-sm" />End Date</small>
-        <label for="event-manage-to">Last whole day, in your timezone </label>
-        <xsb-input-date #endDate name="event-manage-to"
-                        [formControl]="form.controls.endDate"
-                        [xsb-typed]="[endDate, form.controls.endDate]" />
-      </div>
+    <div class="flex flex-col gap-sm col-start-1 row-start-4 col-span-2">
+      <small><fa-icon [icon]="iconDescription" class="pr-sm" />Description</small>
+      <label for="event-manage-description">Detailed description, shown in the event overview</label>
+      <xsb-input-text #longDescription
+                      [formControl]="form.controls.longDescription"
+                      type="area"
+                      [xsb-typed]="[longDescription, form.controls.longDescription]"
+                      name="event-manage-description" placeholder="Event description"
+      />
+    </div>
+
+    <div class="flex flex-col gap-sm col-start-2 row-start-2">
+      <small><fa-icon [icon]="iconStartDate" class="pr-sm" />Start Date</small>
+      <label for="event-manage-from">First whole day, in your timezone</label>
+      <xsb-input-date #startDate name="event-manage-from"
+                      [formControl]="form.controls.startDate"
+                      [xsb-typed]="[startDate, form.controls.startDate]" />
+    </div>
+
+    <div class="flex flex-col gap-sm col-start-2 row-start-3">
+      <small><fa-icon [icon]="iconEndDate" class="pr-sm" />End Date</small>
+      <label for="event-manage-to">Last whole day, in your timezone </label>
+      <xsb-input-date #endDate name="event-manage-to"
+                      [formControl]="form.controls.endDate"
+                      [xsb-typed]="[endDate, form.controls.endDate]" />
     </div>
 
     <div class="col-span-2 grid justify-center pt-md">
