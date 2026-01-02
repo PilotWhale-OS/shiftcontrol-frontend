@@ -23,7 +23,7 @@ export class InputButtonComponent {
   public readonly click = new EventEmitter<MouseEvent>();
 
   @Input()
-  size: "minimal" | "regular" = "regular";
+  size: "minimal" | "regular" | "text" = "regular";
 
   @Input()
   action: "danger" | "normal" | "success" = "normal";

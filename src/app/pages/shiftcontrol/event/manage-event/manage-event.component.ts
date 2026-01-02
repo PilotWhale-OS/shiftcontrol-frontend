@@ -6,12 +6,14 @@ import {faBackward, faBook, faCircleInfo, faForward, faTag} from "@fortawesome/f
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {InputDateComponent} from "../../../../components/inputs/input-date/input-date.component";
 import {InputButtonComponent} from "../../../../components/inputs/input-button/input-button.component";
-import {EventEndpointService} from "../../../../../shiftservice-client";
+import {EventDto, EventEndpointService, LocationCollectionEndpointService, LocationDto} from "../../../../../shiftservice-client";
 import {mapValue} from "../../../../util/value-maps";
 import {ActivatedRoute, Router} from "@angular/router";
-import {map} from "rxjs";
+import {BehaviorSubject, filter, map, switchMap, take, tap} from "rxjs";
 import {PageService} from "../../../../services/page/page.service";
 import {BC_EVENT} from "../../../../breadcrumbs";
+import {AsyncPipe} from "@angular/common";
+import {ManageLocationComponent} from "../../../../components/manage-location/manage-location.component";
 
 @Component({
   selector: "app-manage-event",
@@ -21,7 +23,9 @@ import {BC_EVENT} from "../../../../breadcrumbs";
     TypedFormControlDirective,
     FaIconComponent,
     InputDateComponent,
-    InputButtonComponent
+    InputButtonComponent,
+    AsyncPipe,
+    ManageLocationComponent
   ],
   templateUrl: "./manage-event.component.html",
   styleUrl: "./manage-event.component.scss"
@@ -35,10 +39,14 @@ export class ManageEventComponent {
   protected readonly iconDescription = faBook;
   protected readonly iconStartDate = faForward;
   protected readonly iconEndDate = faBackward;
+
   protected readonly eventId?: string;
+  protected readonly locations$=
+    new BehaviorSubject<undefined | { locations: LocationDto[]; event: EventDto }>(undefined);
 
   private readonly _fb = inject(FormBuilder);
   private readonly _eventService = inject(EventEndpointService);
+  private readonly _locationsService = inject(LocationCollectionEndpointService);
   private readonly _route = inject(ActivatedRoute);
   private readonly _router = inject(Router);
   private readonly _pageService = inject(PageService);
@@ -52,12 +60,11 @@ export class ManageEventComponent {
       endDate: this._fb.nonNullable.control<Date>(new Date())
     });
 
-    this.eventId = this._route.snapshot.paramMap.get("eventId") ?? undefined;
+    const eventId = this._route.snapshot.paramMap.get("eventId") ?? undefined;
+    this.eventId = eventId;
 
-    if(this.eventId !== undefined) {
-      this._eventService.getAllEvents().pipe( // TODO get by id when backend available
-        map(events => events.find(e => e.id === this.eventId))
-      ).subscribe(event => {
+    if(eventId !== undefined) {
+      this._eventService.getEventById(eventId).subscribe(event => {
         if (event === undefined) {throw new Error("No event found");}
 
         this._pageService
@@ -71,7 +78,12 @@ export class ManageEventComponent {
           startDate: new Date(event.startTime),
           endDate: new Date(event.endTime)
         });
+
+        this._locationsService.getAllLocationsForEvent(eventId).pipe(
+          map(locations => ({locations, event}))
+        ).subscribe(l => this.locations$.next(l));
       });
+
     }
   }
 
@@ -109,6 +121,16 @@ export class ManageEventComponent {
         endTime: mapValue.dateAsLocalDateEndOfDayString(this.form.controls.endDate.value)
       }).subscribe(() => this._router.navigate(["../"], {relativeTo: this._route}));
     }
+  }
+
+  refreshLocations(){
+    this.locations$.pipe(
+      take(1),
+      filter(data => data !== undefined),
+      switchMap(data => this._locationsService.getAllLocationsForEvent(data.event.id).pipe(
+        map(locations => ({locations, event: data.event}))
+      ))
+    ).subscribe(v => this.locations$.next(v));
   }
 
 }
