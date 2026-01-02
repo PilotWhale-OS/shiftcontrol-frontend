@@ -57,7 +57,7 @@ export class ManageLocationComponent {
   }
 
   public get isPretalxManaged(){
-    return false; // TODO add pretalx check
+    return this?._location?.readOnly === true;
   }
 
   @Input()
@@ -95,6 +95,10 @@ export class ManageLocationComponent {
     ).subscribe(() => {
       console.log("Location saved successfully.");
       this.locationChanged.emit();
+
+      if(this._location === undefined) {
+        this.form.reset();
+      }
     });
   }
 
