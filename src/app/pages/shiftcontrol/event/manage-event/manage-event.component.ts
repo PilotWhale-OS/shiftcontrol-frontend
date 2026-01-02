@@ -9,7 +9,7 @@ import {InputButtonComponent} from "../../../../components/inputs/input-button/i
 import {EventDto, EventEndpointService, LocationCollectionEndpointService, LocationDto} from "../../../../../shiftservice-client";
 import {mapValue} from "../../../../util/value-maps";
 import {ActivatedRoute, Router} from "@angular/router";
-import {BehaviorSubject, filter, map, switchMap, take, tap} from "rxjs";
+import {BehaviorSubject, filter, map, switchMap, take} from "rxjs";
 import {PageService} from "../../../../services/page/page.service";
 import {BC_EVENT} from "../../../../breadcrumbs";
 import {AsyncPipe} from "@angular/common";

@@ -10,7 +10,7 @@ import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {mapValue} from "../../util/value-maps";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {InputTextComponent} from "../inputs/input-text/input-text.component";
-import {faCircleInfo, faLink, faMapMarker, faMarker, faTag} from "@fortawesome/free-solid-svg-icons";
+import {faCircleInfo, faLink, faLock, faMapMarker, faTag} from "@fortawesome/free-solid-svg-icons";
 import {TypedFormControlDirective} from "../../directives/typed-form-control.directive";
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
 import {NgClass} from "@angular/common";
@@ -40,6 +40,7 @@ export class ManageLocationComponent {
   protected readonly iconName = faTag;
   protected readonly iconCaption = faCircleInfo;
   protected readonly iconUrl = faLink;
+  protected readonly iconLock = faLock;
   protected readonly form;
   protected _location?: LocationDto;
 
@@ -53,6 +54,10 @@ export class ManageLocationComponent {
       description: this._fb.nonNullable.control<string>(""),
       url: this._fb.nonNullable.control<string>("")
     });
+  }
+
+  public get isPretalxManaged(){
+    return false; // TODO add pretalx check
   }
 
   @Input()
