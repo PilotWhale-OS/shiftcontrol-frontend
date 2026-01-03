@@ -17,12 +17,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import {TypedFormControlDirective} from "../../directives/typed-form-control.directive";
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
-import {DatePipe, NgClass} from "@angular/common";
+import {AsyncPipe, DatePipe, NgClass} from "@angular/common";
 import {InputSelectComponent, SelectOptions} from "../inputs/input-select/input-select.component";
 import {InputMultiselectComponent} from "../inputs/input-multiselect/input-multiselect.component";
 import {InputToggleComponent} from "../inputs/input-toggle/input-toggle.component";
 import {InputDateComponent} from "../inputs/input-date/input-date.component";
-import {Subscription} from "rxjs";
+import {BehaviorSubject, Subscription} from "rxjs";
 import {InputNumberComponent} from "../inputs/input-number/input-number.component";
 
 @Component({
@@ -38,7 +38,8 @@ import {InputNumberComponent} from "../inputs/input-number/input-number.componen
     InputToggleComponent,
     InputDateComponent,
     InputNumberComponent,
-    DatePipe
+    DatePipe,
+    AsyncPipe
   ],
   templateUrl: "./manage-invite.component.html",
   styleUrl: "./manage-invite.component.scss"
@@ -70,7 +71,7 @@ export class ManageInviteComponent implements OnDestroy {
     {name: "Planner Join", value: ShiftPlanInviteCreateRequestDto.TypeEnum.PlannerJoin},
     {name: "Volunteer Join", value: ShiftPlanInviteCreateRequestDto.TypeEnum.VolunteerJoin}
   ];
-  protected roleOptions: SelectOptions<string> = [];
+  protected roleOptions$ = new BehaviorSubject<SelectOptions<string>>([]);
 
   private readonly _fb = inject(FormBuilder);
   private readonly _inviteService = inject(ShiftPlanInviteEndpointService);
@@ -112,7 +113,7 @@ export class ManageInviteComponent implements OnDestroy {
 
   @Input()
   public set roles(value: RoleDto[]) {
-    this.roleOptions = value.map(role => ({name: role.name, value:role.id}));
+    this.roleOptions$.next(value.map(role => ({name: role.name, value:role.id})));
   }
 
   ngOnDestroy() {
@@ -168,6 +169,7 @@ export class ManageInviteComponent implements OnDestroy {
     this._inviteService.createShiftPlanInvite(plan.id, createData).subscribe(invite => {
       console.log(invite);
       this.inviteChanged.emit();
+      this.form.reset();
     });
   }
 
@@ -179,11 +181,10 @@ export class ManageInviteComponent implements OnDestroy {
   }
 
   protected getOrder() {
-    const order = new Date(this.invite?.createdAt ?? "").getTime() * -1;
-    if(isNaN(order)) {
+    if(this.invite === undefined) {
       return Number.MIN_SAFE_INTEGER;
     }
-    return order;
+    return Math.floor((new Date(this.invite.createdAt).getTime() / 1000)) * -1;
   }
 
 }

@@ -76,12 +76,14 @@
 
       <div class="flex flex-col gap-sm">
         <small><fa-icon [icon]="iconRole" class="pr-sm" />Assigned Roles</small>
-        <xsb-input-multiselect #roles
-                               [options]="roleOptions" naming="Roles" [previewWholeSelection]="true"
-                               [formControl]="form.controls.roles"
-                               [xsb-typed]="[roles, form.controls.roles]"
-                               name="invite-manage-roles"
-        />
+        @if (roleOptions$ | async; as roleOptions) {
+          <xsb-input-multiselect #roles
+                                 [options]="roleOptions" naming="Roles" [previewWholeSelection]="true"
+                                 [formControl]="form.controls.roles"
+                                 [xsb-typed]="[roles, form.controls.roles]"
+                                 name="invite-manage-roles"
+          />
+        }
       </div>
 
       <div class="flex flex-col gap-sm col-span-2">
