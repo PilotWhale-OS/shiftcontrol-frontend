@@ -23,6 +23,9 @@
     @else if(invite.active) {
       <xsb-input-button content="Revoke" size="text" (click)="revoke(invite)" />
     }
+    @else {
+      <xsb-input-button content="Remove" size="text" (click)="remove(invite)" />
+    }
 
   </div>
 

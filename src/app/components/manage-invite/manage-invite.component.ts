@@ -81,7 +81,7 @@ export class ManageInviteComponent implements OnDestroy {
     this.form = this._fb.group({
       roles: this._fb.nonNullable.control<string[]>([]),
       expiry: this._fb.nonNullable.control<Date>(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)),
-      maxUses: this._fb.nonNullable.control<number>(100),
+      maxUses: this._fb.nonNullable.control<number>(100, [Validators.min(1)]),
       type: this._fb.nonNullable.control<ShiftPlanInviteCreateRequestDto.TypeEnum>(
         ShiftPlanInviteCreateRequestDto.TypeEnum.VolunteerJoin, [Validators.required]
       ),
@@ -172,7 +172,14 @@ export class ManageInviteComponent implements OnDestroy {
   }
 
   protected revoke(invite: ShiftPlanInviteDto) {
-    this._inviteService.revokeShiftPlanInvite(invite.code).subscribe(() => {
+    this._inviteService.revokeShiftPlanInvite(invite.id).subscribe(() => {
+      console.log(invite);
+      this.inviteChanged.emit();
+    });
+  }
+
+  protected remove(invite: ShiftPlanInviteDto) {
+    this._inviteService.deleteShiftPlanInvite(invite.id).subscribe(() => {
       console.log(invite);
       this.inviteChanged.emit();
     });

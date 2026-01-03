@@ -77,13 +77,13 @@ export class ManageRoleComponent {
 
     const roleData: RoleModificationDto = {
       name: this.form.controls.name.value,
-      description: mapValue.undefinedIfEmptyString(this.form.controls.description.value) ?? "",
+      description: mapValue.undefinedIfEmptyString(this.form.controls.description.value),
       selfAssignable: false
     };
 
     (this._role === undefined ?
       this._roleService.createRole(plan.id, roleData) :
-      this._roleService.updateRole(plan.id, this._role.id, roleData)
+      this._roleService.updateRole(this._role.id, roleData)
     ).subscribe(() => {
       console.log("Role saved successfully.");
       this.roleChanged.emit();
@@ -95,11 +95,11 @@ export class ManageRoleComponent {
   }
 
   protected delete() {
-    if(this._role === undefined || this.plan === undefined) {
-      throw new Error("Could not delete role in create mode or plan undefined");
+    if(this._role === undefined) {
+      throw new Error("Could not delete role in create mode");
     }
 
-    this._roleService.deleteRole(this.plan.id, this._role.id).subscribe(() =>{
+    this._roleService.deleteRole(this._role.id).subscribe(() =>{
       console.log("Role deleted successfully.");
       this.roleChanged.emit();
     });
