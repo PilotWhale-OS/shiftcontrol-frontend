@@ -19,6 +19,7 @@ import {DialogComponent} from "../../../../components/dialog/dialog.component";
 import {AsyncPipe} from "@angular/common";
 import {BehaviorSubject, combineLatestWith, filter, map, switchMap, take} from "rxjs";
 import {ManageInviteComponent} from "../../../../components/manage-invite/manage-invite.component";
+import {ManageRoleComponent} from "../../../../components/manage-role/manage-role.component";
 
 @Component({
   selector: "app-manage-shift-plan",
@@ -31,7 +32,8 @@ import {ManageInviteComponent} from "../../../../components/manage-invite/manage
     DialogComponent,
     AsyncPipe,
     ManageInviteComponent,
-    DialogComponent
+    DialogComponent,
+    ManageRoleComponent
   ],
   templateUrl: "./manage-shift-plan.component.html",
   styleUrl: "./manage-shift-plan.component.scss"
@@ -44,8 +46,8 @@ export class ManageShiftPlanComponent {
   protected readonly iconCaption = faCircleInfo;
   protected readonly iconDescription = faBook;
 
-   protected readonly invites$ =
-     new BehaviorSubject<undefined | { plan: ShiftPlanDto; roles: RoleDto[]; invites: ShiftPlanInviteDto[] }>(undefined);
+  protected readonly manageData$ =
+    new BehaviorSubject<undefined | { plan: ShiftPlanDto; roles: RoleDto[]; invites: ShiftPlanInviteDto[] }>(undefined);
   protected readonly planId?: string;
   protected eventId?: string;
 
@@ -93,7 +95,7 @@ export class ManageShiftPlanComponent {
         this._planInviteService.getAllShiftPlanInvites(planId).pipe(
           combineLatestWith(this._roleService.getRoles(planId))
         ).subscribe(([invites, roles]) => {
-          this.invites$.next(
+          this.manageData$.next(
             {plan: dashboard.shiftPlan, invites, roles}
           );
         });
@@ -166,12 +168,15 @@ export class ManageShiftPlanComponent {
     }
     const planId = this.planId;
 
-    this.invites$.pipe(
+    this.manageData$.pipe(
       take(1),
       filter(data => data !== undefined),
       switchMap(({plan, roles}) => this._planInviteService.getAllShiftPlanInvites(planId).pipe(
         map(invites => ({plan, roles, invites}))
+      )),
+      switchMap(({plan, invites}) => this._roleService.getRoles(planId).pipe(
+        map(roles => ({plan, invites, roles}))
       ))
-    ).subscribe(data => this.invites$.next(data));
+    ).subscribe(data => this.manageData$.next(data));
   }
 }

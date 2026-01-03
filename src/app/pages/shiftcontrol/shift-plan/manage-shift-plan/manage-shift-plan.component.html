@@ -1,7 +1,7 @@
-<div class="flex flex-row gap-lg">
+<div class="grid grid-cols-[auto_1fr] grid-rows-[auto_auto] gap-lg">
 
   <!-- manage details -->
-  <div class="card grid grid-cols-2 gap-x-xl gap-y-lg w-fit h-fit">
+  <div class="card grid grid-cols-2 gap-x-xl gap-y-lg w-fit h-fit row-start-1 col-start-1">
 
     <h1 class="col-span-2 signature-gradient-font">Shift Plan Details</h1>
 
@@ -15,9 +15,9 @@
       />
     </div>
 
-    <div class="flex flex-col gap-sm col-start-1 row-start-3">
+    <div class="flex flex-col gap-sm col-start-2 row-start-2">
       <small><fa-icon [icon]="iconCaption" class="pr-sm" />Caption</small>
-      <label for="plan-manage-caption"> A short description, shown in the plan preview</label>
+      <label for="plan-manage-caption">Short description, shown in the plan preview</label>
       <xsb-input-text #shortDescription
                       [formControl]="form.controls.shortDescription"
                       [xsb-typed]="[shortDescription, form.controls.shortDescription]"
@@ -25,7 +25,7 @@
       />
     </div>
 
-    <div class="flex flex-col gap-sm col-start-1 row-start-4 col-span-2">
+    <div class="flex flex-col gap-sm col-start-1 row-start-3 col-span-2">
       <small><fa-icon [icon]="iconDescription" class="pr-sm" />Description</small>
       <label for="plan-manage-description">Detailed description, shown in the plan overview</label>
       <xsb-input-text #longDescription
@@ -48,19 +48,38 @@
   </div>
 
   <!-- manage invites -->
-  @if (invites$ | async; as inviteData) {
+  @if (manageData$ | async; as manageData) {
 
-    <div class="flex card flex-col grow w-fit gap-lg h-fit">
-      <h1 style="grid-column: 1 / -1" class="row-start-1 signature-gradient-font">Shift Plan Invites</h1>
+    <div class="flex card flex-col grow w-full gap-lg h-fit row-start-1 row-span-2 col-start-2">
+      <h1 style="grid-column: 1 / -1" class="row-start-1 signature-gradient-font">Manage Invites</h1>
 
       <div class="grid gap-lg grid-cols-[repeat(auto-fit,min(100%,30rem))] grow">
 
         <!-- create item-->
-        <app-manage-invite [plan]="inviteData.plan" (inviteChanged)="refreshInvites()" />
+        <app-manage-invite [plan]="manageData.plan" (inviteChanged)="refreshInvites()" />
 
         <!-- existing items -->
-        @for (invite of inviteData.invites; track invite.createdAt) {
-          <app-manage-invite [plan]="inviteData.plan" [invite]="invite" (inviteChanged)="refreshInvites()" />
+        @for (invite of manageData.invites; track invite.code) {
+          <app-manage-invite [plan]="manageData.plan" [invite]="invite" (inviteChanged)="refreshInvites()" />
+        }
+      </div>
+    </div>
+  }
+
+  <!-- manage roles -->
+  @if (manageData$ | async; as inviteData) {
+
+    <div class="flex card flex-col grow w-full gap-lg h-fit row-start-2 col-start-1">
+      <h1 style="grid-column: 1 / -1" class="row-start-1 signature-gradient-font">Manage Volunteer Roles</h1>
+
+      <div class="flex flex-col gap-lg">
+
+        <!-- create item-->
+        <app-manage-role [plan]="inviteData.plan" (roleChanged)="refreshInvites()" />
+
+        <!-- existing items -->
+        @for (role of inviteData.roles; track role.id) {
+          <app-manage-role [plan]="inviteData.plan" [role]="role" (roleChanged)="refreshInvites()" />
         }
       </div>
     </div>

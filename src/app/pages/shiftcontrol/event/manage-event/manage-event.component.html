@@ -17,7 +17,7 @@
 
     <div class="flex flex-col gap-sm col-start-1 row-start-3">
       <small><fa-icon [icon]="iconCaption" class="pr-sm" />Caption</small>
-      <label for="event-manage-caption"> A short description, shown in the event preview</label>
+      <label for="event-manage-caption">Short description, shown in the event preview</label>
       <xsb-input-text #shortDescription
                       [formControl]="form.controls.shortDescription"
                       [xsb-typed]="[shortDescription, form.controls.shortDescription]"
@@ -67,7 +67,7 @@
   @if (locations$ | async; as locationData) {
 
     <div class="flex card h-fit flex-col grow w-fit gap-lg">
-      <h1 style="grid-column: 1 / -1" class="row-start-1 signature-gradient-font">Event Locations</h1>
+      <h1 style="grid-column: 1 / -1" class="row-start-1 signature-gradient-font">Manage Locations</h1>
 
       <div class="grid gap-lg grid-cols-[repeat(auto-fit,min(100%,30rem))] grow">
 
