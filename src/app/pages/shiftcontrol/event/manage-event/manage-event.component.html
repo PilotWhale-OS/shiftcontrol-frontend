@@ -79,7 +79,7 @@
 </div>
 
 @if (showEventDeleteConfirm){
-  <xsb-dialog action="danger" danger="Delete Event" (closeDialog)="showEventDeleteConfirm = false; $event === 'success' && delete()">
+  <xsb-dialog action="danger" danger="Delete Event" (closeDialog)="showEventDeleteConfirm = false; $event === 'danger' && delete()">
     <ng-container dialog-header>
       <h1>Delete Event</h1>
     </ng-container>
@@ -88,7 +88,7 @@
       <p>
         Are you sure you want to delete this event?<br>
         This cannot be made undone.<br>
-        All associated data (activities, plans, shifts..) will be deleted.
+        All associated data (activities, plans) will be deleted.
       </p>
     </ng-container>
   </xsb-dialog>

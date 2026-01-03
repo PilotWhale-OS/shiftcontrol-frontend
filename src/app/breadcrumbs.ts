@@ -11,7 +11,7 @@ export const BC_EVENT_EDIT = new Breadcrumb("Manage", "edit", BC_EVENT);
 
 export const BC_PLAN_DASHBOARD = new Breadcrumb("Shift Dashboard", "/plans/plan-id", BC_EVENT);
 export const BC_PLAN_CREATE = new Breadcrumb("Create Shift Plan", "create", BC_EVENT);
-export const BC_PLAN_EDIT = new Breadcrumb("Manage Shift Plan", "edit", BC_PLAN_DASHBOARD);
+export const BC_PLAN_EDIT = new Breadcrumb("Manage", "edit", BC_PLAN_DASHBOARD);
 
 export const BC_SHIFT_CALENDAR = new Breadcrumb("Calendar", "calendar", BC_PLAN_DASHBOARD);
 export const BC_SHIFT_DETAILS = new Breadcrumb("Shift Details", "shift-id", BC_PLAN_DASHBOARD);
