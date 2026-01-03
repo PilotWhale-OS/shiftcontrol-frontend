@@ -1,0 +1,49 @@
+<div class="flex flex-row gap-lg">
+
+  <!-- manage details -->
+  <div class="card grid grid-cols-2 gap-x-xl gap-y-lg w-fit h-fit">
+
+    <h1 class="col-span-2 signature-gradient-font">Shift Plan Details</h1>
+
+    <div class="flex flex-col gap-sm col-start-1 row-start-2">
+      <small><fa-icon [icon]="iconName" class="pr-sm" />Plan Name</small>
+      <label for="plan-manage-name">Expressive name for the plan</label>
+      <xsb-input-text #name
+                      [formControl]="form.controls.name"
+                      [xsb-typed]="[name, form.controls.name]"
+                      name="plan-manage-name" placeholder="Plan name"
+      />
+    </div>
+
+    <div class="flex flex-col gap-sm col-start-1 row-start-3">
+      <small><fa-icon [icon]="iconCaption" class="pr-sm" />Caption</small>
+      <label for="plan-manage-caption"> A short description, shown in the plan preview</label>
+      <xsb-input-text #shortDescription
+                      [formControl]="form.controls.shortDescription"
+                      [xsb-typed]="[shortDescription, form.controls.shortDescription]"
+                      name="plan-manage-caption" placeholder="Plan caption"
+      />
+    </div>
+
+    <div class="flex flex-col gap-sm col-start-1 row-start-4 col-span-2">
+      <small><fa-icon [icon]="iconDescription" class="pr-sm" />Description</small>
+      <label for="plan-manage-description">Detailed description, shown in the plan overview</label>
+      <xsb-input-text #longDescription
+                      [formControl]="form.controls.longDescription"
+                      type="area"
+                      [xsb-typed]="[longDescription, form.controls.longDescription]"
+                      name="plan-manage-description" placeholder="Plan description"
+      />
+    </div>
+
+    <div class="col-span-2 grid justify-center pt-md">
+      @if (planId === undefined){
+        <xsb-input-button content="Create Plan" action="success" (click)="create()" />
+      }
+      @else {
+        <xsb-input-button content="Update Plan" action="success" (click)="update()" />
+      }
+    </div>
+  </div>
+
+</div>

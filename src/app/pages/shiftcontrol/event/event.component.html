@@ -146,7 +146,7 @@
       @if (userType$ | async; as userType) {
         @if (userType === 'ADMIN') {
           <div class="card spotlight interaction grid place-items-center p-lg"
-               [routerLink]="'/plans/create'">
+               [routerLink]="'create-plan'">
             <h2 class="compact">
               <fa-icon [icon]="iconCreate" class="pr-sm" />
               Create new shift plan

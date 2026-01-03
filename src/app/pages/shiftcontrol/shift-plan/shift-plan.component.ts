@@ -12,7 +12,7 @@ import {AsyncPipe, DatePipe} from "@angular/common";
 import {TooltipDirective} from "../../../directives/tooltip.directive";
 
 @Component({
-  selector: "app-shift-dashboard",
+  selector: "app-shift-plan",
   imports: [
     RouterLink,
     ShiftTradeAuctionComponent,
@@ -23,10 +23,10 @@ import {TooltipDirective} from "../../../directives/tooltip.directive";
     TooltipDirective
   ],
   standalone: true,
-  templateUrl: "./shift-plan-dashboard.component.html",
-  styleUrl: "./shift-plan-dashboard.component.scss"
+  templateUrl: "./shift-plan.component.html",
+  styleUrl: "./shift-plan.component.scss"
 })
-export class ShiftPlanDashboardComponent {
+export class ShiftPlanComponent {
 
   protected dashboard$: Observable<ShiftPlanDashboardOverviewDto>;
   protected shiftsWithOrigin$: Observable<shiftWithOrigin[]>;

@@ -10,17 +10,18 @@ import {
   BC_PLAN_DASHBOARD,
   BC_SHIFT_CALENDAR,
   BC_SHIFT_DETAILS,
-  BC_PLAN_ONBOARDING, BC_EVENT_EDIT, BC_EVENT_CREATE
+  BC_PLAN_ONBOARDING, BC_EVENT_EDIT, BC_EVENT_CREATE, BC_PLAN_CREATE, BC_PLAN_EDIT
 } from "./breadcrumbs";
 import { breadcrumbsGuard } from "./guards/breadcrumbs/breadcrumbs.guard";
 import {accessAllowedGuard, notLoggedInGuard} from "./guards/keycloak/keycloak.guard";
 import {AccountComponent} from "./pages/shiftcontrol/account/account.component";
 import {HomeComponent} from "./pages/shiftcontrol/home/home.component";
-import {ShiftPlanDashboardComponent} from "./pages/shiftcontrol/shift-plan-dashboard/shift-plan-dashboard.component";
+import {ShiftPlanComponent} from "./pages/shiftcontrol/shift-plan/shift-plan.component";
 import {ShiftCalendarComponent} from "./pages/shiftcontrol/shift-calendar/shift-calendar.component";
 import {ShiftDetailsComponent} from "./pages/shiftcontrol/shift-details/shift-details.component";
 import {PlanOnboardingComponent} from "./pages/shiftcontrol/plan-onboarding/plan-onboarding.component";
 import {ManageEventComponent} from "./pages/shiftcontrol/event/manage-event/manage-event.component";
+import {ManageShiftPlanComponent} from "./pages/shiftcontrol/shift-plan/manage-shift-plan/manage-shift-plan.component";
 
 export const routes: Routes = ([
   { path: "", component: HomeComponent, pathMatch: "full", data: {breadcrumbs: BC_HOME}, canActivate: [accessAllowedGuard] },
@@ -39,8 +40,12 @@ export const routes: Routes = ([
     data: {breadcrumbs: BC_EVENT_EDIT}, canActivate: [accessAllowedGuard]},
 
   /* shiftplans */
-  { path: "plans/:shiftPlanId", component: ShiftPlanDashboardComponent,
+  { path: "events/:eventId/create-plan", component: ManageShiftPlanComponent,
+    data: { breadcrumbs: BC_PLAN_CREATE }, canActivate: [accessAllowedGuard]},
+  { path: "plans/:shiftPlanId", component: ShiftPlanComponent,
     data: { breadcrumbs: BC_PLAN_DASHBOARD }, canActivate: [accessAllowedGuard]},
+  { path: "plans/:shiftPlanId/edit", component: ManageShiftPlanComponent,
+    data: { breadcrumbs: BC_PLAN_EDIT }, canActivate: [accessAllowedGuard]},
   { path: "plans/:shiftPlanId/calendar", component: ShiftCalendarComponent,
     data: { breadcrumbs: BC_SHIFT_CALENDAR }, canActivate: [accessAllowedGuard]},
   { path: "join/:shiftPlanInvite", redirectTo: "onboarding/:shiftPlanInvite", pathMatch: "full" },
