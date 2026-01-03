@@ -19,5 +19,13 @@ export const mapValue = {
       value
       + "T00:00:00.000Z"
     );
+  },
+  dateAsLocalDateStartOfDayString(value: Date){
+    value = new Date(value.setHours(0,0,0,0));
+    return value.toISOString();
+  },
+  dateAsLocalDateEndOfDayString(value: Date){
+    value = new Date(value.setHours(23,59,59,999));
+    return value.toISOString();
   }
 };

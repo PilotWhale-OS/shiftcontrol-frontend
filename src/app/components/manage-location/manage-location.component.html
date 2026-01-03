@@ -1,0 +1,64 @@
+<div class="card flex flex-col gap-lg h-full" [style.order]="getOrder()" [ngClass]="{
+  'success': _location === undefined,
+}">
+  <div class="flex flex-row gap-sm items-center">
+    @if (_location === undefined){
+      <div class="badge success w-fit">
+        <fa-icon [icon]="locationIcon" />
+        Create Event Location
+      </div>
+    }
+    @else {
+      <div class="badge hint w-fit">
+        <fa-icon [icon]="locationIcon" />
+        Event Location
+      </div>
+
+      @if (isPretalxManaged) {
+        <div class="badge w-fit">
+          <fa-icon [icon]="iconLock" />
+          PreTalx Sync
+        </div>
+      }
+    }
+
+    <span class="grow"></span>
+
+    @if (_location === undefined) {
+      <xsb-input-button content="Create" size="text" (click)="save()" />
+    }
+    @else if(!isPretalxManaged) {
+      <xsb-input-button content="Delete" size="text" (click)="delete()" />
+      <xsb-input-button content="Save" size="text" (click)="save()" />
+    }
+
+  </div>
+
+  <div class="flex flex-col gap-sm">
+    <small><fa-icon [icon]="iconName" class="pr-sm" />Location Name</small>
+    <xsb-input-text #name [disguise]="isPretalxManaged"
+                    [formControl]="form.controls.name"
+                    [xsb-typed]="[name, form.controls.name]"
+                    name="location-manage-name" placeholder="Location name"
+    />
+  </div>
+
+  <div class="flex flex-col gap-sm">
+    <small><fa-icon [icon]="iconCaption" class="pr-sm" />Description</small>
+    <xsb-input-text #description [disguise]="isPretalxManaged"
+                    [formControl]="form.controls.description"
+                    [xsb-typed]="[description, form.controls.description]"
+                    name="location-manage-name" placeholder="Location description"
+    />
+  </div>
+
+  <div class="flex flex-col gap-sm">
+    <small><fa-icon [icon]="iconUrl" class="pr-sm" />Map URL</small>
+    <xsb-input-text #url [disguise]="isPretalxManaged"
+                    [formControl]="form.controls.url"
+                    [xsb-typed]="[url, form.controls.url]"
+                    name="location-manage-url" placeholder="URL to location map"
+    />
+  </div>
+
+</div>

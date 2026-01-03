@@ -46,7 +46,8 @@ export class ShiftDetailsViewComponent {
     positionSlots: [],
     location: {
       id: "asdff",
-      name: "Stage 1"
+      name: "Stage 1",
+      readOnly: false
     }
   };
 
