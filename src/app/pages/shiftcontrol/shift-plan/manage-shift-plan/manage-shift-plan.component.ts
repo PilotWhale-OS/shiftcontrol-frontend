@@ -5,10 +5,10 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {PageService} from "../../../../services/page/page.service";
 import {BC_EVENT, BC_PLAN_DASHBOARD} from "../../../../breadcrumbs";
 import {
-  EventEndpointService, RoleDto, RoleEndpointService,
-  ShiftPlanCollectionEndpointService, ShiftPlanDto,
-  ShiftPlanInviteDto, ShiftPlanInviteEndpointService,
-  ShiftPlanItemEndpointService
+  EventEndpointService,
+  RoleDto, RoleEndpointService, ShiftPlanCollectionEndpointService,
+  ShiftPlanDto,
+  ShiftPlanInviteDto, ShiftPlanInviteEndpointService, ShiftPlanItemEndpointService,
 } from "../../../../../shiftservice-client";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {InputButtonComponent} from "../../../../components/inputs/input-button/input-button.component";
@@ -30,7 +30,8 @@ import {ManageInviteComponent} from "../../../../components/manage-invite/manage
     TypedFormControlDirective,
     DialogComponent,
     AsyncPipe,
-    ManageInviteComponent
+    ManageInviteComponent,
+    DialogComponent
   ],
   templateUrl: "./manage-shift-plan.component.html",
   styleUrl: "./manage-shift-plan.component.scss"
