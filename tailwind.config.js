@@ -36,7 +36,7 @@ module.exports = {
           base: "rgb(13 13 20)",
           card: "rgb(17 18 28)",
           item: "rgb(23 24 45)",
-          card_danger: "#1a141b",
+          card_danger: "rgb(16 8 15)",
           card_success: "#0e1413",
           card_hint: "#101625",
           item_danger: "rgb(46,2,14)",

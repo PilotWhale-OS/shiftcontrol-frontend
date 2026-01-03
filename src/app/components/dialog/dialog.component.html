@@ -1,11 +1,11 @@
 <ng-template cdkPortal>
   <div [ngClass]="{
-    'border-framing-card' : action === 'normal',
-    'border-framing-default_danger shadow-inner shadow-framing-item_danger' : action === 'danger',
-    'order-framing-default_success shadow-inner shadow-shadow-item_success' : action === 'success'
+    'border-framing-card bg-background-card' : action === 'normal',
+    'border-framing-default_danger shadow-inner shadow-framing-item_danger bg-background-card_danger' : action === 'danger',
+    'border-framing-default_success shadow-inner shadow-shadow-item_success bg-background-card_success' : action === 'success'
   }"
     class="border-ctr rounded-lg p-lg flex flex-col gap-md w-full
-bg-background-card">
+">
 
     <!-- header -->
     <div class="flex items-center justify-between">

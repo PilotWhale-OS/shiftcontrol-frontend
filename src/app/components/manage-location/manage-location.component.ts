@@ -14,6 +14,7 @@ import {faCircleInfo, faLink, faLock, faMapMarker, faTag} from "@fortawesome/fre
 import {TypedFormControlDirective} from "../../directives/typed-form-control.directive";
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
 import {NgClass} from "@angular/common";
+import {DialogComponent} from "../dialog/dialog.component";
 
 @Component({
   selector: "app-manage-location",
@@ -23,7 +24,8 @@ import {NgClass} from "@angular/common";
     ReactiveFormsModule,
     TypedFormControlDirective,
     InputButtonComponent,
-    NgClass
+    NgClass,
+    DialogComponent
   ],
   templateUrl: "./manage-location.component.html",
   styleUrl: "./manage-location.component.scss"
@@ -43,6 +45,8 @@ export class ManageLocationComponent {
   protected readonly iconLock = faLock;
   protected readonly form;
   protected _location?: LocationDto;
+
+  protected showDeleteConfirm = false;
 
   private readonly _fb = inject(FormBuilder);
   private readonly locationItemService = inject(LocationItemEndpointService);
