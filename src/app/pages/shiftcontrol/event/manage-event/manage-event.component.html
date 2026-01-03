@@ -79,7 +79,7 @@
 </div>
 
 @if (showEventDeleteConfirm){
-  <xsb-dialog success="Delete Event" (closeDialog)="showEventDeleteConfirm = false; $event === 'success' && delete()">
+  <xsb-dialog action="danger" danger="Delete Event" (closeDialog)="showEventDeleteConfirm = false; $event === 'success' && delete()">
     <ng-container dialog-header>
       <h1>Delete Event</h1>
     </ng-container>
