@@ -8,7 +8,7 @@ import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {faBarsProgress, faCalendar, faCalendarDays, faGift, faHourglass, faPeopleGroup, faShuffle} from "@fortawesome/free-solid-svg-icons";
 import {ShiftPlanDashboardOverviewDto, ShiftPlanItemEndpointService} from "../../../../shiftservice-client";
 import {map, Observable, tap} from "rxjs";
-import {AsyncPipe, DatePipe} from "@angular/common";
+import {AsyncPipe, DatePipe, DecimalPipe} from "@angular/common";
 import {TooltipDirective} from "../../../directives/tooltip.directive";
 
 @Component({
@@ -20,7 +20,8 @@ import {TooltipDirective} from "../../../directives/tooltip.directive";
     FaIconComponent,
     AsyncPipe,
     DatePipe,
-    TooltipDirective
+    TooltipDirective,
+    DecimalPipe
   ],
   standalone: true,
   templateUrl: "./shift-plan.component.html",

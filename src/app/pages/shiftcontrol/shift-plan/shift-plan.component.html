@@ -20,7 +20,7 @@
       <h1 class="col-span-2 compact signature-gradient-font">
         {{dashboard.shiftPlan.name}}
       </h1>
-      <p class="col-span-2">
+      <p class="col-span-2 whitespace-pre-wrap">
         {{dashboard.shiftPlan.longDescription}}
       </p>
 
@@ -39,7 +39,7 @@
              [app-tooltip]="'Sum of signed up shifts in this plan'"
         >
           <fa-icon [icon]="iconHours" />
-          {{dashboard.ownShiftPlanStatistics.totalHours}} Shift Hours
+          {{dashboard.ownShiftPlanStatistics.totalHours | number:"1.0-0"}} Shift Hours
         </div>
         <div class="badge success"
              tooltipMaxWidth="30ex"
@@ -65,22 +65,37 @@
              [app-tooltip]="'Duration of shifts in this shift plan'"
         >
           <fa-icon [icon]="iconHours" />
-          {{dashboard.overallShiftPlanStatistics.totalHours}} Shift Hours
+          {{dashboard.overallShiftPlanStatistics.totalHours | number:"1.0-0"}} Shift Hours
         </div>
       </div>
 
     </div>
 
-    <!-- calendar link card -->
-    <div class="card interaction spotlight row-start-2 h-fit" routerLink="calendar">
-      <h1>
-        <fa-icon [icon]="iconCalendar" class="icon" />
-        View Shift Calendar
-      </h1>
-      <p>
-        Click to explore all available shifts in  the calendar.<br>
-        Here, you can also sign up to shifts that you want to participate in.
-      </p>
+    <!-- manage -->
+    <div class="flex flex-col gap-lg row-start-2 h-fit">
+
+      <!-- calendar link card -->
+      <div class="card interaction spotlight" routerLink="calendar">
+        <h1>
+          <fa-icon [icon]="iconCalendar" class="icon" />
+          View Shift Calendar
+        </h1>
+        <p>
+          Click to explore all available shifts in  the calendar.<br>
+          Here, you can also sign up to shifts that you want to participate in.
+        </p>
+      </div>
+
+      <!-- manage plan -->
+      <div class="card interaction" routerLink="edit">
+
+        <!-- info -->
+        <h1 class="compact">Manage Plan</h1>
+        <p>
+          Click here to manage plan details and invite planners & volunteers.
+        </p>
+      </div>
+
     </div>
 
     <!-- schedule card-->

@@ -36,14 +36,32 @@
       />
     </div>
 
-    <div class="col-span-2 grid justify-center pt-md">
+    <div class="col-span-2 flex gap-x-lg items-center justify-center pt-md">
       @if (planId === undefined){
         <xsb-input-button content="Create Plan" action="success" (click)="create()" />
       }
       @else {
         <xsb-input-button content="Update Plan" action="success" (click)="update()" />
+        <xsb-input-button content="Delete Plan" action="danger" (click)="showPlanDeleteConfirm = true" />
       }
     </div>
   </div>
 
 </div>
+
+
+@if (showPlanDeleteConfirm){
+  <xsb-dialog action="danger" danger="Delete Plan" (closeDialog)="showPlanDeleteConfirm = false; $event === 'danger' && delete()">
+    <ng-container dialog-header>
+      <h1>Delete Shift Plan</h1>
+    </ng-container>
+
+    <ng-container dialog-body>
+      <p>
+        Are you sure you want to delete this shift plan?<br>
+        This cannot be made undone.<br>
+        All associated data (roles, shifts, positions, signups) will be deleted.
+      </p>
+    </ng-container>
+  </xsb-dialog>
+}

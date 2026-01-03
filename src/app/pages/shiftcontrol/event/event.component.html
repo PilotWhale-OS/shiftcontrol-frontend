@@ -39,7 +39,7 @@
                [app-tooltip]="'Sum of signed up shifts in this event'"
           >
             <fa-icon [icon]="iconHours" />
-            {{event.ownEventStatistics.totalHours}} Shift Hours
+            {{event.ownEventStatistics.totalHours | number:"1.0-0"}} Shift Hours
           </div>
           <div class="badge success"
                tooltipMaxWidth="30ex"

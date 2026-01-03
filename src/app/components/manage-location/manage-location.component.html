@@ -64,7 +64,7 @@
 </div>
 
 @if (showDeleteConfirm && _location !== undefined){
-  <xsb-dialog action="danger" danger="Delete Location" (closeDialog)="showDeleteConfirm = false; $event === 'success' && delete()">
+  <xsb-dialog action="danger" danger="Delete Location" (closeDialog)="showDeleteConfirm = false; $event === 'danger' && delete()">
     <ng-container dialog-header>
       <h1>Delete Location "{{_location.name}}"</h1>
     </ng-container>
