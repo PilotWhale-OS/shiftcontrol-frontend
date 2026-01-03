@@ -1,29 +1,30 @@
-import { Component, HostBinding, Injector, Input, OnInit, inject } from "@angular/core";
+import {ChangeDetectorRef, Component, HostBinding, inject, Injector, Input, OnDestroy, OnInit} from "@angular/core";
 import {FormsModule, NG_VALUE_ACCESSOR, NgControl} from "@angular/forms";
+import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import {TypedControlValueAccessor} from "../../../util/typedControlValueAccessor";
 import {NgClass} from "@angular/common";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import {faCheckCircle, faTimesCircle} from "@fortawesome/free-solid-svg-icons";
+import {Subscription} from "rxjs";
 
 @Component({
-  selector: "xsb-input-toggle",
-  templateUrl: "./input-toggle.component.html",
-  styleUrls: ["./input-toggle.component.scss"],
+  selector: "xsb-input-number",
+  templateUrl: "./input-number.component.html",
+  styleUrls: ["./input-number.component.scss"],
   standalone: true,
   imports: [
-    FormsModule,
     NgClass,
+    FormsModule,
     FaIconComponent
   ],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
       multi: true,
-      useExisting: InputToggleComponent
+      useExisting: InputNumberComponent
     }
   ]
 })
-export class InputToggleComponent implements TypedControlValueAccessor<boolean>, OnInit {
+export class InputNumberComponent implements TypedControlValueAccessor<number>, OnInit, OnDestroy {
 
   /**
    * the size style of the input. minimal will have less border and padding
@@ -38,10 +39,16 @@ export class InputToggleComponent implements TypedControlValueAccessor<boolean>,
   name = "";
 
   /**
-   * hide from UI
+   * disguise the input as plain text and make immutable
    */
   @Input()
   disguise = false;
+
+  /**
+   * HTML placeholder of the input element
+   */
+  @Input()
+  placeholder = "";
 
   /**
    * prohibit ID attribute on input
@@ -49,17 +56,17 @@ export class InputToggleComponent implements TypedControlValueAccessor<boolean>,
   @Input()
   id = null;
 
-  public readonly checkIcon = faCheckCircle;
-  public readonly crossIcon = faTimesCircle;
+  /** error con */
+  errorIcon = faCircleExclamation;
 
   /** current disabled state */
   disabled = false;
 
   /** bound ngmodel to the underlying input */
-  value = false;
+  value = 0;
 
   /** inchange callback to be set by the parent form */
-  onChange?: (value: boolean) => void;
+  onChange?: (value: number) => void;
 
   /** ontouched callback to be set by the parent form */
   onTouched?: () => void;
@@ -67,25 +74,34 @@ export class InputToggleComponent implements TypedControlValueAccessor<boolean>,
   /** self form control to access validity state */
   ngControl?: NgControl;
 
-  private injector = inject(Injector);
+  private readonly _injector = inject(Injector);
+  private _changeDetector = inject(ChangeDetectorRef);
+  private _statusSubscription?: Subscription;
 
   /* hide actual properties from html to prevent accessibility isues */
   @HostBinding("attr.name") get hideNameAttr() { return null; }
   @HostBinding("attr.id") get hideIdAttr() { return null; }
   @HostBinding("attr.value") get hideValueAttr() { return null; }
+  @HostBinding("attr.placeholder") get hidePlaceholderAttr() { return null; }
 
   /**
    * current validity state determined by validators
    */
   get valid() {
-    return this.ngControl ? this.ngControl.valid || !this.ngControl.touched : true;
+    return this.ngControl ? !this.ngControl.invalid : true;
   }
 
   /**
    * get the form control (self) avoiding circular deps
    */
   ngOnInit(): void {
-    this.ngControl = this.injector.get(NgControl);
+    this.ngControl = this._injector.get(NgControl);
+
+    this._statusSubscription = this.ngControl.statusChanges?.subscribe(() => this._changeDetector.detectChanges());
+  }
+
+  ngOnDestroy() {
+    this._statusSubscription?.unsubscribe();
   }
 
   /**
@@ -93,7 +109,7 @@ export class InputToggleComponent implements TypedControlValueAccessor<boolean>,
    *
    * @param value new value
    */
-  writeValue(value: boolean): void {
+  writeValue(value: number): void {
     this.value = value;
   }
 
@@ -102,7 +118,7 @@ export class InputToggleComponent implements TypedControlValueAccessor<boolean>,
    *
    * @param fn callback
    */
-  registerOnChange(fn: (value: boolean) => void): void {
+  registerOnChange(fn: (value: number) => void): void {
     this.onChange = fn;
   }
 

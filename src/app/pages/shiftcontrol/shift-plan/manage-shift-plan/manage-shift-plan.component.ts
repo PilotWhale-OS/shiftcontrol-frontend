@@ -17,8 +17,7 @@ import {TypedFormControlDirective} from "../../../../directives/typed-form-contr
 import {ShiftPlanEndpointService} from "../../../../../shiftservice-client/api/shift-plan-endpoint.service";
 import {DialogComponent} from "../../../../components/dialog/dialog.component";
 import {AsyncPipe} from "@angular/common";
-import {ManageLocationComponent} from "../../../../components/manage-location/manage-location.component";
-import {BehaviorSubject, combineLatestWith} from "rxjs";
+import {BehaviorSubject, combineLatestWith, filter, map, switchMap, take} from "rxjs";
 import {ManageInviteComponent} from "../../../../components/manage-invite/manage-invite.component";
 
 @Component({
@@ -92,7 +91,7 @@ export class ManageShiftPlanComponent {
         this.eventId = dashboard.eventOverview.id;
 
         /* build invite data */
-        this._planInviteService.listShiftPlanInvites(planId).pipe(
+        this._planInviteService.getAllShiftPlanInvites(planId).pipe(
           combineLatestWith(this._roleService.getRoles(planId))
         ).subscribe(([invites, roles]) => {
           this.invites$.next(
@@ -160,5 +159,20 @@ export class ManageShiftPlanComponent {
         }
       });
     }
+  }
+
+  protected refreshInvites(){
+    if(this.planId === undefined) {
+      throw new Error("Cannot refresh invites without planId");
+    }
+    const planId = this.planId;
+
+    this.invites$.pipe(
+      take(1),
+      filter(data => data !== undefined),
+      switchMap(({plan, roles}) => this._planInviteService.getAllShiftPlanInvites(planId).pipe(
+        map(invites => ({plan, roles, invites}))
+      ))
+    ).subscribe(data => this.invites$.next(data));
   }
 }

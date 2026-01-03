@@ -6,7 +6,7 @@
       <textarea tabindex="0" class="w-full resize-none active:outline-none p-xs transition-colors border-framing-item bg-background-item focus:outline-none focus:border-framing-highlight" [name]="name" [id]="name"
                 [placeholder]="placeholder" [ngClass]="{
       'focus:border-signature-300' : valid || disabled,
-      'light:focus:border-framing-light-level_2_danger focus:border-framing-level_2_danger' : !valid && !disabled,
+      'focus:border-framing-level_2_danger' : !valid && !disabled,
       'rounded-md text-sm' : size === 'minimal',
       'rounded-lg border-ctr' : size === 'regular',
     }" rows="4" [(ngModel)]="value" (ngModelChange)="onChange ? onChange($event) : 0"
@@ -15,7 +15,7 @@
       <input tabindex="0" class="w-full active:outline-none p-xs transition-colors border-framing-item bg-background-item focus:outline-none focus:border-framing-highlight" [name]="name" [id]="name"
              [placeholder]="placeholder" [ngClass]="{
       'focus:border-signature-300' : valid || disabled,
-      'light:focus:border-framing-light-level_2_danger focus:border-framing-level_2_danger' : !valid && !disabled,
+      'focus:border-framing-level_2_danger' : !valid && !disabled,
       'rounded-md text-sm' : size === 'minimal',
       'rounded-lg border-ctr' : size === 'regular',
     }" [type]="type" [(ngModel)]="value" (ngModelChange)="onChange ? onChange($event) : 0"

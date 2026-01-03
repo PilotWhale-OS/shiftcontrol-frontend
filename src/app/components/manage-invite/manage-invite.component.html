@@ -4,13 +4,13 @@
   <div class="flex flex-row gap-sm items-center">
     @if (invite === undefined){
       <div class="badge success w-fit">
-        <fa-icon [icon]="locationIcon" />
+        <fa-icon [icon]="iconInvite" />
         Create Plan Invite
       </div>
     }
     @else {
       <div class="badge hint w-fit">
-        <fa-icon [icon]="locationIcon" />
+        <fa-icon [icon]="iconInvite" />
         Plan Invite
       </div>
     }
@@ -20,18 +20,130 @@
     @if (invite === undefined) {
       <xsb-input-button content="Create" size="text" (click)="create()" />
     }
+    @else if(invite.active) {
+      <xsb-input-button content="Revoke" size="text" (click)="revoke(invite)" />
+    }
 
   </div>
 
-  <div class="flex flex-col gap-sm">
-    <small><fa-icon [icon]="iconName" class="pr-sm" />Invite Type</small>
-    <xsb-input-select #type [disguise]="invite !== undefined"
-                    [options]="inviteOptions"
-                    [formControl]="form.controls.type"
-                    [xsb-typed]="[type, form.controls.type]"
-                    name="invite-manage-type"
-    />
+  <div class="grid grid-cols-[1fr_1fr] gap-md">
+
+    <!-- show details -->
+    @if (invite !== undefined) {
+
+      <div class="flex flex-col gap-sm">
+        <small><fa-icon [icon]="iconType" class="pr-sm" />Invite Type</small> {{getInviteName(invite)}}
+      </div>
+
+      <div class="flex flex-col gap-sm">
+        <small><fa-icon [icon]="iconRole" class="pr-sm" />Assigned Roles</small> {{getAssignedRolesList(invite)}}
+      </div>
+
+      <div class="flex flex-col gap-sm">
+        <small><fa-icon [icon]="iconExpiry" class="pr-sm" />Expiry</small> {{
+          invite.expiresAt ? (invite.expiresAt | date:'mediumDate') : 'No Expiry'
+        }}
+      </div>
+
+      <div class="flex flex-col gap-sm">
+        <small><fa-icon [icon]="iconLimit" class="pr-sm" />Usage Count Limit</small> {{
+          invite.expiresAt ? (invite.expiresAt | date:'mediumDate') : 'No Usage Count limit'
+        }}
+      </div>
+
+      <div class="flex flex-col gap-sm col-span-2">
+        <small><fa-icon [icon]="iconUrl" class="pr-sm" />Invite Link</small> {{ getInviteLink(invite) }}
+        <xsb-input-button content="Copy Link" size="text" (click)="copyInviteLinkToClipboard(invite)" />
+      </div>
+
+    }
+    @else {
+
+      <!--show form-->
+      <div class="flex flex-col gap-sm">
+        <small><fa-icon [icon]="iconType" class="pr-sm" />Invite Type</small>
+        <xsb-input-select #type
+                          [options]="inviteOptions"
+                          [formControl]="form.controls.type"
+                          [xsb-typed]="[type, form.controls.type]"
+                          name="invite-manage-type"
+        />
+      </div>
+
+      <div class="flex flex-col gap-sm">
+        <small><fa-icon [icon]="iconRole" class="pr-sm" />Assigned Roles</small>
+        <xsb-input-multiselect #roles
+                               [options]="roleOptions" naming="Roles" [previewWholeSelection]="true"
+                               [formControl]="form.controls.roles"
+                               [xsb-typed]="[roles, form.controls.roles]"
+                               name="invite-manage-roles"
+        />
+      </div>
+
+      <div class="flex flex-col gap-sm col-span-2">
+        <small><fa-icon [icon]="iconExpiry" class="pr-sm" />Expiry</small>
+        <div class="flex flex-row gap-sm items-center">
+
+          <xsb-input-toggle #enableExpiry
+                            [formControl]="form.controls.enableExpiry"
+                            [xsb-typed]="[enableExpiry, form.controls.enableExpiry]"
+                            name="invite-manage-enableExpiry"
+          />
+          <label class="grow" for="invite-manage-enableExpiry">Enable Expiry</label>
+
+          <xsb-input-date #expiry name="invite-manage-expiry"
+                          [formControl]="form.controls.expiry"
+                          [xsb-typed]="[expiry, form.controls.expiry]" />
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-sm col-span-2">
+        <small><fa-icon [icon]="iconLimit" class="pr-sm" />Usage Count Limit</small>
+        <div class="flex flex-row gap-sm items-center">
+
+          <xsb-input-toggle #enableMaxUses
+                            [formControl]="form.controls.enableMaxUses"
+                            [xsb-typed]="[enableMaxUses, form.controls.enableMaxUses]"
+                            name="invite-manage-enableMaxUses"
+          />
+          <label class="grow" for="invite-manage-enableMaxUses">Enable Limit</label>
+
+          <xsb-input-number #maxUses name="invite-manage-maxUses"
+                            [formControl]="form.controls.maxUses"
+                            [xsb-typed]="[maxUses, form.controls.maxUses]" />
+        </div>
+      </div>
+    }
+
   </div>
+
+  <!-- badges-->
+  @if (invite !== undefined){
+    <div class="h-full flex gap-sm items-end">
+      @if (invite.active) {
+        <div class="badge w-fit">
+          <fa-icon [icon]="iconActive" />
+          Active
+        </div>
+      }
+      @else {
+        <div class="badge w-fit">
+          <fa-icon [icon]="iconLock" />
+          Expired
+        </div>
+      }
+      <div class="badge w-fit">
+        <fa-icon [icon]="iconDate" />
+        {{invite.createdAt | date:'shortDate'}}
+      </div>
+      <div class="badge w-fit">
+        <fa-icon [icon]="iconCounter" />
+        {{invite.usedCount}} Uses
+      </div>
+    </div>
+  }
+
+
 
 </div>
 

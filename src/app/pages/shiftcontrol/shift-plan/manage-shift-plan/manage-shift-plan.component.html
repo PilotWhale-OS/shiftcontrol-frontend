@@ -55,10 +55,12 @@
 
       <div class="grid gap-md auto-rows-fr grid-cols-[repeat(auto-fit,min(100%,30rem))] grow">
 
-        <app-manage-invite [plan]="inviteData.plan" />
+        <!-- create item-->
+        <app-manage-invite [plan]="inviteData.plan" (inviteChanged)="refreshInvites()" />
 
+        <!-- existing items -->
         @for (invite of inviteData.invites; track invite.createdAt) {
-          <app-manage-invite [plan]="inviteData.plan" [invite]="invite" />
+          <app-manage-invite [plan]="inviteData.plan" [invite]="invite" (inviteChanged)="refreshInvites()" />
         }
       </div>
     </div>

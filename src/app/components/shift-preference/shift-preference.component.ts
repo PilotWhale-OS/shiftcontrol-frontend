@@ -1,6 +1,6 @@
 import {Component, inject} from "@angular/core";
 import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
-import {InputSliderComponent} from "../inputs/input-number/input-slider.component";
+import {InputSliderComponent} from "../inputs/input-slider/input-slider.component";
 import {TypedFormControlDirective} from "../../directives/typed-form-control.directive";
 import {NgClass} from "@angular/common";
 

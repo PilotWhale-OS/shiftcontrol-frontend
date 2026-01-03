@@ -6,7 +6,7 @@
     'text-text-success' : action === 'success',
     'text-default' : action === 'normal',
 
-    'cursor-pointer transition-all opacity-80 hover:opacity-100' : !lock
+    'cursor-pointer transition-all opacity-80 hover:opacity-100 underline' : !lock
   }" (click)="preventDefault($event)" [name]="name" tabindex="0" [value]="content" />
 }
 

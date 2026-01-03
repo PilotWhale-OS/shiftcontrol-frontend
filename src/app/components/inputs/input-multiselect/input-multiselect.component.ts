@@ -37,6 +37,12 @@ export class InputMultiselectComponent<TData> implements TypedControlValueAccess
   options: SelectOptions<TData> = [];
 
   /**
+   * list all selected names in preview instead of count
+   */
+  @Input()
+  previewWholeSelection = false;
+
+  /**
    * border display
    */
   @Input()
@@ -118,7 +124,10 @@ export class InputMultiselectComponent<TData> implements TypedControlValueAccess
    */
   get currentValueName() {
     const opt = this.options.filter(o => this.value?.some(v => v === o.value));
-    return opt.length === 0 ? (this.emptyNaming ?? `No ${this.naming}`) : opt.length === 1 ? opt[0].name : `${opt.length} ${this.naming}`;
+    return opt.length === 0 ?
+      (this.emptyNaming ?? `No ${this.naming}`) :
+      (opt.length === 1 ? opt[0].name :
+        this.previewWholeSelection ? opt.map(o => o.name).join(", ") : `${opt.length} ${this.naming}`);
   }
 
   /**
