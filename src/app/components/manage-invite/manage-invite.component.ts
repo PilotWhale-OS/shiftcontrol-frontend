@@ -11,9 +11,7 @@ import {
   faLink,
   faLock,
   faMessage,
-  faStop,
-  faTag,
-  faUser
+  faStop, faUser
 } from "@fortawesome/free-solid-svg-icons";
 import {TypedFormControlDirective} from "../../directives/typed-form-control.directive";
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
