@@ -1,7 +1,7 @@
 <div class="flex flex-row gap-lg">
 
   <!-- manage details -->
-  <div class="card grid grid-cols-2 gap-y-sm gap-x-xl gap-y-lg w-fit h-fit">
+  <div class="card grid grid-cols-2 gap-x-xl gap-y-lg w-fit h-fit">
 
     <h1 class="col-span-2 signature-gradient-font">Event Details</h1>
 
@@ -52,12 +52,13 @@
                       [xsb-typed]="[endDate, form.controls.endDate]" />
     </div>
 
-    <div class="col-span-2 grid justify-center pt-md">
+    <div class="col-span-2 flex gap-x-lg items-center justify-center pt-md">
       @if (eventId === undefined){
         <xsb-input-button content="Create Event" action="success" (click)="create()" />
       }
       @else {
         <xsb-input-button content="Update Event" action="success" (click)="update()" />
+        <xsb-input-button content="Delete Event" action="danger" (click)="showEventDeleteConfirm = true" />
       }
     </div>
   </div>
@@ -76,3 +77,19 @@
   }
 
 </div>
+
+@if (showEventDeleteConfirm){
+  <xsb-dialog success="Delete Event" (closeDialog)="showEventDeleteConfirm = false; $event === 'success' && delete()">
+    <ng-container dialog-header>
+      <h1>Delete Event</h1>
+    </ng-container>
+
+    <ng-container dialog-body>
+      <p>
+        Are you sure you want to delete this event?<br>
+        This cannot be made undone.<br>
+        All associated data (activities, plans, shifts..) will be deleted.
+      </p>
+    </ng-container>
+  </xsb-dialog>
+}

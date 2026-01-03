@@ -14,6 +14,7 @@ import {PageService} from "../../../../services/page/page.service";
 import {BC_EVENT} from "../../../../breadcrumbs";
 import {AsyncPipe} from "@angular/common";
 import {ManageLocationComponent} from "../../../../components/manage-location/manage-location.component";
+import {DialogComponent} from "../../../../components/dialog/dialog.component";
 
 @Component({
   selector: "app-manage-event",
@@ -25,7 +26,8 @@ import {ManageLocationComponent} from "../../../../components/manage-location/ma
     InputDateComponent,
     InputButtonComponent,
     AsyncPipe,
-    ManageLocationComponent
+    ManageLocationComponent,
+    DialogComponent
   ],
   templateUrl: "./manage-event.component.html",
   styleUrl: "./manage-event.component.scss"
@@ -43,6 +45,8 @@ export class ManageEventComponent {
   protected readonly eventId?: string;
   protected readonly locations$=
     new BehaviorSubject<undefined | { locations: LocationDto[]; event: EventDto }>(undefined);
+
+  protected showEventDeleteConfirm = false;
 
   private readonly _fb = inject(FormBuilder);
   private readonly _eventService = inject(EventEndpointService);
@@ -83,11 +87,10 @@ export class ManageEventComponent {
           map(locations => ({locations, event}))
         ).subscribe(l => this.locations$.next(l));
       });
-
     }
   }
 
-  create(){
+  protected create(){
     if(this.eventId !== undefined) {
       throw new Error("Cannot create in edit mode");
     }
@@ -101,11 +104,11 @@ export class ManageEventComponent {
         longDescription: mapValue.undefinedIfEmptyString(this.form.controls.longDescription.value),
         startTime: mapValue.dateAsLocalDateStartOfDayString(this.form.controls.startDate.value),
         endTime: mapValue.dateAsLocalDateEndOfDayString(this.form.controls.endDate.value)
-      }).subscribe(event => this._router.navigate([`../${event.id}`]));
+      }).subscribe(event => this._router.navigate([`../${event.id}`], {relativeTo: this._route}));
     }
   }
 
-  update(){
+  protected update(){
     if(this.eventId === undefined) {
       throw new Error("Cannot update in create mode");
     }
@@ -123,7 +126,15 @@ export class ManageEventComponent {
     }
   }
 
-  refreshLocations(){
+  protected delete() {
+    if(this.eventId === undefined) {
+      throw new Error("Cannot delete in create mode");
+    }
+
+    this._eventService.deleteEvent(this.eventId).subscribe(() => this._router.navigate(["../"], {relativeTo: this._route}));
+  }
+
+  protected refreshLocations(){
     this.locations$.pipe(
       take(1),
       filter(data => data !== undefined),
