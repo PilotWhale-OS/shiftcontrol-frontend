@@ -2,8 +2,8 @@
 /* eslint-disable */
 /* tslint:disable */
 
-/** Transpiled from NotificationService.Classes.Dto.TestEvent */
-export type TestEvent = {
+/** Transpiled from NotificationService.Classes.Dto.TestEventDto */
+export type TestEventDto = {
     /** Transpiled from string */
     message: string;
 }

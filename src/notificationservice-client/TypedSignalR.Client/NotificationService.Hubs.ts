@@ -3,21 +3,21 @@
 /* tslint:disable */
 // @ts-nocheck
 import type { IStreamResult, Subject } from '@microsoft/signalr';
-import type { TestEvent } from '../NotificationService.Classes.Dto';
+import type { TestEventDto } from '../NotificationService.Classes.Dto';
 
 export type ITestHub = {
     /**
-    * @param testEvent Transpiled from NotificationService.Classes.Dto.TestEvent
-    * @returns Transpiled from System.Threading.Tasks.Task<NotificationService.Classes.Dto.TestEvent>
+    * @param testEventDto Transpiled from NotificationService.Classes.Dto.TestEventDto
+    * @returns Transpiled from System.Threading.Tasks.Task<NotificationService.Classes.Dto.TestEventDto>
     */
-    sendTestEvent(testEvent: TestEvent): Promise<TestEvent>;
+    sendTestEvent(testEventDto: TestEventDto): Promise<TestEventDto>;
 }
 
 export type ITestHubReceiver = {
     /**
-    * @param testEvent Transpiled from NotificationService.Classes.Dto.TestEvent
+    * @param testEventDto Transpiled from NotificationService.Classes.Dto.TestEventDto
     * @returns Transpiled from System.Threading.Tasks.Task
     */
-    testEventReceived(testEvent: TestEvent): Promise<void>;
+    testEventReceived(testEventDto: TestEventDto): Promise<void>;
 }
 

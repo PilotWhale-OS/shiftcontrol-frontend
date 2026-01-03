@@ -4,7 +4,7 @@
 // @ts-nocheck
 import type { HubConnection, IStreamResult, Subject } from '@microsoft/signalr';
 import type { ITestHub, ITestHubReceiver } from './NotificationService.Hubs';
-import type { TestEvent } from '../NotificationService.Classes.Dto';
+import type { TestEventDto } from '../NotificationService.Classes.Dto';
 
 
 // components
@@ -80,8 +80,8 @@ class ITestHub_HubProxy implements ITestHub {
     public constructor(private connection: HubConnection) {
     }
 
-    public readonly sendTestEvent = async (testEvent: TestEvent): Promise<TestEvent> => {
-        return await this.connection.invoke("SendTestEvent", testEvent);
+    public readonly sendTestEvent = async (testEventDto: TestEventDto): Promise<TestEventDto> => {
+        return await this.connection.invoke("SendTestEvent", testEventDto);
     }
 }
 
@@ -97,7 +97,7 @@ class ITestHubReceiver_Binder implements ReceiverRegister<ITestHubReceiver> {
 
     public readonly register = (connection: HubConnection, receiver: ITestHubReceiver): Disposable => {
 
-        const __testEventReceived = (...args: [TestEvent]) => receiver.testEventReceived(...args);
+        const __testEventReceived = (...args: [TestEventDto]) => receiver.testEventReceived(...args);
 
         connection.on("TestEventReceived", __testEventReceived);
 

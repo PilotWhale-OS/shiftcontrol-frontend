@@ -10,7 +10,7 @@ import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {EventEndpointService, EventsDashboardOverviewDto} from "../../../../shiftservice-client";
 import {getHubProxyFactory, getReceiverRegister} from "../../../../notificationservice-client/TypedSignalR.Client";
 import {HubConnectionBuilder} from "@microsoft/signalr";
-import {TestEvent} from "../../../../notificationservice-client/NotificationService.Classes.Dto";
+import {TestEventDto} from "../../../../notificationservice-client/NotificationService.Classes.Dto";
 
 @Component({
   selector: "app-home",
@@ -57,7 +57,7 @@ export class HomeComponent {
         .createHubProxy(connection);
       const subscription = getReceiverRegister("ITestHubReceiver")
         .register(connection, {
-          testEventReceived: async (testEvent: TestEvent) => {
+          testEventReceived: async (testEvent: TestEventDto) => {
             console.log("Received message from hub: ", testEvent);
             subscription.dispose();
           }
