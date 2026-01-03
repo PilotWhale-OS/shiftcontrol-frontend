@@ -56,11 +56,11 @@
       <div class="grid gap-lg grid-cols-[repeat(auto-fit,min(100%,30rem))] grow">
 
         <!-- create item-->
-        <app-manage-invite [plan]="manageData.plan" (inviteChanged)="refreshInvites()" />
+        <app-manage-invite [plan]="manageData.plan" (inviteChanged)="refreshInvites()" [roles]="manageData.roles"  />
 
         <!-- existing items -->
         @for (invite of manageData.invites; track invite.code) {
-          <app-manage-invite [plan]="manageData.plan" [invite]="invite" (inviteChanged)="refreshInvites()" />
+          <app-manage-invite [plan]="manageData.plan" [invite]="invite" [roles]="manageData.roles" (inviteChanged)="refreshInvites()" />
         }
       </div>
     </div>

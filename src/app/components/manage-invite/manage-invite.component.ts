@@ -57,7 +57,7 @@ export class ManageInviteComponent implements OnDestroy {
   protected readonly iconInvite = faMessage;
   protected readonly iconActive = faCertificate;
   protected readonly iconType = faUser;
-  protected readonly iconRole = faTag;
+  protected readonly iconRole = faHashtag;
   protected readonly iconExpiry = faClock;
   protected readonly iconLimit = faStop;
   protected readonly iconLock = faLock;
