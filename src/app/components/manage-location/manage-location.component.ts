@@ -1,9 +1,7 @@
 import {Component, EventEmitter, inject, Input, Output} from "@angular/core";
 import {
   EventDto,
-  LocationCollectionEndpointService,
-  LocationDto,
-  LocationItemEndpointService,
+  LocationDto, LocationEndpointService,
   LocationModificationDto
 } from "../../../shiftservice-client";
 import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
@@ -49,8 +47,7 @@ export class ManageLocationComponent {
   protected showDeleteConfirm = false;
 
   private readonly _fb = inject(FormBuilder);
-  private readonly locationItemService = inject(LocationItemEndpointService);
-  private readonly locationCollectionService = inject(LocationCollectionEndpointService);
+  private readonly _locationService = inject(LocationEndpointService);
 
   constructor() {
     this.form = this._fb.group({
@@ -94,8 +91,8 @@ export class ManageLocationComponent {
     };
 
     (this._location === undefined ?
-      this.locationCollectionService.createLocation(event.id, locationData) :
-      this.locationItemService.updateLocation(this._location.id, locationData)
+      this._locationService.createLocation(event.id, locationData) :
+      this._locationService.updateLocation(this._location.id, locationData)
     ).subscribe(() => {
       console.log("Location saved successfully.");
       this.locationChanged.emit();
@@ -111,7 +108,7 @@ export class ManageLocationComponent {
       throw new Error("Could not delete location in create mode");
     }
 
-    this.locationItemService.deleteLocation(this._location.id).subscribe(() =>{
+    this._locationService.deleteLocation(this._location.id).subscribe(() =>{
       console.log("Location deleted successfully.");
       this.locationChanged.emit();
     });

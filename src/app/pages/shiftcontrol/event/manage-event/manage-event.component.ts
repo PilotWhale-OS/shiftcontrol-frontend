@@ -6,7 +6,7 @@ import {faBackward, faBook, faCircleInfo, faForward, faTag} from "@fortawesome/f
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {InputDateComponent} from "../../../../components/inputs/input-date/input-date.component";
 import {InputButtonComponent} from "../../../../components/inputs/input-button/input-button.component";
-import {EventDto, EventEndpointService, LocationCollectionEndpointService, LocationDto} from "../../../../../shiftservice-client";
+import {EventDto, EventEndpointService, LocationDto, LocationEndpointService} from "../../../../../shiftservice-client";
 import {mapValue} from "../../../../util/value-maps";
 import {ActivatedRoute, Router} from "@angular/router";
 import {BehaviorSubject, filter, map, switchMap, take} from "rxjs";
@@ -50,7 +50,7 @@ export class ManageEventComponent {
 
   private readonly _fb = inject(FormBuilder);
   private readonly _eventService = inject(EventEndpointService);
-  private readonly _locationsService = inject(LocationCollectionEndpointService);
+  private readonly _locationsService = inject(LocationEndpointService);
   private readonly _route = inject(ActivatedRoute);
   private readonly _router = inject(Router);
   private readonly _pageService = inject(PageService);

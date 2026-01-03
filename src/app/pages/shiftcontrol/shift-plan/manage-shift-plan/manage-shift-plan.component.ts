@@ -6,9 +6,9 @@ import {PageService} from "../../../../services/page/page.service";
 import {BC_EVENT, BC_PLAN_DASHBOARD} from "../../../../breadcrumbs";
 import {
   EventEndpointService,
-  RoleDto, RoleEndpointService, ShiftPlanCollectionEndpointService,
+  RoleDto, RoleEndpointService,
   ShiftPlanDto,
-  ShiftPlanInviteDto, ShiftPlanInviteEndpointService, ShiftPlanItemEndpointService,
+  ShiftPlanInviteDto, ShiftPlanInviteEndpointService,
 } from "../../../../../shiftservice-client";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {InputButtonComponent} from "../../../../components/inputs/input-button/input-button.component";
@@ -56,8 +56,6 @@ export class ManageShiftPlanComponent {
   private readonly _router = inject(Router);
   private readonly _pageService = inject(PageService);
   private readonly _eventService = inject(EventEndpointService);
-  private readonly _planCollectionService = inject(ShiftPlanCollectionEndpointService);
-  private readonly _planItemService = inject(ShiftPlanItemEndpointService);
   private readonly _planService = inject(ShiftPlanEndpointService);
   private readonly _planInviteService = inject(ShiftPlanInviteEndpointService);
   private readonly _roleService = inject(RoleEndpointService);
@@ -118,7 +116,7 @@ export class ManageShiftPlanComponent {
     this.form.markAllAsTouched();
 
     if(this.form.valid) {
-      this._planCollectionService.createShiftPlan(this.eventId, {
+      this._planService.createShiftPlan(this.eventId, {
         name: this.form.controls.name.value,
         shortDescription: this.form.controls.shortDescription.value,
         longDescription: this.form.controls.longDescription.value
@@ -135,7 +133,7 @@ export class ManageShiftPlanComponent {
       throw new Error("Cannot delete plan without planId or eventId");
     }
 
-    this._planItemService.deleteShiftPlan(this.planId).subscribe({
+    this._planService.deleteShiftPlan(this.planId).subscribe({
       next: () => {
         this._router.navigateByUrl(`/events/${this.eventId}`);
       }
@@ -150,7 +148,7 @@ export class ManageShiftPlanComponent {
     this.form.markAllAsTouched();
 
     if(this.form.valid) {
-      this._planItemService.updateShiftPlan(this.planId, {
+      this._planService.updateShiftPlan(this.planId, {
         name: this.form.controls.name.value,
         shortDescription: this.form.controls.shortDescription.value,
         longDescription: this.form.controls.longDescription.value

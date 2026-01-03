@@ -6,7 +6,7 @@ import {ShiftTradeAuctionComponent} from "../../../components/shift-trade-auctio
 import {ShiftScheduleComponent, shiftWithOrigin} from "../../../components/shift-schedule/shift-schedule.component";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {faBarsProgress, faCalendar, faCalendarDays, faGift, faHourglass, faPeopleGroup, faShuffle} from "@fortawesome/free-solid-svg-icons";
-import {ShiftPlanDashboardOverviewDto, ShiftPlanItemEndpointService} from "../../../../shiftservice-client";
+import {ShiftPlanDashboardOverviewDto, ShiftPlanEndpointService} from "../../../../shiftservice-client";
 import {map, Observable, tap} from "rxjs";
 import {AsyncPipe, DatePipe, DecimalPipe} from "@angular/common";
 import {TooltipDirective} from "../../../directives/tooltip.directive";
@@ -44,7 +44,7 @@ export class ShiftPlanComponent {
   private readonly _route = inject(ActivatedRoute);
   private readonly _router = inject(Router);
   private readonly _pageService = inject(PageService);
-  private readonly _planService = inject(ShiftPlanItemEndpointService);
+  private readonly _planService = inject(ShiftPlanEndpointService);
 
   constructor() {
     const shiftPlanId = this._route.snapshot.paramMap.get("shiftPlanId");

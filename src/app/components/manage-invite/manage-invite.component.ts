@@ -1,17 +1,15 @@
-import {Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output} from "@angular/core";
+import {Component, EventEmitter, inject, Input, OnDestroy, Output} from "@angular/core";
 import {
-  RoleDto, ShiftPlanDto, ShiftPlanInviteCreateRequestDto, ShiftPlanInviteDto
+  RoleDto, ShiftPlanDto, ShiftPlanInviteCreateRequestDto, ShiftPlanInviteDto, ShiftPlanInviteEndpointService
 } from "../../../shiftservice-client";
 import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {
   faCalendarDay,
   faCertificate,
-  faCircleInfo,
   faClock, faHashtag,
   faLink,
   faLock,
-  faMapMarker,
   faMessage,
   faStop,
   faTag,
@@ -21,7 +19,6 @@ import {TypedFormControlDirective} from "../../directives/typed-form-control.dir
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
 import {DatePipe, NgClass} from "@angular/common";
 import {InputSelectComponent, SelectOptions} from "../inputs/input-select/input-select.component";
-import {ShiftPlanEndpointService} from "../../../shiftservice-client/api/shift-plan-endpoint.service";
 import {InputMultiselectComponent} from "../inputs/input-multiselect/input-multiselect.component";
 import {InputToggleComponent} from "../inputs/input-toggle/input-toggle.component";
 import {InputDateComponent} from "../inputs/input-date/input-date.component";
@@ -76,7 +73,7 @@ export class ManageInviteComponent implements OnDestroy {
   protected roleOptions: SelectOptions<string> = [];
 
   private readonly _fb = inject(FormBuilder);
-  private readonly _planService = inject(ShiftPlanEndpointService);
+  private readonly _inviteService = inject(ShiftPlanInviteEndpointService);
 
   private readonly _expiryEnabledSubscription?: Subscription;
   private readonly _maxUsesEnabledSubscription?: Subscription;
@@ -169,14 +166,14 @@ export class ManageInviteComponent implements OnDestroy {
         this.form.controls.roles.value : undefined
     };
 
-    this._planService.createShiftPlanInvite(plan.id, createData).subscribe(invite => {
+    this._inviteService.createShiftPlanInvite(plan.id, createData).subscribe(invite => {
       console.log(invite);
       this.inviteChanged.emit();
     });
   }
 
   protected revoke(invite: ShiftPlanInviteDto) {
-    this._planService.revokeShiftPlanInvite(invite.code).subscribe(() => {
+    this._inviteService.revokeShiftPlanInvite(invite.code).subscribe(() => {
       console.log(invite);
       this.inviteChanged.emit();
     });
