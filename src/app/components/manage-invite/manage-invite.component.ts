@@ -162,8 +162,7 @@ export class ManageInviteComponent implements OnDestroy {
         this.form.controls.expiry.value.toISOString() : undefined,
       maxUses: this.form.controls.enableMaxUses.value ?
         this.form.controls.maxUses.value : undefined,
-      autoAssignRoleIds: this.form.controls.roles.value.length > 0 ?
-        this.form.controls.roles.value : undefined
+      autoAssignRoleIds: this.form.controls.roles.value
     };
 
     this._inviteService.createShiftPlanInvite(plan.id, createData).subscribe(invite => {
