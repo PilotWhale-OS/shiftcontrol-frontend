@@ -47,6 +47,23 @@
     </div>
   </div>
 
+  <!-- manage invites -->
+  @if (invites$ | async; as inviteData) {
+
+    <div class="flex card flex-col grow w-fit gap-lg h-fit">
+      <h1 style="grid-column: 1 / -1" class="row-start-1 signature-gradient-font">Shift Plan Invites</h1>
+
+      <div class="grid gap-md auto-rows-fr grid-cols-[repeat(auto-fit,min(100%,30rem))] grow">
+
+        <app-manage-invite [plan]="inviteData.plan" />
+
+        @for (invite of inviteData.invites; track invite.createdAt) {
+          <app-manage-invite [plan]="inviteData.plan" [invite]="invite" />
+        }
+      </div>
+    </div>
+  }
+
 </div>
 
 

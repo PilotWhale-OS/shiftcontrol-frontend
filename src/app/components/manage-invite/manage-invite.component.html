@@ -1,0 +1,38 @@
+<div class="card flex flex-col gap-lg h-full" [style.order]="getOrder()" [ngClass]="{
+  'success': invite === undefined,
+}">
+  <div class="flex flex-row gap-sm items-center">
+    @if (invite === undefined){
+      <div class="badge success w-fit">
+        <fa-icon [icon]="locationIcon" />
+        Create Plan Invite
+      </div>
+    }
+    @else {
+      <div class="badge hint w-fit">
+        <fa-icon [icon]="locationIcon" />
+        Plan Invite
+      </div>
+    }
+
+    <span class="grow"></span>
+
+    @if (invite === undefined) {
+      <xsb-input-button content="Create" size="text" (click)="create()" />
+    }
+
+  </div>
+
+  <div class="flex flex-col gap-sm">
+    <small><fa-icon [icon]="iconName" class="pr-sm" />Invite Type</small>
+    <xsb-input-select #type [disguise]="invite !== undefined"
+                    [options]="inviteOptions"
+                    [formControl]="form.controls.type"
+                    [xsb-typed]="[type, form.controls.type]"
+                    name="invite-manage-type"
+    />
+  </div>
+
+</div>
+
+

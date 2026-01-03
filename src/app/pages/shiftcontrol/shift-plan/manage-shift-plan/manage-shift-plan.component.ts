@@ -4,13 +4,22 @@ import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {PageService} from "../../../../services/page/page.service";
 import {BC_EVENT, BC_PLAN_DASHBOARD} from "../../../../breadcrumbs";
-import {EventEndpointService, ShiftPlanCollectionEndpointService, ShiftPlanItemEndpointService} from "../../../../../shiftservice-client";
+import {
+  EventEndpointService, RoleDto, RoleEndpointService,
+  ShiftPlanCollectionEndpointService, ShiftPlanDto,
+  ShiftPlanInviteDto, ShiftPlanInviteEndpointService,
+  ShiftPlanItemEndpointService
+} from "../../../../../shiftservice-client";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {InputButtonComponent} from "../../../../components/inputs/input-button/input-button.component";
 import {InputTextComponent} from "../../../../components/inputs/input-text/input-text.component";
 import {TypedFormControlDirective} from "../../../../directives/typed-form-control.directive";
 import {ShiftPlanEndpointService} from "../../../../../shiftservice-client/api/shift-plan-endpoint.service";
 import {DialogComponent} from "../../../../components/dialog/dialog.component";
+import {AsyncPipe} from "@angular/common";
+import {ManageLocationComponent} from "../../../../components/manage-location/manage-location.component";
+import {BehaviorSubject, combineLatestWith} from "rxjs";
+import {ManageInviteComponent} from "../../../../components/manage-invite/manage-invite.component";
 
 @Component({
   selector: "app-manage-shift-plan",
@@ -20,7 +29,9 @@ import {DialogComponent} from "../../../../components/dialog/dialog.component";
     InputTextComponent,
     ReactiveFormsModule,
     TypedFormControlDirective,
-    DialogComponent
+    DialogComponent,
+    AsyncPipe,
+    ManageInviteComponent
   ],
   templateUrl: "./manage-shift-plan.component.html",
   styleUrl: "./manage-shift-plan.component.scss"
@@ -33,6 +44,8 @@ export class ManageShiftPlanComponent {
   protected readonly iconCaption = faCircleInfo;
   protected readonly iconDescription = faBook;
 
+   protected readonly invites$ =
+     new BehaviorSubject<undefined | { plan: ShiftPlanDto; roles: RoleDto[]; invites: ShiftPlanInviteDto[] }>(undefined);
   protected readonly planId?: string;
   protected eventId?: string;
 
@@ -46,6 +59,8 @@ export class ManageShiftPlanComponent {
   private readonly _planCollectionService = inject(ShiftPlanCollectionEndpointService);
   private readonly _planItemService = inject(ShiftPlanItemEndpointService);
   private readonly _planService = inject(ShiftPlanEndpointService);
+  private readonly _planInviteService = inject(ShiftPlanInviteEndpointService);
+  private readonly _roleService = inject(RoleEndpointService);
 
   constructor() {
     this.form = this._fb.group({
@@ -60,6 +75,8 @@ export class ManageShiftPlanComponent {
     this.eventId = eventId;
 
     if(planId !== undefined) {
+
+      /* fetch plan for page details and form values */
       this._planService.getShiftPlanDashboard(planId).subscribe(dashboard => {
         this._pageService
           .configurePageName(`${dashboard.shiftPlan.name}`)
@@ -73,6 +90,15 @@ export class ManageShiftPlanComponent {
         });
 
         this.eventId = dashboard.eventOverview.id;
+
+        /* build invite data */
+        this._planInviteService.listShiftPlanInvites(planId).pipe(
+          combineLatestWith(this._roleService.getRoles(planId))
+        ).subscribe(([invites, roles]) => {
+          this.invites$.next(
+            {plan: dashboard.shiftPlan, invites, roles}
+          );
+        });
       });
     } else if(eventId !== undefined) {
       this._eventService.getEventById(eventId).subscribe((event) => {
@@ -82,7 +108,6 @@ export class ManageShiftPlanComponent {
     } else {
       throw new Error("Either planId or eventId must be provided in the route parameters");
     }
-
   }
 
   protected create() {

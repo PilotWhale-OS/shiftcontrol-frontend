@@ -66,13 +66,17 @@
   <!-- manage locations -->
   @if (locations$ | async; as locationData) {
 
-    <div class="grid gap-md auto-rows-fr grid-cols-[repeat(auto-fit,min(100%,30rem))] grow h-fit">
-      <app-manage-location [event]="locationData.event" (locationChanged)="refreshLocations()" />
+    <div class="flex card h-fit flex-col grow w-fit gap-lg">
+      <h1 style="grid-column: 1 / -1" class="row-start-1 signature-gradient-font">Event Locations</h1>
 
-      @for (location of locationData.locations; track location.id) {
-        <app-manage-location [location]="location" [event]="locationData.event" (locationChanged)="refreshLocations()" />
-      }
+      <div class="grid gap-md auto-rows-fr grid-cols-[repeat(auto-fit,min(100%,30rem))] grow">
 
+        <app-manage-location [event]="locationData.event" (locationChanged)="refreshLocations()" />
+
+        @for (location of locationData.locations; track location.id) {
+          <app-manage-location [location]="location" [event]="locationData.event" (locationChanged)="refreshLocations()" />
+        }
+      </div>
     </div>
   }
 

@@ -44,6 +44,14 @@
         @apply border-framing-highlight_hint;
       }
     }
+
+    &.success {
+      @apply border-framing-item_success bg-background-item_success;
+
+      &:hover {
+        @apply border-framing-highlight_success;
+      }
+    }
   }
 }
 
