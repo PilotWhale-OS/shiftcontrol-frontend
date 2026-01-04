@@ -7,7 +7,7 @@
     <div class="card grid grid-columns-2 gap-lg">
 
       <!-- info caption -->
-      <small>Plan Overview</small>
+      <h1 class="signature-gradient-font compact">Plan Overview</h1>
       <div class="badge w-fit justify-self-end"
            tooltipMaxWidth="30ex"
            [app-tooltip]="'Event dates of ' + dashboard.eventOverview.name"
@@ -17,9 +17,6 @@
       </div>
 
       <!-- properties -->
-      <h1 class="col-span-2 compact signature-gradient-font">
-        {{dashboard.shiftPlan.name}}
-      </h1>
       <p class="col-span-2 whitespace-pre-wrap">
         {{dashboard.shiftPlan.longDescription}}
       </p>
