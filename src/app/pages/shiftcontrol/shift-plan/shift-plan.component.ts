@@ -48,7 +48,7 @@ export class ShiftPlanComponent {
   private readonly _userService = inject(UserService);
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
-  protected readonly canManagePlan$ = this._userService.canManagePlan$;
+  protected readonly canManagePlan$ = this._userService.canManagePlan$.bind(this._userService);
 
   constructor() {
     const shiftPlanId = this._route.snapshot.paramMap.get("shiftPlanId");

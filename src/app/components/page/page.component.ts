@@ -4,6 +4,7 @@ import {AsyncPipe} from "@angular/common";
 import {RouterLink} from "@angular/router";
 import {UserService} from "../../services/user/user.service";
 import {KeycloakProfile} from "keycloak-js";
+import {map} from "rxjs";
 
 @Component({
   selector: "app-page",
@@ -19,13 +20,14 @@ export class PageComponent {
   private readonly _pageService = inject(PageService);
   private readonly _userService = inject(UserService);
 
-
-  public get breadcrumbs() {
-    return this._pageService.breadcrumbs?.getPath() ?? [];
+  public get breadcrumbs$() {
+    return this._pageService.breadcrumbs$.pipe(
+      map(crumb => crumb?.getPath() ?? [])
+    );
   }
 
-  public get pageName() {
-    return this._pageService.pageName;
+  public get pageName$() {
+    return this._pageService.pageName$;
   }
 
   public get profile$() {

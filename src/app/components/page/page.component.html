@@ -6,7 +6,7 @@
     <!-- breadcrumb navigation items -->
     <div class="breadcrumbs">
 
-      @for (crumb of breadcrumbs; track crumb; let i = $index) {
+      @for (crumb of (breadcrumbs$ | async); track crumb; let i = $index) {
         <div class="breadcrumb" [routerLink]="crumb.getFullHref()">
           {{crumb.name}}
         </div>
@@ -16,7 +16,7 @@
 
     <!-- header in the middle -->
     <div class="title signature-gradient-font">
-      <h1 class="compact">{{pageName}}</h1>
+      <h1 class="compact">{{pageName$ | async}}</h1>
     </div>
 
     <!-- quick links at the right side -->

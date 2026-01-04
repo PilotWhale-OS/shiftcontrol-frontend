@@ -1,27 +1,25 @@
 import { Injectable } from "@angular/core";
 
 import {Breadcrumb} from "../../util/breadcrumb";
+import {BehaviorSubject} from "rxjs";
 
 @Injectable({
   providedIn: "root"
 })
 export class PageService {
 
-  private _breadcrumbs?: Breadcrumb = undefined;
-  private _pageName?: string = undefined;
+  private _breadcrumbs$ = new BehaviorSubject<Breadcrumb | undefined>(undefined);
+  private _pageName$ = new BehaviorSubject<string | undefined>(undefined);
 
-  /**
-   * Get the currently registered breadcrumbs
-   */
-  public get breadcrumbs() {
-    return this._breadcrumbs;
+  public get breadcrumbs$() {
+    return this._breadcrumbs$.asObservable();
   }
 
   /**
    * Get the current page name
    */
-  public get pageName() {
-    return this._pageName;
+  public get pageName$() {
+    return this._pageName$.asObservable();
   }
 
   /**
@@ -29,8 +27,8 @@ export class PageService {
    * @param breadcrumb
    */
   public withBreadcrumbs(breadcrumb?: Breadcrumb): PageService {
-    this._breadcrumbs = breadcrumb?.clone();
-    this._pageName = breadcrumb?.name ?? "ShiftService";
+    this._breadcrumbs$.next(breadcrumb?.clone());
+    this._pageName$.next(breadcrumb?.name ?? "ShiftService");
     return this;
   }
 
@@ -41,7 +39,8 @@ export class PageService {
    * @param href
    */
   public configureBreadcrumb(breadcrumb: Breadcrumb, name: string, href: string): PageService {
-    let traverse= this._breadcrumbs;
+    const crumbs = this._breadcrumbs$.getValue();
+    let traverse= crumbs;
     while (traverse !== undefined) {
       if(traverse.id === breadcrumb.id) {
         traverse.name = name;
@@ -51,11 +50,12 @@ export class PageService {
       traverse = traverse.parent;
     }
 
+    this._breadcrumbs$.next(crumbs);
     return this;
   }
 
   public configurePageName(name: string): PageService {
-    this._pageName = name;
+    this._pageName$.next(name);
     return this;
   }
 }
