@@ -79,8 +79,10 @@
         <!-- venue clickable area -->
         @if (config.emptySpaceClickCallback !== undefined) {
           <div
+            tabindex="0"
             #flow
             class="venue-flow"
+            (keydown)="flow.click()"
             (click)="config.emptySpaceClickCallback(getDateOfClickY(flow, $event, config), venue.location)"
             style="grid-row: 2/2; grid-column: venue-{{venue.location.id}}-start / venue-{{venue.location.id}}-end"
           ></div>
@@ -113,6 +115,8 @@
           <!-- activities -->
           @for (activityItem of schedule.activities; track activityItem.activity.id) {
             <div
+              tabindex="-1"
+              (keydown)="0"
               [ngClass]="config.activityClickCallback !== undefined ? 'item-primary' : 'item-secondary'"
               (click)="config.activityClickCallback !== undefined ? config.activityClickCallback(activityItem.activity) : 0"
               style="grid-row: 2/2; grid-column: venue-{{activityItem.location.id}}-activity-start / venue-{{activityItem.location.id}}-end"

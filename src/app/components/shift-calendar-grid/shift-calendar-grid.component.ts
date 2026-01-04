@@ -1,4 +1,4 @@
-import {Component, ElementRef, Output, viewChild} from "@angular/core";
+import {Component, ElementRef, viewChild} from "@angular/core";
 import {DialogComponent} from "../dialog/dialog.component";
 import {ShiftDetailsViewComponent} from "../shift-details-view/shift-details-view.component";
 import {faCalendarDay, faFilter, faLocationDot} from "@fortawesome/free-solid-svg-icons";
