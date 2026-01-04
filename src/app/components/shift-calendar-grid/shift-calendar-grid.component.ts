@@ -1,10 +1,10 @@
-import {Component, ElementRef, viewChild} from "@angular/core";
+import {Component, ElementRef, Output, viewChild} from "@angular/core";
 import {DialogComponent} from "../dialog/dialog.component";
 import {ShiftDetailsViewComponent} from "../shift-details-view/shift-details-view.component";
 import {faCalendarDay, faFilter, faLocationDot} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {
-  ActivityDto,
+  ActivityDto, LocationDto,
   PositionSlotDto,
   ScheduleLayoutDto,
   ShiftDto,
@@ -35,6 +35,10 @@ export interface calendarConfig {
   startDate: Date;
   endDate: Date;
   locationLayouts: ScheduleLayoutDto[];
+  activityWidth?: string;
+  hideFilterToggle?: boolean;
+  emptySpaceClickCallback?: (date: Date, location: LocationDto) => void;
+  activityClickCallback?: (activity: ActivityDto) => void;
 }
 
 /**
@@ -260,6 +264,13 @@ export class ShiftCalendarGridComponent {
   }
 
   /**
+   * Clear all loaded schedule days
+   */
+  public clearLoadedDays() {
+    this.loadedDays$.next(new Map());
+  }
+
+  /**
    * Set the calendar configuration,
    * clearing any previously loaded days
    * @param config
@@ -338,6 +349,22 @@ export class ShiftCalendarGridComponent {
   }
 
   /**
+   * Get the Date object for a click event Y position based on the calendar config
+   * @param container
+   * @param event
+   * @param config
+   * @protected
+   */
+  protected getDateOfClickY(container: HTMLDivElement, event: MouseEvent, config: calendarAdjustedConfig) {
+    const rect = container.getBoundingClientRect();
+    const clickY = event.clientY - rect.top + container.scrollTop;
+    const totalHeight = container.scrollHeight;
+    const clickPercent = clickY / totalHeight;
+    const clickTime = (config.adjustedEndDate.getTime() - config.adjustedStartDate.getTime()) * clickPercent;
+    return new Date(config.adjustedStartDate.getTime() + clickTime);
+  }
+
+  /**
    * Get the Date object for a given hour index based on the calendar config
    * @param hourIndex
    * @param config
@@ -369,7 +396,7 @@ export class ShiftCalendarGridComponent {
       }).map(locationColumn => {
         const locationName = locationColumn.location.id;
         return `venue-${locationName}-start venue-${locationName}-activity-start] ${
-          this.activityWidth
+          config.activityWidth ?? this.activityWidth
         } [venue-${locationName}-activity-end venue-${locationName}-shift-start ${
           Array(locationColumn.requiredShiftColumns).fill(undefined).map((_, index) =>
             `venue-${locationName}-shift-col-${index + 1}-start] ${
@@ -442,14 +469,6 @@ export class ShiftCalendarGridComponent {
     }
 
     return "";
-  }
-
-  protected addTimezoneOffset(date: Date | null) {
-    if(date === null) {
-      return null;
-    }
-    const timezoneOffset = date.getTimezoneOffset() * -60000;
-    return new Date(date.getTime() + timezoneOffset);
   }
 
   private getScrolledDate(container: HTMLDivElement, config: calendarAdjustedConfig) {

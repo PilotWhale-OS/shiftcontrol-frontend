@@ -1,0 +1,90 @@
+  @if(manageData$ | async; as data) {
+    <!-- manage details -->
+    <div class="grid grid-cols-2 gap-x-xl gap-y-lg w-fit h-fit">
+
+      <div class="flex flex-col gap-sm col-start-1 row-start-2">
+        <small><fa-icon [icon]="iconName" class="pr-sm" />Activity Name</small>
+        <label for="activity-manage-name">Expressive name for the activity</label>
+        <xsb-input-text #name
+                        [formControl]="form.controls.name"
+                        [xsb-typed]="[name, form.controls.name]"
+                        name="activity-manage-name" placeholder="Activity name"
+        />
+      </div>
+
+      <div class="flex flex-col gap-sm col-start-2 row-start-2">
+        <small><fa-icon [icon]="iconCaption" class="pr-sm" />Caption</small>
+        <label for="activity-manage-description">Description, shown ??? nowhere yet TODO</label>
+        <xsb-input-text #description
+                        [formControl]="form.controls.description"
+                        [xsb-typed]="[description, form.controls.description]"
+                        name="activity-manage-description" placeholder="Activity description"
+        />
+      </div>
+
+      <div class="flex flex-col gap-sm col-start-1 row-start-3">
+        <small><fa-icon [icon]="iconStartDate" class="pr-sm" />Activity Start</small>
+        <label for="activity-manage-from">Start time, in your timezone</label>
+
+        <div class="flex flex-row gap-sm">
+          <xsb-input-date #startDate name="activity-manage-from"
+                          [formControl]="form.controls.startDate"
+                          [xsb-typed]="[startDate, form.controls.startDate]" />
+          <xsb-input-time #startTime name="activity-manage-from-time"
+                          [formControl]="form.controls.startTime"
+                          [xsb-typed]="[startTime, form.controls.startTime]" />
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-sm col-start-2 row-start-3">
+        <small><fa-icon [icon]="iconEndDate" class="pr-sm" />Activity End</small>
+        <label for="activity-manage-to">End time, in your timezone </label>
+
+        <div class="flex flex-row gap-sm">
+          <xsb-input-date #endDate name="activity-manage-to"
+                          [formControl]="form.controls.endDate"
+                          [xsb-typed]="[endDate, form.controls.endDate]" />
+          <xsb-input-time #endTime name="activity-manage-to-time"
+                          [formControl]="form.controls.endTime"
+                          [xsb-typed]="[endTime, form.controls.endTime]" />
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-sm col-start-1 row-start-4 col-span-2">
+        <small><fa-icon [icon]="iconLocation" class="pr-sm" />Location</small>
+        <label for="activity-manage-to">Location where the activity takes place</label>
+        <xsb-input-select #location name="activity-manage-location"
+                          [nullable]="true" nullName="No Location"
+                        [formControl]="form.controls.location"
+                        [options]="data.availableLocations"
+                        [xsb-typed]="[location, form.controls.location]"
+        />
+      </div>
+
+      <div class="col-span-2 row-start-5 flex gap-x-lg items-center justify-center pt-md">
+        @if (data.activity === undefined){
+          <xsb-input-button content="Create Activity" action="success" (click)="create(data.eventId)" />
+        }
+        @else {
+          <xsb-input-button content="Update Activity" action="success" (click)="update(data.activity)" />
+          <xsb-input-button content="Delete Activity" action="danger" (click)="showActivityDeleteConfirm = true" />
+        }
+      </div>
+    </div>
+
+    @if (showActivityDeleteConfirm && data.activity !== undefined){
+      <xsb-dialog action="danger" danger="Delete Activity" (closeDialog)="showActivityDeleteConfirm = false; $event === 'danger' && delete(data.activity)">
+        <ng-container dialog-header>
+          <h1>Delete Activity</h1>
+        </ng-container>
+
+        <ng-container dialog-body>
+          <p>
+            Are you sure you want to delete this activity?<br>
+            This cannot be made undone.<br>
+            Associated shifts will not be deleted.
+          </p>
+        </ng-container>
+      </xsb-dialog>
+    }
+  }

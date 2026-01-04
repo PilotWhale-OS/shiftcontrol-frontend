@@ -6,6 +6,7 @@ import {InputDateComponent} from "../inputs/input-date/input-date.component";
 import {TypedFormControlDirective} from "../../directives/typed-form-control.directive";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {InputTimeComponent, time} from "../inputs/input-time/input-time.component";
+import {mapValue} from "../../util/value-maps";
 
 export interface addUnavailabilityInput {
   start?: Date;
@@ -92,23 +93,13 @@ export class DialogAddUnavailabilityComponent {
   closed(result: dialogResult) {
     if (result === "success") {
       const values = this.form.value;
-
-      const start = values.unavailabilityFrom ? new Date(values.unavailabilityFrom.getTime()) : undefined;
-      const fromTime = values.unavailabilityFromTime;
-      if(start !== undefined && fromTime !== undefined) {
-        start.setHours(fromTime.hour, fromTime.minute, 0, 0);
-      }
-
-      const end = values.unavailabilityUntil ? new Date(values.unavailabilityUntil.getTime()) : undefined;
-      const untilTime = values.unavailabilityUntilTime;
-      if(end !== undefined && untilTime !== undefined) {
-        end.setHours(untilTime.hour, untilTime.minute, 0, 0);
-      }
+      const datetimeFrom = mapValue.combineDateAndLocalTime(values.unavailabilityFrom, values.unavailabilityFromTime);
+      const datetimeUntil = mapValue.combineDateAndLocalTime(values.unavailabilityUntil, values.unavailabilityUntilTime);
 
       /* disabled controls are automatically undefined */
       this.result.emit({
-        start,
-        end
+        start: datetimeFrom,
+        end: datetimeUntil
       });
 
       this.form.reset();

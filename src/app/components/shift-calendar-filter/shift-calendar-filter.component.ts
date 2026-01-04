@@ -32,6 +32,12 @@ export enum ShiftCalendarViewMode {
 export class ShiftCalendarFilterComponent {
 
   @Input()
+  public showFilters = false;
+
+  @Input()
+  public showFilterForm = true;
+
+  @Input()
   public statistics?: ScheduleStatisticsDto;
 
   @Input()
@@ -50,8 +56,6 @@ export class ShiftCalendarFilterComponent {
   ];
   public readonly searchForm;
   public readonly viewForm;
-
-  public showFilters = false;
 
   protected iconView = faEye;
 

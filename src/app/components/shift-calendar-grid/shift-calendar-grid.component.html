@@ -7,7 +7,7 @@
 
     <!-- calendar grid: x -> grid columns, scrollable venues; y: continuous big row, time axis, growing by date range, position by top -->
     <div
-      class="relative grid gap-md gap-y-0 "
+      class="relative grid gap-md gap-y-0"
       [style.grid-template-columns]="getGridColumns(config)"
       [style.grid-template-rows]="'auto ' + getMinuteHeight(getHours(config).length * 60)"
     >
@@ -21,7 +21,9 @@
 
       <!-- filter side -->
       <div style="grid-row: 1 / 1; grid-column: filter-start / filter-end" class="filter">
-        <xsb-input-button [icon]="iconFilter" size="minimal" content="Filter" (click)="filterToggleClicked()" />
+        @if(config.hideFilterToggle !== true) {
+          <xsb-input-button [icon]="iconFilter" size="minimal" content="Filter" (click)="filterToggleClicked()" />
+        }
       </div>
 
       <div class="absolute hidden">
@@ -73,6 +75,16 @@
           class="venue-gap"
           style="grid-column: venue-{{venue.location.id}}-gap-start / venue-{{venue.location.id}}-gap-end; grid-row: 1/-1;"
         ></div>
+
+        <!-- venue clickable area -->
+        @if (config.emptySpaceClickCallback !== undefined) {
+          <div
+            #flow
+            class="venue-flow"
+            (click)="config.emptySpaceClickCallback(getDateOfClickY(flow, $event, config), venue.location)"
+            style="grid-row: 2/2; grid-column: venue-{{venue.location.id}}-start / venue-{{venue.location.id}}-end"
+          ></div>
+        }
       }
 
       <!-- venue data -->
@@ -84,7 +96,7 @@
               (click)="viewShift = true"
               (keyup)="viewShift = true"
               tabindex="0"
-              class="shift"
+              class="item-primary"
               [ngClass]="getShiftDisplayCategory(shiftItem.shift.shiftDto)"
               style="grid-row: 2/2; grid-column: venue-{{shiftItem.location.id}}-shift-col-{{shiftItem.shift.columnIndex + 1}}-start / venue-{{shiftItem.location.id}}-shift-col-{{shiftItem.shift.columnIndex +  1}}-end"
               [style.height]="getMinuteHeight(getItemMinutesDuration(shiftItem.shift.shiftDto))"
@@ -92,8 +104,8 @@
             >
               <span class="tag">{{getShiftDisplayTag(shiftItem.shift.shiftDto)}}</span>
               <span class="time">
-            {{shiftItem.shift.shiftDto.startTime | date:"shortTime"}} - {{shiftItem.shift.shiftDto.endTime | date:"shortTime"}}
-          </span>
+                {{shiftItem.shift.shiftDto.startTime | date:"shortTime"}} - {{shiftItem.shift.shiftDto.endTime | date:"shortTime"}}
+              </span>
               <span>{{shiftItem.shift.shiftDto.name}}</span>
             </div>
           }
@@ -101,11 +113,15 @@
           <!-- activities -->
           @for (activityItem of schedule.activities; track activityItem.activity.id) {
             <div
-              class="activity"
+              [ngClass]="config.activityClickCallback !== undefined ? 'item-primary' : 'item-secondary'"
+              (click)="config.activityClickCallback !== undefined ? config.activityClickCallback(activityItem.activity) : 0"
               style="grid-row: 2/2; grid-column: venue-{{activityItem.location.id}}-activity-start / venue-{{activityItem.location.id}}-end"
               [style.height]="getMinuteHeight(getItemMinutesDuration(activityItem.activity))"
               [style.top]="getMinuteHeight(getItemMinutesFromStart(activityItem.activity, config))"
             >
+              <span class="time">
+                {{activityItem.activity.startTime | date:"shortTime"}} - {{activityItem.activity.endTime | date:"shortTime"}}
+              </span>
               <span>{{activityItem.activity.name}}</span>
             </div>
           }

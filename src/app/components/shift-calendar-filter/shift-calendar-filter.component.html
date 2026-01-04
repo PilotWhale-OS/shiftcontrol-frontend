@@ -1,11 +1,11 @@
 <div
-  class="card compact grid grid-cols-[0_auto_auto_auto_auto_1fr] grid-rows-[1fr-1fr] gap-sm gap-x-xl w-fit justify-self-end items-center"
+  class="card compact grid grid-cols-[1fr_auto_auto_auto_auto_auto] grid-rows-[1fr-1fr] gap-sm gap-x-xl w-full justify-self-end items-center"
   [ngClass]="{'hidden': !showFilters}"
 >
 
-  <!--<div class="flex flex-col col-start-1 row-start-1">
-    <h1 class="signature-gradient-font text-center">Filter Shift Calendar</h1>
-  </div>-->
+  <div class="flex flex-row col-start-1 row-start-1 row-span-2">
+    <ng-content></ng-content>
+  </div>
 
   <!-- date picker -->
   <div class="col-start-2 row-start-1">
@@ -20,34 +20,37 @@
                       [xsb-typed]="[viewMode, viewForm.controls.viewMode]" [icon]="iconView" name="calendar-view-mode" />
   </div>
 
-  <!-- title filter -->
-  <div class="flex gap-sm items-center col-start-3 row-start-1">
-    <xsb-input-text class="w-full" #shiftName placeholder="Shift name" name="calendar-filter-name" [formControl]="searchForm.controls.shiftName"
-                    [xsb-typed]="[shiftName, searchForm.controls.shiftName]" />
-  </div>
+  @if (showFilterForm) {
 
-  <!-- categories multiselects -->
-  <div class="col-start-4 row-start-2">
-    <xsb-input-multiselect #rolesCats naming="Roles" emptyNaming="All Roles" [options]="rolesOptions" [formControl]="searchForm.controls.rolesList"
-                           [xsb-typed]="[rolesCats, searchForm.controls.rolesList]" name="calendar-filter-roles"/>
-  </div>
-  <div class="col-start-4 row-start-1">
-    <xsb-input-multiselect #locationsCats naming="Locations" emptyNaming="All Locations" [options]="locationsOptions" [formControl]="searchForm.controls.locationsList"
-                           [xsb-typed]="[locationsCats, searchForm.controls.locationsList]" name="calendar-filter-locations"/>
-  </div>
-  <div class="col-start-3 row-start-2">
-    <xsb-input-multiselect #relevanceCats emptyNaming="All Associations" naming="Associations" [options]="availabilityOptions" [formControl]="searchForm.controls.relevanceList"
-                           [xsb-typed]="[relevanceCats, searchForm.controls.relevanceList]" name="calendar-filter-availability"/>
-  </div>
+    <!-- title filter -->
+    <div class="flex gap-sm items-center col-start-3 row-start-1">
+      <xsb-input-text class="w-full" #shiftName placeholder="Shift name" name="calendar-filter-name" [formControl]="searchForm.controls.shiftName"
+                      [xsb-typed]="[shiftName, searchForm.controls.shiftName]" />
+    </div>
 
-  <!-- summary -->
-  <div class="col-start-5 row-span-2 flex flex-col justify-center justify-self-end px-lg">
-    @if(statistics !== undefined) {
-      <small>Results:</small>
-      <span>{{statistics.totalShifts}} shifts</span>
-      <span>{{statistics.totalHours}} hours</span>
-      <span>{{statistics.unassignedCount}} unassigned</span>
-    }
-  </div>
+    <!-- categories multiselects -->
+    <div class="col-start-4 row-start-2">
+      <xsb-input-multiselect #rolesCats naming="Roles" emptyNaming="All Roles" [options]="rolesOptions" [formControl]="searchForm.controls.rolesList"
+                             [xsb-typed]="[rolesCats, searchForm.controls.rolesList]" name="calendar-filter-roles"/>
+    </div>
+    <div class="col-start-4 row-start-1">
+      <xsb-input-multiselect #locationsCats naming="Locations" emptyNaming="All Locations" [options]="locationsOptions" [formControl]="searchForm.controls.locationsList"
+                             [xsb-typed]="[locationsCats, searchForm.controls.locationsList]" name="calendar-filter-locations"/>
+    </div>
+    <div class="col-start-3 row-start-2">
+      <xsb-input-multiselect #relevanceCats emptyNaming="All Associations" naming="Associations" [options]="availabilityOptions" [formControl]="searchForm.controls.relevanceList"
+                             [xsb-typed]="[relevanceCats, searchForm.controls.relevanceList]" name="calendar-filter-availability"/>
+    </div>
+
+    <!-- summary -->
+    <div class="col-start-5 row-span-2 flex flex-col justify-center justify-self-end px-lg">
+      @if(statistics !== undefined) {
+        <small>Results:</small>
+        <span>{{statistics.totalShifts}} shifts</span>
+        <span>{{statistics.totalHours}} hours</span>
+        <span>{{statistics.unassignedCount}} unassigned</span>
+      }
+    </div>
+  }
 
 </div>
