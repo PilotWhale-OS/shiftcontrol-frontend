@@ -10,6 +10,7 @@ import {ShiftPlanDashboardOverviewDto, ShiftPlanEndpointService} from "../../../
 import {map, Observable, tap} from "rxjs";
 import {AsyncPipe, DatePipe, DecimalPipe} from "@angular/common";
 import {TooltipDirective} from "../../../directives/tooltip.directive";
+import {UserService} from "../../../services/user/user.service";
 
 @Component({
   selector: "app-shift-plan",
@@ -45,6 +46,9 @@ export class ShiftPlanComponent {
   private readonly _router = inject(Router);
   private readonly _pageService = inject(PageService);
   private readonly _planService = inject(ShiftPlanEndpointService);
+  private readonly _userService = inject(UserService);
+
+  public readonly canManagePlan$ = this._userService.canManagePlan$;
 
   constructor() {
     const shiftPlanId = this._route.snapshot.paramMap.get("shiftPlanId");

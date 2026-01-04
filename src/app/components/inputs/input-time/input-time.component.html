@@ -43,5 +43,5 @@
     </div>
   </div>
 } @else {
-  {{hour}}:{{minute}}
+  {{hour.toString().padStart(2, "0")}}:{{minute.toString().padStart(2, "0")}}
 }

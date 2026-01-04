@@ -4,10 +4,18 @@
   <!-- header with filters-->
   <app-shift-calendar-filter [showFilters]="true" [showFilterForm]="false">
     <div class="flex flex-col pl-lg">
-      <h1 class="signature-gradient-font">Manage Event Schedule</h1>
-      <span>
-        Click anywhere in the calendar to create a new activity at the selected time and location.
-      </span>
+      @if ((userType$ | async) === "ADMIN"){
+        <h1 class="signature-gradient-font">Manage Event Schedule</h1>
+        <span>
+          Click anywhere in the calendar to create a new activity at the selected time and location, <br>
+          or click on an existing activity to manage it.
+        </span>
+      } @else {
+        <h1 class="signature-gradient-font">View Event Schedule</h1>
+        <span>
+          Browse the event schedule to view activities across all locations.
+        </span>
+      }
     </div>
   </app-shift-calendar-filter>
 
@@ -24,7 +32,9 @@
     <xsb-dialog #dialog (closeDialog)="selectedActivity$.next(undefined)">
 
       <ng-container dialog-header>
-        <h1 class="signature-gradient-font">{{ activityData.activity === undefined ? 'Create Activity' : 'Manage Activity' }}</h1>
+        <h1 class="signature-gradient-font">
+          {{ ((userType$ | async) === "ADMIN") ? activityData.activity === undefined ? 'Create Activity' : 'Manage Activity' : "View Activity" }}
+        </h1>
       </ng-container>
 
       <ng-container dialog-body>

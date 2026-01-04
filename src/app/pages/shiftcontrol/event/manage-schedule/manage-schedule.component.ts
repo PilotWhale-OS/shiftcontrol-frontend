@@ -2,6 +2,7 @@ import {Component, inject, OnDestroy, viewChild} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import {PageService} from "../../../../services/page/page.service";
 import {
+  AccountInfoDto,
   ActivityDto,
   ActivityEndpointService,
   EventEndpointService,
@@ -28,6 +29,8 @@ import {mapValue} from "../../../../util/value-maps";
 import {ManageActivityComponent, manageActivityParams} from "../../../../components/manage-activity/manage-activity.component";
 import {DialogComponent} from "../../../../components/dialog/dialog.component";
 import {AsyncPipe} from "@angular/common";
+import {UserService} from "../../../../services/user/user.service";
+import UserTypeEnum = AccountInfoDto.UserTypeEnum;
 
 @Component({
   selector: "app-manage-schedule",
@@ -57,7 +60,7 @@ export class ManageScheduleComponent implements OnDestroy {
   private readonly _pageService = inject(PageService);
   private readonly _eventService = inject(EventEndpointService);
   private readonly _locationsService = inject(LocationEndpointService);
-  private readonly _activityService = inject(ActivityEndpointService);
+  private readonly _userService = inject(UserService);
 
   constructor() {
 
@@ -70,6 +73,10 @@ export class ManageScheduleComponent implements OnDestroy {
     }
 
     this._subscriptions = this.setupWithObservables(eventId);
+  }
+
+  public get userType$(){
+    return this._userService.userType$;
   }
 
   ngOnDestroy() {
@@ -126,8 +133,8 @@ export class ManageScheduleComponent implements OnDestroy {
       combineLatestWith(calendarComponent$, locations$),
       withLatestFrom(calendarNavigation$.pipe(
         startWith({visibleDates: [], cachedDates: []})
-      ))
-    ).subscribe(([[event, calendar, locations], navigation]) => {
+      ), this._userService.userType$)
+    ).subscribe(([[event, calendar, locations], navigation, userType]) => {
 
       /*
       start date parsed from utc date, begin of day
@@ -143,8 +150,7 @@ export class ManageScheduleComponent implements OnDestroy {
         locationLayouts: locations.map(location => ({location, requiredShiftColumns: 0})),
         activityWidth: "15rem",
         hideFilterToggle: false,
-        emptySpaceClickCallback: (date, location) => {
-          console.log("Empty space clicked", date, location);
+        emptySpaceClickCallback: userType === UserTypeEnum.Assigned ? undefined : (date, location) => {
           this.selectedActivity$.next({
             suggestedDate: date,
             suggestedLocation: location,
@@ -154,7 +160,6 @@ export class ManageScheduleComponent implements OnDestroy {
           });
         },
         activityClickCallback: activity => {
-          console.log("Activity clicked", activity);
           this.selectedActivity$.next({
             suggestedDate: undefined,
             suggestedLocation: undefined,

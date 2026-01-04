@@ -71,6 +71,13 @@ export class UserService {
     return this.keycloak.token;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public canManagePlan$(planId: string){
+    return this.userType$.pipe(
+      map(userType => userType === UserTypeEnum.Admin) // TODO add check if planner
+    );
+  }
+
   /**
    * Initialize keycloak login process
    */

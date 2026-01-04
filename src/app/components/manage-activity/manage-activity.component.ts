@@ -2,17 +2,19 @@ import {Component, EventEmitter, inject, Input, Output} from "@angular/core";
 import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {faBackward, faCircleInfo, faForward, faLocationPin, faTag} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, map} from "rxjs";
 import {DialogComponent} from "../dialog/dialog.component";
 import {InputTextComponent} from "../inputs/input-text/input-text.component";
 import {TypedFormControlDirective} from "../../directives/typed-form-control.directive";
 import {InputDateComponent} from "../inputs/input-date/input-date.component";
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
-import {ActivityDto, ActivityEndpointService, LocationDto} from "../../../shiftservice-client";
+import {AccountInfoDto, ActivityDto, ActivityEndpointService, LocationDto} from "../../../shiftservice-client";
 import {AsyncPipe} from "@angular/common";
 import {InputSelectComponent, SelectOptions} from "../inputs/input-select/input-select.component";
 import {InputTimeComponent, time} from "../inputs/input-time/input-time.component";
 import {mapValue} from "../../util/value-maps";
+import {UserService} from "../../services/user/user.service";
+import UserTypeEnum = AccountInfoDto.UserTypeEnum;
 
 export interface manageActivityParams {
   eventId: string;
@@ -58,6 +60,7 @@ export class ManageActivityComponent {
 
   private readonly _fb = inject(FormBuilder);
   private readonly _activityService = inject(ActivityEndpointService);
+  private readonly _userService = inject(UserService);
 
   constructor() {
     this.form = this._fb.group({
@@ -69,6 +72,12 @@ export class ManageActivityComponent {
       endTime: this._fb.nonNullable.control<time>({hour: 0, minute: 0}, [Validators.required]),
       location: this._fb.control<string | null>(null)
     });
+  }
+
+  public get canManage$() {
+    return this._userService.userType$.pipe(
+      map(userType => userType === UserTypeEnum.Admin)
+    );
   }
 
   @Input({required: true})

@@ -86,15 +86,17 @@
         </p>
       </div>
 
-      <!-- manage plan -->
-      <div class="card interaction" routerLink="edit">
+      @if(canManagePlan$(dashboard.shiftPlan.id) | async){
+        <!-- manage plan -->
+        <div class="card interaction" routerLink="edit">
 
-        <!-- info -->
-        <h1 class="compact">Manage Plan</h1>
-        <p>
-          Click here to manage plan details and invite planners & volunteers.
-        </p>
-      </div>
+          <!-- info -->
+          <h1 class="compact">Manage Plan</h1>
+          <p>
+            Click here to manage plan details and invite planners & volunteers.
+          </p>
+        </div>
+      }
 
     </div>
 

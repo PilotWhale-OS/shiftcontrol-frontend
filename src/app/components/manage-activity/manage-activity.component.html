@@ -6,6 +6,7 @@
         <small><fa-icon [icon]="iconName" class="pr-sm" />Activity Name</small>
         <label for="activity-manage-name">Expressive name for the activity</label>
         <xsb-input-text #name
+                        [disguise]="(canManage$ | async) !== true"
                         [formControl]="form.controls.name"
                         [xsb-typed]="[name, form.controls.name]"
                         name="activity-manage-name" placeholder="Activity name"
@@ -16,6 +17,7 @@
         <small><fa-icon [icon]="iconCaption" class="pr-sm" />Caption</small>
         <label for="activity-manage-description">Description, shown ??? nowhere yet TODO</label>
         <xsb-input-text #description
+                        [disguise]="(canManage$ | async) !== true"
                         [formControl]="form.controls.description"
                         [xsb-typed]="[description, form.controls.description]"
                         name="activity-manage-description" placeholder="Activity description"
@@ -28,9 +30,11 @@
 
         <div class="flex flex-row gap-sm">
           <xsb-input-date #startDate name="activity-manage-from"
+                          [disguise]="(canManage$ | async) !== true"
                           [formControl]="form.controls.startDate"
                           [xsb-typed]="[startDate, form.controls.startDate]" />
           <xsb-input-time #startTime name="activity-manage-from-time"
+                          [disguise]="(canManage$ | async) !== true"
                           [formControl]="form.controls.startTime"
                           [xsb-typed]="[startTime, form.controls.startTime]" />
         </div>
@@ -42,9 +46,11 @@
 
         <div class="flex flex-row gap-sm">
           <xsb-input-date #endDate name="activity-manage-to"
+                          [disguise]="(canManage$ | async) !== true"
                           [formControl]="form.controls.endDate"
                           [xsb-typed]="[endDate, form.controls.endDate]" />
           <xsb-input-time #endTime name="activity-manage-to-time"
+                          [disguise]="(canManage$ | async) !== true"
                           [formControl]="form.controls.endTime"
                           [xsb-typed]="[endTime, form.controls.endTime]" />
         </div>
@@ -54,20 +60,23 @@
         <small><fa-icon [icon]="iconLocation" class="pr-sm" />Location</small>
         <label for="activity-manage-to">Location where the activity takes place</label>
         <xsb-input-select #location name="activity-manage-location"
+                          [disguise]="(canManage$ | async) !== true"
                           [nullable]="true" nullName="No Location"
-                        [formControl]="form.controls.location"
-                        [options]="data.availableLocations"
-                        [xsb-typed]="[location, form.controls.location]"
+                          [formControl]="form.controls.location"
+                          [options]="data.availableLocations"
+                          [xsb-typed]="[location, form.controls.location]"
         />
       </div>
 
       <div class="col-span-2 row-start-5 flex gap-x-lg items-center justify-center pt-md">
-        @if (data.activity === undefined){
-          <xsb-input-button content="Create Activity" action="success" (click)="create(data.eventId)" />
-        }
-        @else {
-          <xsb-input-button content="Update Activity" action="success" (click)="update(data.activity)" />
-          <xsb-input-button content="Delete Activity" action="danger" (click)="showActivityDeleteConfirm = true" />
+        @if((canManage$ | async) === true){
+          @if (data.activity === undefined){
+            <xsb-input-button content="Create Activity" action="success" (click)="create(data.eventId)" />
+          }
+          @else {
+            <xsb-input-button content="Update Activity" action="success" (click)="update(data.activity)" />
+            <xsb-input-button content="Delete Activity" action="danger" (click)="showActivityDeleteConfirm = true" />
+          }
         }
       </div>
     </div>
