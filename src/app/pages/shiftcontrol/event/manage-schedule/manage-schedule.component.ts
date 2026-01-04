@@ -4,7 +4,6 @@ import {PageService} from "../../../../services/page/page.service";
 import {
   AccountInfoDto,
   ActivityDto,
-  ActivityEndpointService,
   EventEndpointService,
   LocationDto,
   LocationEndpointService, ShiftColumnDto

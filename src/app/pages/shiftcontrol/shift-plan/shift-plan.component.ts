@@ -29,7 +29,6 @@ import {UserService} from "../../../services/user/user.service";
   styleUrl: "./shift-plan.component.scss"
 })
 export class ShiftPlanComponent {
-
   protected dashboard$: Observable<ShiftPlanDashboardOverviewDto>;
   protected shiftsWithOrigin$: Observable<shiftWithOrigin[]>;
 
@@ -48,7 +47,8 @@ export class ShiftPlanComponent {
   private readonly _planService = inject(ShiftPlanEndpointService);
   private readonly _userService = inject(UserService);
 
-  public readonly canManagePlan$ = this._userService.canManagePlan$;
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  protected readonly canManagePlan$ = this._userService.canManagePlan$;
 
   constructor() {
     const shiftPlanId = this._route.snapshot.paramMap.get("shiftPlanId");
