@@ -61,10 +61,6 @@ export class DialogComponent implements AfterViewInit, OnDestroy {
   private overlayRef?: OverlayRef;
   private overlayClickSubscription?: Subscription;
 
-  constructor() {
-    console.log("hi");
-  }
-
   /**
    * attach the portal to the overlay
    */
@@ -75,6 +71,10 @@ export class DialogComponent implements AfterViewInit, OnDestroy {
         this.closeDialog.next("close");
       });
     this.overlayRef.attach(this.portal);
+  }
+
+  public close(){
+    this.closeDialog.next("close");
   }
 
   /**

@@ -8,7 +8,15 @@ import {
   addUnavailabilityInput,
   DialogAddUnavailabilityComponent
 } from "../../../components/dialog-add-unavailability/dialog-add-unavailability.component";
-import {faCalendar, faCalendarDays, faGift, faHourglass, faPause, faPeopleGroup, faPlusCircle} from "@fortawesome/free-solid-svg-icons";
+import {
+  faCalendar,
+  faCalendarDays,
+  faGift,
+  faHourglass,
+  faPause,
+  faPeopleGroup,
+  faPlusCircle, faWrench
+} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {
   EventEndpointService,
@@ -55,6 +63,8 @@ export class EventComponent {
   protected readonly iconRewards = faGift;
   protected readonly iconUnavailable = faPause;
   protected readonly iconCreate = faPlusCircle;
+  protected readonly iconCalendar = faCalendar;
+  protected readonly iconManage = faWrench;
 
   private readonly _pageService = inject(PageService);
   private readonly _fb = inject(FormBuilder);

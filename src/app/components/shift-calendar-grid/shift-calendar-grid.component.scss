@@ -31,6 +31,10 @@
   @apply sticky top-0 z-40 flex flex-row gap-sm items-center justify-center font-semibold border-b-2 border-framing-card bg-background-card pb-xs;
 }
 
+.venue-flow {
+  @apply cursor-crosshair;
+}
+
 .venue-gap {
   @apply bg-framing-default w-[2px] justify-self-center;
 }
@@ -39,7 +43,7 @@
   @apply bg-background-card z-30 sticky top-0;
 }
 
-.activity {
+.item-secondary {
   @apply absolute w-full grid justify-start font-semibold border-ctr border-framing-card bg-background-item bg-opacity-30 rounded-lg;
   @apply font-semibold text-sm text-opacity-50 text-center z-10;
   container-type: size;
@@ -48,9 +52,13 @@
     writing-mode: vertical-rl;
     @apply rotate-180 opacity-50;
   }
+
+  > .tag, > .time {
+    @apply hidden;
+  }
 }
 
-.shift {
+.item-primary {
   @apply absolute w-full grid place-content-center font-semibold border-ctr border-framing-item bg-background-item rounded-lg;
   @apply hover:border-framing-highlight cursor-pointer transition-colors;
   @apply font-semibold text-sm text-opacity-40 text-center z-20;

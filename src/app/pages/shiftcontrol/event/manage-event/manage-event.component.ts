@@ -69,8 +69,6 @@ export class ManageEventComponent {
 
     if(eventId !== undefined) {
       this._eventService.getEventById(eventId).subscribe(event => {
-        if (event === undefined) {throw new Error("No event found");}
-
         this._pageService
           .configurePageName(`Manage ${event.name}`)
           .configureBreadcrumb(BC_EVENT, event.name, event.id);
