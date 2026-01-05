@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { ManageShiftComponent } from './manage-shift.component';
+import { ManageShiftComponent } from "./manage-shift.component";
 
-describe('ManageShiftComponent', () => {
+describe("ManageShiftComponent", () => {
   let component: ManageShiftComponent;
   let fixture: ComponentFixture<ManageShiftComponent>;
 
@@ -17,7 +17,7 @@ describe('ManageShiftComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

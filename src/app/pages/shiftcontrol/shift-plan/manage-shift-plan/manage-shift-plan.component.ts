@@ -1,5 +1,4 @@
 import {Component, inject} from "@angular/core";
-import {faBook, faCircleInfo, faTag} from "@fortawesome/free-solid-svg-icons";
 import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {PageService} from "../../../../services/page/page.service";

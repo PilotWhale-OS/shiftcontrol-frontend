@@ -8,15 +8,6 @@ import {
   addUnavailabilityInput,
   DialogAddUnavailabilityComponent
 } from "../../../components/dialog-add-unavailability/dialog-add-unavailability.component";
-import {
-  faCalendar,
-  faCalendarDays,
-  faGift,
-  faHourglass,
-  faPause,
-  faPeopleGroup,
-  faPlusCircle, faWrench
-} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {
   EventEndpointService,

@@ -5,7 +5,7 @@ import {
   faCalendarDay,
   faCalendarDays, faCertificate, faCircleInfo, faClock, faFilter, faForward,
   faGift, faHashtag,
-  faHourglass, faK, faKey, faLink, faLocationPin, faLock, faMessage, faPause,
+  faHourglass, faKey, faLink, faLocationPin, faLock, faMessage, faPause,
   faPeopleGroup, faPlusCircle,
   faShuffle, faStar, faStop, faTag, faUser,
   faWrench

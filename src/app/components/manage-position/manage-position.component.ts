@@ -125,6 +125,7 @@ export class ManagePositionComponent implements OnDestroy {
     }
   }
 
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   public ngOnDestroy(): void {
     // TODO unsubscribe
   }
