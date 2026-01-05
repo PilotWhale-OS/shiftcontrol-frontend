@@ -95,7 +95,11 @@ export class ShiftCalendarComponent implements OnDestroy {
 
     /* available activities in the shift plan */
     const activities$ = plan$.pipe(
-      switchMap(plan => this._activityService.suggestActivitiesForShift(plan.eventOverview.id, {})),
+      withLatestFrom(this._userService.canManagePlan$(planId)),
+      switchMap(([plan, canManage]) => canManage ?
+        this._activityService.suggestActivitiesForShift(plan.eventOverview.id, {}) :
+        of([])
+      ),
       shareReplay()
     );
 
@@ -207,6 +211,7 @@ export class ShiftCalendarComponent implements OnDestroy {
 
       const availableActivities = activities.map(activity => ({name: activity.name, value: activity}));
       const availableLocations = filterData.locations.map(location => ({name: location.name, value: location}));
+      const availableRoles = filterData.roles.map(role => ({name: role.name, value: role}));
 
       const config: calendarConfig = {
         startDate,
@@ -218,7 +223,8 @@ export class ShiftCalendarComponent implements OnDestroy {
           planId,
           eventId: plan.eventOverview.id,
           availableLocations,
-          availableActivities
+          availableActivities,
+          availableRoles
         }),
         emptySpaceClickCallback: (date, location) => this.selectedShift$.next({
           planId,
@@ -226,7 +232,8 @@ export class ShiftCalendarComponent implements OnDestroy {
           suggestedLocation: location,
           suggestedDate: date,
           availableLocations,
-          availableActivities
+          availableActivities,
+          availableRoles
         })
       };
       const calendarViewInited = navigation.visibleDates.length > 0;

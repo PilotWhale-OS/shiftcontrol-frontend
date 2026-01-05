@@ -1,14 +1,13 @@
 import {Component, EventEmitter, inject, Input, OnDestroy, Output} from "@angular/core";
 import {
-  AccountInfoDto,
   ActivityDto,
   ActivityEndpointService,
-  LocationDto,
+  LocationDto, PositionSlotDto, RoleDto,
   ShiftDto,
   ShiftEndpointService
 } from "../../../shiftservice-client";
 import {InputSelectComponent, SelectOptions} from "../inputs/input-select/input-select.component";
-import {BehaviorSubject, combineLatestWith, map, of, startWith, Subscription, switchMap, withLatestFrom} from "rxjs";
+import {BehaviorSubject, combineLatestWith, map, of, startWith, Subscription, switchMap, take, tap, withLatestFrom} from "rxjs";
 import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {UserService} from "../../services/user/user.service";
 import {InputTimeComponent, time} from "../inputs/input-time/input-time.component";
@@ -22,6 +21,7 @@ import {InputDateComponent} from "../inputs/input-date/input-date.component";
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
 import {DialogComponent} from "../dialog/dialog.component";
 import {TooltipDirective} from "../../directives/tooltip.directive";
+import {ManagePositionComponent, managePositionParams} from "../manage-position/manage-position.component";
 
 export interface manageShiftParams {
   planId: string;
@@ -31,6 +31,7 @@ export interface manageShiftParams {
   suggestedLocation?: LocationDto;
   availableLocations: SelectOptions<LocationDto>;
   availableActivities: SelectOptions<ActivityDto>;
+  availableRoles: SelectOptions<RoleDto>;
 }
 
 @Component({
@@ -46,7 +47,8 @@ export interface manageShiftParams {
     InputSelectComponent,
     InputButtonComponent,
     DialogComponent,
-    TooltipDirective
+    TooltipDirective,
+    ManagePositionComponent
   ],
   providers: [
     DatePipe
@@ -58,6 +60,9 @@ export class ManageShiftComponent implements OnDestroy {
 
   @Output()
   public readonly shiftChanged = new EventEmitter<ShiftDto>();
+
+  @Output()
+  public readonly navigateOut = new EventEmitter<void>();
 
   public readonly form;
 
@@ -71,6 +76,20 @@ export class ManageShiftComponent implements OnDestroy {
   protected readonly iconSignup = faKey;
 
   protected readonly manageData$ = new BehaviorSubject<undefined | manageShiftParams>(undefined);
+  protected readonly slotManageData$ = this.manageData$.pipe(
+    map(data => {
+      if(data === undefined || data.shift === undefined) {
+        return [];
+      }
+      const shift = data.shift;
+
+      const newSlotManageData = this.getSlotManageData(data.shift, data.planId, data.availableRoles, undefined);
+      const existingSlotManageData = shift.positionSlots.map(slot =>
+        this.getSlotManageData(shift, data.planId, data.availableRoles, slot)
+      );
+      return [newSlotManageData, ...existingSlotManageData];
+    })
+  );
   protected readonly suggestedActivities$ = new BehaviorSubject<ActivityDto[]>([]);
   protected readonly requestedEditMode$ = new BehaviorSubject<boolean>(false);
 
@@ -126,7 +145,7 @@ export class ManageShiftComponent implements OnDestroy {
 
   public get title$(){
     return this.mode$.pipe(
-      withLatestFrom(this.manageData$),
+      combineLatestWith(this.manageData$),
       map(([mode, data]) => {
         switch(mode) {
           case "create":
@@ -154,17 +173,21 @@ export class ManageShiftComponent implements OnDestroy {
   public set manageData(value: manageShiftParams) {
     this.manageData$.next(value);
 
-    this._activityService.suggestActivitiesForShift(value.eventId, {
-      timeFilter: value.shift !== undefined ? {
-        startTime: value.shift?.startTime,
-        endTime: value.shift?.endTime,
-        toleranceInMinutes: 60 * 5
-      } : value.suggestedDate ? {
-        startTime: new Date(value.suggestedDate.getTime()).toISOString(),
-        endTime: new Date(value.suggestedDate.getTime() + 1000 * 60 * 60 * 3).toISOString(),
-        toleranceInMinutes: 60 * 5
-      } : undefined
-    }).subscribe(suggestions => {
+    this._userService.canManagePlan$(value.planId).pipe(
+      switchMap(canManage => canManage ?
+        this._activityService.suggestActivitiesForShift(value.eventId, {
+          timeFilter: value.shift !== undefined ? {
+            startTime: value.shift?.startTime,
+            endTime: value.shift?.endTime,
+            toleranceInMinutes: 60 * 5
+          } : value.suggestedDate ? {
+            startTime: new Date(value.suggestedDate.getTime()).toISOString(),
+            endTime: new Date(value.suggestedDate.getTime() + 1000 * 60 * 60 * 3).toISOString(),
+            toleranceInMinutes: 60 * 5
+          } : undefined
+        }) : of([])
+      )
+    ).subscribe(suggestions => {
       this.suggestedActivities$.next(suggestions);
     });
 
@@ -197,6 +220,16 @@ export class ManageShiftComponent implements OnDestroy {
 
   ngOnDestroy() {
     this._disableLocationSubscription.unsubscribe();
+  }
+
+  protected refreshShift(shiftId: string){
+    this.manageData$.pipe(
+      take(1),
+      switchMap(data => this._shiftService.getShiftDetails(shiftId).pipe(
+        tap(shift => this.shiftChanged.emit(shift.shift)),
+        map(shift => ({...data, shift: shift.shift} as manageShiftParams))
+      ))
+    ).subscribe(params =>this.manageData$.next(params));
   }
 
   protected linkAndFill(activity: ActivityDto, params: manageShiftParams) {
@@ -238,10 +271,10 @@ export class ManageShiftComponent implements OnDestroy {
         locationId: this.form.controls.activity.value === null ? (this.form.controls.location.value?.id ?? undefined) : undefined,
         activityId: this.form.controls.activity.value?.id ?? undefined
       }).subscribe(shift => {
-        this.shiftChanged.emit(shift);
+        this.requestedEditMode$.next(false);
+        this.refreshShift(shift.id);
       });
     }
-
   }
 
   protected update(shift: ShiftDto) {
@@ -265,7 +298,8 @@ export class ManageShiftComponent implements OnDestroy {
         locationId: this.form.controls.activity.value === null ? (this.form.controls.location.value?.id ?? undefined) : undefined,
         activityId: this.form.controls.activity.value?.id ?? undefined
       }).subscribe(updatedShift => {
-        this.shiftChanged.emit(updatedShift);
+        this.requestedEditMode$.next(false);
+        this.refreshShift(updatedShift.id);
       });
     }
   }
@@ -273,6 +307,7 @@ export class ManageShiftComponent implements OnDestroy {
   protected delete(shift: ShiftDto) {
     this._shiftService.deleteShift(shift.id).subscribe(() => {
       this.shiftChanged.emit(shift);
+      this.navigateOut.emit();
     });
   }
 
@@ -285,6 +320,16 @@ export class ManageShiftComponent implements OnDestroy {
     const end = new Date(shift.endTime);
 
     return mapValue.dateRangeToDateTimeString(start, end, this._datePipe);
+  }
+
+  protected getSlotManageData(shift: ShiftDto, planId: string, availableRoles: SelectOptions<RoleDto>, position?: PositionSlotDto):
+    managePositionParams {
+    return {
+      shift,
+      planId,
+      availableRoles,
+      position
+    };
   }
 
   protected getLockStatusName(shift: ShiftDto): string {

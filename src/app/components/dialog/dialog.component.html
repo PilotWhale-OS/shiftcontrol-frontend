@@ -2,7 +2,8 @@
   <div [ngClass]="{
     'border-framing-card bg-background-card' : action === 'normal',
     'border-framing-default_danger shadow-inner shadow-framing-item_danger bg-background-card_danger' : action === 'danger',
-    'border-framing-default_success shadow-inner shadow-shadow-item_success bg-background-card_success' : action === 'success'
+    'border-framing-default_success shadow-inner shadow-shadow-item_success bg-background-card_success' : action === 'success',
+    'h-[calc(100vh-(2*21px))] w-[calc(100vw-(2*21px))]' : maxSize
   }"
     class="border-ctr rounded-lg p-lg flex flex-col gap-md w-full
 ">

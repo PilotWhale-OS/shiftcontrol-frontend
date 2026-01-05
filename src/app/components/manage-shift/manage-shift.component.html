@@ -1,4 +1,4 @@
-<div>
+<div class="flex flex-row gap-lg">
 
   @if(manageData$ | async; as data) {
 
@@ -67,7 +67,7 @@
 
         <div class="flex flex-col gap-sm col-start-1 row-start-5">
           <small><fa-icon [icon]="iconActivity" class="pr-sm" />Activity</small>
-          <label for="shift-manage-to">Activity which this shift is associated to</label>
+          <label for="shift-manage-activity">Activity which this shift is associated to</label>
           <xsb-input-select #activity name="shift-manage-activity"
                             [nullable]="true" nullName="No Activity"
                             [formControl]="form.controls.activity"
@@ -79,7 +79,7 @@
 
         <div class="flex flex-col gap-sm col-start-2 row-start-5">
           <small><fa-icon [icon]="iconLocation" class="pr-sm" />Location</small>
-          <label for="shift-manage-to">Location where the shift takes place</label>
+          <label for="shift-manage-location">Location where the shift takes place</label>
           <xsb-input-select #location name="shift-manage-location"
                             [nullable]="true" nullName="No Location"
                             [formControl]="form.controls.location"
@@ -92,7 +92,7 @@
         @if (suggestedActivities$ | async; as suggestedActivities) {
           <div class="flex flex-col gap-sm col-start-1 col-span-2 row-start-6">
             <small><fa-icon [icon]="iconLocation" class="pr-sm" />Suggestions</small>
-            <label for="shift-manage-to">Auto-fill to link with a suggested activity</label>
+            <span>Auto-fill to link with a suggested activity</span>
 
             <div class="flex flex-row flex-wrap gap-sm">
               @for (activity of suggestedActivities; track activity.id) {
@@ -113,13 +113,17 @@
           }
         </div>
       </div>
+
+      <!-- view mode -->
     } @else if (data.shift !== undefined) {
       <div class="card grid grid-cols-2 gap-x-xl gap-y-lg h-fit w-[30rem]">
 
         <h1 class="signature-gradient-font row-start-1 col-start-1">Shift Details</h1>
         <div class="flex flex-row gap-sm justify-end row-start-1 col-start-2">
-          <xsb-input-button content="Edit" size="text" (click)="requestedEditMode$.next(true)" />
-          <xsb-input-button content="Delete" size="text" (click)="showShiftDeleteConfirm = true" />
+          @if (canManage$ | async) {
+            <xsb-input-button content="Edit" size="text" (click)="requestedEditMode$.next(true)" />
+            <xsb-input-button content="Delete" size="text" (click)="showShiftDeleteConfirm = true" />
+          }
         </div>
 
         <div class="col-start-1 row-start-2 col-span-2 whitespace-pre-wrap">
@@ -156,6 +160,19 @@
       </div>
     }
 
+    <!-- position slots -->
+    <div class="flex flex-row flex-wrap gap-lg">
+
+    <!-- manage data from observable for change detection issues -->
+      @if (slotManageData$ | async; as slotData) {
+        @for (slot of slotData; track slot){
+          <app-manage-position
+            [manageData]="slot"
+            (positionChanged)="refreshShift(slot.shift.id)"
+          />
+        }
+      }
+    </div>
 
     @if (showShiftDeleteConfirm && data.shift !== undefined){
       <xsb-dialog action="danger" danger="Delete Shift" (closeDialog)="showShiftDeleteConfirm = false; $event === 'danger' && delete(data.shift)">

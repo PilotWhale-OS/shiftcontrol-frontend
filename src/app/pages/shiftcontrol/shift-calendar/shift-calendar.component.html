@@ -32,7 +32,11 @@
       </ng-container>
 
       <ng-container dialog-body>
-        <app-manage-shift #manage [manageData]="shiftParams" (shiftChanged)="shiftChanged$.next($event); dialog.close()" />
+        <app-manage-shift #manage
+                          [manageData]="shiftParams"
+                          (shiftChanged)="shiftChanged$.next($event)"
+                          (navigateOut)="dialog.close()"
+        />
       </ng-container>
     </xsb-dialog>
   }
