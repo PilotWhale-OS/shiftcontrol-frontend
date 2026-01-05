@@ -5,21 +5,12 @@ import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {ShiftTradeAuctionComponent} from "../../../components/shift-trade-auction/shift-trade-auction.component";
 import {ShiftScheduleComponent, shiftWithOrigin} from "../../../components/shift-schedule/shift-schedule.component";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import {
-  faBarsProgress,
-  faCalendar,
-  faCalendarDays,
-  faGift,
-  faHourglass,
-  faPeopleGroup,
-  faShuffle,
-  faWrench
-} from "@fortawesome/free-solid-svg-icons";
 import {ShiftPlanDashboardOverviewDto, ShiftPlanEndpointService} from "../../../../shiftservice-client";
 import {BehaviorSubject, filter, map, Observable, switchMap, tap} from "rxjs";
 import {AsyncPipe, DatePipe, DecimalPipe} from "@angular/common";
 import {TooltipDirective} from "../../../directives/tooltip.directive";
 import {UserService} from "../../../services/user/user.service";
+import {icons} from "../../../util/icons";
 
 @Component({
   selector: "app-shift-plan",
@@ -41,15 +32,7 @@ export class ShiftPlanComponent {
   protected dashboard$ = new BehaviorSubject<undefined | ShiftPlanDashboardOverviewDto>(undefined);
   protected shiftsWithOrigin$: Observable<shiftWithOrigin[]>;
 
-  protected readonly iconTasks = faBarsProgress;
-  protected readonly iconTrade = faShuffle;
-  protected readonly iconVolunteers = faPeopleGroup;
-  protected readonly iconHours = faHourglass;
-  protected readonly iconDay = faCalendar;
-  protected readonly iconDate = faCalendarDays;
-  protected readonly iconRewards = faGift;
-  protected readonly iconCalendar = faCalendar;
-  protected readonly iconManage = faWrench;
+  protected readonly icons = icons;
 
   private readonly _route = inject(ActivatedRoute);
   private readonly _router = inject(Router);

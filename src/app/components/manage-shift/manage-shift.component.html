@@ -16,7 +16,7 @@
         </div>
 
         <div class="flex flex-col gap-sm col-start-1 row-start-2">
-          <small><fa-icon [icon]="iconName" class="pr-sm" />Shift Name</small>
+          <small><fa-icon [icon]="icons.name" class="pr-sm" />Shift Name</small>
           <label for="shift-manage-name">Expressive name for the shift</label>
           <xsb-input-text #name
                           [formControl]="form.controls.name"
@@ -26,7 +26,7 @@
         </div>
 
         <div class="flex flex-col gap-sm col-start-2 row-start-2 row-span-3">
-          <small><fa-icon [icon]="iconCaption" class="pr-sm" />Description</small>
+          <small><fa-icon [icon]="icons.description" class="pr-sm" />Description</small>
           <label for="shift-manage-description">Relevant infos about the shift</label>
           <xsb-input-text #description
                           [formControl]="form.controls.description"
@@ -38,7 +38,7 @@
         </div>
 
         <div class="flex flex-col gap-sm col-start-1 row-start-3">
-          <small><fa-icon [icon]="iconStartDate" class="pr-sm" />Shift Start</small>
+          <small><fa-icon [icon]="icons.startDate" class="pr-sm" />Shift Start</small>
           <label for="shift-manage-from">Start time, in your timezone</label>
 
           <div class="flex flex-row gap-sm">
@@ -52,7 +52,7 @@
         </div>
 
         <div class="flex flex-col gap-sm col-start-1 row-start-4">
-          <small><fa-icon [icon]="iconEndDate" class="pr-sm" />Shift End</small>
+          <small><fa-icon [icon]="icons.endDate" class="pr-sm" />Shift End</small>
           <label for="shift-manage-to">End time, in your timezone </label>
 
           <div class="flex flex-row gap-sm">
@@ -66,7 +66,7 @@
         </div>
 
         <div class="flex flex-col gap-sm col-start-1 row-start-5">
-          <small><fa-icon [icon]="iconActivity" class="pr-sm" />Activity</small>
+          <small><fa-icon [icon]="icons.activity" class="pr-sm" />Activity</small>
           <label for="shift-manage-activity">Activity which this shift is associated to</label>
           <xsb-input-select #activity name="shift-manage-activity"
                             [nullable]="true" nullName="No Activity"
@@ -78,7 +78,7 @@
         </div>
 
         <div class="flex flex-col gap-sm col-start-2 row-start-5">
-          <small><fa-icon [icon]="iconLocation" class="pr-sm" />Location</small>
+          <small><fa-icon [icon]="icons.location" class="pr-sm" />Location</small>
           <label for="shift-manage-location">Location where the shift takes place</label>
           <xsb-input-select #location name="shift-manage-location"
                             [nullable]="true" nullName="No Location"
@@ -91,7 +91,7 @@
 
         @if (suggestedActivities$ | async; as suggestedActivities) {
           <div class="flex flex-col gap-sm col-start-1 col-span-2 row-start-6">
-            <small><fa-icon [icon]="iconLocation" class="pr-sm" />Suggestions</small>
+            <small><fa-icon [icon]="icons.location" class="pr-sm" />Suggestions</small>
             <span>Auto-fill to link with a suggested activity</span>
 
             <div class="flex flex-row flex-wrap gap-sm">
@@ -133,25 +133,25 @@
         <!-- badges -->
         <div class="flex flex-row flex-wrap gap-sm items-center w-full row-start-3 col-start-1 col-span-2">
           <div class="badge">
-            <fa-icon [icon]="iconDate" />
+            <fa-icon [icon]="icons.date" />
             <span>{{getDateRange(data.shift)}}</span>
           </div>
 
           <div class="badge" [app-tooltip]="getLockStatusDescription(data.shift)" tooltipMaxWidth="10rem" >
-            <fa-icon [icon]="iconSignup"/>
+            <fa-icon [icon]="icons.signUp"/>
             <span>{{getLockStatusName(data.shift)}}</span>
           </div>
 
           @if(data.shift.location !== undefined) {
             <div class="badge hint" [app-tooltip]="data.shift.location.description ?? 'No location description'">
-              <fa-icon [icon]="iconLocation" />
+              <fa-icon [icon]="icons.location" />
               <span>{{data.shift.location.name}}</span>
             </div>
           }
 
           @if(data.shift.relatedActivity !== undefined) {
             <div class="badge hint" [app-tooltip]="data.shift.relatedActivity.description ?? 'No activity description'">
-              <fa-icon [icon]="iconActivity" />
+              <fa-icon [icon]="icons.activity" />
               <span>{{data.shift.relatedActivity.name}}</span>
             </div>
           }

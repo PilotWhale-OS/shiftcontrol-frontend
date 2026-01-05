@@ -4,9 +4,9 @@ import {EventDto, EventEndpointService} from "../../../../shiftservice-client";
 import {Observable} from "rxjs";
 import {AsyncPipe, DatePipe} from "@angular/common";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import {faCalendarDays, faPlusCircle} from "@fortawesome/free-solid-svg-icons";
 import {TooltipDirective} from "../../../directives/tooltip.directive";
 import {UserService} from "../../../services/user/user.service";
+import {icons} from "../../../util/icons";
 
 @Component({
   selector: "app-events",
@@ -25,8 +25,8 @@ export class EventsComponent {
 
   public events$: Observable<EventDto[]>;
 
-  protected readonly iconDate = faCalendarDays;
-  protected readonly iconCreate = faPlusCircle;
+  protected readonly icons = icons;
+
   private readonly _eventsService = inject(EventEndpointService);
   private _userService = inject(UserService);
 

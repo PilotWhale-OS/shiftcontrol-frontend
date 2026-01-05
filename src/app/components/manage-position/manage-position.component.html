@@ -12,12 +12,12 @@
 
           @if(mode === "create"){
             <div class="badge success w-fit">
-              <fa-icon [icon]="iconSignup"/>
+              <fa-icon [icon]="icons.signUp"/>
               Create Position
             </div>
           } @else {
             <div class="badge w-fit">
-              <fa-icon [icon]="iconSignup"/>
+              <fa-icon [icon]="icons.signUp"/>
               Position
             </div>
           }
@@ -33,7 +33,7 @@
           </div>
 
           <div class="flex flex-col gap-sm col-start-1 row-start-2">
-            <small><fa-icon [icon]="iconName" class="pr-sm" />Position Name</small>
+            <small><fa-icon [icon]="icons.name" class="pr-sm" />Position Name</small>
             <label for="position-manage-name">Expressive name for the position</label>
             <xsb-input-text #name
                             [formControl]="form.controls.name"
@@ -43,7 +43,7 @@
           </div>
 
           <div class="flex flex-col gap-sm col-start-2 row-start-2 row-span-3">
-            <small><fa-icon [icon]="iconCaption" class="pr-sm" />Description</small>
+            <small><fa-icon [icon]="icons.description" class="pr-sm" />Description</small>
             <label for="position-manage-description">Relevant infos about the position</label>
             <xsb-input-text #description
                             type="area"
@@ -55,7 +55,7 @@
           </div>
 
           <div class="flex flex-col gap-sm col-start-1 row-start-3">
-            <small><fa-icon [icon]="iconCaption" class="pr-sm" />Volunteer Count</small>
+            <small><fa-icon [icon]="icons.volunteers" class="pr-sm" />Volunteer Count</small>
             <label for="position-manage-count">The required amount of volunteers</label>
             <xsb-input-number #count
                               [formControl]="form.controls.desiredVolunteerCount"
@@ -67,7 +67,7 @@
           </div>
 
           <div class="flex flex-col gap-sm col-start-1 row-start-4">
-            <small><fa-icon [icon]="iconCaption" class="pr-sm" />Reward Points</small>
+            <small><fa-icon [icon]="icons.rewards" class="pr-sm" />Reward Points</small>
             <label for="position-manage-points">Custom amount of reward points for this position</label>
             <xsb-input-number #rewardPoints
                               [formControl]="form.controls.rewardPoints"
@@ -79,7 +79,7 @@
           </div>
 
           <div class="flex flex-col gap-sm col-start-1 row-start-5">
-            <small><fa-icon [icon]="iconActivity" class="pr-sm" />Required Role</small>
+            <small><fa-icon [icon]="icons.activity" class="pr-sm" />Required Role</small>
             <label for="position-manage-role">Required roles for volunteer sign-up</label>
             <xsb-input-select #role name="position-manage-role"
                               [nullable]="true" nullName="No Role Required"
@@ -91,7 +91,7 @@
           </div>
 
           <div class="flex flex-col gap-sm col-start-2 row-start-5">
-            <small><fa-icon [icon]="iconLocation" class="pr-sm" />Optional Position</small>
+            <small><fa-icon [icon]="icons.location" class="pr-sm" />Optional Position</small>
             <label for="shift-manage-skipAutoassign">Optional positions are skipped during auto-assignment</label>
 
             <div class="flex flex-row gap-sm">
@@ -107,7 +107,7 @@
         <div class="card grid grid-cols-2 gap-x-xl gap-y-lg h-fit w-[25rem]">
 
           <div class="badge w-fit">
-            <fa-icon [icon]="iconSignup"/>
+            <fa-icon [icon]="icons.signUp"/>
             Position
           </div>
           <div class="flex flex-row gap-sm justify-end row-start-1 col-start-2">
@@ -129,20 +129,20 @@
 
             <!-- reward points -->
             <div class="badge hint" [app-tooltip]="'Amount of reward points you get for volunteering in this position'">
-              <fa-icon [icon]="rewardIcon" />
+              <fa-icon [icon]="icons.rewards" />
               <span>{{data.position.rewardPoints}} Points</span>
             </div>
 
             <!-- role -->
             @if(data.position.role !== undefined) {
               <div class="badge hint" [app-tooltip]="data.position.role.description ?? 'No role description'">
-                <fa-icon [icon]="roleIcon" />
+                <fa-icon [icon]="icons.role" />
                 <span>{{data.position.role.name}}</span>
               </div>
             }
             @else {
               <div class="badge hint" [app-tooltip]="'Anyone can sign up for this position'">
-                <fa-icon [icon]="roleIcon" />
+                <fa-icon [icon]="icons.role" />
                 <span>No Requirements</span>
               </div>
             }
@@ -151,7 +151,7 @@
             <div class="badge hint"
                  [app-tooltip]="data.position.assignedVolunteers.length + ' of ' + data.position.desiredVolunteerCount + 'required Volunteers have signed up'"
             >
-              <fa-icon [icon]="roleIcon" />
+              <fa-icon [icon]="icons.role" />
               <span>{{data.position.assignedVolunteers.length}} / {{data.position.desiredVolunteerCount}} Volunteers</span>
             </div>
           </div>

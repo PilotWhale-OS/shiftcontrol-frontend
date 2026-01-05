@@ -3,7 +3,7 @@
     <div class="grid grid-cols-2 gap-x-xl gap-y-lg w-fit h-fit">
 
       <div class="flex flex-col gap-sm col-start-1 row-start-2">
-        <small><fa-icon [icon]="iconName" class="pr-sm" />Activity Name</small>
+        <small><fa-icon [icon]="icons.name" class="pr-sm" />Activity Name</small>
         <label for="activity-manage-name">Expressive name for the activity</label>
         <xsb-input-text #name
                         [disguise]="(canManage$ | async) !== true"
@@ -14,7 +14,7 @@
       </div>
 
       <div class="flex flex-col gap-sm col-start-2 row-start-2">
-        <small><fa-icon [icon]="iconCaption" class="pr-sm" />Description</small>
+        <small><fa-icon [icon]="icons.shortDescription" class="pr-sm" />Description</small>
         <label for="activity-manage-description">Description, shown ??? nowhere yet TODO</label>
         <xsb-input-text #description
                         [disguise]="(canManage$ | async) !== true"
@@ -25,7 +25,7 @@
       </div>
 
       <div class="flex flex-col gap-sm col-start-1 row-start-3">
-        <small><fa-icon [icon]="iconStartDate" class="pr-sm" />Activity Start</small>
+        <small><fa-icon [icon]="icons.startDate" class="pr-sm" />Activity Start</small>
         <label for="activity-manage-from">Start time, in your timezone</label>
 
         <div class="flex flex-row gap-sm">
@@ -41,7 +41,7 @@
       </div>
 
       <div class="flex flex-col gap-sm col-start-2 row-start-3">
-        <small><fa-icon [icon]="iconEndDate" class="pr-sm" />Activity End</small>
+        <small><fa-icon [icon]="icons.endDate" class="pr-sm" />Activity End</small>
         <label for="activity-manage-to">End time, in your timezone </label>
 
         <div class="flex flex-row gap-sm">
@@ -57,7 +57,7 @@
       </div>
 
       <div class="flex flex-col gap-sm col-start-1 row-start-4 col-span-2">
-        <small><fa-icon [icon]="iconLocation" class="pr-sm" />Location</small>
+        <small><fa-icon [icon]="icons.location" class="pr-sm" />Location</small>
         <label for="activity-manage-to">Location where the activity takes place</label>
         <xsb-input-select #location name="activity-manage-location"
                           [disguise]="(canManage$ | async) !== true"

@@ -7,7 +7,7 @@
       <div class="card spotlight interaction grid place-items-center p-lg"
            [routerLink]="'/events/create'">
         <h2 class="compact">
-          <fa-icon [icon]="iconCreate" class="pr-sm" />
+          <fa-icon [icon]="icons.create" class="pr-sm" />
           Create new event
         </h2>
       </div>
@@ -21,7 +21,7 @@
            tooltipMaxWidth="30ex"
            [app-tooltip]="'The event dates of ' + event.name"
       >
-        <fa-icon [icon]="iconDate" />
+        <fa-icon [icon]="icons.date" />
         {{event.startTime | date:"mediumDate"}} - {{event.endTime | date:"mediumDate"}}
       </div>
       <p>

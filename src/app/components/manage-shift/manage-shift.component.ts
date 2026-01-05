@@ -7,13 +7,12 @@ import {
   ShiftEndpointService
 } from "../../../shiftservice-client";
 import {InputSelectComponent, SelectOptions} from "../inputs/input-select/input-select.component";
-import {BehaviorSubject, combineLatestWith, map, of, startWith, Subscription, switchMap, take, tap, withLatestFrom} from "rxjs";
+import {BehaviorSubject, combineLatestWith, map, of, startWith, Subscription, switchMap, take, tap} from "rxjs";
 import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {UserService} from "../../services/user/user.service";
 import {InputTimeComponent, time} from "../inputs/input-time/input-time.component";
 import {mapValue} from "../../util/value-maps";
 import {AsyncPipe, DatePipe} from "@angular/common";
-import {faBackward, faCalendarDay, faCircleInfo, faForward, faKey, faLocationPin, faStar, faTag} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {InputTextComponent} from "../inputs/input-text/input-text.component";
 import {TypedFormControlDirective} from "../../directives/typed-form-control.directive";
@@ -22,6 +21,7 @@ import {InputButtonComponent} from "../inputs/input-button/input-button.componen
 import {DialogComponent} from "../dialog/dialog.component";
 import {TooltipDirective} from "../../directives/tooltip.directive";
 import {ManagePositionComponent, managePositionParams} from "../manage-position/manage-position.component";
+import {icons} from "../../util/icons";
 
 export interface manageShiftParams {
   planId: string;
@@ -64,16 +64,8 @@ export class ManageShiftComponent implements OnDestroy {
   @Output()
   public readonly navigateOut = new EventEmitter<void>();
 
-  public readonly form;
-
-  protected readonly iconName = faTag;
-  protected readonly iconCaption = faCircleInfo;
-  protected readonly iconStartDate = faForward;
-  protected readonly iconEndDate = faBackward;
-  protected readonly iconLocation = faLocationPin;
-  protected readonly iconDate = faCalendarDay;
-  protected readonly iconActivity = faStar;
-  protected readonly iconSignup = faKey;
+  protected readonly form;
+  protected readonly icons = icons;
 
   protected readonly manageData$ = new BehaviorSubject<undefined | manageShiftParams>(undefined);
   protected readonly slotManageData$ = this.manageData$.pipe(

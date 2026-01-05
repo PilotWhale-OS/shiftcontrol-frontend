@@ -1,5 +1,4 @@
 import {Component, ElementRef, viewChild} from "@angular/core";
-import {faCalendarDay, faFilter, faLocationDot} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {
   ActivityDto, LocationDto,
@@ -23,6 +22,7 @@ import {
 } from "rxjs";
 import {toObservable} from "@angular/core/rxjs-interop";
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
+import {icons} from "../../util/icons";
 
 /**
  * Configuration for the shift calendar grid component.
@@ -93,9 +93,7 @@ export class ShiftCalendarGridComponent {
    */
   public readonly headDay$: Observable<Date>;
 
-  protected readonly iconLocation = faLocationDot;
-  protected readonly iconDay = faCalendarDay;
-  protected readonly iconFilter = faFilter;
+  protected readonly icons = icons;
   protected readonly scrolled$ = new Subject<Event>();
   protected readonly bodyInitialized$ = new BehaviorSubject<boolean>(false);
 

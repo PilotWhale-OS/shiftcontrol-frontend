@@ -26,11 +26,11 @@
           @if (showShiftOrigin) {
             <div class="flex gap-md col-span-2">
               <div class="badge hint" [app-tooltip]="'The associated event\n of this shift'">
-                <fa-icon [icon]="iconEvent" />
+                <fa-icon [icon]="icons.event" />
                 {{shift.originEvent.name}}
               </div>
               <div class="badge hint" [app-tooltip]="'The associated plan\n of this shift'">
-                <fa-icon [icon]="iconPlan" />
+                <fa-icon [icon]="icons.plan" />
                 {{shift.originPlan.name}}
               </div>
             </div>
@@ -41,12 +41,12 @@
             <div class="flex gap-md col-span-2">
               @for(slot of getAssignedPositionSlots(shift.shift); track slot.id) {
                 <div class="badge" [app-tooltip]="'Your position in this shift'">
-                  <fa-icon [icon]="iconRole" />
+                  <fa-icon [icon]="icons.role" />
                   {{slot.name}}
                 </div>
               }
               <div class="badge" [app-tooltip]="'The shift location'">
-                <fa-icon [icon]="iconLocation" />
+                <fa-icon [icon]="icons.location" />
                 {{shift.shift.location.name}}
               </div>
             </div>

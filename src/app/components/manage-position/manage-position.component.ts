@@ -8,7 +8,6 @@ import {BehaviorSubject, combineLatestWith, map, of, switchMap} from "rxjs";
 import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {UserService} from "../../services/user/user.service";
 import {AsyncPipe, DatePipe, NgClass} from "@angular/common";
-import {faCalendarDay, faCircleInfo, faGift, faKey, faLocationPin, faStar, faTag, faWrench} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {InputTextComponent} from "../inputs/input-text/input-text.component";
 import {TypedFormControlDirective} from "../../directives/typed-form-control.directive";
@@ -17,6 +16,7 @@ import {DialogComponent} from "../dialog/dialog.component";
 import {TooltipDirective} from "../../directives/tooltip.directive";
 import {InputNumberComponent} from "../inputs/input-number/input-number.component";
 import {InputToggleComponent} from "../inputs/input-toggle/input-toggle.component";
+import {icons} from "../../util/icons";
 
 export interface managePositionParams {
   shift: ShiftDto;
@@ -54,14 +54,7 @@ export class ManagePositionComponent implements OnDestroy {
 
   public readonly form;
 
-  protected readonly iconName = faTag;
-  protected readonly iconCaption = faCircleInfo;
-  protected readonly iconLocation = faLocationPin;
-  protected readonly iconDate = faCalendarDay;
-  protected readonly iconActivity = faStar;
-  protected readonly iconSignup = faKey;
-  protected readonly roleIcon = faWrench;
-  protected readonly rewardIcon = faGift;
+  protected readonly icons = icons;
 
   protected readonly manageData$ = new BehaviorSubject<undefined | managePositionParams>(undefined);
   protected readonly requestedEditMode$ = new BehaviorSubject<boolean>(false);

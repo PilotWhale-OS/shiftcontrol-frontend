@@ -1,6 +1,5 @@
 import {Component, EventEmitter, inject, Input, Output} from "@angular/core";
 import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
-import {faBackward, faCircleInfo, faForward, faLocationPin, faTag} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {BehaviorSubject, map} from "rxjs";
 import {DialogComponent} from "../dialog/dialog.component";
@@ -15,6 +14,7 @@ import {InputTimeComponent, time} from "../inputs/input-time/input-time.componen
 import {mapValue} from "../../util/value-maps";
 import {UserService} from "../../services/user/user.service";
 import UserTypeEnum = AccountInfoDto.UserTypeEnum;
+import {icons} from "../../util/icons";
 
 export interface manageActivityParams {
   eventId: string;
@@ -47,12 +47,7 @@ export class ManageActivityComponent {
   public readonly activityChanged = new EventEmitter<ActivityDto>();
 
   public readonly form;
-
-  protected readonly iconName = faTag;
-  protected readonly iconCaption = faCircleInfo;
-  protected readonly iconStartDate = faForward;
-  protected readonly iconEndDate = faBackward;
-  protected readonly iconLocation = faLocationPin;
+  protected readonly icons = icons;
 
   protected readonly manageData$ = new BehaviorSubject<undefined | manageActivityParams>(undefined);
 

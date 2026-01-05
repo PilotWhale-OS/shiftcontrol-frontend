@@ -12,7 +12,7 @@
            tooltipMaxWidth="30ex"
            [app-tooltip]="'Event dates of ' + dashboard.eventOverview.name"
       >
-        <fa-icon [icon]="iconDate" />
+        <fa-icon [icon]="icons.date" />
         {{dashboard.eventOverview.startTime | date:"mediumDate"}} - {{dashboard.eventOverview.endTime | date:"mediumDate"}}
       </div>
 
@@ -28,21 +28,21 @@
              tooltipMaxWidth="30ex"
              [app-tooltip]="'Days where you signed up for shifts in this plan'"
         >
-          <fa-icon [icon]="iconDay" />
+          <fa-icon [icon]="icons.day" />
           {{dashboard.ownShiftPlanStatistics.busyDays}} Busy Days
         </div>
         <div class="badge"
              tooltipMaxWidth="30ex"
              [app-tooltip]="'Sum of signed up shifts in this plan'"
         >
-          <fa-icon [icon]="iconHours" />
+          <fa-icon [icon]="icons.hour" />
           {{dashboard.ownShiftPlanStatistics.totalHours | number:"1.0-0"}} Shift Hours
         </div>
         <div class="badge success"
              tooltipMaxWidth="30ex"
              [app-tooltip]="'Reward points earned during this plan'"
         >
-          <fa-icon [icon]="iconRewards" />
+          <fa-icon [icon]="icons.rewards" />
           {{dashboard.rewardPoints}} Points Rewarded
         </div>
       </div>
@@ -54,14 +54,14 @@
              tooltipMaxWidth="30ex"
              [app-tooltip]="'Volunteers participating in this shift plan'"
         >
-          <fa-icon [icon]="iconVolunteers" />
+          <fa-icon [icon]="icons.volunteers" />
           {{dashboard.overallShiftPlanStatistics.volunteerCount}} Volunteers
         </div>
         <div class="badge hint"
              tooltipMaxWidth="30ex"
              [app-tooltip]="'Duration of shifts in this shift plan'"
         >
-          <fa-icon [icon]="iconHours" />
+          <fa-icon [icon]="icons.hour" />
           {{dashboard.overallShiftPlanStatistics.totalHours | number:"1.0-0"}} Shift Hours
         </div>
       </div>
@@ -74,7 +74,7 @@
       <!-- calendar link card -->
       <div class="card interaction spotlight" routerLink="calendar">
         <h1>
-          <fa-icon [icon]="iconCalendar" class="icon" />
+          <fa-icon [icon]="icons.calendar" class="icon" />
           View Shift Calendar
         </h1>
         <p>
@@ -93,7 +93,7 @@
 
           <!-- info -->
           <h1>
-            <fa-icon [icon]="iconManage" class="icon" />
+            <fa-icon [icon]="icons.manage" class="icon" />
             Manage Plan
           </h1>
           <p>
@@ -109,7 +109,7 @@
 
       <!-- title -->
       <h1 class="col-span-2 signature-gradient-font">
-        <fa-icon [icon]="iconTasks" class="icon" />
+        <fa-icon [icon]="icons.schedule" class="icon" />
         Plan Schedule
       </h1>
 
@@ -125,7 +125,7 @@
 
       <!-- title -->
       <h1 class="col-span-2 signature-gradient-font">
-        <fa-icon [icon]="iconTrade" class="icon" />
+        <fa-icon [icon]="icons.trade" class="icon" />
         Shift Plan Auctions & Trades
       </h1>
 

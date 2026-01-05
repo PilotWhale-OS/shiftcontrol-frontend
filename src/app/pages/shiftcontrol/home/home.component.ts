@@ -5,12 +5,12 @@ import {AsyncPipe, NgClass} from "@angular/common";
 import {map, Observable} from "rxjs";
 import {ShiftTradeAuctionComponent} from "../../../components/shift-trade-auction/shift-trade-auction.component";
 import {ShiftScheduleComponent, shiftWithOrigin} from "../../../components/shift-schedule/shift-schedule.component";
-import {faBarsProgress, faShuffle} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {EventEndpointService, EventsDashboardOverviewDto} from "../../../../shiftservice-client";
 import {getHubProxyFactory, getReceiverRegister} from "../../../../notificationservice-client/TypedSignalR.Client";
 import {HubConnectionBuilder} from "@microsoft/signalr";
 import {TestEventDto} from "../../../../notificationservice-client/NotificationService.Classes.Dto";
+import {icons} from "../../../util/icons";
 
 @Component({
   selector: "app-home",
@@ -27,12 +27,11 @@ import {TestEventDto} from "../../../../notificationservice-client/NotificationS
 })
 export class HomeComponent {
 
-  public readonly cards = [
+  protected readonly cards = [
     {title:"Events", content: "Browse all your events", href: "events"},
     {title:"Pilot Plan", content: "Pilot Event: Currently active", href: "plans/planId", spotlight: true}
   ];
-  public readonly iconTasks = faBarsProgress;
-  public readonly iconTrade = faShuffle;
+  protected readonly icons = icons;
 
   protected readonly dashboard$: Observable<EventsDashboardOverviewDto>;
   protected readonly shiftsWithOrigin$: Observable<shiftWithOrigin[]>;
