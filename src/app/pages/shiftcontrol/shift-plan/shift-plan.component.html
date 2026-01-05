@@ -78,12 +78,16 @@
           View Shift Calendar
         </h1>
         <p>
-          Explore all available shifts in the calendar.<br>
-          Here, you can also sign up to shifts that you want to participate in.
+          @if ((canManagePlan$ | async) === true) {
+            Manage the shifts and their positions of this plan.
+          } @else {
+            Explore and manage all available shifts in the calendar.<br>
+            Here, you can also create new shifts for volunteers to sign up to.
+          }
         </p>
       </div>
 
-      @if(canManagePlan$(dashboard.shiftPlan.id) | async){
+      @if((canManagePlan$ | async) === true){
         <!-- manage plan -->
         <div class="card interaction" routerLink="edit">
 

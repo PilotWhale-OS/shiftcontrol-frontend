@@ -27,6 +27,8 @@
               <xsb-input-button content="Cancel" size="text" (click)="requestedEditMode$.next(false)" />
               <xsb-input-button content="Save" size="text" (click)="update(data.position)" />
               <xsb-input-button content="Delete" size="text" (click)="showSlotDeleteConfirm = true" />
+            } @else {
+              <xsb-input-button content="Create" size="text" (click)="create(data.shift.id)" />
             }
           </div>
 
@@ -44,9 +46,9 @@
             <small><fa-icon [icon]="iconCaption" class="pr-sm" />Description</small>
             <label for="position-manage-description">Relevant infos about the position</label>
             <xsb-input-text #description
+                            type="area"
                             [formControl]="form.controls.description"
                             [xsb-typed]="[description, form.controls.description]"
-                            type="area"
                             name="position-manage-description" placeholder="Position description"
                             class="grow"
             />
@@ -100,15 +102,9 @@
               <label for="shift-manage-skipAutoassign">Optional position</label>
             </div>
           </div>
-
-          <div class="col-span-2 row-start-7 flex gap-x-lg items-center justify-center pt-md">
-            @if (data.shift !== undefined && data.position === undefined) {
-              <xsb-input-button content="Create Position" action="success" (click)="create(data.shift.id)" />
-            }
-          </div>
         </div>
       } @else if (data.position !== undefined) {
-        <div class="card grid grid-cols-2 gap-x-xl gap-y-lg h-fit w-[30rem]">
+        <div class="card grid grid-cols-2 gap-x-xl gap-y-lg h-fit w-[25rem]">
 
           <div class="badge w-fit">
             <fa-icon [icon]="iconSignup"/>

@@ -3,23 +3,25 @@
     'border-framing-card bg-background-card' : action === 'normal',
     'border-framing-default_danger shadow-inner shadow-framing-item_danger bg-background-card_danger' : action === 'danger',
     'border-framing-default_success shadow-inner shadow-shadow-item_success bg-background-card_success' : action === 'success',
-    'h-[calc(100vh-(2*21px))] w-[calc(100vw-(2*21px))]' : maxSize
+    'h-[calc(90vh-(2*21px))] w-[calc(90vw-(2*21px))]' : maxSize
   }"
     class="border-ctr rounded-lg p-lg flex flex-col gap-md w-full
 ">
 
     <!-- header -->
-    <div class="flex items-center justify-between">
+    <div class="grid grid-cols-[5rem_1fr_5rem] place-content-center justify-between">
+
+      <span></span>
 
       <!-- title -->
-      <div class="text-lg font-bold">
+      <div class="text-lg font-bold grow text-center border-b-ctr border-framing-card">
         <ng-content select="[dialog-header]"></ng-content>
       </div>
 
       <!-- close -->
-      <div class="text-md opacity-60 hover:opacity-100 cursor-pointer font-semibold" tabindex="0"
+      <div class="text-md opacity-60 hover:opacity-100 cursor-pointer font-semibold justify-self-end" tabindex="0"
         (keydown)="closeDialog.next('close')" (click)="closeDialog.next('close')">Close</div>
-    </div>
+      </div>
 
     <!-- body -->
     <div class="grow overflow-auto">

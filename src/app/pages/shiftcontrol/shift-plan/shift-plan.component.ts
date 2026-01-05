@@ -16,7 +16,7 @@ import {
   faWrench
 } from "@fortawesome/free-solid-svg-icons";
 import {ShiftPlanDashboardOverviewDto, ShiftPlanEndpointService} from "../../../../shiftservice-client";
-import {map, Observable, tap} from "rxjs";
+import {BehaviorSubject, filter, map, Observable, switchMap, tap} from "rxjs";
 import {AsyncPipe, DatePipe, DecimalPipe} from "@angular/common";
 import {TooltipDirective} from "../../../directives/tooltip.directive";
 import {UserService} from "../../../services/user/user.service";
@@ -38,7 +38,7 @@ import {UserService} from "../../../services/user/user.service";
   styleUrl: "./shift-plan.component.scss"
 })
 export class ShiftPlanComponent {
-  protected dashboard$: Observable<ShiftPlanDashboardOverviewDto>;
+  protected dashboard$ = new BehaviorSubject<undefined | ShiftPlanDashboardOverviewDto>(undefined);
   protected shiftsWithOrigin$: Observable<shiftWithOrigin[]>;
 
   protected readonly iconTasks = faBarsProgress;
@@ -49,15 +49,13 @@ export class ShiftPlanComponent {
   protected readonly iconDate = faCalendarDays;
   protected readonly iconRewards = faGift;
   protected readonly iconCalendar = faCalendar;
+  protected readonly iconManage = faWrench;
 
   private readonly _route = inject(ActivatedRoute);
   private readonly _router = inject(Router);
   private readonly _pageService = inject(PageService);
   private readonly _planService = inject(ShiftPlanEndpointService);
   private readonly _userService = inject(UserService);
-
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  protected readonly canManagePlan$ = this._userService.canManagePlan$.bind(this._userService);
 
   constructor() {
     const shiftPlanId = this._route.snapshot.paramMap.get("shiftPlanId");
@@ -66,7 +64,7 @@ export class ShiftPlanComponent {
       throw new Error("Shift Plan ID is required");
     }
 
-    this.dashboard$ = this._planService.getShiftPlanDashboard(shiftPlanId).pipe(
+    this._planService.getShiftPlanDashboard(shiftPlanId).pipe(
       tap(dashboard => {
         this._pageService
           .configurePageName(`${dashboard.shiftPlan.name} Dashboard`)
@@ -76,10 +74,20 @@ export class ShiftPlanComponent {
       tap({error: () => {
         this._router.navigateByUrl("/");
       }})
-    );
+    ).subscribe(dashboard => {
+      this.dashboard$.next(dashboard);
+    });
 
     this.shiftsWithOrigin$ = this.dashboard$.pipe(
+      filter(dashboard => dashboard !== undefined),
       map(dashboard => this.mapShiftsWithOrigin(dashboard))
+    );
+  }
+
+  protected get canManagePlan$(){
+    return this.dashboard$.pipe(
+      filter(dashboard => dashboard !== undefined),
+      switchMap(dashboard => this._userService.canManagePlan$(dashboard.shiftPlan.id))
     );
   }
 
@@ -90,6 +98,4 @@ export class ShiftPlanComponent {
         originPlan: dashboard.shiftPlan
       }));
   }
-
-  protected readonly iconManage = faWrench;
 }

@@ -1,7 +1,7 @@
 import {Component, inject} from "@angular/core";
 import {RouterLink} from "@angular/router";
 import {UserService} from "../../../services/user/user.service";
-import {AsyncPipe} from "@angular/common";
+import {AsyncPipe, NgClass} from "@angular/common";
 import {map, Observable} from "rxjs";
 import {ShiftTradeAuctionComponent} from "../../../components/shift-trade-auction/shift-trade-auction.component";
 import {ShiftScheduleComponent, shiftWithOrigin} from "../../../components/shift-schedule/shift-schedule.component";
@@ -19,7 +19,8 @@ import {TestEventDto} from "../../../../notificationservice-client/NotificationS
     AsyncPipe,
     ShiftTradeAuctionComponent,
     ShiftScheduleComponent,
-    FaIconComponent
+    FaIconComponent,
+    NgClass
   ],
   templateUrl: "./home.component.html",
   styleUrl: "./home.component.scss"
@@ -27,9 +28,8 @@ import {TestEventDto} from "../../../../notificationservice-client/NotificationS
 export class HomeComponent {
 
   public readonly cards = [
-    {title:"Events", content: "Manage your events and shift plans", href: "events"},
-    {title:"User Account", content: "Manage your notification settings and unavailable time", href: "me"},
-    {title:"Pilot Plan", content: "Pilot Event: Currently active", href: "plans/planId"}
+    {title:"Events", content: "Browse all your events", href: "events"},
+    {title:"Pilot Plan", content: "Pilot Event: Currently active", href: "plans/planId", spotlight: true}
   ];
   public readonly iconTasks = faBarsProgress;
   public readonly iconTrade = faShuffle;

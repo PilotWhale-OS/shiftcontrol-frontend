@@ -130,20 +130,20 @@
         </div>
       }
 
-      <!-- calendar link card -->
-      <div class="card interaction spotlight" routerLink="calendar">
-        <h1>
-          <fa-icon [icon]="iconCalendar" class="icon" />
-          View Event Calendar
-        </h1>
-        <p>
-          @if ((userType$ | async) === "ADMIN") {
+
+
+      @if ((userType$ | async) === "ADMIN") {
+        <!-- calendar link card -->
+        <div class="card interaction spotlight" routerLink="calendar">
+          <h1>
+            <fa-icon [icon]="iconCalendar" class="icon" />
+            View Event Calendar
+          </h1>
+          <p>
             Manage the schedule of the event.
-          } @else {
-            View the schedule of the event.
-          }
-        </p>
-      </div>
+          </p>
+        </div>
+      }
 
       @if ((userType$ | async) === "ADMIN") {
         <!-- manage event -->

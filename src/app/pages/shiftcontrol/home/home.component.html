@@ -16,7 +16,7 @@
     </div>
 
     @for (card of cards; track card) {
-      <div class="card interaction" [routerLink]="card.href">
+      <div class="card interaction" [ngClass]="card.spotlight === true ? 'spotlight' : ''" [routerLink]="card.href">
         <h1>{{card.title}}</h1>
         <span>{{card.content}}</span>
       </div>
