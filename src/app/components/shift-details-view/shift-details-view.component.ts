@@ -48,7 +48,8 @@ export class ShiftDetailsViewComponent {
       id: "asdff",
       name: "Stage 1",
       readOnly: false
-    }
+    },
+    lockStatus: "SELF_SIGNUP"
   };
 
   private readonly _pageService = inject(PageService);
@@ -80,7 +81,8 @@ export class ShiftDetailsViewComponent {
       positionSignupState: state,
       desiredVolunteerCount: volCount,
       tradeInfoDtos: [],
-      auctions: []
+      auctions: [],
+      lockStatus: "SELF_SIGNUP"
     };
   }
 }
