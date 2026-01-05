@@ -45,7 +45,7 @@
 
 .item-secondary {
   @apply absolute w-full grid justify-start font-semibold border-ctr border-framing-card bg-background-item bg-opacity-30 rounded-lg;
-  @apply font-semibold text-sm text-opacity-50 text-center z-10;
+  @apply font-semibold text-sm text-opacity-50 text-center z-10 pointer-events-none;
   container-type: size;
 
   span {

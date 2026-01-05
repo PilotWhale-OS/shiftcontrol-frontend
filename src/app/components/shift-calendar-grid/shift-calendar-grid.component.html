@@ -95,11 +95,10 @@
           <!-- shifts -->
           @for (shiftItem of schedule.shifts; track shiftItem.shift.shiftDto.id) {
             <div
-              (click)="viewShift = true"
-              (keyup)="viewShift = true"
+              (click)="config.shiftClickCallback !== undefined ? config.shiftClickCallback(shiftItem.shift.shiftDto) : 0"
+              (keydown)="0"
               tabindex="0"
-              class="item-primary"
-              [ngClass]="getShiftDisplayCategory(shiftItem.shift.shiftDto)"
+              [ngClass]="[getShiftDisplayCategory(shiftItem.shift.shiftDto), config.shiftClickCallback !== undefined ? 'item-primary' : 'item-secondary']"
               style="grid-row: 2/2; grid-column: venue-{{shiftItem.location.id}}-shift-col-{{shiftItem.shift.columnIndex + 1}}-start / venue-{{shiftItem.location.id}}-shift-col-{{shiftItem.shift.columnIndex +  1}}-end"
               [style.height]="getMinuteHeight(getItemMinutesDuration(shiftItem.shift.shiftDto))"
               [style.top]="getMinuteHeight(getItemMinutesFromStart(shiftItem.shift.shiftDto, config))"
@@ -133,14 +132,3 @@
     </div>
   }
 </div>
-
-@if (viewShift){
-  <xsb-dialog (closeDialog)="viewShift = false">
-    <ng-container dialog-header>
-      <h1 class="signature-gradient-font">Shift Details</h1>
-    </ng-container>
-    <ng-container dialog-body>
-      <app-shift-details-view></app-shift-details-view>
-    </ng-container>
-  </xsb-dialog>
-}

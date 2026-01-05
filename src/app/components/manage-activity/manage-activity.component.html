@@ -14,7 +14,7 @@
       </div>
 
       <div class="flex flex-col gap-sm col-start-2 row-start-2">
-        <small><fa-icon [icon]="iconCaption" class="pr-sm" />Caption</small>
+        <small><fa-icon [icon]="iconCaption" class="pr-sm" />Description</small>
         <label for="activity-manage-description">Description, shown ??? nowhere yet TODO</label>
         <xsb-input-text #description
                         [disguise]="(canManage$ | async) !== true"
