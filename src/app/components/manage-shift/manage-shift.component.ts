@@ -8,20 +8,20 @@ import {
   ShiftEndpointService
 } from "../../../shiftservice-client";
 import {InputSelectComponent, SelectOptions} from "../inputs/input-select/input-select.component";
-import {BehaviorSubject, map, startWith, Subscription} from "rxjs";
+import {BehaviorSubject, combineLatestWith, map, of, startWith, Subscription, switchMap, withLatestFrom} from "rxjs";
 import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {UserService} from "../../services/user/user.service";
 import {InputTimeComponent, time} from "../inputs/input-time/input-time.component";
-import UserTypeEnum = AccountInfoDto.UserTypeEnum;
 import {mapValue} from "../../util/value-maps";
-import {AsyncPipe} from "@angular/common";
-import {faBackward, faCircleInfo, faForward, faLocationPin, faTag} from "@fortawesome/free-solid-svg-icons";
+import {AsyncPipe, DatePipe} from "@angular/common";
+import {faBackward, faCalendarDay, faCircleInfo, faForward, faKey, faLocationPin, faStar, faTag} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {InputTextComponent} from "../inputs/input-text/input-text.component";
 import {TypedFormControlDirective} from "../../directives/typed-form-control.directive";
 import {InputDateComponent} from "../inputs/input-date/input-date.component";
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
 import {DialogComponent} from "../dialog/dialog.component";
+import {TooltipDirective} from "../../directives/tooltip.directive";
 
 export interface manageShiftParams {
   planId: string;
@@ -45,7 +45,11 @@ export interface manageShiftParams {
     InputTimeComponent,
     InputSelectComponent,
     InputButtonComponent,
-    DialogComponent
+    DialogComponent,
+    TooltipDirective
+  ],
+  providers: [
+    DatePipe
   ],
   templateUrl: "./manage-shift.component.html",
   styleUrl: "./manage-shift.component.scss"
@@ -62,9 +66,13 @@ export class ManageShiftComponent implements OnDestroy {
   protected readonly iconStartDate = faForward;
   protected readonly iconEndDate = faBackward;
   protected readonly iconLocation = faLocationPin;
+  protected readonly iconDate = faCalendarDay;
+  protected readonly iconActivity = faStar;
+  protected readonly iconSignup = faKey;
 
   protected readonly manageData$ = new BehaviorSubject<undefined | manageShiftParams>(undefined);
   protected readonly suggestedActivities$ = new BehaviorSubject<ActivityDto[]>([]);
+  protected readonly requestedEditMode$ = new BehaviorSubject<boolean>(false);
 
   protected showShiftDeleteConfirm = false;
 
@@ -72,6 +80,7 @@ export class ManageShiftComponent implements OnDestroy {
   private readonly _userService = inject(UserService);
   private readonly _shiftService = inject(ShiftEndpointService);
   private readonly _activityService = inject(ActivityEndpointService);
+  private readonly _datePipe = inject(DatePipe);
 
   private readonly _disableLocationSubscription: Subscription;
 
@@ -100,9 +109,44 @@ export class ManageShiftComponent implements OnDestroy {
     });
   }
 
+  public get mode$(){
+    return this.manageData$.pipe(
+      combineLatestWith(this.canManage$, this.requestedEditMode$),
+      map(([data, canManage, requestedEdit]) => {
+        if(data?.shift === undefined && canManage) {
+          return "create";
+        }
+        if(requestedEdit && canManage && data !== undefined) {
+          return "edit";
+        }
+        return "view";
+      })
+    );
+  }
+
+  public get title$(){
+    return this.mode$.pipe(
+      withLatestFrom(this.manageData$),
+      map(([mode, data]) => {
+        switch(mode) {
+          case "create":
+            return "Create Shift";
+          case "edit":
+            return `${data?.shift?.name ?? ""}`;
+          case "view":
+            return `${data?.shift?.name ?? ""}`;
+        }
+        return "";
+      })
+    );
+  }
+
   public get canManage$() {
-    return this._userService.userType$.pipe(
-      map(userType => userType === UserTypeEnum.Admin)
+    return this.manageData$.pipe(
+      switchMap(data => data === undefined ?
+        of(false) :
+        this._userService.canManagePlan$(data.planId)
+      )
     );
   }
 
@@ -155,7 +199,7 @@ export class ManageShiftComponent implements OnDestroy {
     this._disableLocationSubscription.unsubscribe();
   }
 
-  linkAndFill(activity: ActivityDto, params: manageShiftParams) {
+  protected linkAndFill(activity: ActivityDto, params: manageShiftParams) {
     const matchingActivity = params.availableActivities
       .find(o => o.value.id === activity.id);
     this.form.controls.activity.setValue(matchingActivity?.value ?? null);
@@ -173,7 +217,7 @@ export class ManageShiftComponent implements OnDestroy {
     }
   }
 
-  public create(planId: string) {
+  protected create(planId: string) {
     this.form.markAllAsTouched();
 
     if(this.form.valid) {
@@ -191,7 +235,7 @@ export class ManageShiftComponent implements OnDestroy {
         startTime: start.toISOString(),
         endTime: end.toISOString(),
         /* location only if not activity set*/
-        locationId: this.form.controls.activity.value === undefined ? (this.form.controls.location.value?.id ?? undefined) : undefined,
+        locationId: this.form.controls.activity.value === null ? (this.form.controls.location.value?.id ?? undefined) : undefined,
         activityId: this.form.controls.activity.value?.id ?? undefined
       }).subscribe(shift => {
         this.shiftChanged.emit(shift);
@@ -200,11 +244,33 @@ export class ManageShiftComponent implements OnDestroy {
 
   }
 
-  public update(shift: ShiftDto) {
+  protected update(shift: ShiftDto) {
+    this.form.markAllAsTouched();
 
+    if(this.form.valid) {
+
+      const start = mapValue.combineDateAndLocalTime(this.form.controls.startDate.value, this.form.controls.startTime.value);
+      const end = mapValue.combineDateAndLocalTime(this.form.controls.endDate.value, this.form.controls.endTime.value);
+
+      if(start === undefined || end === undefined) {
+        throw new Error("Start and end date must be defined");
+      }
+
+      this._shiftService.updateShift(shift.id, {
+        name: this.form.controls.name.value,
+        longDescription: this.form.controls.description.value,
+        startTime: start.toISOString(),
+        endTime: end.toISOString(),
+        /* location only if not activity set*/
+        locationId: this.form.controls.activity.value === null ? (this.form.controls.location.value?.id ?? undefined) : undefined,
+        activityId: this.form.controls.activity.value?.id ?? undefined
+      }).subscribe(updatedShift => {
+        this.shiftChanged.emit(updatedShift);
+      });
+    }
   }
 
-  public delete(shift: ShiftDto) {
+  protected delete(shift: ShiftDto) {
     this._shiftService.deleteShift(shift.id).subscribe(() => {
       this.shiftChanged.emit(shift);
     });
@@ -212,5 +278,34 @@ export class ManageShiftComponent implements OnDestroy {
 
   protected idComparatorFn(a: { id: string } | null, b: { id: string } | null): boolean {
     return a?.id === b?.id || (a === null && b === null);
+  }
+
+  protected getDateRange(shift: ShiftDto): string {
+    const start = new Date(shift.startTime);
+    const end = new Date(shift.endTime);
+
+    return mapValue.dateRangeToDateTimeString(start, end, this._datePipe);
+  }
+
+  protected getLockStatusName(shift: ShiftDto): string {
+    switch(shift.lockStatus) {
+      case ShiftDto.LockStatusEnum.Locked:
+        return "Locked Phase";
+      case ShiftDto.LockStatusEnum.SelfSignup:
+        return "Self Signup Phase";
+      case ShiftDto.LockStatusEnum.Supervised:
+        return "Supervised Phase";
+    }
+  }
+
+  protected getLockStatusDescription(shift: ShiftDto): string {
+    switch(shift.lockStatus) {
+      case ShiftDto.LockStatusEnum.Locked:
+        return "Shift sign-ups can no longer be changed.";
+      case ShiftDto.LockStatusEnum.SelfSignup:
+        return "You can sign-up and withdraw from shifts freely.";
+      case ShiftDto.LockStatusEnum.Supervised:
+        return "You can only sign-up or withdraw from shifts with approval from a manager or by trading with other volunteers.";
+    }
   }
 }

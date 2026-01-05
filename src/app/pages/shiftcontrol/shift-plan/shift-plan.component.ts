@@ -5,7 +5,16 @@ import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {ShiftTradeAuctionComponent} from "../../../components/shift-trade-auction/shift-trade-auction.component";
 import {ShiftScheduleComponent, shiftWithOrigin} from "../../../components/shift-schedule/shift-schedule.component";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import {faBarsProgress, faCalendar, faCalendarDays, faGift, faHourglass, faPeopleGroup, faShuffle} from "@fortawesome/free-solid-svg-icons";
+import {
+  faBarsProgress,
+  faCalendar,
+  faCalendarDays,
+  faGift,
+  faHourglass,
+  faPeopleGroup,
+  faShuffle,
+  faWrench
+} from "@fortawesome/free-solid-svg-icons";
 import {ShiftPlanDashboardOverviewDto, ShiftPlanEndpointService} from "../../../../shiftservice-client";
 import {map, Observable, tap} from "rxjs";
 import {AsyncPipe, DatePipe, DecimalPipe} from "@angular/common";
@@ -81,4 +90,6 @@ export class ShiftPlanComponent {
         originPlan: dashboard.shiftPlan
       }));
   }
+
+  protected readonly iconManage = faWrench;
 }

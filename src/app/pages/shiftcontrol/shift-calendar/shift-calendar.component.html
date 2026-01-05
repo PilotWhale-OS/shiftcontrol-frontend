@@ -18,6 +18,8 @@
 
 </div>
 
+
+<!-- view/edit/manage shift -->
 @if (selectedShift$ | async; as shiftParams){
   @if (shiftParams !== null && shiftParams !== undefined){
 
@@ -25,12 +27,12 @@
 
       <ng-container dialog-header>
         <h1 class="signature-gradient-font">
-          {{ (canManagePlan$(shiftParams.planId) | async) ? (shiftParams.shift === undefined ? 'Create Shift' : 'Manage Shift') : "View Shift" }}
+          {{manage.title$ | async}}
         </h1>
       </ng-container>
 
       <ng-container dialog-body>
-        <app-manage-shift [manageData]="shiftParams" (shiftChanged)="shiftChanged$.next($event); dialog.close()" />
+        <app-manage-shift #manage [manageData]="shiftParams" (shiftChanged)="shiftChanged$.next($event); dialog.close()" />
       </ng-container>
     </xsb-dialog>
   }
