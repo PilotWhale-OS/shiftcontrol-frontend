@@ -4,7 +4,7 @@ import {
   Component,
   HostBinding, inject,
   Injector,
-  Input,
+  Input, OnDestroy,
   OnInit
 } from "@angular/core";
 import { NG_VALUE_ACCESSOR, NgControl } from "@angular/forms";
@@ -14,6 +14,7 @@ import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {NgClass} from "@angular/common";
 import {FlyoutComponent} from "../../flyout/flyout.component";
 import {FlyoutTriggerDirective} from "../../../directives/flyout-trigger.directive";
+import {Subscription} from "rxjs";
 
 export type SelectOptions<TData> = Array<{ name: string; value: TData }>;
 
@@ -36,7 +37,7 @@ export type SelectOptions<TData> = Array<{ name: string; value: TData }>;
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InputSelectComponent<TData> implements TypedControlValueAccessor<TData | null>, OnInit {
+export class InputSelectComponent<TData> implements TypedControlValueAccessor<TData | null>, OnInit, OnDestroy {
 
   /**
    * the selection items that can be chosen of
@@ -105,7 +106,8 @@ export class InputSelectComponent<TData> implements TypedControlValueAccessor<TD
   circleCheckIcon = faCircleCheck;
 
   private injector = inject(Injector);
-  private changeDetectorRef = inject(ChangeDetectorRef);
+  private _changeDetector = inject(ChangeDetectorRef);
+  private _statusSubscription?: Subscription;
 
   @HostBinding("attr.id") get hideIdAttr() { return null; }
   @HostBinding("attr.name") get hideNameAttr() { return null; }
@@ -116,7 +118,7 @@ export class InputSelectComponent<TData> implements TypedControlValueAccessor<TD
    * @returns name or empty indicator
    */
   get currentValueName() {
-    const opt = this.options.find(o => o.value === this.value);
+    const opt = this.options.find(o => this.comparatorFn(this.value, o.value));
     return opt?.name ?? this.nullName;
   }
 
@@ -131,11 +133,20 @@ export class InputSelectComponent<TData> implements TypedControlValueAccessor<TD
     return [...this.options, ...(this.nullable ? [{ value: null, name: this.nullName }] : [])];
   }
 
+  @Input()
+  comparatorFn: ((a: TData | null, b: TData | null) => boolean) = (a, b) => a === b;
+
   /**
    * get the form control (self) avoiding circular deps
    */
   ngOnInit(): void {
     this.ngControl = this.injector.get(NgControl);
+
+    this._statusSubscription = this.ngControl.statusChanges?.subscribe(() => this._changeDetector.detectChanges());
+  }
+
+  ngOnDestroy() {
+    this._statusSubscription?.unsubscribe();
   }
 
   /**
@@ -144,10 +155,10 @@ export class InputSelectComponent<TData> implements TypedControlValueAccessor<TD
    * @param value new value
    */
   writeValue(value: TData | null): void {
-    const match = this.options.find(o => o.value === value);
+    const match = this.options.find(o => this.comparatorFn(o.value, value));
     if (match !== undefined) {
       this.value = value;
-      this.changeDetectorRef.markForCheck();
+      this._changeDetector.markForCheck();
     } else {
       const oldValue = this.value;
       this.value = this.nullable || this.options.length === 0 ? null : this.options[0].value;
@@ -155,7 +166,7 @@ export class InputSelectComponent<TData> implements TypedControlValueAccessor<TD
       if(oldValue === this.value) {return;}
       if (this.onChange !== undefined) {
         this.onChange(this.value);
-        this.changeDetectorRef.markForCheck();
+        this._changeDetector.markForCheck();
       } else {
         this.initModified = this.value;
       }
@@ -192,6 +203,7 @@ export class InputSelectComponent<TData> implements TypedControlValueAccessor<TD
    */
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
+    this._changeDetector.detectChanges();
   }
 
   /**

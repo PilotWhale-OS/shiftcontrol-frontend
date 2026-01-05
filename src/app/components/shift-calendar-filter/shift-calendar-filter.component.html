@@ -47,7 +47,7 @@
       @if(statistics !== undefined) {
         <small>Results:</small>
         <span>{{statistics.totalShifts}} shifts</span>
-        <span>{{statistics.totalHours}} hours</span>
+        <span>{{statistics.totalHours | number:'1.0-0'}} hours</span>
         <span>{{statistics.unassignedCount}} unassigned</span>
       }
     </div>
