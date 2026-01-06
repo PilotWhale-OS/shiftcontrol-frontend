@@ -31,7 +31,7 @@ export class PageComponent {
   }
 
   public get profile$() {
-    return this._userService.profile$;
+    return this._userService.kcProfile$;
   }
 
   /**

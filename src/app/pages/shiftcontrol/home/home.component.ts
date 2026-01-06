@@ -70,7 +70,7 @@ export class HomeComponent {
   }
 
   protected get name$(){
-    return this._userService.profile$.pipe(
+    return this._userService.kcProfile$.pipe(
       map(user => `${user?.firstName}`)
     );
   }

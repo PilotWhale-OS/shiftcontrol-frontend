@@ -53,7 +53,7 @@ export class AccountComponent implements OnDestroy {
       checked: this._fb.nonNullable.control<boolean>(false)
     });
 
-    this._profileSubscription = this._userService.profile$.subscribe(profile => {
+    this._profileSubscription = this._userService.kcProfile$.subscribe(profile => {
       if(profile) {
         this.form.setValue({
           givenName: profile.firstName ?? "",
@@ -100,7 +100,7 @@ export class AccountComponent implements OnDestroy {
   }
 
   public get user() {
-    return this._userService.profile$;
+    return this._userService.kcProfile$;
   }
 
   ngOnDestroy(): void {
