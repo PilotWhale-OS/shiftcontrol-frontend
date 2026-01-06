@@ -6,7 +6,7 @@
     <h1 class="col-span-2 signature-gradient-font">Event Details</h1>
 
     <div class="flex flex-col gap-sm col-start-1 row-start-2">
-      <small><fa-icon [icon]="iconName" class="pr-sm" />Event Name</small>
+      <small><fa-icon [icon]="icons.name" class="pr-sm" />Event Name</small>
       <label for="event-manage-name">Expressive name for the event</label>
       <xsb-input-text #name
                       [formControl]="form.controls.name"
@@ -16,7 +16,7 @@
     </div>
 
     <div class="flex flex-col gap-sm col-start-1 row-start-3">
-      <small><fa-icon [icon]="iconCaption" class="pr-sm" />Caption</small>
+      <small><fa-icon [icon]="icons.shortDescription" class="pr-sm" />Caption</small>
       <label for="event-manage-caption">Short description, shown in the event preview</label>
       <xsb-input-text #shortDescription
                       [formControl]="form.controls.shortDescription"
@@ -26,7 +26,7 @@
     </div>
 
     <div class="flex flex-col gap-sm col-start-1 row-start-4 col-span-2">
-      <small><fa-icon [icon]="iconDescription" class="pr-sm" />Description</small>
+      <small><fa-icon [icon]="icons.longDescription" class="pr-sm" />Description</small>
       <label for="event-manage-description">Detailed description, shown in the event overview</label>
       <xsb-input-text #longDescription
                       [formControl]="form.controls.longDescription"
@@ -37,7 +37,7 @@
     </div>
 
     <div class="flex flex-col gap-sm col-start-2 row-start-2">
-      <small><fa-icon [icon]="iconStartDate" class="pr-sm" />Start Date</small>
+      <small><fa-icon [icon]="icons.startDate" class="pr-sm" />Start Date</small>
       <label for="event-manage-from">First whole day, in your timezone</label>
       <xsb-input-date #startDate name="event-manage-from"
                       [formControl]="form.controls.startDate"
@@ -45,7 +45,7 @@
     </div>
 
     <div class="flex flex-col gap-sm col-start-2 row-start-3">
-      <small><fa-icon [icon]="iconEndDate" class="pr-sm" />End Date</small>
+      <small><fa-icon [icon]="icons.endDate" class="pr-sm" />End Date</small>
       <label for="event-manage-to">Last whole day, in your timezone </label>
       <xsb-input-date #endDate name="event-manage-to"
                       [formControl]="form.controls.endDate"

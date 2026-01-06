@@ -1,5 +1,4 @@
 import {Component, inject} from "@angular/core";
-import {faBook, faCircleInfo, faTag} from "@fortawesome/free-solid-svg-icons";
 import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {PageService} from "../../../../services/page/page.service";
@@ -14,12 +13,14 @@ import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {InputButtonComponent} from "../../../../components/inputs/input-button/input-button.component";
 import {InputTextComponent} from "../../../../components/inputs/input-text/input-text.component";
 import {TypedFormControlDirective} from "../../../../directives/typed-form-control.directive";
-import {ShiftPlanEndpointService} from "../../../../../shiftservice-client/api/shift-plan-endpoint.service";
+import {ShiftPlanEndpointService} from "../../../../../shiftservice-client";
 import {DialogComponent} from "../../../../components/dialog/dialog.component";
 import {AsyncPipe} from "@angular/common";
 import {BehaviorSubject, combineLatestWith, filter, map, switchMap, take} from "rxjs";
 import {ManageInviteComponent} from "../../../../components/manage-invite/manage-invite.component";
 import {ManageRoleComponent} from "../../../../components/manage-role/manage-role.component";
+import {icons} from "../../../../util/icons";
+import {InputNumberComponent} from "../../../../components/inputs/input-number/input-number.component";
 
 @Component({
   selector: "app-manage-shift-plan",
@@ -33,7 +34,8 @@ import {ManageRoleComponent} from "../../../../components/manage-role/manage-rol
     AsyncPipe,
     ManageInviteComponent,
     DialogComponent,
-    ManageRoleComponent
+    ManageRoleComponent,
+    InputNumberComponent
   ],
   templateUrl: "./manage-shift-plan.component.html",
   styleUrl: "./manage-shift-plan.component.scss"
@@ -42,9 +44,7 @@ export class ManageShiftPlanComponent {
 
   public readonly form;
 
-  protected readonly iconName = faTag;
-  protected readonly iconCaption = faCircleInfo;
-  protected readonly iconDescription = faBook;
+  protected readonly icons = icons;
 
   protected readonly manageData$ =
     new BehaviorSubject<undefined | { plan: ShiftPlanDto; roles: RoleDto[]; invites: ShiftPlanInviteDto[] }>(undefined);
@@ -66,7 +66,8 @@ export class ManageShiftPlanComponent {
     this.form = this._fb.group({
       name: this._fb.nonNullable.control<string>("", [Validators.maxLength(30), Validators.required]),
       shortDescription: this._fb.nonNullable.control<string>("", [Validators.maxLength(100)]),
-      longDescription: this._fb.nonNullable.control<string>("", [Validators.maxLength(1000)])
+      longDescription: this._fb.nonNullable.control<string>("", [Validators.maxLength(1000)]),
+      defaultRewardPointsPerMinute: this._fb.nonNullable.control<number>(10, [Validators.min(0)])
     });
 
     const planId = this._route.snapshot.paramMap.get("shiftPlanId") ?? undefined;
@@ -86,7 +87,8 @@ export class ManageShiftPlanComponent {
         this.form.setValue({
           name: dashboard.shiftPlan.name,
           shortDescription: dashboard.shiftPlan.shortDescription ?? "",
-          longDescription: dashboard.shiftPlan.longDescription ?? ""
+          longDescription: dashboard.shiftPlan.longDescription ?? "",
+          defaultRewardPointsPerMinute: dashboard.shiftPlan.defaultNoRolePointsPerMinute
         });
 
         this.eventId = dashboard.eventOverview.id;
@@ -121,7 +123,8 @@ export class ManageShiftPlanComponent {
       this._planService.createShiftPlan(this.eventId, {
         name: this.form.controls.name.value,
         shortDescription: this.form.controls.shortDescription.value,
-        longDescription: this.form.controls.longDescription.value
+        longDescription: this.form.controls.longDescription.value,
+        defaultNoRolePointsPerMinute: this.form.controls.defaultRewardPointsPerMinute.value
       }).subscribe({
         next: (plan) => {
           this._router.navigateByUrl(`/plans/${plan.id}`);
@@ -153,7 +156,8 @@ export class ManageShiftPlanComponent {
       this._planService.updateShiftPlan(this.planId, {
         name: this.form.controls.name.value,
         shortDescription: this.form.controls.shortDescription.value,
-        longDescription: this.form.controls.longDescription.value
+        longDescription: this.form.controls.longDescription.value,
+        defaultNoRolePointsPerMinute: this.form.controls.defaultRewardPointsPerMinute.value
       }).subscribe({
         next: (plan) => {
           this._router.navigateByUrl(`/plans/${plan.id}`);

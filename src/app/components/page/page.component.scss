@@ -5,11 +5,12 @@
 
   display: grid;
   grid-template-rows: auto 1fr;
-  @apply bg-background-item;
+  /*@apply bg-background-card;*/
+  background: linear-gradient(180deg, rgb(13 13 20) 0%, rgb(13 14 22) 100%);
 
   .profile {
     @apply rounded-full aspect-square h-10 bg-framing-highlight_hint grid place-content-center select-none cursor-pointer;
-    @apply border-ctr border-framing-item;
+    /*@apply border-ctr border-framing-item;*/
   }
 
   .header {
@@ -80,8 +81,8 @@
     grid-row: 2;
     border-top-left-radius: 2.5em;
     border-top-right-radius: 2.5em;
-    background: linear-gradient(180deg, rgb(13 13 20) 0%, rgb(13 14 22) 100%);
-    box-shadow: 0 0 1px 1px rgb(40 43 87);/*0px 0px 10px 7px rgb(28 32 55), 0px -2px 0px 0px rgb(193 193 209);*/
+
+   /* box-shadow: 0 0 1px 1px rgb(40 43 87);*//*0px 0px 10px 7px rgb(28 32 55), 0px -2px 0px 0px rgb(193 193 209);*/
   }
 
 

@@ -32,11 +32,11 @@
   <div class="flex flex-row gap-sm">
     <div class="badge w-fit" [app-tooltip]="'The reward\nfor this position'">
       <fa-icon [icon]="iconReward" />
-      {{position.rewardPoints}} points
+      {{position.rewardPointsDto.currentRewardPoints}} points
     </div>
     <div class="badge w-fit" [app-tooltip]="'The open slots\nof this position'">
       <fa-icon [icon]="iconSlots" />
-      {{position.assignedVolunteers.length}} / {{position.desiredVolunteerCount}} taken
+      {{position.assignments.length}} / {{position.desiredVolunteerCount}} taken
     </div>
     <div class="badge hint w-fit" [app-tooltip]="'The location\nof this position'">
       <fa-icon [icon]="iconLocation" />
@@ -74,7 +74,7 @@
           You are eligible for this position. Claim your spot!
       </span>
 
-    @if (tradeAvailable || auctionAvailable || !shiftLocked && (position.assignedVolunteers.length) < (position.desiredVolunteerCount)) {
+    @if (tradeAvailable || auctionAvailable || !shiftLocked && (position.assignments.length) < (position.desiredVolunteerCount)) {
       <xsb-input-button content="Sign Up" size="regular" action="success" name="shift-signup" />
     } @else {
       <xsb-input-button content="Request Sign Up" size="regular" action="normal" name="shift-request-signup" />

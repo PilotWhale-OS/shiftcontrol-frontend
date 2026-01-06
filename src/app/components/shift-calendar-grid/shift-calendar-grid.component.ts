@@ -1,7 +1,4 @@
 import {Component, ElementRef, viewChild} from "@angular/core";
-import {DialogComponent} from "../dialog/dialog.component";
-import {ShiftDetailsViewComponent} from "../shift-details-view/shift-details-view.component";
-import {faCalendarDay, faFilter, faLocationDot} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {
   ActivityDto, LocationDto,
@@ -25,6 +22,7 @@ import {
 } from "rxjs";
 import {toObservable} from "@angular/core/rxjs-interop";
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
+import {icons} from "../../util/icons";
 
 /**
  * Configuration for the shift calendar grid component.
@@ -39,6 +37,8 @@ export interface calendarConfig {
   hideFilterToggle?: boolean;
   emptySpaceClickCallback?: (date: Date, location: LocationDto) => void;
   activityClickCallback?: (activity: ActivityDto) => void;
+  shiftClickCallback?: (shift: ShiftDto) => void;
+  shiftPaddingColumn?: boolean;
 }
 
 /**
@@ -71,8 +71,6 @@ export interface calendarNavigation {
 @Component({
   selector: "app-shift-calendar-grid",
   imports: [
-    DialogComponent,
-    ShiftDetailsViewComponent,
     FaIconComponent,
     DatePipe,
     NgClass,
@@ -95,10 +93,7 @@ export class ShiftCalendarGridComponent {
    */
   public readonly headDay$: Observable<Date>;
 
-  protected viewShift = false;
-  protected readonly iconLocation = faLocationDot;
-  protected readonly iconDay = faCalendarDay;
-  protected readonly iconFilter = faFilter;
+  protected readonly icons = icons;
   protected readonly scrolled$ = new Subject<Event>();
   protected readonly bodyInitialized$ = new BehaviorSubject<boolean>(false);
 
@@ -160,7 +155,10 @@ export class ShiftCalendarGridComponent {
 
   constructor() {
     this.navigation$ = this._visibleDates$.pipe(
-      withLatestFrom(this.bodyInitialized$),
+      withLatestFrom(this.bodyInitialized$.pipe(
+        filter(initialized => initialized),
+        take(1)
+      )),
       filter(([, initialized]) => initialized),
       combineLatestWith(this.loadedDays$),
       map(([[visibleDates], loadedDays]) => {
@@ -398,10 +396,14 @@ export class ShiftCalendarGridComponent {
         return `venue-${locationName}-start venue-${locationName}-activity-start] ${
           config.activityWidth ?? this.activityWidth
         } [venue-${locationName}-activity-end venue-${locationName}-shift-start ${
-          Array(locationColumn.requiredShiftColumns).fill(undefined).map((_, index) =>
+          [...Array(locationColumn.requiredShiftColumns).fill(undefined).map((_, index) =>
             `venue-${locationName}-shift-col-${index + 1}-start] ${
               this.shiftWidth
-            } [venue-${locationName}-shift-col-${index + 1}-end`).join(" ")
+            } [venue-${locationName}-shift-col-${index + 1}-end`),
+            config.shiftPaddingColumn ? `venue-${locationName}-shift-col-${locationColumn.requiredShiftColumns}-start] ${
+              config.activityWidth ?? this.activityWidth
+            } [venue-${locationName}-shift-col-${locationColumn.requiredShiftColumns + 1}-end` : ""
+          ].join(" ")
         } venue-${locationName}-shift-end venue-${locationName}-end venue-${locationName}-gap-start] ${
           this.venueGapWidth
         } [venue-${locationName}-gap-end`;
@@ -438,7 +440,7 @@ export class ShiftCalendarGridComponent {
    * @param shift
    * @protected
    */
-  protected getShiftDisplayCategory(shift: ShiftDto): "eligible" | "signed-up" | undefined {
+  protected getShiftDisplayCategory(shift: ShiftDto): "eligible" | "signed-up" | "" {
     if(shift.positionSlots.some(slot => slot.positionSignupState ===  PositionSlotDto.PositionSignupStateEnum.SignedUp)){
       return "signed-up";
     }
@@ -449,7 +451,7 @@ export class ShiftCalendarGridComponent {
       return "eligible";
     }
 
-    return undefined;
+    return "";
   }
 
   /**

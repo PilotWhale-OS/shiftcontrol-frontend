@@ -16,7 +16,7 @@
     </div>
 
     @for (card of cards; track card) {
-      <div class="card interaction" [routerLink]="card.href">
+      <div class="card interaction" [ngClass]="card.spotlight === true ? 'spotlight' : ''" [routerLink]="card.href">
         <h1>{{card.title}}</h1>
         <span>{{card.content}}</span>
       </div>
@@ -28,7 +28,7 @@
 
     <!-- title -->
     <h1 class="col-span-2 signature-gradient-font">
-      <fa-icon [icon]="iconTasks" class="icon" />
+      <fa-icon [icon]="icons.schedule" class="icon" />
       Your Schedule
     </h1>
 
@@ -44,7 +44,7 @@
 
     <!-- title -->
     <h1 class="col-span-2 signature-gradient-font">
-      <fa-icon [icon]="iconTrade" class="icon" />
+      <fa-icon [icon]="icons.trade" class="icon" />
       Shift Auctions & Trades
     </h1>
 

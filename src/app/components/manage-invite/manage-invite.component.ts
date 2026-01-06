@@ -4,15 +4,6 @@ import {
 } from "../../../shiftservice-client";
 import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import {
-  faCalendarDay,
-  faCertificate,
-  faClock, faHashtag,
-  faLink,
-  faLock,
-  faMessage,
-  faStop, faUser
-} from "@fortawesome/free-solid-svg-icons";
 import {TypedFormControlDirective} from "../../directives/typed-form-control.directive";
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
 import {AsyncPipe, DatePipe, NgClass} from "@angular/common";
@@ -22,6 +13,7 @@ import {InputToggleComponent} from "../inputs/input-toggle/input-toggle.componen
 import {InputDateComponent} from "../inputs/input-date/input-date.component";
 import {BehaviorSubject, Subscription} from "rxjs";
 import {InputNumberComponent} from "../inputs/input-number/input-number.component";
+import {icons} from "../../util/icons";
 
 @Component({
   selector: "app-manage-invite",
@@ -53,16 +45,7 @@ export class ManageInviteComponent implements OnDestroy {
   @Output()
   public inviteChanged = new EventEmitter<void>();
 
-  protected readonly iconInvite = faMessage;
-  protected readonly iconActive = faCertificate;
-  protected readonly iconType = faUser;
-  protected readonly iconRole = faHashtag;
-  protected readonly iconExpiry = faClock;
-  protected readonly iconLimit = faStop;
-  protected readonly iconLock = faLock;
-  protected readonly iconDate = faCalendarDay;
-  protected readonly iconCounter = faHashtag;
-  protected readonly iconUrl = faLink;
+  protected readonly icons = icons;
   protected readonly form;
 
   protected inviteOptions: SelectOptions<ShiftPlanInviteCreateRequestDto.TypeEnum> = [

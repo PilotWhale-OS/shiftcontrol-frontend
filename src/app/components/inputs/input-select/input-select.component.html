@@ -36,16 +36,16 @@
 
       <!-- option items -->
       @for (option of allOptions; track option) {
-        <div role="option" [attr.aria-selected]="value === option.value"
+        <div role="option" [attr.aria-selected]="comparatorFn(value,option.value)"
                (click)="selectValue(option.value)" (keyup)="selectValue(option.value)" tabindex="0"
                class="flex gap-md items-center cursor-pointer hover:opacity-100" [ngClass]="{
-          'opacity-100' : value === option.value,
-          'opacity-50' : value !== option.value
+          'opacity-100' : comparatorFn(value,option.value),
+          'opacity-50' : !comparatorFn(value,option.value)
         }">
 
           <!-- active icon -->
           <fa-icon [icon]="circleCheckIcon" class="text-sm"
-                   [ngClass]="{'opacity-0' : value !== option.value, 'opacity-50' : value === option.value}" />
+                   [ngClass]="{'opacity-0' : !comparatorFn(value,option.value), 'opacity-50' : comparatorFn(value,option.value)}" />
 
           <!-- display name -->
           <div>

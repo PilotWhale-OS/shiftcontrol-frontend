@@ -7,12 +7,12 @@
         <div class="flex gap-sm">
           <h1 class="signature-gradient-font grow pr-lg">{{invite.inviteDto.shiftPlanDto.name}}</h1>
           <div class="badge h-fit" [app-tooltip]="'Start & end date\n of the event'">
-            <fa-icon [icon]="iconDate" />
+            <fa-icon [icon]="icons.date" />
             {{ invite.eventDto.startTime | date:"shortDate" }} - {{ invite.eventDto.endTime | date:"shortDate" }}
           </div>
 
           <div class="badge hint h-fit" [app-tooltip]="'Associated event\n of this shift plan'">
-            <fa-icon [icon]="iconEvent" />
+            <fa-icon [icon]="icons.event" />
             Pilot Event
           </div>
         </div>

@@ -7,7 +7,7 @@ import {DialogShiftTradeComponent} from "../dialog-shift-trade/dialog-shift-trad
 import {faCalendar, faGift, faLocationDot, faLock, faStar} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {TooltipDirective} from "../../directives/tooltip.directive";
-import {PositionSlotDto, ShiftDto, VolunteerDto} from "../../../shiftservice-client";
+import {AssignmentDto, PositionSlotDto, ShiftDto} from "../../../shiftservice-client";
 import {ShiftDetailsPositionComponent} from "../shift-details-position/shift-details-position.component";
 
 @Component({
@@ -44,6 +44,7 @@ export class ShiftDetailsViewComponent {
     endTime: "asdasdasd",
     relatedActivity: undefined,
     positionSlots: [],
+    bonusRewardPoints: 0,
     location: {
       id: "asdff",
       name: "Stage 1",
@@ -74,10 +75,14 @@ export class ShiftDetailsViewComponent {
         description: description,
         id: "asda",
         selfAssignable: false,
+        rewardPointsPerMinute: 1
       },
       preferenceValue: 0,
-      rewardPoints: 100,
-      assignedVolunteers: Array(assCount) as unknown as VolunteerDto[],
+      rewardPointsDto: {
+        currentRewardPoints: 100,
+        rewardPointsConfigHash: ""
+      },
+      assignments: Array(assCount) as unknown as AssignmentDto[],
       positionSignupState: state,
       desiredVolunteerCount: volCount,
       tradeInfoDtos: [],

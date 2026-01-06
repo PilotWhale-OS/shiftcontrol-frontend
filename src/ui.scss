@@ -26,9 +26,9 @@
     }
   }
 
-  &:hover:not(.ghost) {
+  /*&:hover:not(.ghost) {
     box-shadow: 0px 0px 5px 0px rgb(25 28 43);
-  }
+  }*/
 
   &.interaction:not(.ghost) {
     @apply cursor-pointer border-framing-item bg-background-item;

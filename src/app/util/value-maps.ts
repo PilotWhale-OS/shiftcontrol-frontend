@@ -1,4 +1,5 @@
 import {time} from "../components/inputs/input-time/input-time.component";
+import {DatePipe} from "@angular/common";
 
 export const mapValue = {
   undefinedIfEmptyString(value: string | null | undefined): string | undefined {
@@ -49,5 +50,95 @@ export const mapValue = {
       combined.setHours(0, 0, 0, 0);
     }
     return combined;
+  },
+  /**
+   * Concat start and end date as intuitive string in user timezone
+   * If dates are the same: day year, hour:minute to hour:minute
+   * If dates are different: day year hour:minute to day year hour:minute
+   * If dates and hours are the same: day year hour:minute-minute
+   * @param start
+   * @param end
+   * @param datePipe
+   */
+  dateRangeToDateTimeString(start: Date, end: Date, datePipe: DatePipe): string {
+    const sameDay = start.getFullYear() === end.getFullYear()
+      && start.getMonth() === end.getMonth()
+      && start.getDate() === end.getDate();
+    const sameHour = sameDay
+      && start.getHours() === end.getHours();
+
+    if(sameHour) {
+      return `${
+        datePipe.transform(start, "mediumDate")
+      } ${
+        start.getHours().toString().padStart(2,"0")
+      }:${
+        start.getMinutes().toString().padStart(2,"0")
+      }-${
+        end.getMinutes().toString().padStart(2,"0")
+      }`;
+    } else if(sameDay) {
+      return `${
+        datePipe.transform(start, "mediumDate")
+      } ${
+        start.getHours().toString().padStart(2,"0")
+      }:${
+        start.getMinutes().toString().padStart(2,"0")
+      } to ${
+        end.getHours().toString().padStart(2,"0")
+      }:${
+        end.getMinutes().toString().padStart(2,"0")
+      }`;
+    } else {
+      return `${
+        datePipe.transform(start, "mediumDate")
+      } ${
+        start.getHours().toString().padStart(2,"0")
+      }:${
+        start.getMinutes().toString().padStart(2,"0")
+      } to ${
+        datePipe.transform(end, "mediumDate")
+      } ${
+        end.getHours().toString().padStart(2,"0")
+      }:${
+        end.getMinutes().toString().padStart(2,"0")
+      }`;
+    }
+  },
+  /**
+   * Concat start and end date as intuitive string in user timezone
+   * Don't repeat year, and month parts if same
+   * @param start
+   * @param end
+   * @param datePipe
+   */
+  dateRangeToDateString(start: Date, end: Date, datePipe: DatePipe): string {
+    const sameYear = start.getFullYear() === end.getFullYear();
+    const sameMonth = sameYear && start.getMonth() === end.getMonth();
+    const sameDay = sameMonth && start.getDate() === end.getDate();
+
+    if(sameDay) {
+      return `${
+        datePipe.transform(start, "longDate")
+      }`;
+    } else if(sameMonth) {
+      return `${
+        datePipe.transform(start, "MMMM d")
+      } to ${
+        datePipe.transform(end, "d, y")
+      }`;
+    } else if(sameYear) {
+      return `${
+        datePipe.transform(start, "MMMM d")
+      } to ${
+        datePipe.transform(end, "MMMM d, y")
+      }`;
+    } else {
+      return `${
+        datePipe.transform(start, "longDate")
+      } to ${
+        datePipe.transform(end, "longDate")
+      }`;
+    }
   }
 };

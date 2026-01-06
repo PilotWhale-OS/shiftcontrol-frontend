@@ -4,13 +4,13 @@
   <div class="flex flex-row gap-sm items-center">
     @if (_role === undefined){
       <div class="badge success w-fit">
-        <fa-icon [icon]="roleIcon" />
+        <fa-icon [icon]="icons.role" />
         Create Volunteer Role
       </div>
     }
     @else {
       <div class="badge hint w-fit">
-        <fa-icon [icon]="roleIcon" />
+        <fa-icon [icon]="icons.role" />
         Volunteer Role
       </div>
     }
@@ -33,7 +33,7 @@
 
   <div class="grid grid-cols-2 gap-lg">
     <div class="flex flex-col gap-sm">
-      <small><fa-icon [icon]="iconName" class="pr-sm" />Role Name</small>
+      <small><fa-icon [icon]="icons.name" class="pr-sm" />Role Name</small>
       <xsb-input-text #name
                       [formControl]="form.controls.name"
                       [xsb-typed]="[name, form.controls.name]"
@@ -42,7 +42,16 @@
     </div>
 
     <div class="flex flex-col gap-sm">
-      <small><fa-icon [icon]="iconCaption" class="pr-sm" />Description</small>
+      <small><fa-icon [icon]="icons.rewards" class="pr-sm" />Reward Points per minute</small>
+      <xsb-input-number #rewardPointsPerMinute
+                      [formControl]="form.controls.rewardPointsPerMinute"
+                      [xsb-typed]="[rewardPointsPerMinute, form.controls.rewardPointsPerMinute]"
+                      name="role-manage-points" placeholder="Reward Points"
+      />
+    </div>
+
+    <div class="flex flex-col gap-sm col-span-2">
+      <small><fa-icon [icon]="icons.description" class="pr-sm" />Description</small>
       <xsb-input-text #description
                       [formControl]="form.controls.description"
                       [xsb-typed]="[description, form.controls.description]"

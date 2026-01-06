@@ -6,7 +6,7 @@ import {InputTextComponent} from "../inputs/input-text/input-text.component";
 import {TypedFormControlDirective} from "../../directives/typed-form-control.directive";
 import {InputDateComponent} from "../inputs/input-date/input-date.component";
 import {InputMultiselectComponent} from "../inputs/input-multiselect/input-multiselect.component";
-import {NgClass} from "@angular/common";
+import {DecimalPipe, NgClass} from "@angular/common";
 import {ScheduleStatisticsDto, ShiftPlanScheduleFilterDto} from "../../../shiftservice-client";
 
 export enum ShiftCalendarViewMode {
@@ -23,7 +23,8 @@ export enum ShiftCalendarViewMode {
     InputDateComponent,
     InputSelectComponent,
     InputMultiselectComponent,
-    NgClass
+    NgClass,
+    DecimalPipe
   ],
   standalone: true,
   templateUrl: "./shift-calendar-filter.component.html",
