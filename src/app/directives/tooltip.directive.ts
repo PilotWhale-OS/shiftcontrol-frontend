@@ -11,7 +11,7 @@ import {ComponentPortal} from "@angular/cdk/portal";
 export class TooltipDirective implements OnInit, OnDestroy {
 
   @Input()
-  public tooltipMaxWidth?: string;
+  public tooltipMaxWidth: string = "20rem";
 
   @Input("app-tooltip") text = "";
   private overlayRef?: OverlayRef;

@@ -8,15 +8,6 @@ import {
   addUnavailabilityInput,
   DialogAddUnavailabilityComponent
 } from "../../../components/dialog-add-unavailability/dialog-add-unavailability.component";
-import {
-  faCalendar,
-  faCalendarDays,
-  faGift,
-  faHourglass,
-  faPause,
-  faPeopleGroup,
-  faPlusCircle, faWrench
-} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {
   EventEndpointService,
@@ -29,6 +20,7 @@ import {AsyncPipe, DatePipe, DecimalPipe} from "@angular/common";
 import {TooltipDirective} from "../../../directives/tooltip.directive";
 import {DialogAddEmergencyComponent} from "../../../components/dialog-add-emergency/dialog-add-emergency.component";
 import {UserService} from "../../../services/user/user.service";
+import {icons} from "../../../util/icons";
 
 @Component({
   selector: "app-plans",
@@ -56,15 +48,7 @@ export class EventComponent {
   protected event$: Observable<EventShiftPlansOverviewDto>;
   protected timeConstraints$: Observable<TimeConstraintDto[]>;
 
-  protected readonly iconVolunteers = faPeopleGroup;
-  protected readonly iconHours = faHourglass;
-  protected readonly iconDay = faCalendar;
-  protected readonly iconDate = faCalendarDays;
-  protected readonly iconRewards = faGift;
-  protected readonly iconUnavailable = faPause;
-  protected readonly iconCreate = faPlusCircle;
-  protected readonly iconCalendar = faCalendar;
-  protected readonly iconManage = faWrench;
+  protected readonly icons = icons;
 
   private readonly _pageService = inject(PageService);
   private readonly _fb = inject(FormBuilder);

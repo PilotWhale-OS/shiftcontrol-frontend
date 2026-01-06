@@ -6,11 +6,11 @@ import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {mapValue} from "../../util/value-maps";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {InputTextComponent} from "../inputs/input-text/input-text.component";
-import {faCircleInfo, faHashtag, faTag} from "@fortawesome/free-solid-svg-icons";
 import {TypedFormControlDirective} from "../../directives/typed-form-control.directive";
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
 import {NgClass} from "@angular/common";
 import {DialogComponent} from "../dialog/dialog.component";
+import {icons} from "../../util/icons";
 
 @Component({
   selector: "app-manage-role",
@@ -35,9 +35,7 @@ export class ManageRoleComponent {
   @Output()
   public roleChanged = new EventEmitter<void>();
 
-  protected readonly roleIcon = faHashtag;
-  protected readonly iconName = faTag;
-  protected readonly iconCaption = faCircleInfo;
+  protected readonly icons = icons;
   protected readonly form;
   protected _role?: RoleDto;
 

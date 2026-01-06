@@ -30,6 +30,9 @@ export class DialogComponent implements AfterViewInit, OnDestroy {
   @Input()
   danger?: string;
 
+  @Input()
+  maxSize = false;
+
   /**
    * reference to the portal directive
    */

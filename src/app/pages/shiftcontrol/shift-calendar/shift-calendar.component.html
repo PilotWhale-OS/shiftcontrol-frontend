@@ -17,3 +17,27 @@
   </div>
 
 </div>
+
+
+<!-- view/edit/manage shift -->
+@if (selectedShift$ | async; as shiftParams){
+  @if (shiftParams !== null && shiftParams !== undefined){
+
+    <xsb-dialog #dialog (closeDialog)="selectedShift$.next(undefined)" [maxSize]="true">
+
+      <ng-container dialog-header>
+        <h1 class="signature-gradient-font">
+          {{manage.title$ | async}}
+        </h1>
+      </ng-container>
+
+      <ng-container dialog-body>
+        <app-manage-shift #manage
+                          [manageData]="shiftParams"
+                          (shiftChanged)="shiftChanged$.next($event)"
+                          (navigateOut)="dialog.close()"
+        />
+      </ng-container>
+    </xsb-dialog>
+  }
+}

@@ -1,11 +1,11 @@
 import {Component, Input} from "@angular/core";
 import {RouterLink} from "@angular/router";
-import {faCalendar, faLocationDot, faStar, faWrench} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {TooltipDirective} from "../../directives/tooltip.directive";
 import {EventDto, PositionSlotDto, ShiftDto, ShiftPlanDto} from "../../../shiftservice-client";
 import {BehaviorSubject} from "rxjs";
 import {AsyncPipe, DatePipe} from "@angular/common";
+import {icons} from "../../util/icons";
 
 type groupedShifts = Map<Date, shiftWithOrigin[]>;
 
@@ -40,11 +40,7 @@ export class ShiftScheduleComponent {
   public showShiftPersonalDetails = false;
 
   protected readonly shifts$ = new BehaviorSubject<groupedShifts>(new Map());
-
-  protected readonly iconEvent = faStar;
-  protected readonly iconPlan = faCalendar;
-  protected readonly iconRole = faWrench;
-  protected readonly iconLocation = faLocationDot;
+  protected readonly icons = icons;
 
   @Input()
   public set shifts(shifts: shiftWithOrigin[]) {

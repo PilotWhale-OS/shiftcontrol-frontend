@@ -8,11 +8,11 @@ import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {mapValue} from "../../util/value-maps";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {InputTextComponent} from "../inputs/input-text/input-text.component";
-import {faCircleInfo, faLink, faLock, faMapMarker, faTag} from "@fortawesome/free-solid-svg-icons";
 import {TypedFormControlDirective} from "../../directives/typed-form-control.directive";
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
 import {NgClass} from "@angular/common";
 import {DialogComponent} from "../dialog/dialog.component";
+import {icons} from "../../util/icons";
 
 @Component({
   selector: "app-manage-location",
@@ -36,11 +36,7 @@ export class ManageLocationComponent {
   @Output()
   public locationChanged = new EventEmitter<void>();
 
-  protected readonly locationIcon = faMapMarker;
-  protected readonly iconName = faTag;
-  protected readonly iconCaption = faCircleInfo;
-  protected readonly iconUrl = faLink;
-  protected readonly iconLock = faLock;
+  protected readonly icons = icons;
   protected readonly form;
   protected _location?: LocationDto;
 

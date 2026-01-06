@@ -4,11 +4,11 @@ import {BC_EVENT, BC_PLAN_DASHBOARD, BC_PLAN_ONBOARDING} from "../../../breadcru
 import {InputButtonComponent} from "../../../components/inputs/input-button/input-button.component";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import {faCalendar, faStar} from "@fortawesome/free-solid-svg-icons";
 import {ShiftPlanInviteDto, ShiftPlanInviteEndpointService, ShiftPlanJoinOverviewDto} from "../../../../shiftservice-client";
 import {BehaviorSubject} from "rxjs";
 import {AsyncPipe, DatePipe} from "@angular/common";
 import {TooltipDirective} from "../../../directives/tooltip.directive";
+import {icons} from "../../../util/icons";
 
 @Component({
   selector: "app-plan-onboarding",
@@ -26,8 +26,7 @@ import {TooltipDirective} from "../../../directives/tooltip.directive";
 })
 export class PlanOnboardingComponent {
 
-  protected readonly iconDate = faCalendar;
-  protected readonly iconEvent = faStar;
+  protected readonly icons = icons;
   protected readonly invite$ = new BehaviorSubject<ShiftPlanJoinOverviewDto | null | "INVALID">(null);
 
   private readonly _pageService = inject(PageService);

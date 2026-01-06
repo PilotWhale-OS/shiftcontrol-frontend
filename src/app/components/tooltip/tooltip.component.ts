@@ -40,5 +40,5 @@ export class TooltipComponent {
 
   @Input() text?: string;
 
-  @Input() maxWidth?: string;
+  @Input() maxWidth?: string = "10rem";
 }

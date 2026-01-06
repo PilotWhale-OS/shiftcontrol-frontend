@@ -15,7 +15,7 @@
              tooltipMaxWidth="30ex"
              [app-tooltip]="'Event dates of ' + event.eventOverview.name"
         >
-          <fa-icon [icon]="iconDay" />
+          <fa-icon [icon]="icons.date" />
           {{event.eventOverview.startTime | date:"shortDate"}} - {{event.eventOverview.endTime | date:"shortDate"}}
         </div>
 
@@ -31,21 +31,21 @@
                tooltipMaxWidth="30ex"
                [app-tooltip]="'Days where you signed up for shifts in this event'"
           >
-            <fa-icon [icon]="iconDay" />
+            <fa-icon [icon]="icons.day" />
             {{event.ownEventStatistics.busyDays}} Busy Days
           </div>
           <div class="badge"
                tooltipMaxWidth="30ex"
                [app-tooltip]="'Sum of signed up shifts in this event'"
           >
-            <fa-icon [icon]="iconHours" />
+            <fa-icon [icon]="icons.hour" />
             {{event.ownEventStatistics.totalHours | number:"1.0-0"}} Shift Hours
           </div>
           <div class="badge success"
                tooltipMaxWidth="30ex"
                [app-tooltip]="'Reward points earned during this event'"
           >
-            <fa-icon [icon]="iconRewards" />
+            <fa-icon [icon]="icons.rewards" />
             {{event.rewardPoints}} Points Rewarded
           </div>
         </div>
@@ -57,14 +57,14 @@
                tooltipMaxWidth="30ex"
                [app-tooltip]="'Volunteers participating in this event'"
           >
-            <fa-icon [icon]="iconVolunteers" />
+            <fa-icon [icon]="icons.volunteers" />
             {{event.overallEventStatistics.volunteerCount}} Volunteers
           </div>
           <div class="badge hint"
                tooltipMaxWidth="30ex"
                [app-tooltip]="'Duration of shifts during this event'"
           >
-            <fa-icon [icon]="iconHours" />
+            <fa-icon [icon]="icons.hour" />
             {{event.overallEventStatistics.totalHours | number:"1.0-0"}} Shift Hours
           </div>
         </div>
@@ -95,7 +95,7 @@
 
                   @if (constraint.type === "EMERGENCY") {
                     <div class="badge hint">
-                      <fa-icon [icon]="iconUnavailable" />
+                      <fa-icon [icon]="icons.unavailable" />
                       Emergency
                     </div>
 
@@ -106,7 +106,7 @@
 
                   @else {
                     <div class="badge success">
-                      <fa-icon [icon]="iconUnavailable" />
+                      <fa-icon [icon]="icons.unavailable" />
                       {{ getUnavailabilityDayLength(constraint) }}
                     </div>
 
@@ -130,13 +130,28 @@
         </div>
       }
 
+
+
+      @if ((userType$ | async) === "ADMIN") {
+        <!-- calendar link card -->
+        <div class="card interaction spotlight" routerLink="calendar">
+          <h1>
+            <fa-icon [icon]="icons.calendar" class="icon" />
+            View Event Calendar
+          </h1>
+          <p>
+            Manage the schedule of the event.
+          </p>
+        </div>
+      }
+
       @if ((userType$ | async) === "ADMIN") {
         <!-- manage event -->
         <div class="card interaction" routerLink="edit">
 
           <!-- info -->
-          <h1 class="compact">
-            <fa-icon [icon]="iconManage" class="icon" />
+          <h1>
+            <fa-icon [icon]="icons.manage" class="icon" />
             Manage Event
           </h1>
           <p>
@@ -145,21 +160,6 @@
 
         </div>
       }
-
-      <!-- calendar link card -->
-      <div class="card interaction spotlight" routerLink="calendar">
-        <h1 class="compact">
-          <fa-icon [icon]="iconCalendar" class="icon" />
-          Event Calendar
-        </h1>
-        <p>
-          @if ((userType$ | async) === "ADMIN") {
-            Manage the schedule of the event.
-          } @else {
-            View the schedule of the event.
-          }
-        </p>
-      </div>
     </div>
 
     <!-- shift plans list -->
@@ -170,7 +170,7 @@
           <div class="card spotlight interaction grid place-items-center p-lg"
                [routerLink]="'create-plan'">
             <h2 class="compact">
-              <fa-icon [icon]="iconCreate" class="pr-sm" />
+              <fa-icon [icon]="icons.create" class="pr-sm" />
               Create new shift plan
             </h2>
           </div>

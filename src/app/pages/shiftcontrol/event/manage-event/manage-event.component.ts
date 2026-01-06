@@ -2,7 +2,6 @@ import {Component, inject} from "@angular/core";
 import {InputTextComponent} from "../../../../components/inputs/input-text/input-text.component";
 import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {TypedFormControlDirective} from "../../../../directives/typed-form-control.directive";
-import {faBackward, faBook, faCircleInfo, faForward, faTag} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {InputDateComponent} from "../../../../components/inputs/input-date/input-date.component";
 import {InputButtonComponent} from "../../../../components/inputs/input-button/input-button.component";
@@ -15,6 +14,7 @@ import {BC_EVENT} from "../../../../breadcrumbs";
 import {AsyncPipe} from "@angular/common";
 import {ManageLocationComponent} from "../../../../components/manage-location/manage-location.component";
 import {DialogComponent} from "../../../../components/dialog/dialog.component";
+import {icons} from "../../../../util/icons";
 
 @Component({
   selector: "app-manage-event",
@@ -36,11 +36,7 @@ export class ManageEventComponent {
 
   public readonly form;
 
-  protected readonly iconName = faTag;
-  protected readonly iconCaption = faCircleInfo;
-  protected readonly iconDescription = faBook;
-  protected readonly iconStartDate = faForward;
-  protected readonly iconEndDate = faBackward;
+  protected readonly icons = icons;
 
   protected readonly eventId?: string;
   protected readonly locations$=

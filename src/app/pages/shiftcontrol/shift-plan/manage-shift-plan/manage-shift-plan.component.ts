@@ -1,5 +1,4 @@
 import {Component, inject} from "@angular/core";
-import {faBook, faCircleInfo, faTag} from "@fortawesome/free-solid-svg-icons";
 import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {PageService} from "../../../../services/page/page.service";
@@ -14,12 +13,13 @@ import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {InputButtonComponent} from "../../../../components/inputs/input-button/input-button.component";
 import {InputTextComponent} from "../../../../components/inputs/input-text/input-text.component";
 import {TypedFormControlDirective} from "../../../../directives/typed-form-control.directive";
-import {ShiftPlanEndpointService} from "../../../../../shiftservice-client/api/shift-plan-endpoint.service";
+import {ShiftPlanEndpointService} from "../../../../../shiftservice-client";
 import {DialogComponent} from "../../../../components/dialog/dialog.component";
 import {AsyncPipe} from "@angular/common";
 import {BehaviorSubject, combineLatestWith, filter, map, switchMap, take} from "rxjs";
 import {ManageInviteComponent} from "../../../../components/manage-invite/manage-invite.component";
 import {ManageRoleComponent} from "../../../../components/manage-role/manage-role.component";
+import {icons} from "../../../../util/icons";
 
 @Component({
   selector: "app-manage-shift-plan",
@@ -42,9 +42,7 @@ export class ManageShiftPlanComponent {
 
   public readonly form;
 
-  protected readonly iconName = faTag;
-  protected readonly iconCaption = faCircleInfo;
-  protected readonly iconDescription = faBook;
+  protected readonly icons = icons;
 
   protected readonly manageData$ =
     new BehaviorSubject<undefined | { plan: ShiftPlanDto; roles: RoleDto[]; invites: ShiftPlanInviteDto[] }>(undefined);
