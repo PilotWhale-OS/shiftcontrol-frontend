@@ -5,16 +5,16 @@
     'border-framing-default_success shadow-inner shadow-shadow-item_success bg-background-card_success' : action === 'success',
     'h-[calc(90vh-(2*21px))] w-[calc(90vw-(2*21px))]' : maxSize
   }"
-    class="border-ctr rounded-lg p-lg flex flex-col gap-md w-full
+    class="border-ctr rounded-lg p-lg flex flex-col gap-md
 ">
 
     <!-- header -->
-    <div class="grid grid-cols-[5rem_1fr_5rem] place-content-center justify-between">
+    <div class="grid grid-cols-[5rem_1fr_5rem] place-content-center justify-between border-b-ctr border-framing-card">
 
       <span></span>
 
       <!-- title -->
-      <div class="text-lg font-bold grow text-center border-b-ctr border-framing-card">
+      <div class="text-lg font-bold grow text-center">
         <ng-content select="[dialog-header]"></ng-content>
       </div>
 

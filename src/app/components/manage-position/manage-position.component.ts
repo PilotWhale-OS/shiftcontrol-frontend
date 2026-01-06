@@ -111,7 +111,7 @@ export class ManagePositionComponent implements OnDestroy {
         desiredVolunteerCount: value.position.desiredVolunteerCount,
         skipAutoAssignment: value.position.skipAutoAssignment,
         role: value.position.role ?? null,
-        rewardPoints: value.position.rewardPoints
+        rewardPoints: 0 as never // TODO
       });
     } else {
       this.form.setValue({
@@ -143,7 +143,7 @@ export class ManagePositionComponent implements OnDestroy {
         desiredVolunteerCount: this.form.controls.desiredVolunteerCount.value,
         skipAutoAssignment: this.form.controls.skipAutoAssignment.value,
         roleId: this.form.controls.role.value?.id ?? undefined,
-        rewardPoints: this.form.controls.rewardPoints.value
+        overrideRewardPoints: 0 as never // TODO
       }).subscribe(pos => {
         this.positionChanged.emit(pos);
       });
@@ -162,7 +162,7 @@ export class ManagePositionComponent implements OnDestroy {
         desiredVolunteerCount: this.form.controls.desiredVolunteerCount.value,
         skipAutoAssignment: this.form.controls.skipAutoAssignment.value,
         roleId: this.form.controls.role.value?.id ?? undefined,
-        rewardPoints: this.form.controls.rewardPoints.value
+        overrideRewardPoints: 0 as never // TODO
       }).subscribe(pos => {
         this.positionChanged.emit(pos);
       });

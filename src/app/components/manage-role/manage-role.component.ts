@@ -76,7 +76,8 @@ export class ManageRoleComponent {
     const roleData: RoleModificationDto = {
       name: this.form.controls.name.value,
       description: mapValue.undefinedIfEmptyString(this.form.controls.description.value),
-      selfAssignable: false
+      selfAssignable: false,
+      rewardPointsPerMinute: 0 as never // TODO
     };
 
     (this._role === undefined ?

@@ -1,10 +1,10 @@
-<div class="flex flex-row gap-lg">
+<div class="flex flex-row gap-lg w-full">
 
   @if(manageData$ | async; as data) {
 
     <!-- manage card -->
     @if ((mode$ | async) !== "view") {
-      <div class="card grid grid-cols-2 gap-x-xl gap-y-lg h-fit w-fit">
+      <div class="card grid grid-cols-2 gap-x-xl gap-y-lg h-fit w-[min(100%,50rem)]">
 
         <h1 class="signature-gradient-font">Shift Details</h1>
         <div class="flex flex-row gap-sm justify-end">
@@ -25,19 +25,17 @@
           />
         </div>
 
-        <div class="flex flex-col gap-sm col-start-2 row-start-2 row-span-3">
-          <small><fa-icon [icon]="icons.description" class="pr-sm" />Description</small>
-          <label for="shift-manage-description">Relevant infos about the shift</label>
-          <xsb-input-text #description
-                          [formControl]="form.controls.description"
-                          [xsb-typed]="[description, form.controls.description]"
-                          type="area"
-                          name="shift-manage-description" placeholder="Shift description"
-                          class="grow"
+        <div class="flex flex-col gap-sm col-start-2 row-start-2">
+          <small><fa-icon [icon]="icons.name" class="pr-sm" />Bonus Points</small>
+          <label for="shift-manage-bonusPoints">Make this shift more attractive to sign up</label>
+          <xsb-input-number #bonusPoints
+                          [formControl]="form.controls.bonusPoints"
+                          [xsb-typed]="[bonusPoints, form.controls.bonusPoints]"
+                          name="shift-manage-bonusPoints" placeholder="Bonus Points"
           />
         </div>
 
-        <div class="flex flex-col gap-sm col-start-1 row-start-3">
+        <div class="flex flex-col gap-sm col-start-1 row-start-4">
           <small><fa-icon [icon]="icons.startDate" class="pr-sm" />Shift Start</small>
           <label for="shift-manage-from">Start time, in your timezone</label>
 
@@ -51,7 +49,7 @@
           </div>
         </div>
 
-        <div class="flex flex-col gap-sm col-start-1 row-start-4">
+        <div class="flex flex-col gap-sm col-start-2 row-start-4">
           <small><fa-icon [icon]="icons.endDate" class="pr-sm" />Shift End</small>
           <label for="shift-manage-to">End time, in your timezone </label>
 
@@ -65,7 +63,7 @@
           </div>
         </div>
 
-        <div class="flex flex-col gap-sm col-start-1 row-start-5">
+        <div class="flex flex-col gap-sm col-start-1 row-start-3">
           <small><fa-icon [icon]="icons.activity" class="pr-sm" />Activity</small>
           <label for="shift-manage-activity">Activity which this shift is associated to</label>
           <xsb-input-select #activity name="shift-manage-activity"
@@ -77,7 +75,7 @@
           />
         </div>
 
-        <div class="flex flex-col gap-sm col-start-2 row-start-5">
+        <div class="flex flex-col gap-sm col-start-2 row-start-3">
           <small><fa-icon [icon]="icons.location" class="pr-sm" />Location</small>
           <label for="shift-manage-location">Location where the shift takes place</label>
           <xsb-input-select #location name="shift-manage-location"
@@ -86,6 +84,18 @@
                             [options]="data.availableLocations"
                             [comparatorFn]="idComparatorFn"
                             [xsb-typed]="[location, form.controls.location]"
+          />
+        </div>
+
+        <div class="flex flex-col gap-sm col-start-1 row-start-5 col-span-2">
+          <small><fa-icon [icon]="icons.description" class="pr-sm" />Description</small>
+          <label for="shift-manage-description">Relevant infos about the shift</label>
+          <xsb-input-text #description
+                          [formControl]="form.controls.description"
+                          [xsb-typed]="[description, form.controls.description]"
+                          type="area"
+                          name="shift-manage-description" placeholder="Shift description"
+                          class="grow"
           />
         </div>
 
@@ -163,13 +173,15 @@
     <!-- position slots -->
     <div class="flex flex-row flex-wrap gap-lg">
 
-    <!-- manage data from observable for change detection issues -->
+      <!-- manage data from observable for change detection issues -->
       @if (slotManageData$ | async; as slotData) {
         @for (slot of slotData; track slot){
+          <!--why contents necessary to make parent not wider than content??-->
           <app-manage-position
+            class="contents"
             [manageData]="slot"
             (positionChanged)="refreshShift(slot.shift.id)"
-          />
+            />
         }
       }
     </div>
