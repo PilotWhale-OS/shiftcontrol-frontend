@@ -155,10 +155,10 @@
 
           <!-- attending volunteers -->
           <div class="badge hint"
-               [app-tooltip]="data.position.assignedVolunteers.length + ' of ' + data.position.desiredVolunteerCount + 'required Volunteers have signed up'"
+               [app-tooltip]="data.position.assignments.length + ' of ' + data.position.desiredVolunteerCount + 'required Volunteers have signed up'"
           >
             <fa-icon [icon]="icons.role" />
-            <span>{{data.position.assignedVolunteers.length}} / {{data.position.desiredVolunteerCount}} Volunteers</span>
+            <span>{{data.position.assignments.length}} / {{data.position.desiredVolunteerCount}} Volunteers</span>
           </div>
         </div>
       </div>
