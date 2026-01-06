@@ -37,7 +37,7 @@ export class EventLeaderboardComponent {
   private ownStatusMessage(ranks: LeaderBoardDto) {
 
     if(ranks.ranks.length === 0) {
-      return "The leaderboard is empty.\nSign up for a shifts to get ranked!";
+      return "The leaderboard is empty.\nSign up for a shift to get ranked!";
     }
 
     const rankMap = new Map<number, RankDto>();
@@ -46,7 +46,7 @@ export class EventLeaderboardComponent {
     });
 
     if(ranks.ownRank === undefined) {
-      return "You are not ranked yet. Sign up for shifts!";
+      return "You are not ranked yet. Sign up for a shift to get ranked!";
     } else if(ranks.ownRank.rank === 1) {
       return "Congrats! You have more shift hours than anyone else.";
     } else if(ranks.ownRank.rank < 4) {
