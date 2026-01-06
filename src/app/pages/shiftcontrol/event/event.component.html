@@ -130,7 +130,10 @@
         </div>
       }
 
-
+      <!-- leaderboard -->
+      @if (leaderboard$ | async; as leaderboard) {
+        <app-event-leaderboard [leaderboard]="leaderboard ?? undefined"  />
+      }
 
       @if ((userType$ | async) === "ADMIN") {
         <!-- calendar link card -->
