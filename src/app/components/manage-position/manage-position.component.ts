@@ -4,7 +4,7 @@ import {
   ShiftDto,
 } from "../../../shiftservice-client";
 import {InputSelectComponent, SelectOptions} from "../inputs/input-select/input-select.component";
-import {BehaviorSubject, combineLatestWith, map, of, switchMap} from "rxjs";
+import {BehaviorSubject, combineLatest, combineLatestWith, map, of, startWith, Subscription, switchMap} from "rxjs";
 import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {UserService} from "../../services/user/user.service";
 import {AsyncPipe, DatePipe, NgClass} from "@angular/common";
@@ -65,6 +65,8 @@ export class ManagePositionComponent implements OnDestroy {
   private readonly _userService = inject(UserService);
   private readonly _positionService = inject(PositionSlotEndpointService);
 
+  private readonly _updatePointsDisplaySubscription: Subscription;
+
   constructor() {
     this.form = this._fb.group({
       name: this._fb.nonNullable.control<string>("", [Validators.maxLength(50), Validators.required]),
@@ -72,7 +74,22 @@ export class ManagePositionComponent implements OnDestroy {
       desiredVolunteerCount: this._fb.nonNullable.control<number>(5, [Validators.min(1), Validators.required]),
       skipAutoAssignment: this._fb.nonNullable.control<boolean>(false),
       role: this._fb.control<RoleDto | null>(null),
+      enableCustomPoints: this._fb.nonNullable.control<boolean>(false),
       rewardPoints: this._fb.nonNullable.control<number>(0, [Validators.min(0)])
+    });
+
+    this._updatePointsDisplaySubscription = this.form.valueChanges.pipe(
+      startWith(this.form.value),
+    ).subscribe(value => {
+      const customEnabled = value.enableCustomPoints ?? false;
+      const pointsEnabled = this.form.controls.rewardPoints.enabled;
+
+      if(customEnabled && !pointsEnabled) {
+        this.form.controls.rewardPoints.enable();
+      }
+      if(!customEnabled && pointsEnabled) {
+        this.form.controls.rewardPoints.disable();
+      }
     });
   }
 
@@ -111,7 +128,8 @@ export class ManagePositionComponent implements OnDestroy {
         desiredVolunteerCount: value.position.desiredVolunteerCount,
         skipAutoAssignment: value.position.skipAutoAssignment,
         role: value.position.role ?? null,
-        rewardPoints: 0 as never // TODO
+        rewardPoints: value.position.rewardPointsDto.overrideRewardPoints ?? 0,
+        enableCustomPoints: value.position.rewardPointsDto.overrideRewardPoints !== undefined
       });
     } else {
       this.form.setValue({
@@ -120,20 +138,18 @@ export class ManagePositionComponent implements OnDestroy {
         desiredVolunteerCount: 5,
         skipAutoAssignment: false,
         role: null,
-        rewardPoints: 100 // TODO set shiftplan default reward points
+        rewardPoints: 0,
+        enableCustomPoints: false
       });
     }
   }
 
-  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   public ngOnDestroy(): void {
-    // TODO unsubscribe
+    this._updatePointsDisplaySubscription?.unsubscribe();
   }
 
   protected create(shiftId: string) {
     this.form.markAllAsTouched();
-
-    // TODO handle points override
 
     if(this.form.valid) {
 
@@ -143,7 +159,7 @@ export class ManagePositionComponent implements OnDestroy {
         desiredVolunteerCount: this.form.controls.desiredVolunteerCount.value,
         skipAutoAssignment: this.form.controls.skipAutoAssignment.value,
         roleId: this.form.controls.role.value?.id ?? undefined,
-        overrideRewardPoints: 0 as never // TODO
+        overrideRewardPoints: this.form.value.rewardPoints /* automatically undefined if disabled */
       }).subscribe(pos => {
         this.positionChanged.emit(pos);
       });
@@ -153,8 +169,6 @@ export class ManagePositionComponent implements OnDestroy {
   protected update(position: PositionSlotDto) {
     this.form.markAllAsTouched();
 
-    // TODO handle points override
-
     if(this.form.valid) {
       this._positionService.updatePositionSlot(position.id, {
         name: this.form.controls.name.value,
@@ -162,7 +176,7 @@ export class ManagePositionComponent implements OnDestroy {
         desiredVolunteerCount: this.form.controls.desiredVolunteerCount.value,
         skipAutoAssignment: this.form.controls.skipAutoAssignment.value,
         roleId: this.form.controls.role.value?.id ?? undefined,
-        overrideRewardPoints: 0 as never // TODO
+        overrideRewardPoints: this.form.value.rewardPoints /* automatically undefined if disabled */
       }).subscribe(pos => {
         this.positionChanged.emit(pos);
       });

@@ -152,6 +152,13 @@
             <span>{{getLockStatusName(data.shift)}}</span>
           </div>
 
+          @if(data.shift.bonusRewardPoints > 0) {
+            <div class="badge hint" [app-tooltip]="'This shift has bonus reward points to make it more attractive to volunteers. The points are already included in the position reward info.'">
+              <fa-icon [icon]="icons.rewards" />
+              <span>{{data.shift.bonusRewardPoints}} Bonus Points</span>
+            </div>
+          }
+
           @if(data.shift.location !== undefined) {
             <div class="badge hint" [app-tooltip]="data.shift.location.description ?? 'No location description'">
               <fa-icon [icon]="icons.location" />

@@ -11,6 +11,7 @@ import {InputButtonComponent} from "../inputs/input-button/input-button.componen
 import {NgClass} from "@angular/common";
 import {DialogComponent} from "../dialog/dialog.component";
 import {icons} from "../../util/icons";
+import {InputNumberComponent} from "../inputs/input-number/input-number.component";
 
 @Component({
   selector: "app-manage-role",
@@ -21,7 +22,8 @@ import {icons} from "../../util/icons";
     TypedFormControlDirective,
     InputButtonComponent,
     NgClass,
-    DialogComponent
+    DialogComponent,
+    InputNumberComponent
   ],
   standalone: true,
   templateUrl: "./manage-role.component.html",
@@ -47,7 +49,8 @@ export class ManageRoleComponent {
   constructor() {
     this.form = this._fb.group({
       name: this._fb.nonNullable.control<string>("", [Validators.required]),
-      description: this._fb.nonNullable.control<string>("")
+      description: this._fb.nonNullable.control<string>(""),
+      rewardPointsPerMinute: this._fb.nonNullable.control<number>(0, [Validators.min(0)])
     });
   }
 
@@ -59,7 +62,8 @@ export class ManageRoleComponent {
 
     this.form.setValue({
       name: value.name,
-      description: value.description ?? ""
+      description: value.description ?? "",
+      rewardPointsPerMinute: value.rewardPointsPerMinute
     });
   }
 
@@ -77,7 +81,7 @@ export class ManageRoleComponent {
       name: this.form.controls.name.value,
       description: mapValue.undefinedIfEmptyString(this.form.controls.description.value),
       selfAssignable: false,
-      rewardPointsPerMinute: 0 as never // TODO
+      rewardPointsPerMinute: this.form.controls.rewardPointsPerMinute.value
     };
 
     (this._role === undefined ?

@@ -60,7 +60,6 @@
           <xsb-input-number #count
                             [formControl]="form.controls.desiredVolunteerCount"
                             [xsb-typed]="[count, form.controls.desiredVolunteerCount]"
-                            type="area"
                             name="position-manage-count" placeholder="Volunteer Count"
                             class="grow"
           />
@@ -68,14 +67,21 @@
 
         <div class="flex flex-col gap-sm col-start-1 row-start-4">
           <small><fa-icon [icon]="icons.rewards" class="pr-sm" />Reward Points</small>
-          <label for="position-manage-points">Custom amount of reward points for this position</label>
-          <xsb-input-number #rewardPoints
-                            [formControl]="form.controls.rewardPoints"
-                            [xsb-typed]="[rewardPoints, form.controls.rewardPoints]"
-                            type="area"
-                            name="position-manage-points" placeholder="Reward Points"
-                            class="grow"
-          />
+          <span>Reward Points are calculated by role and shift bonus</span>
+
+          <div class="grid grid-cols-[auto_1fr_auto] gap-sm items-center">
+            <xsb-input-toggle #enableCustomPoints
+                              [formControl]="form.controls.enableCustomPoints"
+                              [xsb-typed]="[enableCustomPoints, form.controls.enableCustomPoints]"
+                              name="position-manage-enableCustomPoints"
+            />
+            <label for="position-manage-enableCustomPoints" class="pr-sm whitespace-nowrap">Custom Points</label>
+            <xsb-input-number #rewardPoints
+                              [formControl]="form.controls.rewardPoints"
+                              [xsb-typed]="[rewardPoints, form.controls.rewardPoints]"
+                              name="position-manage-points" placeholder="Reward Points"
+            />
+          </div>
         </div>
 
         <div class="flex flex-col gap-sm col-start-1 row-start-5">
