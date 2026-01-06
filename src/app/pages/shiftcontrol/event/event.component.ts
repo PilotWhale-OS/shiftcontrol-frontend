@@ -11,7 +11,7 @@ import {
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {
   EventEndpointService,
-  EventShiftPlansOverviewDto, LeaderBoardDto, LeaderboeardEndpointService,
+  EventShiftPlansOverviewDto, LeaderBoardDto, LeaderboardEndpointService,
   TimeConstraintCreateDto,
   TimeConstraintDto, TimeConstraintEndpointService
 } from "../../../../shiftservice-client";
@@ -59,7 +59,7 @@ export class EventComponent {
   private readonly _router = inject(Router);
   private readonly _eventService = inject(EventEndpointService);
   private readonly _timeConstraintService = inject(TimeConstraintEndpointService);
-  private readonly _leaderboardService = inject(LeaderboeardEndpointService);
+  private readonly _leaderboardService = inject(LeaderboardEndpointService);
   private _userService = inject(UserService);
 
   constructor() {
