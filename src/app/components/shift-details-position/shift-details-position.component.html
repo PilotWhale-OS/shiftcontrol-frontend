@@ -32,7 +32,7 @@
   <div class="flex flex-row gap-sm">
     <div class="badge w-fit" [app-tooltip]="'The reward\nfor this position'">
       <fa-icon [icon]="iconReward" />
-      {{position.rewardPoints}} points
+      {{position.rewardPointsDto.currentRewardPoints}} points
     </div>
     <div class="badge w-fit" [app-tooltip]="'The open slots\nof this position'">
       <fa-icon [icon]="iconSlots" />

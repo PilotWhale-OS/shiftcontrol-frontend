@@ -44,6 +44,7 @@ export class ShiftDetailsViewComponent {
     endTime: "asdasdasd",
     relatedActivity: undefined,
     positionSlots: [],
+    bonusRewardPoints: 0,
     location: {
       id: "asdff",
       name: "Stage 1",
@@ -74,9 +75,13 @@ export class ShiftDetailsViewComponent {
         description: description,
         id: "asda",
         selfAssignable: false,
+        rewardPointsPerMinute: 1
       },
       preferenceValue: 0,
-      rewardPoints: 100,
+      rewardPointsDto: {
+        currentRewardPoints: 100,
+        rewardPointsConfigHash: ""
+      },
       assignments: Array(assCount) as unknown as AssignmentDto[],
       positionSignupState: state,
       desiredVolunteerCount: volCount,

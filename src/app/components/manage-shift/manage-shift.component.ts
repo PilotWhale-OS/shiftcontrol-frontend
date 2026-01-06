@@ -22,6 +22,7 @@ import {DialogComponent} from "../dialog/dialog.component";
 import {TooltipDirective} from "../../directives/tooltip.directive";
 import {ManagePositionComponent, managePositionParams} from "../manage-position/manage-position.component";
 import {icons} from "../../util/icons";
+import {InputNumberComponent} from "../inputs/input-number/input-number.component";
 
 export interface manageShiftParams {
   planId: string;
@@ -48,7 +49,8 @@ export interface manageShiftParams {
     InputButtonComponent,
     DialogComponent,
     TooltipDirective,
-    ManagePositionComponent
+    ManagePositionComponent,
+    InputNumberComponent
   ],
   providers: [
     DatePipe
@@ -104,7 +106,8 @@ export class ManageShiftComponent implements OnDestroy {
       endDate: this._fb.nonNullable.control<Date>(new Date()),
       endTime: this._fb.nonNullable.control<time>({hour: 0, minute: 0}, [Validators.required]),
       location: this._fb.control<LocationDto | null>(null),
-      activity: this._fb.control<ActivityDto | null>(null)
+      activity: this._fb.control<ActivityDto | null>(null),
+      bonusPoints: this._fb.nonNullable.control<number>(0, [Validators.min(0)])
     });
 
     this._disableLocationSubscription = this.form.controls.activity.valueChanges.pipe(
@@ -192,7 +195,8 @@ export class ManageShiftComponent implements OnDestroy {
         endDate: new Date(value.shift.endTime),
         endTime: mapValue.datetimeStringAsLocalTime(value.shift.endTime),
         location: value.shift.location ?? null,
-        activity: value.shift.relatedActivity ?? null
+        activity: value.shift.relatedActivity ?? null,
+        bonusPoints: value.shift.bonusRewardPoints
       });
     } else {
       this.form.setValue({
@@ -205,7 +209,8 @@ export class ManageShiftComponent implements OnDestroy {
           mapValue.datetimeStringAsLocalTime(new Date(value.suggestedDate.getTime() + 1000 * 60 * 60 * 2).toISOString()) :
           {hour: 12, minute: 0},
         location: value.suggestedLocation ?? null,
-        activity: null
+        activity: null,
+        bonusPoints: 0
       });
     }
   }
@@ -261,7 +266,8 @@ export class ManageShiftComponent implements OnDestroy {
         endTime: end.toISOString(),
         /* location only if not activity set*/
         locationId: this.form.controls.activity.value === null ? (this.form.controls.location.value?.id ?? undefined) : undefined,
-        activityId: this.form.controls.activity.value?.id ?? undefined
+        activityId: this.form.controls.activity.value?.id ?? undefined,
+        bonusRewardPoints: this.form.controls.bonusPoints.value,
       }).subscribe(shift => {
         this.requestedEditMode$.next(false);
         this.refreshShift(shift.id);
@@ -288,7 +294,8 @@ export class ManageShiftComponent implements OnDestroy {
         endTime: end.toISOString(),
         /* location only if not activity set*/
         locationId: this.form.controls.activity.value === null ? (this.form.controls.location.value?.id ?? undefined) : undefined,
-        activityId: this.form.controls.activity.value?.id ?? undefined
+        activityId: this.form.controls.activity.value?.id ?? undefined,
+        bonusRewardPoints: this.form.controls.bonusPoints.value
       }).subscribe(updatedShift => {
         this.requestedEditMode$.next(false);
         this.refreshShift(updatedShift.id);
