@@ -9,7 +9,7 @@ import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {EventEndpointService, EventsDashboardOverviewDto} from "../../../../shiftservice-client";
 import {getHubProxyFactory, getReceiverRegister} from "../../../../notificationservice-client/TypedSignalR.Client";
 import {HubConnectionBuilder} from "@microsoft/signalr";
-import {TestEventDto} from "../../../../notificationservice-client/NotificationService.Classes.Dto";
+import {PushNotificationEventDto} from "../../../../notificationservice-client/NotificationService.Classes.Dto";
 import {icons} from "../../../util/icons";
 
 @Component({
@@ -47,24 +47,24 @@ export class HomeComponent {
 
     (async () => {
       const connection = new HubConnectionBuilder()
-        .withUrl("http://notificationservice.127.0.0.1.nip.io/hubs/testhub", {
+        .withUrl("http://notificationservice.127.0.0.1.nip.io/hubs/push", {
           withCredentials: false,
           accessTokenFactory: () => (this._userService.token ?? "")
         })
         .build();
-      const hubProxy = getHubProxyFactory("ITestHub")
+      const hubProxy = getHubProxyFactory("IPushNotificationHub")
         .createHubProxy(connection);
-      const subscription = getReceiverRegister("ITestHubReceiver")
+      const subscription = getReceiverRegister("IPushNotificationHubReceiver")
         .register(connection, {
-          testEventReceived: async (testEvent: TestEventDto) => {
-            console.log("Received message from hub: ", testEvent);
-            subscription.dispose();
+          pushNotificationReceived: async (event: PushNotificationEventDto) => {
+            console.log("Received message from hub: ", event);
           }
         });
 
       await connection.start();
 
-      await hubProxy.sendTestEvent({ message: "Hello from client" });
+      const missed = await hubProxy.getPendingNotifications();
+      console.log("Missed notifications: ", missed);
     })();
 
   }
