@@ -2,11 +2,13 @@ import {Component, Input} from "@angular/core";
 import {LeaderBoardDto, RankDto} from "../../../shiftservice-client";
 import { icons } from "../../util/icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
+import {DecimalPipe} from "@angular/common";
 
 @Component({
   selector: "app-event-leaderboard",
   imports: [
-    FaIconComponent
+    FaIconComponent,
+    DecimalPipe
   ],
   templateUrl: "./event-leaderboard.component.html",
   styleUrl: "./event-leaderboard.component.scss"
@@ -15,28 +17,51 @@ export class EventLeaderboardComponent {
 
   protected ranksTop3: RankDto[] = [];
   protected ranksRest: RankDto[] = [];
+  protected ownRank?: RankDto = undefined;
+  protected statusMessage = "";
 
   protected readonly icons = icons;
 
   @Input()
   public set leaderboard(value: LeaderBoardDto) {
 
-    const testRanks = [
-      { rank: 2, firstName: "Jane", lastName: "Doe" },
-      { rank: 1, firstName: "John", lastName: "Smith" },
-      { rank: 3, firstName: "Alice", lastName: "Johnson" },
-      { rank: 5, firstName: "Bob", lastName: "Brown" },
-      { rank: 4, firstName: "Charlie", lastName: "Davis" },
-      { rank: 6, firstName: "Eve", lastName: "Wilson" },
-      { rank: 8, firstName: "Frank", lastName: "Miller" },
-      { rank: 7, firstName: "Grace", lastName: "Taylor" }
-    ];
-
-    const ranks = (testRanks ?? this.leaderboard?.ranks ?? [])
+    const ranks = (value.ranks ?? [])
       .sort((a, b) => a.rank - b.rank);
 
     this.ranksTop3 = ranks.slice(0, 3);
     this.ranksRest = ranks.slice(3);
+    this.ownRank = value.ownRank;
+    this.statusMessage = this.ownStatusMessage(value);
+  }
+
+  private ownStatusMessage(ranks: LeaderBoardDto) {
+
+    if(ranks.ranks.length === 0) {
+      return "The leaderboard is empty.\nSign up for a shifts to get ranked!";
+    }
+
+    const rankMap = new Map<number, RankDto>();
+    ranks.ranks.forEach(r => {
+      rankMap.set(r.rank, r);
+    });
+
+    if(ranks.ownRank === undefined) {
+      return "You are not ranked yet. Sign up for shifts!";
+    } else if(ranks.ownRank.rank === 1) {
+      return "Congrats! You have more shift hours than anyone else.";
+    } else if(ranks.ownRank.rank < 4) {
+      return `You are ranked in the podium!\nYou need ${
+        (rankMap.get(ranks.ownRank.rank - 1)?.hours ?? 0) - ranks.ownRank.hours + 1
+      } more hours to reach the #1 spot.`;
+    } else if(ranks.ownRank.rank <= ranks.size) {
+      return `You are ranked in toe top 10!\nYou need ${
+        (rankMap.get(3)?.hours ?? 0) - ranks.ownRank.hours + 1
+      } more hours to reach the podium.`;
+    } else {
+      return `You are ranked #${ranks.ownRank.rank}.\nYou need ${
+        (rankMap.get(10)?.hours ?? 0) - ranks.ownRank.hours + 1
+      } more hours to reach the top 10.`;
+    }
   }
 
 }
