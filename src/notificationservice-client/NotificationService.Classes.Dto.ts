@@ -8,6 +8,8 @@ export type PushNotificationEventDto = {
     title: string;
     /** Transpiled from string */
     notification: string;
+    /** Transpiled from System.DateTime */
+    time: (Date | string);
     /** Transpiled from string? */
     url?: string;
 }

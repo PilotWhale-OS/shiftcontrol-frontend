@@ -22,6 +22,14 @@
     <!-- quick links at the right side -->
     <div class="links">
 
+      <!-- notifications -->
+      @if (unseenNotificationCount$ | async; as unseen) {
+        <div class="notifications" routerLink="notifications" [ngClass]="unseen.count > 0 ? 'unseen' : 'idle'">
+          <span class="icon"><fa-icon [icon]="icons.notification" /></span>
+          <span class="count">{{unseen.count}}</span>
+        </div>
+      }
+
       <!-- user acc display -->
       @if (profile$ | async; as profile) {
         @if(profile !== null) {

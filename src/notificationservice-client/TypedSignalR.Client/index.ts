@@ -80,7 +80,7 @@ class IPushNotificationHub_HubProxy implements IPushNotificationHub {
     public constructor(private connection: HubConnection) {
     }
 
-    public readonly getPendingNotifications = async (): Promise<string[]> => {
+    public readonly getPendingNotifications = async (): Promise<PushNotificationEventDto[]> => {
         return await this.connection.invoke("GetPendingNotifications");
     }
 }

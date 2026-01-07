@@ -7,9 +7,9 @@ import type { PushNotificationEventDto } from '../NotificationService.Classes.Dt
 
 export type IPushNotificationHub = {
     /**
-    * @returns Transpiled from System.Threading.Tasks.Task<System.Collections.Generic.ICollection<string>>
+    * @returns Transpiled from System.Threading.Tasks.Task<System.Collections.Generic.ICollection<NotificationService.Classes.Dto.PushNotificationEventDto>>
     */
-    getPendingNotifications(): Promise<string[]>;
+    getPendingNotifications(): Promise<PushNotificationEventDto[]>;
 }
 
 export type IPushNotificationHubReceiver = {

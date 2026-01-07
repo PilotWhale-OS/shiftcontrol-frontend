@@ -7,9 +7,6 @@ import {ShiftTradeAuctionComponent} from "../../../components/shift-trade-auctio
 import {ShiftScheduleComponent, shiftWithOrigin} from "../../../components/shift-schedule/shift-schedule.component";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {EventEndpointService, EventsDashboardOverviewDto} from "../../../../shiftservice-client";
-import {getHubProxyFactory, getReceiverRegister} from "../../../../notificationservice-client/TypedSignalR.Client";
-import {HubConnectionBuilder} from "@microsoft/signalr";
-import {PushNotificationEventDto} from "../../../../notificationservice-client/NotificationService.Classes.Dto";
 import {icons} from "../../../util/icons";
 
 @Component({
@@ -44,29 +41,6 @@ export class HomeComponent {
     this.shiftsWithOrigin$ = this.dashboard$.pipe(
       map(dashboard => this.flatMapDashboardShifts(dashboard))
     );
-
-    (async () => {
-      const connection = new HubConnectionBuilder()
-        .withUrl("http://notificationservice.127.0.0.1.nip.io/hubs/push", {
-          withCredentials: false,
-          accessTokenFactory: () => (this._userService.token ?? "")
-        })
-        .build();
-      const hubProxy = getHubProxyFactory("IPushNotificationHub")
-        .createHubProxy(connection);
-      const subscription = getReceiverRegister("IPushNotificationHubReceiver")
-        .register(connection, {
-          pushNotificationReceived: async (event: PushNotificationEventDto) => {
-            console.log("Received message from hub: ", event);
-          }
-        });
-
-      await connection.start();
-
-      const missed = await hubProxy.getPendingNotifications();
-      console.log("Missed notifications: ", missed);
-    })();
-
   }
 
   protected get name$(){
