@@ -45,10 +45,12 @@
                   {{slot.name}}
                 </div>
               }
-              <div class="badge" [app-tooltip]="'The shift location'">
-                <fa-icon [icon]="icons.location" />
-                {{shift.shift.location.name}}
-              </div>
+              @if (shift.shift.location !== undefined) {
+                <div class="badge" [app-tooltip]="'The shift location'">
+                  <fa-icon [icon]="icons.location" />
+                  {{shift.shift.location.name}}
+                </div>
+              }
             </div>
           }
         </div>
