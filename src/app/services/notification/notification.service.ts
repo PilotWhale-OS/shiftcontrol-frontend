@@ -17,7 +17,7 @@ interface connectionState {
 })
 export class NotificationService {
 
-  private readonly hubUrl = "http://notificationservice.127.0.0.1.nip.io/hubs/push";
+  private readonly _hubUrl = "http://notificationservice.127.0.0.1.nip.io/hubs/push";
   private readonly _userService = inject(UserService);
 
   private _connectionState$ = new BehaviorSubject<connectionState | undefined>(undefined);
@@ -42,7 +42,7 @@ export class NotificationService {
 
   private async setupAsync() {
     const connection = new HubConnectionBuilder()
-      .withUrl("http://notificationservice.127.0.0.1.nip.io/hubs/push", {
+      .withUrl(this._hubUrl, {
         withCredentials: false,
         accessTokenFactory: () => (this._userService.token ?? "")
       })
