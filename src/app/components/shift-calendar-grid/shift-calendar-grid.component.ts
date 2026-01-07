@@ -396,7 +396,7 @@ export class ShiftCalendarGridComponent {
         return `venue-${locationName}-start venue-${locationName}-activity-start] ${
           config.activityWidth ?? this.activityWidth
         } [venue-${locationName}-activity-end venue-${locationName}-shift-start ${
-          [...Array(locationColumn.requiredShiftColumns).fill(undefined).map((_, index) =>
+          [...Array(Math.max(1,locationColumn.requiredShiftColumns) /* at least 1 column */ ).fill(undefined).map((_, index) =>
             `venue-${locationName}-shift-col-${index + 1}-start] ${
               this.shiftWidth
             } [venue-${locationName}-shift-col-${index + 1}-end`),
