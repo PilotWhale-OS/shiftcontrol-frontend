@@ -5,7 +5,7 @@ import {PageService} from "../../../services/page/page.service";
 import {BC_EVENT, BC_PLAN_DASHBOARD} from "../../../breadcrumbs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {
-  ActivityEndpointService,
+  ActivityEndpointService, LocationEndpointService, RoleEndpointService,
   ShiftDto,
   ShiftPlanEndpointService,
   ShiftPlanScheduleEndpointService
@@ -61,6 +61,8 @@ export class ShiftCalendarComponent implements OnDestroy {
   private readonly _planScheduleService = inject(ShiftPlanScheduleEndpointService);
   private readonly _planService = inject(ShiftPlanEndpointService);
   private readonly _activityService = inject(ActivityEndpointService);
+  private readonly _locationService = inject(LocationEndpointService);
+  private readonly _rolesService = inject(RoleEndpointService);
   private readonly _route = inject(ActivatedRoute);
   private readonly _router = inject(Router);
   private readonly _userService = inject(UserService);
@@ -94,16 +96,6 @@ export class ShiftCalendarComponent implements OnDestroy {
     );
 
     const canManage$ = this._userService.canManagePlan$(planId).pipe(
-      shareReplay()
-    );
-
-    /* available activities in the shift plan */
-    const activities$ = plan$.pipe(
-      withLatestFrom(this._userService.canManagePlan$(planId)),
-      switchMap(([plan, canManage]) => canManage ?
-        this._activityService.suggestActivitiesForShift(plan.eventOverview.id, {}) :
-        of([])
-      ),
       shareReplay()
     );
 
@@ -162,6 +154,27 @@ export class ShiftCalendarComponent implements OnDestroy {
       shareReplay()
     );
 
+    const allPlannerLocations$ =this._userService.canManagePlan$(planId).pipe(
+      combineLatestWith(plan$),
+      switchMap(([canManage, plan]) =>
+        canManage ? this._locationService.getAllLocationsForEvent(plan.eventOverview.id) : of(undefined)),
+      shareReplay()
+    );
+
+    const allPlannerActivities$ = this._userService.canManagePlan$(planId).pipe(
+      combineLatestWith(plan$),
+      switchMap(([canManage, plan]) =>
+        canManage ? this._activityService.getActivitiesForEvent(plan.eventOverview.id) : of(undefined)),
+      shareReplay()
+    );
+
+    const allPlannerRoles$ = this._userService.canManagePlan$(planId).pipe(
+      combineLatestWith(plan$),
+      switchMap(([canManage, plan]) =>
+        canManage ? this._rolesService.getRoles(plan.shiftPlan.id) : of(undefined)),
+      shareReplay()
+    );
+
     const subs: Subscription[] = [];
 
     /* Update page properties */
@@ -200,8 +213,11 @@ export class ShiftCalendarComponent implements OnDestroy {
       combineLatestWith(calendarComponent$, layout$, filterComponent$),
       withLatestFrom(calendarNavigation$.pipe(
         startWith({visibleDates: [], cachedDates: []})
-      ), activities$, plan$, canManage$)
-    ).subscribe(([[filterData, calendar, layout, filterComponent], navigation, activities, plan, canManage]) => {
+      ), plan$, canManage$, allPlannerActivities$, allPlannerLocations$, allPlannerRoles$)
+    ).subscribe((
+      [[filterData, calendar, layout, filterComponent],
+        navigation, plan, canManage, allPlannerActivities, allPlannerLocations, allPlannerRoles
+      ]) => {
 
       /*
       start date parsed from utc date, begin of day
@@ -213,9 +229,9 @@ export class ShiftCalendarComponent implements OnDestroy {
       const endDate = filterData.lastDate ?
         mapValue.dateStringAsEndOfDayDatetime(filterData.lastDate) : new Date();
 
-      const availableActivities = activities.map(activity => ({name: activity.name, value: activity}));
-      const availableLocations = filterData.locations.map(location => ({name: location.name, value: location}));
-      const availableRoles = filterData.roles.map(role => ({name: role.name, value: role}));
+      const availableActivities = allPlannerActivities?.map(activity => ({name: activity.name, value: activity}));
+      const availableLocations = allPlannerLocations?.map(location => ({name: location.name, value: location}));
+      const availableRoles = allPlannerRoles?.map(role => ({name: role.name, value: role}));
 
       const config: calendarConfig = {
         startDate,
@@ -226,18 +242,23 @@ export class ShiftCalendarComponent implements OnDestroy {
           shift,
           planId,
           eventId: plan.eventOverview.id,
-          availableLocations,
-          availableActivities,
-          availableRoles
+          availableLocations: availableLocations ??
+            (shift.location ? [{name: shift.location.name, value: shift.location}] : []),
+          availableActivities: availableActivities ??
+            (shift.relatedActivity ? [{name: shift.relatedActivity.name, value: shift.relatedActivity}] : []),
+          availableRoles: availableRoles ?? shift.positionSlots
+            .map(slot => slot.role)
+            .filter(role=>role !== undefined)
+            .map(role => ({name: role.name, value: role}))
         }),
         emptySpaceClickCallback: !canManage ? undefined : (date, location) => this.selectedShift$.next({
           planId,
           eventId: plan.eventOverview.id,
           suggestedLocation: location,
           suggestedDate: date,
-          availableLocations,
-          availableActivities,
-          availableRoles
+          availableLocations: availableLocations ?? [],
+          availableActivities: availableActivities ?? [],
+          availableRoles: availableRoles ?? []
         })
       };
       const calendarViewInited = navigation.visibleDates.length > 0;
