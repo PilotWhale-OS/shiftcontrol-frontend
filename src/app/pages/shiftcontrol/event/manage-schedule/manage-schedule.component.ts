@@ -6,7 +6,7 @@ import {
   ActivityDto,
   EventEndpointService,
   LocationDto,
-  LocationEndpointService, ShiftColumnDto
+  LocationEndpointService, ShiftColumnDto, ShiftPlanScheduleContentDto
 } from "../../../../../shiftservice-client";
 import {BC_EVENT} from "../../../../breadcrumbs";
 import {ShiftCalendarFilterComponent} from "../../../../components/shift-calendar-filter/shift-calendar-filter.component";
@@ -242,10 +242,12 @@ export class ManageScheduleComponent implements OnDestroy {
             map(schedule => {
               const locationMap = new Map<string, ActivityDto[]>();
               const locationIdMap = new Map<string, LocationDto>();
+              const activitiesNoLocation: ActivityDto[] = [];
 
               schedule.activities.forEach(activity => {
                 if(activity.location === undefined) {
-                  return; // TODO handle activities without location?
+                  activitiesNoLocation.push(activity);
+                  return;
                 }
 
                 locationIdMap.set(activity.location.id, activity.location);
@@ -263,8 +265,12 @@ export class ManageScheduleComponent implements OnDestroy {
                     location,
                     activities: locationMap.get(id) ?? [],
                     shiftColumns: [] as ShiftColumnDto[]
-                  }))
-              };
+                  })),
+                scheduleContentNoLocationDto: {
+                  activities: activitiesNoLocation,
+                  shiftColumns: [] as ShiftColumnDto[]
+                }
+              } as ShiftPlanScheduleContentDto;
             })
           )
         );
