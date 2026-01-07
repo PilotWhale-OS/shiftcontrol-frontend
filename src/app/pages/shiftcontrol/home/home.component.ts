@@ -26,7 +26,7 @@ export class HomeComponent {
 
   protected readonly cards = [
     {title:"Events", content: "Browse all your events", href: "events"},
-    {title:"Pilot Plan", content: "Pilot Event: Currently active", href: "plans/planId", spotlight: true}
+    {title:"Pilot Plan", content: "Pilot Event: Currently active\n(coming soon)", href: "/", spotlight: true}
   ];
   protected readonly icons = icons;
 

@@ -19,6 +19,11 @@
       </div>
     </div>
   }
+
+  @if ((notifications$ | async)?.length === 0) {
+    <h1 class="flex gap-md signature-gradient-font"><fa-icon [icon]="icons.noNotification" /> It's quiet for now</h1>
+    <span>No notifications available.</span>
+  }
 </div>
 
 

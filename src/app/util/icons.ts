@@ -5,7 +5,7 @@ import {
   faCalendarDay,
   faCalendarDays, faCertificate, faCircleInfo, faClock, faCrown, faFilter, faForward,
   faGift, faHashtag,
-  faHourglass, faKey, faLink, faLocationPin, faLock, faMedal, faMessage, faPause,
+  faHourglass, faKey, faLink, faLocationPin, faLock, faMedal, faMessage, faMoon, faPause,
   faPeopleGroup, faPlusCircle,
   faShuffle, faStar, faStop, faTag, faTrophy, faUser,
   faWrench
@@ -51,6 +51,7 @@ export const icons = {
   noEdit: faLock,
   filter: faFilter,
   notification: faBell,
+  noNotification: faMoon,
 
   /* time */
   hour: faHourglass,

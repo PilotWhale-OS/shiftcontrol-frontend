@@ -1,25 +1,76 @@
 import {Component, inject} from "@angular/core";
 import {PageService} from "../../../services/page/page.service";
 import {BC_PLAN_DASHBOARD, BC_SHIFT_DETAILS, BC_EVENT} from "../../../breadcrumbs";
-import {ShiftDetailsViewComponent} from "../../../components/shift-details-view/shift-details-view.component";
+import {ActivatedRoute, Router} from "@angular/router";
+import {ShiftDetailsDto, ShiftEndpointService} from "../../../../shiftservice-client";
+import {BehaviorSubject, filter, map, Observable} from "rxjs";
+import {ManageShiftComponent, manageShiftParams} from "../../../components/manage-shift/manage-shift.component";
+import {AsyncPipe} from "@angular/common";
 
 @Component({
   selector: "app-shift-details",
-  imports: [ShiftDetailsViewComponent],
+  imports: [ManageShiftComponent, AsyncPipe],
   standalone: true,
   templateUrl: "./shift-details.component.html",
   styleUrl: "./shift-details.component.scss"
 })
 export class ShiftDetailsComponent {
 
+  protected shift$ = new BehaviorSubject<ShiftDetailsDto | undefined>(undefined);
+  protected manageShiftParams$: Observable<manageShiftParams>;
+
   private readonly _pageService = inject(PageService);
+  private readonly _route = inject(ActivatedRoute);
+  private readonly _router = inject(Router);
+  private readonly _shiftService = inject(ShiftEndpointService);
+  private readonly _shiftId;
 
   constructor() {
-    this._pageService
-      .configurePageName("Pilot Shift Details")
-      .configureBreadcrumb(BC_EVENT, "Pilot Event", "eventId")
-      .configureBreadcrumb(BC_PLAN_DASHBOARD, "Pilot Plan", "/plans/planId")
-      .configureBreadcrumb(BC_SHIFT_DETAILS, "Pilot Shift", "shiftId");
+    const shiftId = this._route.snapshot.paramMap.get("shiftId");
+    if(shiftId === null) {
+      this._router.navigateByUrl("/");
+      throw new Error("Shift ID is required");
+    }
+    this._shiftId = shiftId;
+
+    this._shiftService.getShiftDetails(shiftId).subscribe(shift => this.shift$.next(shift));
+
+    this.manageShiftParams$ = this.shift$.pipe(
+      filter(shift => shift !== undefined),
+      map(shift => ({
+        planId: shift.shiftPlan.id,
+        eventId: shift.shiftPlan.id,
+        shift: shift.shift,
+        availableActivities: shift.shift.relatedActivity === undefined ?
+          [] :
+          [{name: shift.shift.relatedActivity.name, value: shift.shift.relatedActivity}],
+        availableRoles: shift.shift.positionSlots
+          .map(slot => slot.role)
+          .filter(role => role !== undefined)
+          .map(role => ({name: role.name, value: role})),
+        availableLocations: shift.shift.location === undefined ?
+          [] :
+          [{name: shift.shift.location.name, value: shift.shift.location}]
+      }))
+    );
+
+    this.shift$.pipe(
+      filter(shift => shift !== undefined)
+    ).subscribe(shift => {
+      this._pageService
+        .configurePageName(shift.shift.name)
+        .configureBreadcrumb(BC_EVENT, shift.event.name, shift.event.id)
+        .configureBreadcrumb(BC_PLAN_DASHBOARD, shift.shiftPlan.name, "/plans/" + shift.shiftPlan.id)
+        .configureBreadcrumb(BC_SHIFT_DETAILS, shift.shift.name, shift.shift.id);
+    });
+  }
+
+  public refetchShift() {
+    this._shiftService.getShiftDetails(this._shiftId).subscribe(shift => this.shift$.next(shift));
+  }
+
+  public goToPlanDashboard(planId: string) {
+    this._router.navigateByUrl(`/plans/${planId}`);
   }
 
 }
