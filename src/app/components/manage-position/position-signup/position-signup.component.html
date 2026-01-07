@@ -1,0 +1,31 @@
+<div class="flex flex-col gap-md">
+  @if (header$ | async; as header) {
+    <b>{{header}}</b>
+  }
+
+  @if (body$ | async; as body) {
+    <p class="whitespace-pre-line">{{body}}</p>
+  }
+
+  <div></div>
+
+  @if (position$ | async; as position){
+    @switch(action$ | async) {
+      @case("SIGN_UP") {
+        <xsb-input-button content="Sign Up" action="success" (click)="signUp(position.slot)" />
+      }
+
+      @case("SIGN_OUT") {
+        <xsb-input-button content="Leave Position" action="normal" (click)="signOut(position.slot)" />
+      }
+
+      @case("REQUEST_SIGN_UP") {
+        <xsb-input-button content="Request Sign Up" action="success" />
+      }
+
+      @case("REQUEST_SIGN_OUT") {
+        <xsb-input-button content="Request Leave" action="normal" />
+      }
+    }
+  }
+</div>

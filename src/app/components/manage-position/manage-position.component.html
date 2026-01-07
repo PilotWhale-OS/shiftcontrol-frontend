@@ -110,18 +110,47 @@
         </div>
       </div>
     } @else if (data.position !== undefined) {
-      <div class="card grid grid-cols-2 gap-x-xl gap-y-lg h-fit w-[25rem]">
+      <div
+        class="card grid grid-cols-2 gap-x-xl gap-y-lg w-[25rem] grid-rows-[auto_auto_auto_auto_1fr_auto]"
+        [ngClass]="{
+        'success' : isSignedUp(data.position),
+        'cursor-not-allowed opacity-60' : !isSignedUp(data.position) && !isEligible(data.position) && (canManage$ | async) === false
+        }"
+      >
 
-        <div class="badge w-fit">
-          <fa-icon [icon]="icons.signUp"/>
-          Position
-        </div>
-        <div class="flex flex-row gap-sm justify-end row-start-1 col-start-2">
+        <div class="flex flex-row gap-sm col-span-2">
+          <!--<div class="badge w-fit">
+            <fa-icon [icon]="icons.signUp"/>
+            Position
+          </div>-->
+
+          @if (isSignedUp(data.position)) {
+            <div class="badge success w-fit">
+              <fa-icon [icon]="icons.signedUp"/>
+              Signed Up Position
+            </div>
+          }
+
+          @else if (isEligible(data.position)) {
+            <div class="badge w-fit">
+              <fa-icon [icon]="icons.signUp"/>
+              Eligible Position
+            </div>
+          } @else {
+            <div class="badge deaf w-fit">
+              <fa-icon [icon]="icons.ineligible"/>
+              Ineligible Position
+            </div>
+          }
+
+          <div class="grow"></div>
+
           @if(canManage$ | async) {
             <xsb-input-button content="Edit" size="text" (click)="requestedEditMode$.next(true)" />
             <xsb-input-button content="Delete" size="text" (click)="showSlotDeleteConfirm = true" />
           }
         </div>
+
         <h1 class="signature-gradient-font compact row-start-2 col-start-1 col-span-2">
           {{data.position.name}}
         </h1>
@@ -158,8 +187,14 @@
                [app-tooltip]="data.position.assignments.length + ' of ' + data.position.desiredVolunteerCount + 'required Volunteers have signed up'"
           >
             <fa-icon [icon]="icons.role" />
-            <span>{{data.position.assignments.length}} / {{data.position.desiredVolunteerCount}} Volunteers</span>
+            <span>{{data.position.assignments.length}} / {{data.position.desiredVolunteerCount}} taken</span>
           </div>
+        </div>
+
+        <div class="border-t-ctr border-framing-card w-full col-span-2 self-center"></div>
+
+        <div class="col-span-2">
+          <app-position-signup [positionSlot]="(positionSignupData$ | async) ?? undefined" (positionSignupChanged)="positionChanged.emit(data.position)" />
         </div>
       </div>
     }

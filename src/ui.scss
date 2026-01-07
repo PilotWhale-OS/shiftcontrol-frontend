@@ -94,6 +94,10 @@ small {
     @apply bg-framing-highlight_success;
   }
 
+  &.deaf {
+    @apply bg-framing-card;
+  }
+
   &.padding-eq{
     @apply py-xs px-xs;
   }

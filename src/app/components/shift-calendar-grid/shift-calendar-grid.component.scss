@@ -78,10 +78,10 @@
 
   @container (min-height: 4rem) {
     > .tag {
-      @apply block absolute top-[.5rem] left-[.5rem] text-xs opacity-30 font-normal;
+      @apply block absolute top-[.5rem] left-[.5rem] text-xs opacity-50 font-normal;
     }
     > .time {
-      @apply block absolute bottom-[.5rem] left-[.5rem] text-xs opacity-30 font-normal;
+      @apply block absolute bottom-[.5rem] left-[.5rem] text-xs opacity-50 font-normal;
     }
   }
 }

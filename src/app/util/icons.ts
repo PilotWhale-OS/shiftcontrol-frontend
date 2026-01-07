@@ -1,5 +1,5 @@
 import {
-  faBackward,
+  faBackward, faBan,
   faBarsProgress, faBell, faBook,
   faCalendar,
   faCalendarDay,
@@ -27,6 +27,9 @@ export const icons = {
   userType: faUser,
   role: faHashtag,
   signUp: faKey,
+  signedUp: faCertificate,
+  eligible: faCertificate,
+  ineligible: faBan,
   plan: faCalendar,
   leaderboard: faTrophy,
   leaderboardFirst: faCrown,

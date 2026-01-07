@@ -28,7 +28,7 @@
           }
         }
         <div class="flex flex-col items-start">
-          <h2 class="m-0 flex gap-md items-center">
+          <h2 class="m-0 flex gap-md items-center text-base">
             {{rank.firstName}} {{rank.lastName.slice(0,1)}}.
 
             @if (rank.rank === ownRank?.rank) {
@@ -40,7 +40,7 @@
       }
 
       @if (ranksTop3.length === 0) {
-        <span class="col-span-3 text-center opacity-60">No podium ranks yet.!</span>
+        <span class="col-span-3 text-center opacity-60">No podium ranks yet.</span>
       }
     </div>
   </div>

@@ -17,6 +17,8 @@ import {TooltipDirective} from "../../directives/tooltip.directive";
 import {InputNumberComponent} from "../inputs/input-number/input-number.component";
 import {InputToggleComponent} from "../inputs/input-toggle/input-toggle.component";
 import {icons} from "../../util/icons";
+import {PositionSignupComponent, positionSignupParams} from "./position-signup/position-signup.component";
+import PositionSignupStateEnum = PositionSlotDto.PositionSignupStateEnum;
 
 export interface managePositionParams {
   shift: ShiftDto;
@@ -39,7 +41,8 @@ export interface managePositionParams {
     TooltipDirective,
     InputNumberComponent,
     InputToggleComponent,
-    NgClass
+    NgClass,
+    PositionSignupComponent
   ],
   providers: [
     DatePipe
@@ -57,6 +60,12 @@ export class ManagePositionComponent implements OnDestroy {
   protected readonly icons = icons;
 
   protected readonly manageData$ = new BehaviorSubject<undefined | managePositionParams>(undefined);
+  protected readonly positionSignupData$ = this.manageData$.pipe(
+    map(data => (data === undefined || data.position === undefined) ? undefined : {
+      slot: data.position,
+      shift: data.shift
+    } as positionSignupParams)
+  );
   protected readonly requestedEditMode$ = new BehaviorSubject<boolean>(false);
 
   protected showSlotDeleteConfirm = false;
@@ -191,5 +200,30 @@ export class ManagePositionComponent implements OnDestroy {
 
   protected idComparatorFn(a: { id: string } | null, b: { id: string } | null): boolean {
     return a?.id === b?.id || (a === null && b === null);
+  }
+
+  protected isEligible(position?: PositionSlotDto): boolean {
+    if(position === undefined) {
+      return false;
+    }
+
+    switch (position.positionSignupState) {
+      case PositionSignupStateEnum.SignupPossible:
+      case PositionSignupStateEnum.SignupViaTrade:
+      case PositionSignupStateEnum.SignupOrTrade:
+      case PositionSignupStateEnum.SignupViaAuction:
+        return true;
+
+      default:
+        return false;
+    }
+  }
+
+  protected isSignedUp(position?: PositionSlotDto): boolean {
+    if(position === undefined) {
+      return false;
+    }
+
+    return position.positionSignupState === PositionSignupStateEnum.SignedUp;
   }
 }

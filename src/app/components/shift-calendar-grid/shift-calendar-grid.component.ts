@@ -446,7 +446,9 @@ export class ShiftCalendarGridComponent {
     }
     if(shift.positionSlots.some(slot =>
       slot.positionSignupState ===  PositionSlotDto.PositionSignupStateEnum.SignupViaAuction ||
-      slot.positionSignupState ===  PositionSlotDto.PositionSignupStateEnum.SignupViaTrade
+      slot.positionSignupState ===  PositionSlotDto.PositionSignupStateEnum.SignupViaTrade ||
+      slot.positionSignupState ===  PositionSlotDto.PositionSignupStateEnum.SignupPossible ||
+      slot.positionSignupState ===  PositionSlotDto.PositionSignupStateEnum.SignupOrTrade
     )){
       return "eligible";
     }
@@ -465,7 +467,9 @@ export class ShiftCalendarGridComponent {
     }
     if(shift.positionSlots.some(slot =>
       slot.positionSignupState ===  PositionSlotDto.PositionSignupStateEnum.SignupViaAuction ||
-      slot.positionSignupState ===  PositionSlotDto.PositionSignupStateEnum.SignupViaTrade
+      slot.positionSignupState ===  PositionSlotDto.PositionSignupStateEnum.SignupViaTrade ||
+      slot.positionSignupState ===  PositionSlotDto.PositionSignupStateEnum.SignupPossible ||
+      slot.positionSignupState ===  PositionSlotDto.PositionSignupStateEnum.SignupOrTrade
     )){
       return "Eligible";
     }

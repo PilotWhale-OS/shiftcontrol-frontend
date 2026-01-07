@@ -93,6 +93,10 @@ export class ShiftCalendarComponent implements OnDestroy {
       shareReplay()
     );
 
+    const canManage$ = this._userService.canManagePlan$(planId).pipe(
+      shareReplay()
+    );
+
     /* available activities in the shift plan */
     const activities$ = plan$.pipe(
       withLatestFrom(this._userService.canManagePlan$(planId)),
@@ -196,8 +200,8 @@ export class ShiftCalendarComponent implements OnDestroy {
       combineLatestWith(calendarComponent$, layout$, filterComponent$),
       withLatestFrom(calendarNavigation$.pipe(
         startWith({visibleDates: [], cachedDates: []})
-      ), activities$, plan$)
-    ).subscribe(([[filterData, calendar, layout, filterComponent], navigation, activities, plan]) => {
+      ), activities$, plan$, canManage$)
+    ).subscribe(([[filterData, calendar, layout, filterComponent], navigation, activities, plan, canManage]) => {
 
       /*
       start date parsed from utc date, begin of day
@@ -226,7 +230,7 @@ export class ShiftCalendarComponent implements OnDestroy {
           availableActivities,
           availableRoles
         }),
-        emptySpaceClickCallback: (date, location) => this.selectedShift$.next({
+        emptySpaceClickCallback: !canManage ? undefined : (date, location) => this.selectedShift$.next({
           planId,
           eventId: plan.eventOverview.id,
           suggestedLocation: location,
