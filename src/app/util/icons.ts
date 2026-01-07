@@ -3,11 +3,11 @@ import {
   faBarsProgress, faBook,
   faCalendar,
   faCalendarDay,
-  faCalendarDays, faCertificate, faCircleInfo, faClock, faFilter, faForward,
+  faCalendarDays, faCertificate, faCircleInfo, faClock, faCrown, faFilter, faForward,
   faGift, faHashtag,
-  faHourglass, faKey, faLink, faLocationPin, faLock, faMessage, faPause,
+  faHourglass, faKey, faLink, faLocationPin, faLock, faMedal, faMessage, faPause,
   faPeopleGroup, faPlusCircle,
-  faShuffle, faStar, faStop, faTag, faUser,
+  faShuffle, faStar, faStop, faTag, faTrophy, faUser,
   faWrench
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -28,6 +28,10 @@ export const icons = {
   role: faHashtag,
   signUp: faKey,
   plan: faCalendar,
+  leaderboard: faTrophy,
+  leaderboardFirst: faCrown,
+  leaderboardPodium: faMedal,
+  leaderboardOther: faCertificate,
 
   /* labels */
   calendar: faCalendar,

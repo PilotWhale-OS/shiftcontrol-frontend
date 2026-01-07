@@ -11,16 +11,17 @@ import {
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {
   EventEndpointService,
-  EventShiftPlansOverviewDto,
+  EventShiftPlansOverviewDto, LeaderBoardDto, LeaderboardEndpointService,
   TimeConstraintCreateDto,
   TimeConstraintDto, TimeConstraintEndpointService
 } from "../../../../shiftservice-client";
-import {Observable, tap} from "rxjs";
+import {Observable, shareReplay, tap} from "rxjs";
 import {AsyncPipe, DatePipe, DecimalPipe} from "@angular/common";
 import {TooltipDirective} from "../../../directives/tooltip.directive";
 import {DialogAddEmergencyComponent} from "../../../components/dialog-add-emergency/dialog-add-emergency.component";
 import {UserService} from "../../../services/user/user.service";
 import {icons} from "../../../util/icons";
+import {EventLeaderboardComponent} from "../../../components/event-leaderboard/event-leaderboard.component";
 
 @Component({
   selector: "app-plans",
@@ -34,7 +35,8 @@ import {icons} from "../../../util/icons";
     DatePipe,
     TooltipDirective,
     DialogAddEmergencyComponent,
-    DecimalPipe
+    DecimalPipe,
+    EventLeaderboardComponent
   ],
   standalone: true,
   templateUrl: "./event.component.html",
@@ -47,6 +49,7 @@ export class EventComponent {
   protected showEmergencyDialog = false;
   protected event$: Observable<EventShiftPlansOverviewDto>;
   protected timeConstraints$: Observable<TimeConstraintDto[]>;
+  protected leaderboard$: Observable<LeaderBoardDto>;
 
   protected readonly icons = icons;
 
@@ -56,6 +59,7 @@ export class EventComponent {
   private readonly _router = inject(Router);
   private readonly _eventService = inject(EventEndpointService);
   private readonly _timeConstraintService = inject(TimeConstraintEndpointService);
+  private readonly _leaderboardService = inject(LeaderboardEndpointService);
   private _userService = inject(UserService);
 
   constructor() {
@@ -77,9 +81,11 @@ export class EventComponent {
         this._pageService
           .configurePageName(`${event.eventOverview.name}`)
           .configureBreadcrumb(BC_EVENT, event.eventOverview.name, event.eventOverview.id);
-      })
+      }),
+      shareReplay()
     );
 
+    this.leaderboard$ = this._leaderboardService.getLeaderboardForEvent(eventId);
     this.timeConstraints$ = this._timeConstraintService.getTimeConstraints(eventId);
   }
 

@@ -71,13 +71,20 @@
 
       </div>
 
-      @if((userType$ | async) === "ASSIGNED") {
+      <!-- leaderboard -->
+      @if (leaderboard$ | async; as leaderboard) {
+        <app-event-leaderboard [leaderboard]="leaderboard ?? undefined"  />
+      }
 
-        <!-- availability times card -->
+      <!-- availability times card -->
+      @if((userType$ | async) === "ASSIGNED") {
         <div class="card col-start-1 col-span-2 row-span-2 grid grid-columns-2 gap-lg h-fit">
 
           <!-- info -->
-          <h1 class="compact signature-gradient-font">Manage Absence</h1>
+          <h1 class="compact signature-gradient-font">
+            <fa-icon class="icon" [icon]="icons.unavailable" />
+            Manage Absence
+          </h1>
           <p class="col-span-2">
             Set your absence times for calendar filtering and better shift suggestions.
           </p>
@@ -129,8 +136,6 @@
 
         </div>
       }
-
-
 
       @if ((userType$ | async) === "ADMIN") {
         <!-- calendar link card -->
