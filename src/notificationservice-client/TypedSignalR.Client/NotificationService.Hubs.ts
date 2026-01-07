@@ -3,21 +3,20 @@
 /* tslint:disable */
 // @ts-nocheck
 import type { IStreamResult, Subject } from '@microsoft/signalr';
-import type { TestEventDto } from '../NotificationService.Classes.Dto';
+import type { PushNotificationEventDto } from '../NotificationService.Classes.Dto';
 
-export type ITestHub = {
+export type IPushNotificationHub = {
     /**
-    * @param testEventDto Transpiled from NotificationService.Classes.Dto.TestEventDto
-    * @returns Transpiled from System.Threading.Tasks.Task<NotificationService.Classes.Dto.TestEventDto>
+    * @returns Transpiled from System.Threading.Tasks.Task<System.Collections.Generic.ICollection<NotificationService.Classes.Dto.PushNotificationEventDto>>
     */
-    sendTestEvent(testEventDto: TestEventDto): Promise<TestEventDto>;
+    getPendingNotifications(): Promise<PushNotificationEventDto[]>;
 }
 
-export type ITestHubReceiver = {
+export type IPushNotificationHubReceiver = {
     /**
-    * @param testEventDto Transpiled from NotificationService.Classes.Dto.TestEventDto
+    * @param notificationEvent Transpiled from NotificationService.Classes.Dto.PushNotificationEventDto
     * @returns Transpiled from System.Threading.Tasks.Task
     */
-    testEventReceived(testEventDto: TestEventDto): Promise<void>;
+    pushNotificationReceived(notificationEvent: PushNotificationEventDto): Promise<void>;
 }
 

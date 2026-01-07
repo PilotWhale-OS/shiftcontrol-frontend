@@ -10,7 +10,7 @@ import {
   BC_PLAN_DASHBOARD,
   BC_SHIFT_CALENDAR,
   BC_SHIFT_DETAILS,
-  BC_PLAN_ONBOARDING, BC_EVENT_EDIT, BC_EVENT_CREATE, BC_PLAN_CREATE, BC_PLAN_EDIT, BC_EVENT_SCHEDULE
+  BC_PLAN_ONBOARDING, BC_EVENT_EDIT, BC_EVENT_CREATE, BC_PLAN_CREATE, BC_PLAN_EDIT, BC_EVENT_SCHEDULE, BC_NOTIFICATIONS
 } from "./breadcrumbs";
 import { breadcrumbsGuard } from "./guards/breadcrumbs/breadcrumbs.guard";
 import {accessAllowedGuard, notLoggedInGuard} from "./guards/keycloak/keycloak.guard";
@@ -23,12 +23,15 @@ import {PlanOnboardingComponent} from "./pages/shiftcontrol/plan-onboarding/plan
 import {ManageEventComponent} from "./pages/shiftcontrol/event/manage-event/manage-event.component";
 import {ManageShiftPlanComponent} from "./pages/shiftcontrol/shift-plan/manage-shift-plan/manage-shift-plan.component";
 import {ManageScheduleComponent} from "./pages/shiftcontrol/event/manage-schedule/manage-schedule.component";
+import {NotificationsComponent} from "./pages/shiftcontrol/notifications/notifications.component";
 
 export const routes: Routes = ([
   { path: "", component: HomeComponent, pathMatch: "full", data: {breadcrumbs: BC_HOME}, canActivate: [accessAllowedGuard] },
   { path: "login", component: LoginComponent, canActivate: [notLoggedInGuard] },
   { path: "me", component: AccountComponent,
     data: {breadcrumbs: BC_ACCOUNT}, canActivate: [accessAllowedGuard]},
+  { path: "notifications", component: NotificationsComponent,
+    data: {breadcrumbs: BC_NOTIFICATIONS}, canActivate: [accessAllowedGuard]},
 
   /* events */
   { path: "events", component: EventsComponent,

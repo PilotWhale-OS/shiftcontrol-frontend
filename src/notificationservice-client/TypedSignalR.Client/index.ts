@@ -3,8 +3,8 @@
 /* tslint:disable */
 // @ts-nocheck
 import type { HubConnection, IStreamResult, Subject } from '@microsoft/signalr';
-import type { ITestHub, ITestHubReceiver } from './NotificationService.Hubs';
-import type { TestEventDto } from '../NotificationService.Classes.Dto';
+import type { IPushNotificationHub, IPushNotificationHubReceiver } from './NotificationService.Hubs';
+import type { PushNotificationEventDto } from '../NotificationService.Classes.Dto';
 
 
 // components
@@ -43,66 +43,66 @@ class ReceiverMethodSubscription implements Disposable {
 // API
 
 export type HubProxyFactoryProvider = {
-    (hubType: "ITestHub"): HubProxyFactory<ITestHub>;
+    (hubType: "IPushNotificationHub"): HubProxyFactory<IPushNotificationHub>;
 }
 
 export const getHubProxyFactory = ((hubType: string) => {
-    if(hubType === "ITestHub") {
-        return ITestHub_HubProxyFactory.Instance;
+    if(hubType === "IPushNotificationHub") {
+        return IPushNotificationHub_HubProxyFactory.Instance;
     }
 }) as HubProxyFactoryProvider;
 
 export type ReceiverRegisterProvider = {
-    (receiverType: "ITestHubReceiver"): ReceiverRegister<ITestHubReceiver>;
+    (receiverType: "IPushNotificationHubReceiver"): ReceiverRegister<IPushNotificationHubReceiver>;
 }
 
 export const getReceiverRegister = ((receiverType: string) => {
-    if(receiverType === "ITestHubReceiver") {
-        return ITestHubReceiver_Binder.Instance;
+    if(receiverType === "IPushNotificationHubReceiver") {
+        return IPushNotificationHubReceiver_Binder.Instance;
     }
 }) as ReceiverRegisterProvider;
 
 // HubProxy
 
-class ITestHub_HubProxyFactory implements HubProxyFactory<ITestHub> {
-    public static Instance = new ITestHub_HubProxyFactory();
+class IPushNotificationHub_HubProxyFactory implements HubProxyFactory<IPushNotificationHub> {
+    public static Instance = new IPushNotificationHub_HubProxyFactory();
 
     private constructor() {
     }
 
-    public readonly createHubProxy = (connection: HubConnection): ITestHub => {
-        return new ITestHub_HubProxy(connection);
+    public readonly createHubProxy = (connection: HubConnection): IPushNotificationHub => {
+        return new IPushNotificationHub_HubProxy(connection);
     }
 }
 
-class ITestHub_HubProxy implements ITestHub {
+class IPushNotificationHub_HubProxy implements IPushNotificationHub {
 
     public constructor(private connection: HubConnection) {
     }
 
-    public readonly sendTestEvent = async (testEventDto: TestEventDto): Promise<TestEventDto> => {
-        return await this.connection.invoke("SendTestEvent", testEventDto);
+    public readonly getPendingNotifications = async (): Promise<PushNotificationEventDto[]> => {
+        return await this.connection.invoke("GetPendingNotifications");
     }
 }
 
 
 // Receiver
 
-class ITestHubReceiver_Binder implements ReceiverRegister<ITestHubReceiver> {
+class IPushNotificationHubReceiver_Binder implements ReceiverRegister<IPushNotificationHubReceiver> {
 
-    public static Instance = new ITestHubReceiver_Binder();
+    public static Instance = new IPushNotificationHubReceiver_Binder();
 
     private constructor() {
     }
 
-    public readonly register = (connection: HubConnection, receiver: ITestHubReceiver): Disposable => {
+    public readonly register = (connection: HubConnection, receiver: IPushNotificationHubReceiver): Disposable => {
 
-        const __testEventReceived = (...args: [TestEventDto]) => receiver.testEventReceived(...args);
+        const __pushNotificationReceived = (...args: [PushNotificationEventDto]) => receiver.pushNotificationReceived(...args);
 
-        connection.on("TestEventReceived", __testEventReceived);
+        connection.on("PushNotificationReceived", __pushNotificationReceived);
 
         const methodList: ReceiverMethod[] = [
-            { methodName: "TestEventReceived", method: __testEventReceived }
+            { methodName: "PushNotificationReceived", method: __pushNotificationReceived }
         ]
 
         return new ReceiverMethodSubscription(connection, methodList);

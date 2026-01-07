@@ -1,0 +1,24 @@
+<div class="flex flex-col w-full gap-md items-center h-full overflow-y-auto">
+  @for (notification of notifications$ | async; track notification) {
+    <div class="card compact w-[min(100%,30rem)]">
+      <div class="flex items-start pr-sm">
+        <h2 class="flex gap-md">
+          <fa-icon class="icon opacity-50" [icon]="icons.notification" />
+          {{notification.title}}
+        </h2>
+
+        <small class="grow text-right">{{notification.time | date:"short"}}</small>
+      </div>
+
+      <div class="flex items-start pr-sm">
+        <p class="grow">{{notification.notification}}</p>
+
+        @if (notification.url !== undefined) {
+          <xsb-input-button size="text" content="View" class="justify-self-end" />
+        }
+      </div>
+    </div>
+  }
+</div>
+
+

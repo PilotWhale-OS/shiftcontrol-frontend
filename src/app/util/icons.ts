@@ -1,6 +1,6 @@
 import {
   faBackward,
-  faBarsProgress, faBook,
+  faBarsProgress, faBell, faBook,
   faCalendar,
   faCalendarDay,
   faCalendarDays, faCertificate, faCircleInfo, faClock, faCrown, faFilter, faForward,
@@ -47,6 +47,7 @@ export const icons = {
   url: faLink,
   noEdit: faLock,
   filter: faFilter,
+  notification: faBell,
 
   /* time */
   hour: faHourglass,
