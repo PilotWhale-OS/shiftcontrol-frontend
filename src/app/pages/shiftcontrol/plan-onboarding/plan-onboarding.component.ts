@@ -4,7 +4,7 @@ import {BC_EVENT, BC_PLAN_DASHBOARD, BC_PLAN_ONBOARDING} from "../../../breadcru
 import {InputButtonComponent} from "../../../components/inputs/input-button/input-button.component";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import {ShiftPlanInviteDto, ShiftPlanInviteEndpointService, ShiftPlanJoinOverviewDto} from "../../../../shiftservice-client";
+import {ShiftPlanInviteDto, ShiftPlanInviteEndpointService, ShiftPlanInviteDetailsDto} from "../../../../shiftservice-client";
 import {BehaviorSubject} from "rxjs";
 import {AsyncPipe, DatePipe} from "@angular/common";
 import {TooltipDirective} from "../../../directives/tooltip.directive";
@@ -27,7 +27,7 @@ import {icons} from "../../../util/icons";
 export class PlanOnboardingComponent {
 
   protected readonly icons = icons;
-  protected readonly invite$ = new BehaviorSubject<ShiftPlanJoinOverviewDto | null | "INVALID">(null);
+  protected readonly invite$ = new BehaviorSubject<ShiftPlanInviteDetailsDto | null | "INVALID">(null);
 
   private readonly _pageService = inject(PageService);
   private readonly _planService = inject(ShiftPlanInviteEndpointService);

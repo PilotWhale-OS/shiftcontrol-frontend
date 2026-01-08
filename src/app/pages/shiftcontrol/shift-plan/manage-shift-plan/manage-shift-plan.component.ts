@@ -126,8 +126,8 @@ export class ManageShiftPlanComponent {
         longDescription: this.form.controls.longDescription.value,
         defaultNoRolePointsPerMinute: this.form.controls.defaultRewardPointsPerMinute.value
       }).subscribe({
-        next: (plan) => {
-          this._router.navigateByUrl(`/plans/${plan.id}`);
+        next: (createDto) => {
+          this._router.navigateByUrl(`/plans/${createDto.shiftPlan.id}`);
         }
       });
     }
