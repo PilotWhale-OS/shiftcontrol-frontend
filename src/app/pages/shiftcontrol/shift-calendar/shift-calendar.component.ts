@@ -237,6 +237,9 @@ export class ShiftCalendarComponent implements OnDestroy {
         startDate,
         endDate,
         locationLayouts: layout.scheduleLayoutDtos,
+        noLocationLayout: {
+          requiredShiftColumns: 1
+        },
         shiftPaddingColumn: true,
         shiftClickCallback: shift => this.selectedShift$.next({
           shift,

@@ -89,6 +89,33 @@
         }
       }
 
+    @if (config.noLocationLayout !== undefined) {
+
+      <!-- venue header -->
+      <div class="venue" style="grid-row: 1/1; grid-column: venue-none-start / venue-none-end">
+        <fa-icon [icon]="icons.location" class="text-sm" />
+        <span>Without Location</span>
+      </div>
+
+      <!-- venue header gap -->
+      <div
+        class="venue-gap"
+        style="grid-column: venue-none-gap-start / venue-none-gap-end; grid-row: 1/-1;"
+      ></div>
+
+      <!-- venue clickable area -->
+      @if (config.emptySpaceClickCallback !== undefined) {
+        <div
+          tabindex="0"
+          #flow
+          class="venue-flow"
+          (keydown)="flow.click()"
+          (click)="config.emptySpaceClickCallback(getDateOfClickY(flow, $event, config), undefined)"
+          style="grid-row: 2/2; grid-column: venue-none-start / venue-none-end"
+        ></div>
+      }
+    }
+
       <!-- venue data -->
       @if (schedule$ | async; as schedule) {
 
@@ -99,7 +126,7 @@
               (keydown)="0"
               tabindex="0"
               [ngClass]="[getShiftDisplayCategory(shiftItem.shift.shiftDto), config.shiftClickCallback !== undefined ? 'item-primary' : 'item-secondary']"
-              style="grid-row: 2/2; grid-column: venue-{{shiftItem.location.id}}-shift-col-{{shiftItem.shift.columnIndex + 1}}-start / venue-{{shiftItem.location.id}}-shift-col-{{shiftItem.shift.columnIndex +  1}}-end"
+              style="grid-row: 2/2; grid-column: venue-{{shiftItem.location?.id ?? 'none'}}-shift-col-{{shiftItem.shift.columnIndex + 1}}-start / venue-{{shiftItem.location?.id ?? 'none'}}-shift-col-{{shiftItem.shift.columnIndex +  1}}-end"
               [style.height]="getMinuteHeight(getItemMinutesDuration(shiftItem.shift.shiftDto))"
               [style.top]="getMinuteHeight(getItemMinutesFromStart(shiftItem.shift.shiftDto, config))"
             >
@@ -118,7 +145,7 @@
               (keydown)="0"
               [ngClass]="config.activityClickCallback !== undefined ? 'item-primary' : 'item-secondary'"
               (click)="config.activityClickCallback !== undefined ? config.activityClickCallback(activityItem.activity) : 0"
-              style="grid-row: 2/2; grid-column: venue-{{activityItem.location.id}}-activity-start / venue-{{activityItem.location.id}}-end"
+              style="grid-row: 2/2; grid-column: venue-{{activityItem.location?.id ?? 'none'}}-activity-start / venue-{{activityItem.location?.id ?? 'none'}}-end"
               [style.height]="getMinuteHeight(getItemMinutesDuration(activityItem.activity))"
               [style.top]="getMinuteHeight(getItemMinutesFromStart(activityItem.activity, config))"
             >
