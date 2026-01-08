@@ -4,7 +4,7 @@ import {getHubProxyFactory, getReceiverRegister, Disposable} from "../../../noti
 import {PushNotificationEventDto} from "../../../notificationservice-client/NotificationService.Classes.Dto";
 import {UserService} from "../user/user.service";
 import {IPushNotificationHub} from "../../../notificationservice-client/TypedSignalR.Client/NotificationService.Hubs";
-import {BehaviorSubject, Observable, take} from "rxjs";
+import {BehaviorSubject, combineLatest, combineLatestWith, distinctUntilChanged, map, Observable, switchMap, take} from "rxjs";
 
 interface connectionState {
   connection: HubConnection;
@@ -25,7 +25,31 @@ export class NotificationService {
   private _unreadNotifications$ = new BehaviorSubject<Set<PushNotificationEventDto>>(new Set());
 
   constructor() {
-    this.setupAsync();
+
+    /* handle connection when user changes */
+    this._userService.userProfile$.pipe(
+      combineLatestWith(this._connectionState$),
+      switchMap(async ([profile, connectionState]) => {
+        if(profile && !connectionState) {
+          return await this.setupConnectionAsync();
+        }
+        if(!profile && connectionState) {
+          await connectionState.connection.stop();
+          connectionState.subscription.dispose();
+          connectionState.connection.onclose(async () => {
+            await connectionState.connection.stop();
+            connectionState.subscription.dispose();
+            this._connectionState$.next(undefined);
+          });
+          return undefined;
+        }
+
+        return connectionState;
+      }),
+      distinctUntilChanged((a, b) => a?.connection?.connectionId === b?.connection?.connectionId)
+    ).subscribe(connection => this._connectionState$.next(connection));
+
+    /*  */
   }
 
   public get notifications$(): Observable<Set<PushNotificationEventDto>> {
@@ -40,7 +64,7 @@ export class NotificationService {
     this._unreadNotifications$.next(new Set());
   }
 
-  private async setupAsync() {
+  private async setupConnectionAsync(): Promise<connectionState> {
     const connection = new HubConnectionBuilder()
       .withUrl(this._hubUrl, {
         withCredentials: false,
@@ -55,11 +79,11 @@ export class NotificationService {
       });
 
     await connection.start();
-    this._connectionState$.next({
+    return {
       connection,
       subscription,
       hub: hubProxy
-    });
+    };
   }
 
   private addNotification(event: PushNotificationEventDto) {
