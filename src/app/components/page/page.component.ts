@@ -4,7 +4,7 @@ import {AsyncPipe, NgClass} from "@angular/common";
 import {RouterLink} from "@angular/router";
 import {UserService} from "../../services/user/user.service";
 import {KeycloakProfile} from "keycloak-js";
-import {map} from "rxjs";
+import {combineLatestWith, map} from "rxjs";
 import {NotificationService} from "../../services/notification/notification.service";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {icons} from "../../util/icons";
@@ -45,7 +45,9 @@ export class PageComponent {
 
   public get unseenNotificationCount$() {
     return this._notificationService.unreadCount$.pipe(
-      map(count => ({count}))
+      map(count => ({count})),
+      combineLatestWith(this._userService.userProfile$),
+      map(([count, profile]) => profile === null ? null : count)
     );
   }
 
