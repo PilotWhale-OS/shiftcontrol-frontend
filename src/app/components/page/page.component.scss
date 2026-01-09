@@ -6,7 +6,7 @@
   display: grid;
   grid-template-rows: auto 1fr;
   /*@apply bg-background-card;*/
-  background: linear-gradient(180deg, rgb(13 13 20) 0%, rgb(13 14 22) 100%);
+  background: linear-gradient(180deg, rgb(13, 13, 20) 0%, rgb(4 2 13) 100%);
 
   .profile {
     @apply rounded-full aspect-square h-10 bg-framing-highlight_hint grid place-content-center select-none cursor-pointer;

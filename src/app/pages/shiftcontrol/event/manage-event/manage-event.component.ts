@@ -120,6 +120,16 @@ export class ManageEventComponent {
     }
   }
 
+  protected clone() {
+    if(this.eventId === undefined) {
+      throw new Error("Cannot clone in create mode");
+    }
+
+    this._eventService.cloneEvent(this.eventId).subscribe(event => {
+      this._router.navigate([`../../${event.id}`], {relativeTo: this._route});
+    });
+  }
+
   protected delete() {
     if(this.eventId === undefined) {
       throw new Error("Cannot delete in create mode");
