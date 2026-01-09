@@ -5,10 +5,11 @@ import {InputButtonComponent} from "../../../components/inputs/input-button/inpu
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {ShiftPlanInviteDto, ShiftPlanInviteEndpointService, ShiftPlanInviteDetailsDto} from "../../../../shiftservice-client";
-import {BehaviorSubject, map} from "rxjs";
+import {BehaviorSubject, map, switchMap} from "rxjs";
 import {AsyncPipe, DatePipe} from "@angular/common";
 import {TooltipDirective} from "../../../directives/tooltip.directive";
 import {icons} from "../../../util/icons";
+import {UserService} from "../../../services/user/user.service";
 
 @Component({
   selector: "app-plan-onboarding",
@@ -42,6 +43,7 @@ export class PlanOnboardingComponent {
   private readonly _pageService = inject(PageService);
   private readonly _planService = inject(ShiftPlanInviteEndpointService);
   private readonly _activatedRoute = inject(ActivatedRoute);
+  private readonly _userService = inject(UserService);
   private readonly _router = inject(Router);
 
   constructor() {
@@ -81,7 +83,9 @@ export class PlanOnboardingComponent {
   joinShiftPlan(invite: ShiftPlanInviteDto) {
     this._planService.joinShiftPlan({
       inviteCode: invite.code
-    }).subscribe(() => {
+    }).pipe(
+      switchMap(() => this._userService.refreshProfile())
+    ).subscribe(() => {
       this._router.navigateByUrl(`/plans/${invite.shiftPlanDto.id}`);
     });
   }
