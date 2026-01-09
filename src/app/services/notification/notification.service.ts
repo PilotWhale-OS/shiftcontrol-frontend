@@ -4,7 +4,7 @@ import {getHubProxyFactory, getReceiverRegister, Disposable} from "../../../noti
 import {PushNotificationEventDto} from "../../../notificationservice-client/NotificationService.Classes.Dto";
 import {UserService} from "../user/user.service";
 import {IPushNotificationHub} from "../../../notificationservice-client/TypedSignalR.Client/NotificationService.Hubs";
-import {BehaviorSubject, combineLatest, combineLatestWith, distinctUntilChanged, map, Observable, switchMap, take} from "rxjs";
+import {BehaviorSubject, combineLatestWith, distinctUntilChanged, Observable, switchMap, take} from "rxjs";
 
 interface connectionState {
   connection: HubConnection;
