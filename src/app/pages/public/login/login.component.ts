@@ -2,6 +2,7 @@ import { Component, inject } from "@angular/core";
 import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
 import {InputButtonComponent} from "../../../components/inputs/input-button/input-button.component";
 import {UserService} from "../../../services/user/user.service";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: "app-login",
@@ -18,6 +19,7 @@ export class LoginComponent {
 
   private readonly _userService = inject(UserService);
   private readonly _fb = inject(FormBuilder);
+  private readonly _activatedRoute = inject(ActivatedRoute);
 
   constructor(){
     this.form = this._fb.group({
@@ -27,6 +29,9 @@ export class LoginComponent {
   }
 
   public login() {
-    this._userService.login();
+    const continueParam = this._activatedRoute.snapshot.queryParamMap.get("continue");
+    const decodedContinue = continueParam ? decodeURIComponent(continueParam) : undefined;
+
+    this._userService.login(decodedContinue);
   }
 }

@@ -124,8 +124,8 @@ export class UserService {
   /**
    * Initialize keycloak login process
    */
-  public login() {
-    this.keycloak.login({redirectUri: window.location.origin});
+  public login(redirectTo?: string) {
+    this.keycloak.login({redirectUri: redirectTo ?? window.location.origin});
   }
 
   /**
