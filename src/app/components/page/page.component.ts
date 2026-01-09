@@ -4,7 +4,7 @@ import {AsyncPipe, NgClass} from "@angular/common";
 import {RouterLink} from "@angular/router";
 import {UserService} from "../../services/user/user.service";
 import {KeycloakProfile} from "keycloak-js";
-import {combineLatestWith, map} from "rxjs";
+import {map} from "rxjs";
 import {NotificationService} from "../../services/notification/notification.service";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {icons} from "../../util/icons";

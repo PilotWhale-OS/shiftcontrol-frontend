@@ -1,7 +1,7 @@
 import {Component, inject} from "@angular/core";
 import {NotificationService} from "../../../services/notification/notification.service";
 import {map, tap} from "rxjs";
-import {AsyncPipe, DatePipe, NgClass} from "@angular/common";
+import {AsyncPipe, DatePipe} from "@angular/common";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {icons} from "../../../util/icons";
 import {InputButtonComponent} from "../../../components/inputs/input-button/input-button.component";
