@@ -121,14 +121,24 @@ export class AccountComponent implements OnDestroy {
 
   protected getNotificationKindName(type: NotificationSettingsDto.TypeEnum): string {
     switch (type) {
-      case NotificationSettingsDto.TypeEnum.AutoAssigned:
+      case NotificationSettingsDto.TypeEnum.VolunteerAutoAssigned:
         return "Auto Assigned";
-      case NotificationSettingsDto.TypeEnum.TradeAcceptedDeclined:
-        return "Trade Status";
-      case NotificationSettingsDto.TypeEnum.TradeRequested:
+      case NotificationSettingsDto.TypeEnum.VolunteerTradesAuctionsRequestsChanged:
+        return "Assignment Status Changed";
+      case NotificationSettingsDto.TypeEnum.VolunteerTradeRequested:
         return "Trade Requested";
-      case NotificationSettingsDto.TypeEnum.ShiftReminder:
+      case NotificationSettingsDto.TypeEnum.VolunteerShiftReminder:
         return "Shift Reminder";
+      case NotificationSettingsDto.TypeEnum.PlannerTrustAlertTriggered:
+        return "Trust Alert Triggered";
+      case NotificationSettingsDto.TypeEnum.PlannerVolunteerJoinedPlan:
+        return "Volunteer Joined";
+      case NotificationSettingsDto.TypeEnum.PlannerVolunteerRequestedAction:
+        return "Volunteer Assignment Action Requested";
+      case NotificationSettingsDto.TypeEnum.AdminPlannerJoined:
+        return "Planner Joined";
+      case NotificationSettingsDto.TypeEnum.AdminRewardSyncUsed:
+        return "Rewards Synced";
     }
   }
 }

@@ -22,20 +22,70 @@
           {{invite.inviteDto.shiftPlanDto.longDescription ?? invite.inviteDto.shiftPlanDto.shortDescription}}<br>
         </p>
 
-        <div class="max-w-[30rem]">
-          <b>{{invite.attendingVolunteerCount}} other people</b> have joined this plan on ShiftControl.<br>
-          Be one of them and make the event happen!
-        </div>
+        @if (invite.inviteDto.autoAssignedRoles.length > 0) {
+          <div class="max-w-[30rem] flex flex-col gap-xs">
+            <small>Your Qualifications</small>
+            <div class="flex flex-row gap-sm items-center">
+              @for (role of invite.inviteDto.autoAssignedRoles; track role.id) {
+                  <div class="badge w-fit success"><fa-icon [icon]="icons.role" /> {{role.name}}</div>
+              }
+            </div>
+          </div>
+        }
 
-        <div class="flex flex-col gap-sm justify-center items-center pt-lg">
-          @if(!invite.joined) {
-            <xsb-input-button action="success" content="Join Event as Volunteer" (click)="joinShiftPlan(invite.inviteDto)" name="onboarding-join" />
+
+        @if (inviteMode$ | async; as mode){
+          @switch (mode) {
+
+            @case ("UPGRADE_ACCESS") {
+              <div class="max-w-[30rem]">
+                <b>{{invite.attendingVolunteerCount}} {{invite.attendingVolunteerCount > 1 ? "people have" : "person has"}} joined</b> this plan on ShiftControl.
+              </div>
+
+              <div class="flex flex-col gap-sm justify-center items-center pt-lg">
+                <small>You have already joined this plan, but this invite makes you a shift planner.</small>
+                <xsb-input-button class="w-fit" action="success" content="Upgrade Access" (click)="joinShiftPlan(invite.inviteDto)" name="onboarding-upgrade" />
+              </div>
+            }
+
+            @case ("UPGRADE_ROLES") {
+              <div class="max-w-[30rem]">
+                <b>{{invite.attendingVolunteerCount}} {{invite.attendingVolunteerCount > 1 ? "people have" : "person has"}} joined</b> this plan on ShiftControl.
+              </div>
+
+              <div class="flex flex-col gap-sm justify-center items-center pt-lg">
+                <small>You have already joined this plan, but this invite grants you extra shift qualifications.</small>
+                <xsb-input-button class="w-fit" action="success" content="Unlock Qualificatins" (click)="joinShiftPlan(invite.inviteDto)" name="onboarding-extend" />
+              </div>
+            }
+
+            @case ("JOINED") {
+              <div class="max-w-[30rem]">
+                <b>{{invite.attendingVolunteerCount}} {{invite.attendingVolunteerCount > 1 ? "people have" : "person has"}} joined</b> this plan on ShiftControl.
+              </div>
+
+              <div class="flex flex-col gap-sm justify-center items-center pt-lg">
+                <small>You have already joined this plan.</small>
+                <xsb-input-button class="w-fit" action="success" content="View Shift Plan" [routerLink]="'/plans/' + invite.inviteDto.shiftPlanDto.id" name="onboarding-view" />
+              </div>
+            }
+
+            @case ("JOIN") {
+              <div class="max-w-[30rem]">
+                <b>{{invite.attendingVolunteerCount}} {{invite.attendingVolunteerCount > 1 ? "people have" : "person has"}} joined</b> this plan on ShiftControl.<br>
+                Be one of them and make the event happen!
+              </div>
+
+              <div class="flex flex-col gap-sm justify-center items-center pt-lg">
+                @if (invite.inviteDto.type === "VOLUNTEER_JOIN") {
+                  <xsb-input-button action="success" content="Join Event as Volunteer" (click)="joinShiftPlan(invite.inviteDto)" name="onboarding-join-planner" />
+                } @else {
+                  <xsb-input-button action="success" content="Join Event as Planner" (click)="joinShiftPlan(invite.inviteDto)" name="onboarding-join-planner" />
+                }
+              </div>
+            }
           }
-          @else {
-            <small>You have already joined this plan.</small>
-            <xsb-input-button class="w-fit" action="success" content="View Shift Plan" [routerLink]="'/plans/' + invite.inviteDto.shiftPlanDto.id" name="onboarding-view" />
-          }
-        </div>
+        }
       </div>
     }
     @else if(invite === "INVALID") {
