@@ -28,8 +28,8 @@ export class EventLeaderboardComponent {
     const ranks = (value.ranks ?? [])
       .sort((a, b) => a.rank - b.rank);
 
-    this.ranksTop3 = ranks.slice(0, 3);
-    this.ranksRest = ranks.slice(3);
+    this.ranksTop3 = ranks.filter(rank => rank.rank <= 3);
+    this.ranksRest = ranks.filter(rank => rank.rank > 3);
     this.ownRank = value.ownRank;
     this.statusMessage = this.ownStatusMessage(value);
   }
