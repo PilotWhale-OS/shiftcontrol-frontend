@@ -135,7 +135,7 @@ export class AccountComponent implements OnDestroy {
         return "Volunteer Joined";
       case NotificationSettingsDto.TypeEnum.PlannerVolunteerRequestedAction:
         return "Volunteer Assignment Action Requested";
-      case NotificationSettingsDto.TypeEnum.AdminPlannerJoined:
+      case NotificationSettingsDto.TypeEnum.AdminPlannerJoinedPlan:
         return "Planner Joined";
       case NotificationSettingsDto.TypeEnum.AdminRewardSyncUsed:
         return "Rewards Synced";
