@@ -2,8 +2,8 @@
 /* eslint-disable */
 /* tslint:disable */
 
-/** Transpiled from NotificationService.Classes.Dto.PushNotificationEventDto */
-export type PushNotificationEventDto = {
+/** Transpiled from NotificationService.Classes.Dto.PushNotificationDto */
+export type PushNotificationDto = {
     /** Transpiled from string */
     title: string;
     /** Transpiled from string */
@@ -12,5 +12,9 @@ export type PushNotificationEventDto = {
     time: (Date | string);
     /** Transpiled from string? */
     url?: string;
+    /** Transpiled from bool */
+    isRead: boolean;
+    /** Transpiled from System.Guid */
+    id?: string;
 }
 

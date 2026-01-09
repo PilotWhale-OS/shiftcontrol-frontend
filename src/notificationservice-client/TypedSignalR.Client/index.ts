@@ -4,7 +4,7 @@
 // @ts-nocheck
 import type { HubConnection, IStreamResult, Subject } from '@microsoft/signalr';
 import type { IPushNotificationHub, IPushNotificationHubReceiver } from './NotificationService.Hubs';
-import type { PushNotificationEventDto } from '../NotificationService.Classes.Dto';
+import type { PushNotificationDto } from '../NotificationService.Classes.Dto';
 
 
 // components
@@ -80,8 +80,20 @@ class IPushNotificationHub_HubProxy implements IPushNotificationHub {
     public constructor(private connection: HubConnection) {
     }
 
-    public readonly getPendingNotifications = async (): Promise<PushNotificationEventDto[]> => {
-        return await this.connection.invoke("GetPendingNotifications");
+    public readonly getHistory = async (): Promise<PushNotificationDto[]> => {
+        return await this.connection.invoke("GetHistory");
+    }
+
+    public readonly markAllAsRead = async (): Promise<void> => {
+        return await this.connection.invoke("MarkAllAsRead");
+    }
+
+    public readonly clearNotification = async (notificationId: string): Promise<void> => {
+        return await this.connection.invoke("ClearNotification", notificationId);
+    }
+
+    public readonly clearHistory = async (): Promise<void> => {
+        return await this.connection.invoke("ClearHistory");
     }
 }
 
@@ -97,7 +109,7 @@ class IPushNotificationHubReceiver_Binder implements ReceiverRegister<IPushNotif
 
     public readonly register = (connection: HubConnection, receiver: IPushNotificationHubReceiver): Disposable => {
 
-        const __pushNotificationReceived = (...args: [PushNotificationEventDto]) => receiver.pushNotificationReceived(...args);
+        const __pushNotificationReceived = (...args: [PushNotificationDto]) => receiver.pushNotificationReceived(...args);
 
         connection.on("PushNotificationReceived", __pushNotificationReceived);
 

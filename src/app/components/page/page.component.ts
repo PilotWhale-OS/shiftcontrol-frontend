@@ -44,9 +44,8 @@ export class PageComponent {
   }
 
   public get unseenNotificationCount$() {
-    return this._notificationService.unseenNotifications$.pipe(
-      combineLatestWith(this._userService.kcProfile$),
-      map(([notifs, profile]) => profile === null ? null : ({count: notifs.size}))
+    return this._notificationService.unreadCount$.pipe(
+      map(count => ({count}))
     );
   }
 

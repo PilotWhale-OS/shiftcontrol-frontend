@@ -3,20 +3,33 @@
 /* tslint:disable */
 // @ts-nocheck
 import type { IStreamResult, Subject } from '@microsoft/signalr';
-import type { PushNotificationEventDto } from '../NotificationService.Classes.Dto';
+import type { PushNotificationDto } from '../NotificationService.Classes.Dto';
 
 export type IPushNotificationHub = {
     /**
-    * @returns Transpiled from System.Threading.Tasks.Task<System.Collections.Generic.ICollection<NotificationService.Classes.Dto.PushNotificationEventDto>>
+    * @returns Transpiled from System.Threading.Tasks.Task<System.Collections.Generic.ICollection<NotificationService.Classes.Dto.PushNotificationDto>>
     */
-    getPendingNotifications(): Promise<PushNotificationEventDto[]>;
+    getHistory(): Promise<PushNotificationDto[]>;
+    /**
+    * @returns Transpiled from System.Threading.Tasks.Task
+    */
+    markAllAsRead(): Promise<void>;
+    /**
+    * @param notificationId Transpiled from System.Guid
+    * @returns Transpiled from System.Threading.Tasks.Task
+    */
+    clearNotification(notificationId: string): Promise<void>;
+    /**
+    * @returns Transpiled from System.Threading.Tasks.Task
+    */
+    clearHistory(): Promise<void>;
 }
 
 export type IPushNotificationHubReceiver = {
     /**
-    * @param notificationEvent Transpiled from NotificationService.Classes.Dto.PushNotificationEventDto
+    * @param notification Transpiled from NotificationService.Classes.Dto.PushNotificationDto
     * @returns Transpiled from System.Threading.Tasks.Task
     */
-    pushNotificationReceived(notificationEvent: PushNotificationEventDto): Promise<void>;
+    pushNotificationReceived(notification: PushNotificationDto): Promise<void>;
 }
 

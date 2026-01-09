@@ -1,10 +1,10 @@
 import {inject, Injectable} from "@angular/core";
 import {HubConnection, HubConnectionBuilder} from "@microsoft/signalr";
 import {getHubProxyFactory, getReceiverRegister, Disposable} from "../../../notificationservice-client/TypedSignalR.Client";
-import {PushNotificationEventDto} from "../../../notificationservice-client/NotificationService.Classes.Dto";
 import {UserService} from "../user/user.service";
 import {IPushNotificationHub} from "../../../notificationservice-client/TypedSignalR.Client/NotificationService.Hubs";
-import {BehaviorSubject, combineLatestWith, distinctUntilChanged, Observable, switchMap, take} from "rxjs";
+import {PushNotificationDto} from "../../../notificationservice-client/NotificationService.Classes.Dto";
+import {BehaviorSubject, combineLatestWith, distinctUntilChanged, firstValueFrom, map, Observable, switchMap, take} from "rxjs";
 
 interface connectionState {
   connection: HubConnection;
@@ -21,8 +21,7 @@ export class NotificationService {
   private readonly _userService = inject(UserService);
 
   private _connectionState$ = new BehaviorSubject<connectionState | undefined>(undefined);
-  private _notifications$ = new BehaviorSubject<Set<PushNotificationEventDto>>(new Set());
-  private _unreadNotifications$ = new BehaviorSubject<Set<PushNotificationEventDto>>(new Set());
+  private _notifications$ = new BehaviorSubject<Set<PushNotificationDto>>(new Set());
 
   constructor() {
 
@@ -49,19 +48,64 @@ export class NotificationService {
       distinctUntilChanged((a, b) => a?.connection?.connectionId === b?.connection?.connectionId)
     ).subscribe(connection => this._connectionState$.next(connection));
 
-    /*  */
   }
 
-  public get notifications$(): Observable<Set<PushNotificationEventDto>> {
+  public get notifications$(): Observable<Set<PushNotificationDto>> {
     return this._notifications$.asObservable();
   }
 
-  public get unseenNotifications$() {
-    return this._unreadNotifications$.asObservable();
+  public get unreadCount$(): Observable<number> {
+    return this._notifications$.pipe(
+      map(notifications => [...notifications.values()].filter(n => !n.isRead).length)
+    );
   }
 
-  public markAllAsRead() {
-    this._unreadNotifications$.next(new Set());
+  public async markAllAsRead() {
+    const connection = await firstValueFrom(this._connectionState$);
+    if(connection === undefined) {
+      throw new Error("Not connected");
+    }
+
+    const notifications = await firstValueFrom(this._notifications$);
+    let count = 0;
+    notifications.forEach(n => {
+      if(!n.isRead) {
+        n.isRead = true;
+        count++;
+      }
+    });
+
+    if(count > 0) {
+      await connection.hub.markAllAsRead();
+       this._notifications$.next(notifications);
+    }
+  }
+
+  public async clearHistory() {
+    const connection = await firstValueFrom(this._connectionState$);
+    if(connection === undefined) {
+      throw new Error("Not connected");
+    }
+
+    await connection.hub.clearHistory();
+    this._notifications$.next(new Set());
+  }
+
+  public async clearNotification(notificationId: string) {
+    const connection = await firstValueFrom(this._connectionState$);
+    if(connection === undefined) {
+      throw new Error("Not connected");
+    }
+
+    const notifications = await firstValueFrom(this._notifications$);
+    const notification = [...notifications.values()].find(n => n.id === notificationId);
+    if(!notification) {
+      throw new Error("Notification not found");
+    }
+
+    await connection.hub.clearNotification(notificationId);
+    notifications.delete(notification);
+    this._notifications$.next(notifications);
   }
 
   private async setupConnectionAsync(): Promise<connectionState> {
@@ -79,6 +123,10 @@ export class NotificationService {
       });
 
     await connection.start();
+
+    const history = await hubProxy.getHistory();
+    this._notifications$.next(new Set(history));
+
     return {
       connection,
       subscription,
@@ -86,19 +134,12 @@ export class NotificationService {
     };
   }
 
-  private addNotification(event: PushNotificationEventDto) {
+  private addNotification(event: PushNotificationDto) {
     this._notifications$.pipe(
       take(1)
     ).subscribe(notifications => {
       notifications.add(event);
       this._notifications$.next(notifications);
-    });
-
-    this._unreadNotifications$.pipe(
-      take(1)
-    ).subscribe(unread => {
-      unread.add(event);
-      this._unreadNotifications$.next(unread);
     });
   }
 }
