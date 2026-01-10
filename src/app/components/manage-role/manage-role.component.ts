@@ -12,6 +12,7 @@ import {NgClass} from "@angular/common";
 import {DialogComponent} from "../dialog/dialog.component";
 import {icons} from "../../util/icons";
 import {InputNumberComponent} from "../inputs/input-number/input-number.component";
+import {ToastService} from "../../services/toast/toast.service";
 
 @Component({
   selector: "app-manage-role",
@@ -45,6 +46,7 @@ export class ManageRoleComponent {
 
   private readonly _fb = inject(FormBuilder);
   private readonly _roleService = inject(RoleEndpointService);
+  private readonly _toastService = inject(ToastService);
 
   constructor() {
     this.form = this._fb.group({
@@ -87,8 +89,11 @@ export class ManageRoleComponent {
     (this._role === undefined ?
       this._roleService.createRole(plan.id, roleData) :
       this._roleService.updateRole(this._role.id, roleData)
+    ).pipe(
+      this._role === undefined ?
+        this._toastService.tapCreating("Role", item => item.name) :
+        this._toastService.tapSaving("Role", item => item.name)
     ).subscribe(() => {
-      console.log("Role saved successfully.");
       this.roleChanged.emit();
 
       if(this._role === undefined) {
@@ -102,8 +107,9 @@ export class ManageRoleComponent {
       throw new Error("Could not delete role in create mode");
     }
 
-    this._roleService.deleteRole(this._role.id).subscribe(() =>{
-      console.log("Role deleted successfully.");
+    this._roleService.deleteRole(this._role.id).pipe(
+      this._toastService.tapDeleting("Role", item => item.name)
+    ).subscribe(() =>{
       this.roleChanged.emit();
     });
   }
