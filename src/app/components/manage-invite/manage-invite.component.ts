@@ -174,7 +174,7 @@ export class ManageInviteComponent implements OnDestroy {
 
   protected remove(invite: ShiftPlanInviteDto) {
     this._inviteService.deleteShiftPlanInvite(invite.id).pipe(
-      this._toastService.tapDeleting("Invite", item => item.code)
+      this._toastService.tapDeleting("Invite", () => invite.code)
     ).subscribe(() => {
       this.inviteChanged.emit();
     });

@@ -1,5 +1,6 @@
 import {time} from "../components/inputs/input-time/input-time.component";
 import {DatePipe} from "@angular/common";
+import {HttpErrorResponse} from "@angular/common/http";
 
 export const mapValue = {
   undefinedIfEmptyString(value: string | null | undefined): string | undefined {
@@ -143,8 +144,15 @@ export const mapValue = {
   },
 
   apiErrorToMessage(error: unknown) {
-    if(error instanceof Error) {
-      return error.message;
+    if(error instanceof HttpErrorResponse) {
+      const httpError = error as HttpErrorResponse;
+      if(typeof(httpError.error) === "object") {
+        const apiError = httpError.error as object;
+        const message = apiError["message" as keyof typeof apiError] as unknown;
+        if(typeof(message) === "string") {
+          return message;
+        }
+      }
     }
     return "An unknown error occurred";
   }

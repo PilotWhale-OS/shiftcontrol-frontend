@@ -148,7 +148,7 @@ export class ManageShiftPlanComponent {
     }
 
     this._planService.deleteShiftPlan(this.planId).pipe(
-      this._toastService.tapDeleting("Shift Plan", item => item.name)
+      this._toastService.tapDeleting("Shift Plan")
     ).subscribe({
       next: () => {
         this._router.navigateByUrl(`/events/${this.eventId}`);

@@ -111,7 +111,7 @@ export class ManageRoleComponent {
     }
 
     this._roleService.deleteRole(this._role.id).pipe(
-      this._toastService.tapDeleting("Role", item => item.name)
+      this._toastService.tapDeleting("Role")
     ).subscribe(() =>{
       this.roleChanged.emit();
     });

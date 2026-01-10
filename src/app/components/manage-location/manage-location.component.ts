@@ -113,7 +113,7 @@ export class ManageLocationComponent {
     }
 
     this._locationService.deleteLocation(this._location.id).pipe(
-      this._toastService.tapDeleting("Location", item => item.name)
+      this._toastService.tapDeleting("Location")
     ).subscribe(() => {
       this.locationChanged.emit();
     });

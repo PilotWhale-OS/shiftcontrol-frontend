@@ -149,7 +149,7 @@ export class ManageEventComponent {
     }
 
     this._eventService.deleteEvent(this.eventId).pipe(
-      this._toastService.tapDeleting("Event", event => event.name)
+      this._toastService.tapDeleting("Event")
     ).subscribe(() => this._router.navigate(["../"], {relativeTo: this._route}));
   }
 

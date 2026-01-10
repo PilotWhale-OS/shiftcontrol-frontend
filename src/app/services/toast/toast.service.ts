@@ -13,7 +13,7 @@ export class ToastService {
 
   public showNotification(title: string, message: string, timeout?: number) {
     this._toastr.info(message,title, {
-      timeOut: timeout,
+      timeOut: timeout ?? 5000,
       payload: {
         notification: true,
       }
@@ -22,19 +22,19 @@ export class ToastService {
 
   public showInfo(title: string, message: string, timeout?: number) {
     this._toastr.info(message,title, {
-      timeOut: timeout
+      timeOut: timeout ?? 3000
     });
   }
 
   public showError(title: string, message: string, timeout?: number) {
     this._toastr.error(message,title, {
-      timeOut: timeout
+      timeOut: timeout ?? 5000
     });
   }
 
   public showSuccess(title: string, message: string, timeout?: number) {
     this._toastr.success(message,title, {
-      timeOut: timeout
+      timeOut: timeout ?? 3000
     });
   }
 
@@ -92,7 +92,7 @@ export class ToastService {
           },
           error: err => {
             const detail = errorDetail ? errorDetail(err) : "";
-            this.showInfo(errorName, detail);
+            this.showError(errorName, detail);
             observer.error?.(err);
           },
           complete: () => observer.complete?.()
@@ -115,7 +115,7 @@ export class ToastService {
   public tapSaving<T>(itemType: string, itemName?: (value: T) => string): (source: Observable<T>) => Observable<T> {
     const success = this.tapSuccess<T>(
       `${itemType} Saved`,
-      itemName ? (value: T) => `New ${itemType} "${itemName(value)}" has been saved.` : undefined
+      itemName ? (value: T) => `${itemType} "${itemName(value)}" has been saved.` : undefined
     );
     const error = this.tapError<T>(
       `Error Saving ${itemType}`,

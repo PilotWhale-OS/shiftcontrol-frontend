@@ -204,7 +204,7 @@ export class ManagePositionComponent implements OnDestroy {
 
   protected delete(position: PositionSlotDto) {
     this._positionService.deletePositionSlot(position.id).pipe(
-      this._toastService.tapDeleting("Position", item => item.name)
+      this._toastService.tapDeleting("Position", () => position.name)
     ).subscribe(() => {
       this.positionChanged.emit();
     });

@@ -315,7 +315,7 @@ export class ManageShiftComponent implements OnDestroy {
 
   protected delete(shift: ShiftDto) {
     this._shiftService.deleteShift(shift.id).pipe(
-      this._toastService.tapDeleting("Shift", item => item.name)
+      this._toastService.tapDeleting("Shift", () => shift.name)
     ).subscribe(() => {
       this.shiftChanged.emit(shift);
       this.navigateOut.emit();
