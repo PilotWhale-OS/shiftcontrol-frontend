@@ -10,6 +10,8 @@ import {AsyncPipe, DatePipe} from "@angular/common";
 import {TooltipDirective} from "../../../directives/tooltip.directive";
 import {icons} from "../../../util/icons";
 import {UserService} from "../../../services/user/user.service";
+import {mapValue} from "../../../util/value-maps";
+import {ToastService} from "../../../services/toast/toast.service";
 
 @Component({
   selector: "app-plan-onboarding",
@@ -45,6 +47,7 @@ export class PlanOnboardingComponent {
   private readonly _activatedRoute = inject(ActivatedRoute);
   private readonly _userService = inject(UserService);
   private readonly _router = inject(Router);
+  private readonly _toastService = inject(ToastService);
 
   constructor() {
     const inviteCode = this._activatedRoute.snapshot.paramMap.get("shiftPlanInvite");
@@ -84,6 +87,8 @@ export class PlanOnboardingComponent {
     this._planService.joinShiftPlan({
       inviteCode: invite.code
     }).pipe(
+      this._toastService.tapSuccess("Joined Shift Plan", plan => `You have joined the shift plan "${plan.name}"`),
+      this._toastService.tapError("Error joining shift plan", mapValue.apiErrorToMessage),
       switchMap(() => this._userService.refreshProfile())
     ).subscribe(() => {
       this._router.navigateByUrl(`/plans/${invite.shiftPlanDto.id}`);
