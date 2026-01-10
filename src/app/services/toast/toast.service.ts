@@ -1,6 +1,7 @@
 import {inject, Injectable} from "@angular/core";
 import {ToastrService} from "ngx-toastr";
 import {Observable} from "rxjs";
+import {mapValue} from "../../util/value-maps";
 
 @Injectable({
   providedIn: "root"
@@ -37,7 +38,7 @@ export class ToastService {
     });
   }
 
-  public tapSuccess<T>(successName: string, successDetail?: (value: T) => string) {
+  public tapSuccess<T>(successName: string, successDetail?: (value: T) => string): (source: Observable<T>) => Observable<T> {
     return (source: Observable<T>) =>
       new Observable<T>(observer => {
         source.subscribe({
@@ -52,7 +53,7 @@ export class ToastService {
       });
   }
 
-  public tapNotification<T>(notificationName: string, notificationDetail?: (value: T) => string) {
+  public tapNotification<T>(notificationName: string, notificationDetail?: (value: T) => string): (source: Observable<T>) => Observable<T> {
     return (source: Observable<T>) =>
       new Observable<T>(observer => {
         source.subscribe({
@@ -67,7 +68,7 @@ export class ToastService {
       });
   }
 
-  public tapInfo<T>(infoName: string, infoDetail?: (value: T) => string) {
+  public tapInfo<T>(infoName: string, infoDetail?: (value: T) => string): (source: Observable<T>) => Observable<T> {
     return (source: Observable<T>) =>
       new Observable<T>(observer => {
         source.subscribe({
@@ -82,7 +83,7 @@ export class ToastService {
       });
   }
 
-  public tapError<T>(errorName: string, errorDetail?: (value: unknown) => string) {
+  public tapError<T>(errorName: string, errorDetail?: (value: unknown) => string): (source: Observable<T>) => Observable<T> {
     return (source: Observable<T>) =>
       new Observable<T>(observer => {
         source.subscribe({
@@ -97,5 +98,41 @@ export class ToastService {
           complete: () => observer.complete?.()
         });
       });
+  }
+
+  public tapCreating<T>(itemType: string, itemName?: (value: T) => string): (source: Observable<T>) => Observable<T> {
+    const success = this.tapSuccess<T>(
+      `${itemType} Created`,
+      itemName ? (value: T) => `${itemType} "${itemName(value)}" has been created.` : undefined
+    );
+    const error = this.tapError<T>(
+      `Error Creating ${itemType}`,
+      (err: unknown) => mapValue.apiErrorToMessage(err)
+    );
+    return (source: Observable<T>) => source.pipe(success, error);
+  }
+
+  public tapSaving<T>(itemType: string, itemName?: (value: T) => string): (source: Observable<T>) => Observable<T> {
+    const success = this.tapSuccess<T>(
+      `${itemType} Saved`,
+      itemName ? (value: T) => `New ${itemType} "${itemName(value)}" has been saved.` : undefined
+    );
+    const error = this.tapError<T>(
+      `Error Saving ${itemType}`,
+      (err: unknown) => mapValue.apiErrorToMessage(err)
+    );
+    return (source: Observable<T>) => source.pipe(success, error);
+  }
+
+  public tapDeleting<T>(itemType: string, itemName?: (value: T) => string): (source: Observable<T>) => Observable<T> {
+    const success = this.tapSuccess<T>(
+      `${itemType} Deleted`,
+      itemName ? (value: T) => `${itemType} "${itemName(value)}" has been deleted.` : undefined
+    );
+    const error = this.tapError<T>(
+      `Error Deleting ${itemType}`,
+      (err: unknown) => mapValue.apiErrorToMessage(err)
+    );
+    return (source: Observable<T>) => source.pipe(success, error);
   }
 }

@@ -131,8 +131,7 @@ export class ManageShiftPlanComponent {
         longDescription: this.form.controls.longDescription.value,
         defaultNoRolePointsPerMinute: this.form.controls.defaultRewardPointsPerMinute.value
       }).pipe(
-        this._toastService.tapSuccess("Shift Plan Created", item => `New shift plan "${item.shiftPlan.name}" has been created.`),
-        this._toastService.tapError("Error creating shift plan", mapValue.apiErrorToMessage)
+        this._toastService.tapCreating("Shift Plan", item => item.shiftPlan.name)
       ).subscribe({
         next: (createDto) => {
           this._router.navigateByUrl(`/plans/${createDto.shiftPlan.id}`);
@@ -149,8 +148,7 @@ export class ManageShiftPlanComponent {
     }
 
     this._planService.deleteShiftPlan(this.planId).pipe(
-      this._toastService.tapSuccess("Shift Plan Deleted", item => `Shift plan "${item.shiftPlan.name}" has been deleted.`),
-      this._toastService.tapError("Error deleting shift plan", mapValue.apiErrorToMessage)
+      this._toastService.tapDeleting("Shift Plan", item => item.name)
     ).subscribe({
       next: () => {
         this._router.navigateByUrl(`/events/${this.eventId}`);
@@ -172,8 +170,7 @@ export class ManageShiftPlanComponent {
         longDescription: this.form.controls.longDescription.value,
         defaultNoRolePointsPerMinute: this.form.controls.defaultRewardPointsPerMinute.value
       }).pipe(
-        this._toastService.tapSuccess("Shift Plan Saved", item => `Shift plan "${item.name}" has been saved.`),
-        this._toastService.tapError("Error saving shift plan", mapValue.apiErrorToMessage)
+        this._toastService.tapSaving("Shift Plan", item => item.name)
       ).subscribe({
         next: (plan) => {
           this._router.navigateByUrl(`/plans/${plan.id}`);
