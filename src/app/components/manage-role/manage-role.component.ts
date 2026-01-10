@@ -70,7 +70,10 @@ export class ManageRoleComponent {
   }
 
   protected save() {
+    this.form.markAllAsTouched();
+
     if(this.form.invalid) {
+      this._toastService.showError("Invalid Role", "Please provide valid role details.");
       return;
     }
 
