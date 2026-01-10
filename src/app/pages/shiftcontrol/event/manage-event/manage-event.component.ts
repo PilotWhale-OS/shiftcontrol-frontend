@@ -101,7 +101,8 @@ export class ManageEventComponent {
         startTime: mapValue.dateAsLocalDateStartOfDayString(this.form.controls.startDate.value),
         endTime: mapValue.dateAsLocalDateEndOfDayString(this.form.controls.endDate.value)
       }).pipe(
-        this._toastService.tapSuccess("Event Created", event => `New event "${event.name}" has been created.`)
+        this._toastService.tapSuccess("Event Created", event => `New event "${event.name}" has been created.`),
+        this._toastService.tapError("Error creating event", mapValue.apiErrorToMessage)
       ).subscribe(event => this._router.navigate([`../${event.id}`], {relativeTo: this._route}));
     } else {
       this._toastService.showError("Invalid Event", "Please provide valid event details.");
@@ -123,7 +124,8 @@ export class ManageEventComponent {
         startTime: mapValue.dateAsLocalDateStartOfDayString(this.form.controls.startDate.value),
         endTime: mapValue.dateAsLocalDateEndOfDayString(this.form.controls.endDate.value)
       }).pipe(
-        this._toastService.tapSuccess("Event Saved", event => `Event details of "${event.name}" have been updated.`)
+        this._toastService.tapSuccess("Event Saved", event => `Event details of "${event.name}" have been updated.`),
+        this._toastService.tapError("Error saving event", mapValue.apiErrorToMessage)
       ).subscribe(() => this._router.navigate(["../"], {relativeTo: this._route}));
     } else {
       this._toastService.showError("Invalid Event", "Please provide valid event details.");
@@ -136,7 +138,8 @@ export class ManageEventComponent {
     }
 
     this._eventService.cloneEvent(this.eventId).pipe(
-      this._toastService.tapSuccess("Event Clone")
+      this._toastService.tapSuccess("Event Clone"),
+      this._toastService.tapError("Error cloning event", mapValue.apiErrorToMessage)
     ).subscribe(event => {
       this._router.navigate([`../../${event.id}`], {relativeTo: this._route});
     });
@@ -148,7 +151,8 @@ export class ManageEventComponent {
     }
 
     this._eventService.deleteEvent(this.eventId).pipe(
-      this._toastService.tapSuccess("Event Deleted")
+      this._toastService.tapSuccess("Event Deleted"),
+      this._toastService.tapError("Error deleting event", mapValue.apiErrorToMessage)
     ).subscribe(() => this._router.navigate(["../"], {relativeTo: this._route}));
   }
 
