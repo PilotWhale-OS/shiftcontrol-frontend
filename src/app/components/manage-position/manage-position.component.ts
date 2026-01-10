@@ -19,6 +19,7 @@ import {InputToggleComponent} from "../inputs/input-toggle/input-toggle.componen
 import {icons} from "../../util/icons";
 import {PositionSignupComponent, positionSignupParams} from "./position-signup/position-signup.component";
 import PositionSignupStateEnum = PositionSlotDto.PositionSignupStateEnum;
+import {ToastService} from "../../services/toast/toast.service";
 
 export interface managePositionParams {
   shift: ShiftDto;
@@ -73,6 +74,7 @@ export class ManagePositionComponent implements OnDestroy {
   private readonly _fb = inject(FormBuilder);
   private readonly _userService = inject(UserService);
   private readonly _positionService = inject(PositionSlotEndpointService);
+  private readonly _toastService = inject(ToastService);
 
   private readonly _updatePointsDisplaySubscription: Subscription;
 
@@ -169,9 +171,13 @@ export class ManagePositionComponent implements OnDestroy {
         skipAutoAssignment: this.form.controls.skipAutoAssignment.value,
         roleId: this.form.controls.role.value?.id ?? undefined,
         overrideRewardPoints: this.form.value.rewardPoints /* automatically undefined if disabled */
-      }).subscribe(pos => {
+      }).pipe(
+        this._toastService.tapCreating("Position", item => item.name)
+      ).subscribe(pos => {
         this.positionChanged.emit(pos);
       });
+    } else {
+      this._toastService.showError("Invalid Position", "Please provide valid position details.");
     }
   }
 
@@ -186,14 +192,20 @@ export class ManagePositionComponent implements OnDestroy {
         skipAutoAssignment: this.form.controls.skipAutoAssignment.value,
         roleId: this.form.controls.role.value?.id ?? undefined,
         overrideRewardPoints: this.form.value.rewardPoints /* automatically undefined if disabled */
-      }).subscribe(pos => {
+      }).pipe(
+        this._toastService.tapSaving("Position", item => item.name)
+      ).subscribe(pos => {
         this.positionChanged.emit(pos);
       });
+    } else {
+      this._toastService.showError("Invalid Position", "Please provide valid position details.");
     }
   }
 
   protected delete(position: PositionSlotDto) {
-    this._positionService.deletePositionSlot(position.id).subscribe(() => {
+    this._positionService.deletePositionSlot(position.id).pipe(
+      this._toastService.tapDeleting("Position", item => item.name)
+    ).subscribe(() => {
       this.positionChanged.emit();
     });
   }
