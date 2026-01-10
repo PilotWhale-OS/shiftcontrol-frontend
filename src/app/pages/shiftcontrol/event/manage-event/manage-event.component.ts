@@ -15,6 +15,7 @@ import {AsyncPipe} from "@angular/common";
 import {ManageLocationComponent} from "../../../../components/manage-location/manage-location.component";
 import {DialogComponent} from "../../../../components/dialog/dialog.component";
 import {icons} from "../../../../util/icons";
+import {ToastService} from "../../../../services/toast/toast.service";
 
 @Component({
   selector: "app-manage-event",
@@ -46,6 +47,7 @@ export class ManageEventComponent {
 
   private readonly _fb = inject(FormBuilder);
   private readonly _eventService = inject(EventEndpointService);
+  private readonly _toastService = inject(ToastService);
   private readonly _locationsService = inject(LocationEndpointService);
   private readonly _route = inject(ActivatedRoute);
   private readonly _router = inject(Router);
@@ -98,7 +100,11 @@ export class ManageEventComponent {
         longDescription: mapValue.undefinedIfEmptyString(this.form.controls.longDescription.value),
         startTime: mapValue.dateAsLocalDateStartOfDayString(this.form.controls.startDate.value),
         endTime: mapValue.dateAsLocalDateEndOfDayString(this.form.controls.endDate.value)
-      }).subscribe(event => this._router.navigate([`../${event.id}`], {relativeTo: this._route}));
+      }).pipe(
+        this._toastService.tapSuccess("Event Created", event => `New event "${event.name}" has been created.`)
+      ).subscribe(event => this._router.navigate([`../${event.id}`], {relativeTo: this._route}));
+    } else {
+      this._toastService.showError("Invalid Event", "Please provide valid event details.");
     }
   }
 
@@ -116,7 +122,11 @@ export class ManageEventComponent {
         longDescription: mapValue.undefinedIfEmptyString(this.form.controls.longDescription.value),
         startTime: mapValue.dateAsLocalDateStartOfDayString(this.form.controls.startDate.value),
         endTime: mapValue.dateAsLocalDateEndOfDayString(this.form.controls.endDate.value)
-      }).subscribe(() => this._router.navigate(["../"], {relativeTo: this._route}));
+      }).pipe(
+        this._toastService.tapSuccess("Event Saved", event => `Event details of "${event.name}" have been updated.`)
+      ).subscribe(() => this._router.navigate(["../"], {relativeTo: this._route}));
+    } else {
+      this._toastService.showError("Invalid Event", "Please provide valid event details.");
     }
   }
 
@@ -125,7 +135,9 @@ export class ManageEventComponent {
       throw new Error("Cannot clone in create mode");
     }
 
-    this._eventService.cloneEvent(this.eventId).subscribe(event => {
+    this._eventService.cloneEvent(this.eventId).pipe(
+      this._toastService.tapSuccess("Event Clone")
+    ).subscribe(event => {
       this._router.navigate([`../../${event.id}`], {relativeTo: this._route});
     });
   }
@@ -135,7 +147,9 @@ export class ManageEventComponent {
       throw new Error("Cannot delete in create mode");
     }
 
-    this._eventService.deleteEvent(this.eventId).subscribe(() => this._router.navigate(["../"], {relativeTo: this._route}));
+    this._eventService.deleteEvent(this.eventId).pipe(
+      this._toastService.tapSuccess("Event Deleted")
+    ).subscribe(() => this._router.navigate(["../"], {relativeTo: this._route}));
   }
 
   protected refreshLocations(){

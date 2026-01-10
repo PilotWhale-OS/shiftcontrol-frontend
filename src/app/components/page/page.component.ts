@@ -8,6 +8,7 @@ import {combineLatestWith, map} from "rxjs";
 import {NotificationService} from "../../services/notification/notification.service";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {icons} from "../../util/icons";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: "app-page",
