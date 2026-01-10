@@ -87,7 +87,7 @@ export class PlanOnboardingComponent {
     this._planService.joinShiftPlan({
       inviteCode: invite.code
     }).pipe(
-      this._toastService.tapSuccess("Joined Shift Plan", plan => `You have joined the shift plan "${plan.name}"`),
+      this._toastService.tapSuccess("Joined Shift Plan", () => `You have joined the shift plan "${invite.shiftPlanDto.name}"`),
       this._toastService.tapError("Error joining shift plan", mapValue.apiErrorToMessage),
       switchMap(() => this._userService.refreshProfile())
     ).subscribe(() => {

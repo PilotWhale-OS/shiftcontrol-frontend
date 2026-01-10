@@ -22,7 +22,6 @@ import {ManageRoleComponent} from "../../../../components/manage-role/manage-rol
 import {icons} from "../../../../util/icons";
 import {InputNumberComponent} from "../../../../components/inputs/input-number/input-number.component";
 import {ToastService} from "../../../../services/toast/toast.service";
-import {mapValue} from "../../../../util/value-maps";
 
 @Component({
   selector: "app-manage-shift-plan",

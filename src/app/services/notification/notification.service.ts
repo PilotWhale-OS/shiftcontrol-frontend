@@ -5,6 +5,7 @@ import {UserService} from "../user/user.service";
 import {IPushNotificationHub} from "../../../notificationservice-client/TypedSignalR.Client/NotificationService.Hubs";
 import {PushNotificationDto} from "../../../notificationservice-client/NotificationService.Classes.Dto";
 import {BehaviorSubject, combineLatestWith, distinctUntilChanged, firstValueFrom, map, Observable, switchMap, take} from "rxjs";
+import {ToastService} from "../toast/toast.service";
 
 interface connectionState {
   connection: HubConnection;
@@ -19,6 +20,7 @@ export class NotificationService {
 
   private readonly _hubUrl = "http://notificationservice.127.0.0.1.nip.io/hubs/push";
   private readonly _userService = inject(UserService);
+  private readonly _toastService = inject(ToastService);
 
   private _connectionState$ = new BehaviorSubject<connectionState | undefined>(undefined);
   private _notifications$ = new BehaviorSubject<Set<PushNotificationDto>>(new Set());
@@ -47,7 +49,6 @@ export class NotificationService {
       }),
       distinctUntilChanged((a, b) => a?.connection?.connectionId === b?.connection?.connectionId)
     ).subscribe(connection => this._connectionState$.next(connection));
-
   }
 
   public get notifications$(): Observable<Set<PushNotificationDto>> {
@@ -135,6 +136,7 @@ export class NotificationService {
   }
 
   private addNotification(event: PushNotificationDto) {
+    this._toastService.showNotification(event.title, event.notification);
     this._notifications$.pipe(
       take(1)
     ).subscribe(notifications => {
