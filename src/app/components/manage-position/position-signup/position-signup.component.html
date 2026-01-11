@@ -7,25 +7,72 @@
     <p class="whitespace-pre-line">{{body}}</p>
   }
 
-  <div></div>
+  <div>
+    @if (currentUserId$ | async; as userId) {
+      @if (position$ | async; as position){
+        @if (actions$ | async; as actions) {
+          @for (action of actions; track action) {
+            @switch(action) {
+              @case("SIGN_UP") {
+                <xsb-input-button content="Sign Up" action="success" (click)="signUp(position.slot, position.shift, userId)" />
+              }
 
-  @if (position$ | async; as position){
-    @switch(action$ | async) {
-      @case("SIGN_UP") {
-        <xsb-input-button content="Sign Up" action="success" (click)="signUp(position.slot)" />
-      }
+              @case("SIGN_OUT") {
+                <xsb-input-button content="Leave Position" action="normal" (click)="signOut(position.slot)" />
+              }
 
-      @case("SIGN_OUT") {
-        <xsb-input-button content="Leave Position" action="normal" (click)="signOut(position.slot)" />
-      }
+              @case("REQUEST_SIGN_UP") {
+                <xsb-input-button content="Request Sign Up" action="success" (click)="requestSignUp(position.slot, position.shift)"  />
+              }
 
-      @case("REQUEST_SIGN_UP") {
-        <xsb-input-button content="Request Sign Up" action="success" />
-      }
+              @case("REQUEST_SIGN_OUT") {
+                <xsb-input-button content="Request Unassign" action="success" (click)="requestSignOut(position.slot, position.shift)"  />
+              }
 
-      @case("REQUEST_SIGN_OUT") {
-        <xsb-input-button content="Request Leave" action="normal" />
+              @case("REQUEST_TRADE") {
+                <xsb-input-button content="Request Trade" action="success" (click)="requestTrade(position.slot, position.shift)"  />
+              }
+
+              @case("DISABLED_REQUEST_SIGN_UP") {
+                <xsb-input-button content="Request Sign Up" action="success" [lock]="true" [disableLockIcon]="true" />
+              }
+
+              @case("DISABLED_REQUEST_SIGN_OUT") {
+                <xsb-input-button content="Request Leave" action="normal" [lock]="true" [disableLockIcon]="true" />
+              }
+            }
+          }
+        }
       }
     }
-  }
+  </div>
 </div>
+
+@if (signupOptions$ | async; as signupOptions){
+  <xsb-dialog (closeDialog)="signupOptions$.next(undefined)">
+
+    <ng-container dialog-header>
+      <h2>Sign Up Options</h2>
+    </ng-container>
+
+    <ng-container dialog-body>
+      hello there
+    </ng-container>
+
+  </xsb-dialog>
+}
+
+
+@if (tradeRequestOptions$ | async; as tradeRequestOptions){
+  <xsb-dialog (closeDialog)="tradeRequestOptions$.next(undefined)">
+
+    <ng-container dialog-header>
+      <h2>Request Shift Trade</h2>
+    </ng-container>
+
+    <ng-container dialog-body>
+      hello there
+    </ng-container>
+
+  </xsb-dialog>
+}
