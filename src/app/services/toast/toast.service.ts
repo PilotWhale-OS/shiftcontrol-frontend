@@ -22,7 +22,7 @@ export class ToastService {
 
   public showInfo(title: string, message: string, timeout?: number) {
     this._toastr.info(message,title, {
-      timeOut: timeout ?? 3000
+      timeOut: timeout ?? 5000
     });
   }
 
@@ -34,7 +34,7 @@ export class ToastService {
 
   public showSuccess(title: string, message: string, timeout?: number) {
     this._toastr.success(message,title, {
-      timeOut: timeout ?? 3000
+      timeOut: timeout ?? 5000
     });
   }
 

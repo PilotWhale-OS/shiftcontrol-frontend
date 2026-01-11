@@ -17,5 +17,6 @@ export const BC_PLAN_EDIT = new Breadcrumb("Manage", "edit", BC_PLAN_DASHBOARD);
 
 export const BC_SHIFT_CALENDAR = new Breadcrumb("Calendar", "calendar", BC_PLAN_DASHBOARD);
 export const BC_SHIFT_DETAILS = new Breadcrumb("Shift Details", "shift-id", BC_PLAN_DASHBOARD);
+export const BC_PLAN_SIGNUP_DASHBOARD = new Breadcrumb("Signup Dashboard", "signup-dashboard", BC_PLAN_DASHBOARD);
 export const BC_PLAN_ONBOARDING = new Breadcrumb("Onboarding", "onboarding", BC_PLAN_DASHBOARD);
 

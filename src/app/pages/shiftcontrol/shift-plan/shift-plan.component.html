@@ -102,6 +102,21 @@
         </div>
       }
 
+      @if((canManagePlan$ | async) === true){
+        <!-- signup dashboard -->
+        <div class="card interaction" routerLink="signup-dashboard">
+
+          <!-- info -->
+          <h1>
+            <fa-icon [icon]="icons.eligible" class="icon" />
+            Manage Sign-Ups
+          </h1>
+          <p>
+            Click here to manage how volunteers can sign up for shifts and handle requests by volunteers.
+          </p>
+        </div>
+      }
+
     </div>
 
     <!-- schedule card-->

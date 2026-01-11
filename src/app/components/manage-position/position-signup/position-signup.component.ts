@@ -9,6 +9,8 @@ import {
 import {icons} from "../../../util/icons";
 import {AsyncPipe} from "@angular/common";
 import {InputButtonComponent} from "../../inputs/input-button/input-button.component";
+import {ToastService} from "../../../services/toast/toast.service";
+import {mapValue} from "../../../util/value-maps";
 
 export interface positionSignupParams {
   slot: PositionSlotDto;
@@ -44,6 +46,7 @@ export class PositionSignupComponent {
   );
 
   private readonly _positionService = inject(PositionSlotEndpointService);
+  private readonly _toastService = inject(ToastService);
 
   @Input()
   public set positionSlot(value: positionSignupParams | undefined) {
@@ -53,13 +56,21 @@ export class PositionSignupComponent {
   public signUp(slot: PositionSlotDto) {
     this._positionService.joinPositionSlot(slot.id, {
       acceptedRewardPointsConfigHash: slot.rewardPointsDto.rewardPointsConfigHash
-    }).subscribe(data => {
+    }).pipe(
+      this._toastService.tapSuccess("Successfully Signed Up",
+        () => `You are now signed up for the position ${slot.name}. You can view your assignments in the shift plan dashboard.`),
+      this._toastService.tapError("Could Not Sign Up", mapValue.apiErrorToMessage)
+    ).subscribe(data => {
       this.positionSignupChanged.emit(data);
     });
   }
 
   public signOut(slot: PositionSlotDto) {
-    this._positionService.leavePositionSlot(slot.id).subscribe(data => {
+    this._positionService.leavePositionSlot(slot.id).pipe(
+      this._toastService.tapSuccess("Successfully Unassigned",
+        () => `You are no longer signed up for the position ${slot.name}.`),
+      this._toastService.tapError("Could Not Unassign", mapValue.apiErrorToMessage)
+    ).subscribe(data => {
       this.positionSignupChanged.emit(data);
     });
   }

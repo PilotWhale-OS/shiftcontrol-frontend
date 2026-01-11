@@ -22,6 +22,7 @@ import {DialogAddEmergencyComponent} from "../../../components/dialog-add-emerge
 import {UserService} from "../../../services/user/user.service";
 import {icons} from "../../../util/icons";
 import {EventLeaderboardComponent} from "../../../components/event-leaderboard/event-leaderboard.component";
+import {ToastService} from "../../../services/toast/toast.service";
 
 @Component({
   selector: "app-plans",
@@ -60,7 +61,8 @@ export class EventComponent {
   private readonly _eventService = inject(EventEndpointService);
   private readonly _timeConstraintService = inject(TimeConstraintEndpointService);
   private readonly _leaderboardService = inject(LeaderboardEndpointService);
-  private _userService = inject(UserService);
+  private readonly _userService = inject(UserService);
+  private readonly _toastService = inject(ToastService);
 
   constructor() {
     const eventId = this._route.snapshot.paramMap.get("eventId");
@@ -103,7 +105,9 @@ export class EventComponent {
       from: input.start ? input.start.toISOString() : event.eventOverview.startTime,
       to: input.end ? input.end.toISOString() : event.eventOverview.endTime,
       type: TimeConstraintCreateDto.TypeEnum.Unavailable
-    }).subscribe(() => {
+    }).pipe(
+      this._toastService.tapCreating("Absence")
+    ).subscribe(() => {
       this.timeConstraints$ = this._timeConstraintService.getTimeConstraints(event.eventOverview.id);
     });
   }
@@ -118,7 +122,9 @@ export class EventComponent {
       from: emergencyDate.toISOString(),
       to: emergencyDate.toISOString(),
       type: TimeConstraintCreateDto.TypeEnum.Emergency
-    }).subscribe(() => {
+    }).pipe(
+      this._toastService.tapCreating("Emergency")
+    ).subscribe(() => {
       this.timeConstraints$ = this._timeConstraintService.getTimeConstraints(event.eventOverview.id);
     });
   }
