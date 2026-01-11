@@ -7,11 +7,12 @@
     <p class="whitespace-pre-line">{{body}}</p>
   }
 
-  <div>
-    @if (currentUserId$ | async; as userId) {
-      @if (position$ | async; as position){
-        @if (actions$ | async; as actions) {
-          @for (action of actions; track action) {
+
+  @if (currentUserId$ | async; as userId) {
+    @if (position$ | async; as position){
+      @if (actions$ | async; as actions) {
+        @for (action of actions; track action) {
+          <div>
             @switch(action) {
               @case("SIGN_UP") {
                 <xsb-input-button content="Sign Up" action="success" (click)="signUp(position.slot, position.shift, userId)" />
@@ -40,12 +41,16 @@
               @case("DISABLED_REQUEST_SIGN_OUT") {
                 <xsb-input-button content="Request Leave" action="normal" [lock]="true" [disableLockIcon]="true" />
               }
+
+              @case("DISABLED_SIGN_UP") {
+                <xsb-input-button content="Sign Up" action="success" [lock]="true" [disableLockIcon]="true" />
+              }
             }
-          }
+          </div>
         }
       }
     }
-  </div>
+  }
 </div>
 
 @if (signupOptions$ | async; as signupOptions){

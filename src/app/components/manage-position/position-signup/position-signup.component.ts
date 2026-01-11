@@ -74,7 +74,7 @@ export class PositionSignupComponent implements OnInit {
     return this.hasInited$.pipe(
       filter(inited => inited),
       switchMap( () => this._userService.userProfile$.pipe(
-          map(profile => profile?.account?.id ?? undefined),
+          map(profile => profile?.account?.volunteer.id ?? undefined),
           filter(id => id !== undefined)
         )
       ));
@@ -295,6 +295,8 @@ export class PositionSignupComponent implements OnInit {
             return "Make sure to show up at the shift location at the specified time.";
           case PositionSlotDto.PositionSignupStateEnum.Full:
             return "The position slot is currently full.";
+          case PositionSlotDto.PositionSignupStateEnum.NotEligible:
+            return "You don't have the required roles to sign up for this position.";
           default:
             return "INVALID_STATE";
         }
@@ -327,7 +329,7 @@ export class PositionSignupComponent implements OnInit {
   }
 
   private getActions(position: positionSignupParams | undefined, userId: string): Array<
-    "SIGN_UP" | "REQUEST_TRADE" | "SIGN_OUT" | "REQUEST_SIGN_UP" |
+    "SIGN_UP" | "REQUEST_TRADE" | "SIGN_OUT" | "REQUEST_SIGN_UP" | "DISABLED_SIGN_UP" |
     "DISABLED_REQUEST_SIGN_UP" | "DISABLED_REQUEST_SIGN_OUT" | "REQUEST_SIGN_OUT"> | undefined {
     if (position === undefined) {
       return undefined;
@@ -354,11 +356,13 @@ export class PositionSignupComponent implements OnInit {
           case PositionSlotDto.PositionSignupStateEnum.SignupViaTrade:
           case PositionSlotDto.PositionSignupStateEnum.SignupViaAuction:
           case PositionSlotDto.PositionSignupStateEnum.SignupOrTrade:
-            return ["SIGN_UP"];
+            return ["SIGN_UP", ...REQUEST_TRADE];
           case PositionSlotDto.PositionSignupStateEnum.SignedUp:
             return ["SIGN_OUT"];
           case PositionSlotDto.PositionSignupStateEnum.Full:
             return [...REQUEST_TRADE];
+          case PositionSlotDto.PositionSignupStateEnum.NotEligible:
+            return ["DISABLED_SIGN_UP"];
           default:
             return undefined;
         }
@@ -377,6 +381,8 @@ export class PositionSignupComponent implements OnInit {
             return ["REQUEST_SIGN_OUT"];
           case PositionSlotDto.PositionSignupStateEnum.Full:
             return [...REQUEST_TRADE];
+          case PositionSlotDto.PositionSignupStateEnum.NotEligible:
+            return ["DISABLED_SIGN_UP"];
           default:
             return undefined;
         }
