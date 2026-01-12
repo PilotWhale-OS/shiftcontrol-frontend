@@ -4,7 +4,7 @@ import {
   AssignmentDto,
   PositionSlotDto,
   PositionSlotEndpointService, PositionSlotTradeEndpointService,
-  ShiftDto, ShiftPlanDto, TradeCandidatesDto, TradeInfoDto, VolunteerDto
+  ShiftDto, ShiftPlanDto, TradeCandidatesDto, TradeDto, TradeInfoDto, VolunteerDto
 } from "../../../../shiftservice-client";
 import {icons} from "../../../util/icons";
 import {AsyncPipe} from "@angular/common";
@@ -215,7 +215,7 @@ export class PositionSignupComponent implements OnInit {
   }
 
   /**
-   * Initiate trade request
+   * Initiate trade request user selection UI
    * @param slot
    * @param shift
    * @protected
@@ -243,15 +243,34 @@ export class PositionSignupComponent implements OnInit {
     // TODO implement trade acceptance
   }
 
+  /**
+   * Submit trade request with given selection
+   * @param slot
+   * @param volunteer
+   * @param userId
+   * @param offeringSlot
+   * @protected
+   */
   protected submitTradeRequest(slot: PositionSlotDto, volunteer: VolunteerDto | undefined, userId: string, offeringSlot: PositionSlotDto) {
-    const assignment = slot.assignments.find(ass => ass.assignedVolunteer.id === volunteer?.id);
-    const offeringAs;
+    const requestedAssignment = slot.assignments.find(ass => ass.assignedVolunteer.id === volunteer?.id);
+    const offeringAssignment = offeringSlot.assignments.find(ass => ass.assignedVolunteer.id === userId);
 
-    if(assignment) {
-      this._tradeService.acceptTrade({
-
-      });
+    if(requestedAssignment === undefined || offeringAssignment === undefined) {
+      throw new Error("one of the trading assignment couldnt not be determined");
     }
+
+    const trade: TradeDto = {
+      createdAt: new Date().toISOString(), /* todo remove from dto */
+      status: "OPEN", /* todo remove from dto */
+      offeringAssignment,
+      requestedAssignment
+    };
+
+    this._tradeService.acceptTrade(trade).pipe(
+      this._toastService.tapSuccess("Requested Trade",
+        () => "The other volunteer will be notified. You can see the status on your shift plan dashboard."),
+      this._toastService.tapError("Could Request Trade", mapValue.apiErrorToMessage)
+    ).subscribe(() => this.positionSignupChanged.emit(undefined));
   }
 
   protected signOut(slot: PositionSlotDto) {

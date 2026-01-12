@@ -51,6 +51,11 @@
             </div>
           }
         </div>
+
+        <app-dialog-trade-request
+          [requestOptions]="(tradeRequestOptions$ | async) ?? undefined"
+          (submitted)="$event !== undefined ? submitTradeRequest(position.slot, $event.partner, userId, $event.slot) : 0; tradeRequestOptions$.next(undefined)"
+        />
       }
     }
   }
@@ -69,6 +74,4 @@
 
   </xsb-dialog>
 }
-
-<app-dialog-trade-request [requestOptions]="(tradeRequestOptions$ | async) ?? undefined" (submitted)="tradeRequestOptions$.next(undefined)" />
 

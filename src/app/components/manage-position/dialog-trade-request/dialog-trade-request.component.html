@@ -13,7 +13,7 @@
             <fa-icon [icon]="icons.signedUp" />
             Requested Position
           </small>
-          <span>{{tradeRequestOptions.slot.name}}</span>
+          <span>You are requesting a position in "{{tradeRequestOptions.slot.name}}".</span>
         </div>
 
         @if (offerShiftOptions$ | async; as options) {
@@ -23,12 +23,12 @@
               Your Shift Offer
             </small>
             <label for="trade-request-offering">Select one of your positions which will be offered in exchange</label>
-            <xsb-input-select #offeredShift name="trade-request-offering"
+            <xsb-input-select #offeredPosition name="trade-request-offering"
                               [nullable]="false" nullName="No position selected"
-                              [formControl]="form.controls.offeredShift"
+                              [formControl]="form.controls.offeredPosition"
                               [options]="options"
                               [comparatorFn]="candidateComparatorFn"
-                              [xsb-typed]="[offeredShift, form.controls.offeredShift]"
+                              [xsb-typed]="[offeredPosition, form.controls.offeredPosition]"
             />
           </div>
         }

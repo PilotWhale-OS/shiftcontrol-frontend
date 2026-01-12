@@ -52,11 +52,11 @@ export class DialogTradeRequestComponent {
 
   constructor() {
     this.form = this._fb.group({
-      offeredShift: this._fb.nonNullable.control<TradeCandidatesDto | undefined>(undefined, [Validators.required]),
+      offeredPosition: this._fb.nonNullable.control<TradeCandidatesDto | undefined>(undefined, [Validators.required]),
       tradePartner: this._fb.nonNullable.control<VolunteerDto | undefined>(undefined, [Validators.required])
     });
 
-    this.partnerOptions$ = this.form.controls.offeredShift.valueChanges.pipe(
+    this.partnerOptions$ = this.form.controls.offeredPosition.valueChanges.pipe(
       map(value => {
         if(value === undefined) {
           return undefined;
@@ -85,10 +85,19 @@ export class DialogTradeRequestComponent {
 
   protected selectVolunteer(options: tradeRequestOptions) {
     if(this.form.valid) {
+      const offeredPosition = this.form.controls.offeredPosition.value;
+      if(offeredPosition === undefined) {
+        throw new Error("No offered position selected");
+      }
+
       const volunteer = this.form.controls.tradePartner.value;
-      this.submitted.emit(volunteer === undefined ? undefined : {
+      if(volunteer === undefined) {
+        throw new Error("No volunteer selected");
+      }
+
+      this.submitted.emit({
         partner: volunteer,
-        slot: options.slot
+        slot: offeredPosition.ownPosition
       });
     }
   }
