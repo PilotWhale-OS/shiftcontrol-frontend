@@ -4,7 +4,7 @@ import {
   AssignmentDto,
   PositionSlotDto,
   PositionSlotEndpointService, PositionSlotTradeEndpointService,
-  ShiftDto, ShiftPlanDto, TradeCandidatesDto, TradeInfoDto
+  ShiftDto, ShiftPlanDto, TradeCandidatesDto, TradeInfoDto, VolunteerDto
 } from "../../../../shiftservice-client";
 import {icons} from "../../../util/icons";
 import {AsyncPipe} from "@angular/common";
@@ -14,6 +14,7 @@ import {mapValue} from "../../../util/value-maps";
 import LockStatusEnum = ShiftPlanDto.LockStatusEnum;
 import {UserService} from "../../../services/user/user.service";
 import {DialogComponent} from "../../dialog/dialog.component";
+import {DialogTradeRequestComponent} from "../dialog-trade-request/dialog-trade-request.component";
 
 export interface positionSignupParams {
   slot: PositionSlotDto;
@@ -36,7 +37,8 @@ interface tradeRequestOptions {
   imports: [
     AsyncPipe,
     InputButtonComponent,
-    DialogComponent
+    DialogComponent,
+    DialogTradeRequestComponent
   ],
   standalone: true,
   templateUrl: "./position-signup.component.html",
@@ -237,12 +239,19 @@ export class PositionSignupComponent implements OnInit {
     throw new Error("No available options for requesting trade.");
   }
 
-  protected acceptTrade(slot: PositionSlotDto, trade: TradeInfoDto) {
+  protected acceptTrade(slot: PositionSlotDto, volunteer: VolunteerDto | undefined) {
     // TODO implement trade acceptance
   }
 
-  protected submitTradeRequest(slot: PositionSlotDto, trade: TradeInfoDto) {
-    // TODO implement trade acceptance
+  protected submitTradeRequest(slot: PositionSlotDto, volunteer: VolunteerDto | undefined, userId: string, offeringSlot: PositionSlotDto) {
+    const assignment = slot.assignments.find(ass => ass.assignedVolunteer.id === volunteer?.id);
+    const offeringAs;
+
+    if(assignment) {
+      this._tradeService.acceptTrade({
+
+      });
+    }
   }
 
   protected signOut(slot: PositionSlotDto) {

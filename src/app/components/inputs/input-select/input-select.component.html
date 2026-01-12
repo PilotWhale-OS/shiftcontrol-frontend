@@ -20,7 +20,7 @@
       <div class="grow flex gap-lg items-center">
         <div class="grow">{{currentValueName}}</div>
         @if (!valid) {
-          <fa-icon icon="circle-exclamation" class="text-text-danger" />
+          <fa-icon [icon]="errorIcon" class="text-text-danger" />
         }
         <fa-icon [icon]="caretDownIcon" class="opacity-50" />
       </div>

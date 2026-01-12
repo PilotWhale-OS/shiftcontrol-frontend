@@ -8,7 +8,7 @@ import {
   OnInit
 } from "@angular/core";
 import { NG_VALUE_ACCESSOR, NgControl } from "@angular/forms";
-import {faCaretDown, faCircleCheck, IconDefinition} from "@fortawesome/free-solid-svg-icons";
+import {faCaretDown, faCircleCheck, faCircleExclamation, IconDefinition} from "@fortawesome/free-solid-svg-icons";
 import {TypedControlValueAccessor} from "../../../util/typedControlValueAccessor";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {NgClass} from "@angular/common";
@@ -89,6 +89,9 @@ export class InputSelectComponent<TData> implements TypedControlValueAccessor<TD
 
   /** bound ngmodel to the underlying input */
   value: TData | null = null;
+
+  /** error con */
+  errorIcon = faCircleExclamation;
 
   /** onchange callback to be set by the parent form */
   onChange?: (value: TData | null) => void;

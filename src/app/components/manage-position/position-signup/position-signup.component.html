@@ -11,8 +11,10 @@
   @if (currentUserId$ | async; as userId) {
     @if (position$ | async; as position){
       @if (actions$ | async; as actions) {
-        @for (action of actions; track action) {
-          <div>
+        <div class="flex flex-row gap-sm">
+          @for (action of actions; track action) {
+            <div class="flex-1 flex-grow">
+
             @switch(action) {
               @case("SIGN_UP") {
                 <xsb-input-button content="Sign Up" action="success" (click)="signUp(position.slot, position.shift, userId)" />
@@ -31,7 +33,7 @@
               }
 
               @case("REQUEST_TRADE") {
-                <xsb-input-button content="Request Trade" action="success" (click)="requestTrade(position.slot, position.shift)"  />
+                <xsb-input-button content="Request Trade" action="normal" (click)="requestTrade(position.slot, position.shift)"  />
               }
 
               @case("DISABLED_REQUEST_SIGN_UP") {
@@ -46,8 +48,9 @@
                 <xsb-input-button content="Sign Up" action="success" [lock]="true" [disableLockIcon]="true" />
               }
             }
-          </div>
-        }
+            </div>
+          }
+        </div>
       }
     }
   }
@@ -67,17 +70,5 @@
   </xsb-dialog>
 }
 
+<app-dialog-trade-request [requestOptions]="(tradeRequestOptions$ | async) ?? undefined" (submitted)="tradeRequestOptions$.next(undefined)" />
 
-@if (tradeRequestOptions$ | async; as tradeRequestOptions){
-  <xsb-dialog (closeDialog)="tradeRequestOptions$.next(undefined)">
-
-    <ng-container dialog-header>
-      <h2>Request Shift Trade</h2>
-    </ng-container>
-
-    <ng-container dialog-body>
-      hello there
-    </ng-container>
-
-  </xsb-dialog>
-}
