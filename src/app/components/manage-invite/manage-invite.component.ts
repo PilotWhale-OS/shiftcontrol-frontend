@@ -14,6 +14,8 @@ import {InputDateComponent} from "../inputs/input-date/input-date.component";
 import {BehaviorSubject, Subscription} from "rxjs";
 import {InputNumberComponent} from "../inputs/input-number/input-number.component";
 import {icons} from "../../util/icons";
+import {ToastService} from "../../services/toast/toast.service";
+import {mapValue} from "../../util/value-maps";
 
 @Component({
   selector: "app-manage-invite",
@@ -56,6 +58,7 @@ export class ManageInviteComponent implements OnDestroy {
 
   private readonly _fb = inject(FormBuilder);
   private readonly _inviteService = inject(ShiftPlanInviteEndpointService);
+  private readonly _toastService = inject(ToastService);
 
   private readonly _expiryEnabledSubscription?: Subscription;
   private readonly _maxUsesEnabledSubscription?: Subscription;
@@ -110,9 +113,10 @@ export class ManageInviteComponent implements OnDestroy {
   protected copyInviteLinkToClipboard(invite: ShiftPlanInviteDto) {
     const link = this.getInviteLink(invite);
     navigator.clipboard.writeText(link).then(() => {
-      console.log("Invite link copied to clipboard");
-    }).catch(err => {
-      console.error("Failed to copy invite link to clipboard", err);
+      this._toastService.showSuccess("Copied Invite", "Invite link has been copied to clipboard.");
+    }).catch(() => {
+      console.error("Could not copy invite link to clipboard");
+      this._toastService.showError("Clipboard Error", "Failed to copy invite link to clipboard.");
     });
   }
 
@@ -129,7 +133,10 @@ export class ManageInviteComponent implements OnDestroy {
   }
 
   protected create() {
+    this.form.markAllAsTouched();
+
     if(this.form.invalid) {
+      this._toastService.showError("Invalid Invite", "Please provide valid invite details.");
       return;
     }
 
@@ -147,23 +154,28 @@ export class ManageInviteComponent implements OnDestroy {
       autoAssignRoleIds: this.form.controls.roles.value
     };
 
-    this._inviteService.createShiftPlanInvite(plan.id, createData).subscribe(invite => {
-      console.log(invite);
+    this._inviteService.createShiftPlanInvite(plan.id, createData).pipe(
+      this._toastService.tapCreating("Invite", item => item.code)
+    ).subscribe(() => {
       this.inviteChanged.emit();
       this.form.reset();
     });
   }
 
   protected revoke(invite: ShiftPlanInviteDto) {
-    this._inviteService.revokeShiftPlanInvite(invite.id).subscribe(() => {
+    this._inviteService.revokeShiftPlanInvite(invite.id).pipe(
+      this._toastService.tapSuccess("Invite Revoked"),
+      this._toastService.tapError("Error revoking invite", mapValue.apiErrorToMessage)
+    ).subscribe(() => {
       console.log(invite);
       this.inviteChanged.emit();
     });
   }
 
   protected remove(invite: ShiftPlanInviteDto) {
-    this._inviteService.deleteShiftPlanInvite(invite.id).subscribe(() => {
-      console.log(invite);
+    this._inviteService.deleteShiftPlanInvite(invite.id).pipe(
+      this._toastService.tapDeleting("Invite", () => invite.code)
+    ).subscribe(() => {
       this.inviteChanged.emit();
     });
   }

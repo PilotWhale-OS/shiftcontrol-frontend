@@ -21,6 +21,7 @@ import {ManageInviteComponent} from "../../../../components/manage-invite/manage
 import {ManageRoleComponent} from "../../../../components/manage-role/manage-role.component";
 import {icons} from "../../../../util/icons";
 import {InputNumberComponent} from "../../../../components/inputs/input-number/input-number.component";
+import {ToastService} from "../../../../services/toast/toast.service";
 
 @Component({
   selector: "app-manage-shift-plan",
@@ -61,6 +62,7 @@ export class ManageShiftPlanComponent {
   private readonly _planService = inject(ShiftPlanEndpointService);
   private readonly _planInviteService = inject(ShiftPlanInviteEndpointService);
   private readonly _roleService = inject(RoleEndpointService);
+  private readonly _toastService = inject(ToastService);
 
   constructor() {
     this.form = this._fb.group({
@@ -108,6 +110,8 @@ export class ManageShiftPlanComponent {
           .configureBreadcrumb(BC_EVENT, event.name, event.id);
       });
     } else {
+      this._toastService.showError("Something unexpected happened", "Shift Plan could not be loaded. Please try again.");
+      this._router.navigateByUrl("/");
       throw new Error("Either planId or eventId must be provided in the route parameters");
     }
   }
@@ -125,11 +129,15 @@ export class ManageShiftPlanComponent {
         shortDescription: this.form.controls.shortDescription.value,
         longDescription: this.form.controls.longDescription.value,
         defaultNoRolePointsPerMinute: this.form.controls.defaultRewardPointsPerMinute.value
-      }).subscribe({
-        next: (plan) => {
-          this._router.navigateByUrl(`/plans/${plan.id}`);
+      }).pipe(
+        this._toastService.tapCreating("Shift Plan", item => item.shiftPlan.name)
+      ).subscribe({
+        next: (createDto) => {
+          this._router.navigateByUrl(`/plans/${createDto.shiftPlan.id}`);
         }
       });
+    } else {
+      this._toastService.showError("Invalid Shift Plan", "Please provide valid shift plan details.");
     }
   }
 
@@ -138,7 +146,9 @@ export class ManageShiftPlanComponent {
       throw new Error("Cannot delete plan without planId or eventId");
     }
 
-    this._planService.deleteShiftPlan(this.planId).subscribe({
+    this._planService.deleteShiftPlan(this.planId).pipe(
+      this._toastService.tapDeleting("Shift Plan")
+    ).subscribe({
       next: () => {
         this._router.navigateByUrl(`/events/${this.eventId}`);
       }
@@ -158,11 +168,15 @@ export class ManageShiftPlanComponent {
         shortDescription: this.form.controls.shortDescription.value,
         longDescription: this.form.controls.longDescription.value,
         defaultNoRolePointsPerMinute: this.form.controls.defaultRewardPointsPerMinute.value
-      }).subscribe({
+      }).pipe(
+        this._toastService.tapSaving("Shift Plan", item => item.name)
+      ).subscribe({
         next: (plan) => {
           this._router.navigateByUrl(`/plans/${plan.id}`);
         }
       });
+    } else {
+      this._toastService.showError("Invalid Shift Plan", "Please provide valid shift plan details.");
     }
   }
 

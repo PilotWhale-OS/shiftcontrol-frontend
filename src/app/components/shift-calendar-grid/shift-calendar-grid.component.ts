@@ -33,9 +33,10 @@ export interface calendarConfig {
   startDate: Date;
   endDate: Date;
   locationLayouts: ScheduleLayoutDto[];
+  noLocationLayout?: Omit<ScheduleLayoutDto, "location">;
   activityWidth?: string;
   hideFilterToggle?: boolean;
-  emptySpaceClickCallback?: (date: Date, location: LocationDto) => void;
+  emptySpaceClickCallback?: (date: Date, location?: LocationDto) => void;
   activityClickCallback?: (activity: ActivityDto) => void;
   shiftClickCallback?: (shift: ShiftDto) => void;
   shiftPaddingColumn?: boolean;
@@ -118,19 +119,37 @@ export class ShiftCalendarGridComponent {
     map(dayMap => dayMap.size > 0 ? [...dayMap.values()] : []),
     map(days => {
       const activities = days
-        .flatMap(day => day.scheduleContentDtos)
-        .flatMap(schedule => schedule.activities.map(activity => ({
-          activity,
-          location: schedule.location
-        })));
+        .flatMap(day => [
+          ...day.scheduleContentDtos.
+          map(schedule => schedule.activities.map(activity => ({
+              activity,
+              location: schedule.location
+            }))
+          ),
+          ...(day.scheduleContentNoLocationDto === undefined ? [] : [day.scheduleContentNoLocationDto])
+          .map(schedule => schedule.activities.map(activity => ({
+            activity,
+            location: undefined
+          })))
+        ])
+        .flat();
       const activityMap = new Map(activities.map(activityItem => [activityItem.activity.id, activityItem]));
 
       const shifts = days
-        .flatMap(day => day.scheduleContentDtos)
-        .flatMap(schedule => schedule.shiftColumns.map(shift => ({
-          shift,
-          location: schedule.location
-        })));
+        .flatMap(day => [
+          ...day.scheduleContentDtos.
+          map(schedule => schedule.shiftColumns.map(shift => ({
+              shift,
+              location: schedule.location
+            }))
+          ),
+          ...(day.scheduleContentNoLocationDto === undefined ? [] : [day.scheduleContentNoLocationDto])
+          .map(schedule => schedule.shiftColumns.map(shift => ({
+            shift,
+            location: undefined
+          })))
+        ])
+        .flat();
       const shiftMap = new Map(shifts.map(shiftItem => [shiftItem.shift.shiftDto.id, shiftItem]));
 
       return {
@@ -380,6 +399,22 @@ export class ShiftCalendarGridComponent {
    */
   protected getGridColumns(config: calendarAdjustedConfig){
 
+    const createLocationColumns = (locationName: string, columnCount: number) =>
+      `venue-${locationName}-start venue-${locationName}-activity-start] ${
+        config.activityWidth ?? this.activityWidth
+      } [venue-${locationName}-activity-end venue-${locationName}-shift-start ${
+        [...Array(Math.max(1,columnCount) /* at least 1 column */ ).fill(undefined).map((_, index) =>
+          `venue-${locationName}-shift-col-${index + 1}-start] ${
+            this.shiftWidth
+          } [venue-${locationName}-shift-col-${index + 1}-end`),
+          config.shiftPaddingColumn ? `venue-${locationName}-shift-col-${columnCount}-start] ${
+            config.activityWidth ?? this.activityWidth
+          } [venue-${locationName}-shift-col-${Math.max(1,columnCount) + 1}-end` : ""
+        ].join(" ")
+      } venue-${locationName}-shift-end venue-${locationName}-end venue-${locationName}-gap-start] ${
+        this.venueGapWidth
+      } [venue-${locationName}-gap-end`;
+
     return `[time-start] ${this.dateWidth} [time-end ${
       (config.locationLayouts ?? []).sort((a,b) => {
         const aId = a.location.id.toLowerCase();
@@ -393,21 +428,10 @@ export class ShiftCalendarGridComponent {
         return 0;
       }).map(locationColumn => {
         const locationName = locationColumn.location.id;
-        return `venue-${locationName}-start venue-${locationName}-activity-start] ${
-          config.activityWidth ?? this.activityWidth
-        } [venue-${locationName}-activity-end venue-${locationName}-shift-start ${
-          [...Array(Math.max(1,locationColumn.requiredShiftColumns) /* at least 1 column */ ).fill(undefined).map((_, index) =>
-            `venue-${locationName}-shift-col-${index + 1}-start] ${
-              this.shiftWidth
-            } [venue-${locationName}-shift-col-${index + 1}-end`),
-            config.shiftPaddingColumn ? `venue-${locationName}-shift-col-${locationColumn.requiredShiftColumns}-start] ${
-              config.activityWidth ?? this.activityWidth
-            } [venue-${locationName}-shift-col-${locationColumn.requiredShiftColumns + 1}-end` : ""
-          ].join(" ")
-        } venue-${locationName}-shift-end venue-${locationName}-end venue-${locationName}-gap-start] ${
-          this.venueGapWidth
-        } [venue-${locationName}-gap-end`;
+        return createLocationColumns(locationName, locationColumn.requiredShiftColumns);
       }).join(" ")
+    } ${
+      config.noLocationLayout === undefined ? "" : createLocationColumns("none", config.noLocationLayout.requiredShiftColumns)
     } blank-start] 1fr [blank-end filter-start]  ${this.dateWidth} [filter-end]`;
   }
 
@@ -445,10 +469,10 @@ export class ShiftCalendarGridComponent {
       return "signed-up";
     }
     if(shift.positionSlots.some(slot =>
-      slot.positionSignupState ===  PositionSlotDto.PositionSignupStateEnum.SignupViaAuction ||
-      slot.positionSignupState ===  PositionSlotDto.PositionSignupStateEnum.SignupViaTrade ||
-      slot.positionSignupState ===  PositionSlotDto.PositionSignupStateEnum.SignupPossible ||
-      slot.positionSignupState ===  PositionSlotDto.PositionSignupStateEnum.SignupOrTrade
+      slot.positionSignupState === PositionSlotDto.PositionSignupStateEnum.SignupViaAuction ||
+      slot.positionSignupState === PositionSlotDto.PositionSignupStateEnum.SignupViaTrade ||
+      slot.positionSignupState === PositionSlotDto.PositionSignupStateEnum.SignupPossible ||
+      slot.positionSignupState === PositionSlotDto.PositionSignupStateEnum.SignupOrTrade
     )){
       return "eligible";
     }
@@ -466,10 +490,10 @@ export class ShiftCalendarGridComponent {
       return "Signed Up";
     }
     if(shift.positionSlots.some(slot =>
-      slot.positionSignupState ===  PositionSlotDto.PositionSignupStateEnum.SignupViaAuction ||
-      slot.positionSignupState ===  PositionSlotDto.PositionSignupStateEnum.SignupViaTrade ||
-      slot.positionSignupState ===  PositionSlotDto.PositionSignupStateEnum.SignupPossible ||
-      slot.positionSignupState ===  PositionSlotDto.PositionSignupStateEnum.SignupOrTrade
+      slot.positionSignupState === PositionSlotDto.PositionSignupStateEnum.SignupViaAuction ||
+      slot.positionSignupState === PositionSlotDto.PositionSignupStateEnum.SignupViaTrade ||
+      slot.positionSignupState === PositionSlotDto.PositionSignupStateEnum.SignupPossible ||
+      slot.positionSignupState === PositionSlotDto.PositionSignupStateEnum.SignupOrTrade
     )){
       return "Eligible";
     }

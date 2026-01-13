@@ -15,6 +15,7 @@ import {mapValue} from "../../util/value-maps";
 import {UserService} from "../../services/user/user.service";
 import UserTypeEnum = AccountInfoDto.UserTypeEnum;
 import {icons} from "../../util/icons";
+import {ToastService} from "../../services/toast/toast.service";
 
 export interface manageActivityParams {
   eventId: string;
@@ -56,6 +57,7 @@ export class ManageActivityComponent {
   private readonly _fb = inject(FormBuilder);
   private readonly _activityService = inject(ActivityEndpointService);
   private readonly _userService = inject(UserService);
+  private readonly _toastService = inject(ToastService);
 
   constructor() {
     this.form = this._fb.group({
@@ -122,9 +124,13 @@ export class ManageActivityComponent {
         startTime: start.toISOString(),
         endTime: end.toISOString(),
         locationId: this.form.controls.location.value ?? undefined
-      }).subscribe(activity => {
+      }).pipe(
+        this._toastService.tapCreating("Activity", item => item.name)
+      ).subscribe(activity => {
         this.activityChanged.emit(activity);
       });
+    }else {
+      this._toastService.showError("Invalid Activity", "Please provide valid activity details.");
     }
   }
 
@@ -146,14 +152,20 @@ export class ManageActivityComponent {
         startTime: start.toISOString(),
         endTime: end.toISOString(),
         locationId: this.form.controls.location.value ?? undefined
-      }).subscribe(updated => {
+      }).pipe(
+        this._toastService.tapSaving("Activity", item => item.name)
+      ).subscribe(updated => {
         this.activityChanged.emit(updated);
       });
+    }else {
+      this._toastService.showError("Invalid Activity", "Please provide valid activity details.");
     }
   }
 
   protected delete(activity: ActivityDto) {
-    this._activityService.deleteActivity(activity.id).subscribe(() => {
+    this._activityService.deleteActivity(activity.id).pipe(
+      this._toastService.tapDeleting("Activity")
+    ).subscribe(() => {
       this.activityChanged.emit(activity);
     });
   }

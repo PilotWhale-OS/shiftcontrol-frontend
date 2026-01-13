@@ -13,6 +13,7 @@ import {InputButtonComponent} from "../inputs/input-button/input-button.componen
 import {NgClass} from "@angular/common";
 import {DialogComponent} from "../dialog/dialog.component";
 import {icons} from "../../util/icons";
+import {ToastService} from "../../services/toast/toast.service";
 
 @Component({
   selector: "app-manage-location",
@@ -44,6 +45,7 @@ export class ManageLocationComponent {
 
   private readonly _fb = inject(FormBuilder);
   private readonly _locationService = inject(LocationEndpointService);
+  private readonly _toastService = inject(ToastService);
 
   constructor() {
     this.form = this._fb.group({
@@ -71,7 +73,10 @@ export class ManageLocationComponent {
   }
 
   protected save() {
+    this.form.markAllAsTouched();
+
     if(this.form.invalid) {
+      this._toastService.showError("Invalid Location", "Please provide valid location details.");
       return;
     }
 
@@ -89,8 +94,11 @@ export class ManageLocationComponent {
     (this._location === undefined ?
       this._locationService.createLocation(event.id, locationData) :
       this._locationService.updateLocation(this._location.id, locationData)
+    ).pipe(
+      this._location === undefined ?
+        this._toastService.tapCreating("Location", item => item.name) :
+        this._toastService.tapSaving("Location", item => item.name)
     ).subscribe(() => {
-      console.log("Location saved successfully.");
       this.locationChanged.emit();
 
       if(this._location === undefined) {
@@ -104,8 +112,9 @@ export class ManageLocationComponent {
       throw new Error("Could not delete location in create mode");
     }
 
-    this._locationService.deleteLocation(this._location.id).subscribe(() =>{
-      console.log("Location deleted successfully.");
+    this._locationService.deleteLocation(this._location.id).pipe(
+      this._toastService.tapDeleting("Location")
+    ).subscribe(() => {
       this.locationChanged.emit();
     });
   }

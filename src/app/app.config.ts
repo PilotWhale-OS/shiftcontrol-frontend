@@ -7,6 +7,8 @@ import { provideHttpClient } from "@angular/common/http";
 import {Configuration as ShiftserviceConfiguration} from "../shiftservice-client";
 import Keycloak from "keycloak-js";
 import {provideAnimations} from "@angular/platform-browser/animations";
+import {provideToastr} from "ngx-toastr";
+import {ToastComponent} from "./components/toast/toast.component";
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideKeycloak({
@@ -25,7 +27,12 @@ export const appConfig: ApplicationConfig = {
         sessionTimeout: 60000 * 30, // 30 minutes
       })
     ],
-    providers: [AutoRefreshTokenService, UserActivityService, provideAnimations(), provideHttpClient(),
+    providers: [AutoRefreshTokenService, UserActivityService, provideAnimations(), provideToastr({
+      toastComponent: ToastComponent,
+      closeButton: true,
+      easeTime: 100,
+      timeOut: 5000,
+    }), provideHttpClient(),
       {provide: LOCALE_ID, useValue: "de-AT" },
       {
         provide: ShiftserviceConfiguration,

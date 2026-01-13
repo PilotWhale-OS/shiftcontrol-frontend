@@ -53,3 +53,10 @@ body::-webkit-scrollbar-track {
   width: 0 !important;
   height: 0 !important;
 }
+
+.overlay-container {
+  position: fixed;
+  top: .8rem;
+  right: .8rem;
+  z-index: 1000;
+}

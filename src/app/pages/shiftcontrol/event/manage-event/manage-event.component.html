@@ -57,6 +57,7 @@
         <xsb-input-button content="Create Event" action="success" (click)="create()" />
       }
       @else {
+        <xsb-input-button content="Clone Event" action="normal" (click)="clone()" />
         <xsb-input-button content="Update Event" action="success" (click)="update()" />
         <xsb-input-button content="Delete Event" action="danger" (click)="showEventDeleteConfirm = true" />
       }

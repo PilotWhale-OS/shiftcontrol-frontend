@@ -52,6 +52,7 @@ export const icons = {
   filter: faFilter,
   notification: faBell,
   noNotification: faMoon,
+  info: faCircleInfo,
 
   /* time */
   hour: faHourglass,

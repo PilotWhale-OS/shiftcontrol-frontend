@@ -23,6 +23,7 @@ import {TooltipDirective} from "../../directives/tooltip.directive";
 import {ManagePositionComponent, managePositionParams} from "../manage-position/manage-position.component";
 import {icons} from "../../util/icons";
 import {InputNumberComponent} from "../inputs/input-number/input-number.component";
+import {ToastService} from "../../services/toast/toast.service";
 
 export interface manageShiftParams {
   planId: string;
@@ -94,6 +95,7 @@ export class ManageShiftComponent implements OnDestroy {
   private readonly _shiftService = inject(ShiftEndpointService);
   private readonly _activityService = inject(ActivityEndpointService);
   private readonly _datePipe = inject(DatePipe);
+  private readonly _toastService = inject(ToastService);
 
   private readonly _disableLocationSubscription: Subscription;
 
@@ -268,10 +270,14 @@ export class ManageShiftComponent implements OnDestroy {
         locationId: this.form.controls.activity.value === null ? (this.form.controls.location.value?.id ?? undefined) : undefined,
         activityId: this.form.controls.activity.value?.id ?? undefined,
         bonusRewardPoints: this.form.controls.bonusPoints.value,
-      }).subscribe(shift => {
+      }).pipe(
+        this._toastService.tapCreating("Shift", item => item.name)
+      ).subscribe(shift => {
         this.requestedEditMode$.next(false);
         this.refreshShift(shift.id);
       });
+    } else {
+      this._toastService.showError("Invalid Shift", "Please provide valid shift details.");
     }
   }
 
@@ -296,15 +302,21 @@ export class ManageShiftComponent implements OnDestroy {
         locationId: this.form.controls.activity.value === null ? (this.form.controls.location.value?.id ?? undefined) : undefined,
         activityId: this.form.controls.activity.value?.id ?? undefined,
         bonusRewardPoints: this.form.controls.bonusPoints.value
-      }).subscribe(updatedShift => {
+      }).pipe(
+        this._toastService.tapSaving("Shift", item => item.name)
+      ).subscribe(updatedShift => {
         this.requestedEditMode$.next(false);
         this.refreshShift(updatedShift.id);
       });
+    }else {
+      this._toastService.showError("Invalid Shift", "Please provide valid shift details.");
     }
   }
 
   protected delete(shift: ShiftDto) {
-    this._shiftService.deleteShift(shift.id).subscribe(() => {
+    this._shiftService.deleteShift(shift.id).pipe(
+      this._toastService.tapDeleting("Shift", () => shift.name)
+    ).subscribe(() => {
       this.shiftChanged.emit(shift);
       this.navigateOut.emit();
     });

@@ -1,7 +1,7 @@
 import { effect, Injectable, Signal, inject } from "@angular/core";
 import {KEYCLOAK_EVENT_SIGNAL, KeycloakEvent, KeycloakEventType, ReadyArgs, typeEventArgs} from "keycloak-angular";
 import Keycloak, {KeycloakProfile} from "keycloak-js";
-import {BehaviorSubject, map, Observable, of, switchMap} from "rxjs";
+import {BehaviorSubject, map, Observable, of, switchMap, tap} from "rxjs";
 import {AccountInfoDto, UserProfileDto, UserProfileEndpointService} from "../../../shiftservice-client";
 import UserTypeEnum = AccountInfoDto.UserTypeEnum;
 
@@ -124,8 +124,14 @@ export class UserService {
   /**
    * Initialize keycloak login process
    */
-  public login() {
-    this.keycloak.login({redirectUri: window.location.origin});
+  public login(redirectTo?: string) {
+    this.keycloak.login({redirectUri: redirectTo ?? window.location.origin});
+  }
+
+  public refreshProfile() {
+    return this.userService.getCurrentUserProfile().pipe(
+      tap((user) => this._userProfile$.next(user))
+    );
   }
 
   /**

@@ -147,6 +147,9 @@ export class ManageScheduleComponent implements OnDestroy {
         startDate,
         endDate,
         locationLayouts: locations.map(location => ({location, requiredShiftColumns: 0})),
+        noLocationLayout: {
+          requiredShiftColumns: 0
+        },
         activityWidth: "15rem",
         hideFilterToggle: false,
         emptySpaceClickCallback: userType === UserTypeEnum.Assigned ? undefined : (date, location) => {

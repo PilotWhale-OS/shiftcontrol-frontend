@@ -5,6 +5,7 @@ import {AsyncPipe, DatePipe} from "@angular/common";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {icons} from "../../../util/icons";
 import {InputButtonComponent} from "../../../components/inputs/input-button/input-button.component";
+import {RouterLink} from "@angular/router";
 
 @Component({
   selector: "app-notifications",
@@ -12,7 +13,8 @@ import {InputButtonComponent} from "../../../components/inputs/input-button/inpu
     AsyncPipe,
     FaIconComponent,
     InputButtonComponent,
-    DatePipe
+    DatePipe,
+    RouterLink
   ],
   templateUrl: "./notifications.component.html",
   styleUrl: "./notifications.component.scss"
@@ -20,13 +22,22 @@ import {InputButtonComponent} from "../../../components/inputs/input-button/inpu
 export class NotificationsComponent {
 
   protected readonly icons = icons;
+  protected readonly notifications$;
 
   private readonly _notificationService = inject(NotificationService);
 
-  public get notifications$() {
-    return this._notificationService.notifications$.pipe(
-      tap(() => this._notificationService.markAllAsRead()),
+  constructor() {
+    this.notifications$ = this._notificationService.notifications$.pipe(
+      tap(async () => await this._notificationService.markAllAsRead()),
       map(notifications => [...notifications])
     );
+  }
+
+  protected clearNotification(notificationId: string) {
+    this._notificationService.clearNotification(notificationId);
+  }
+
+  protected clearHistory() {
+    this._notificationService.clearHistory();
   }
 }

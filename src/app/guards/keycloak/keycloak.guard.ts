@@ -13,8 +13,11 @@ const isAccessAllowed = async (
     return true;
   }
 
+  const currentUrl = window.location.href;
+  const currentUrlEncoded = encodeURIComponent(currentUrl);
+
   const router = inject(Router);
-  return router.parseUrl("/login");
+  return router.parseUrl("/login?continue=" + currentUrlEncoded);
 };
 
 const isNotLoggedIn = async (
