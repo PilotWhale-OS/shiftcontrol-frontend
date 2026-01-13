@@ -4,7 +4,7 @@ import {
   AssignmentDto,
   PositionSlotDto,
   PositionSlotEndpointService, PositionSlotTradeEndpointService,
-  ShiftDto, ShiftPlanDto, TradeCandidatesDto, TradeDto, TradeInfoDto, VolunteerDto
+  ShiftDto, ShiftPlanDto, TradeCandidatesDto, TradeDto, TradeAcceptDto, TradeInfoDto, VolunteerDto
 } from "../../../../shiftservice-client";
 import {icons} from "../../../util/icons";
 import {AsyncPipe} from "@angular/common";
@@ -259,11 +259,10 @@ export class PositionSignupComponent implements OnInit {
       throw new Error("one of the trading assignment couldnt not be determined");
     }
 
-    const trade: TradeDto = {
-      createdAt: new Date().toISOString(), /* todo remove from dto */
-      status: "OPEN", /* todo remove from dto */
-      offeringAssignment,
-      requestedAssignment
+    const trade: TradeAcceptDto = {
+      offeredSlot: offeringAssignment.positionSlotId,
+      requestedSlot: requestedAssignment.positionSlotId,
+      offeringVolunteer: offeringAssignment.assignedVolunteer.id
     };
 
     this._tradeService.acceptTrade(trade).pipe(
