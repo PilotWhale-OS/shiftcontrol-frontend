@@ -84,6 +84,7 @@ export class DialogTradeRequestComponent {
   }
 
   protected selectVolunteer(options: tradeRequestOptions) {
+    console.log(options);
     if(this.form.valid) {
       const offeredPosition = this.form.controls.offeredPosition.value;
       if(offeredPosition === undefined) {

@@ -148,7 +148,7 @@ export class PositionSignupComponent implements OnInit {
       slot.positionSignupState === PositionSlotDto.PositionSignupStateEnum.SignupOrTrade ||
       slot.positionSignupState === PositionSlotDto.PositionSignupStateEnum.SignupViaTrade
     ) {
-      const trades = slot.tradeInfoDtos.filter(trade => trade.offeringVolunteer.id !== userId);
+      const trades = slot.offeredTrades.filter(trade => trade.offeringVolunteer.id !== userId);
       if(trades.length === 0) {
         throw new Error("No available trades for signing up to position.");
       }
@@ -221,6 +221,7 @@ export class PositionSignupComponent implements OnInit {
    * @protected
    */
   protected requestTrade(slot: PositionSlotDto, shift: ShiftDto) {
+    console.log(shift);
 
     /* if eligible and not in position, users can start a trade */
     if(
@@ -240,6 +241,7 @@ export class PositionSignupComponent implements OnInit {
   }
 
   protected acceptTrade(slot: PositionSlotDto, volunteer: VolunteerDto | undefined) {
+    console.log(slot, volunteer);
     // TODO implement trade acceptance
   }
 
@@ -291,6 +293,7 @@ export class PositionSignupComponent implements OnInit {
   }
 
   private getBody(position: positionSignupParams | undefined, userId: string): string | undefined {
+    console.log(userId);
     if(position === undefined) {
       return undefined;
     }
@@ -358,6 +361,7 @@ export class PositionSignupComponent implements OnInit {
   private getActions(position: positionSignupParams | undefined, userId: string): Array<
     "SIGN_UP" | "REQUEST_TRADE" | "SIGN_OUT" | "REQUEST_SIGN_UP" | "DISABLED_SIGN_UP" |
     "DISABLED_REQUEST_SIGN_UP" | "DISABLED_REQUEST_SIGN_OUT" | "REQUEST_SIGN_OUT"> | undefined {
+    console.log(userId);
     if (position === undefined) {
       return undefined;
     }

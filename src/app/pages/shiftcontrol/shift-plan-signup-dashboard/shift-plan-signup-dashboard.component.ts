@@ -7,7 +7,6 @@ import {PageService} from "../../../services/page/page.service";
 import {InputButtonComponent} from "../../../components/inputs/input-button/input-button.component";
 import {BehaviorSubject} from "rxjs";
 import {AsyncPipe} from "@angular/common";
-import {DashboardOverviewDto} from "../../../../shiftservice-client/model/dashboard-overview-dto";
 import LockStatusEnum = ShiftPlanDto.LockStatusEnum;
 import {ToastService} from "../../../services/toast/toast.service";
 
