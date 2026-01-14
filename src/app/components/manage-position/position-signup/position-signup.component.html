@@ -97,7 +97,7 @@
 
         <app-dialog-trade-details
           [tradeInfo]="(dialogTradeInfo$ | async) ?? undefined"
-          (tradeChanged)="positionSignupChanged.next($event)"
+          (tradeChanged)="positionSignupChanged.emit(undefined); dialogTradeInfo$.next(undefined)"
         />
       }
     }

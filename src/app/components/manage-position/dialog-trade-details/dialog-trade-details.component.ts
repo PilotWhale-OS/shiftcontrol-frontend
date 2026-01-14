@@ -1,6 +1,5 @@
 import {Component, EventEmitter, inject, Input, Output} from "@angular/core";
 import {
-  AssignmentDto,
   PositionSlotDto,
   PositionSlotEndpointService, PositionSlotTradeEndpointService, ShiftDetailsDto,
   ShiftEndpointService,
@@ -43,7 +42,7 @@ interface mappedInfo {
 export class DialogTradeDetailsComponent {
 
   @Output()
-  tradeChanged = new EventEmitter<AssignmentDto>();
+  tradeChanged = new EventEmitter<void>();
 
   protected icons = icons;
 
@@ -102,20 +101,37 @@ export class DialogTradeDetailsComponent {
 
     if(tradeData.isOwnRequest) {
       if(result === "danger") {
-        /* this._tradeService.cancelTrade();*/
+        this._tradeService.cancelTrade({
+          offeredSlotId: tradeData.ownSlot.id,
+          requestedSlotId: tradeData.otherSlot.id,
+          offeringVolunteerId: tradeData.ownVolunteer.id,
+          requestingVolunteerId: tradeData.otherVolunteer.id
+        }).pipe(
+          this._toastService.tapSuccess("Trade Cancelled", () => "The trade has been cancelled successfully."),
+          this._toastService.tapError("Cancel Failed", mapValue.apiErrorToMessage)
+        ).subscribe(() => this.tradeChanged.emit());
       }
     } else {
       if(result ==="success") {
         this._tradeService.acceptTrade({
-          offeredSlot: tradeData.otherSlot.id,
-          requestedSlot: tradeData.ownSlot.id,
-          offeringVolunteer: tradeData.otherVolunteer.id
+          offeredSlotId: tradeData.otherSlot.id,
+          requestedSlotId: tradeData.ownSlot.id,
+          offeringVolunteerId: tradeData.otherVolunteer.id,
+          requestingVolunteerId: tradeData.ownVolunteer.id
         }).pipe(
           this._toastService.tapSuccess("Trade Accepted", () => "The trade has been accepted successfully."),
           this._toastService.tapError("Trade Failed", mapValue.apiErrorToMessage)
-        ).subscribe((trade) => this.tradeChanged.emit(trade.requestedAssignment));
+        ).subscribe(() => this.tradeChanged.emit());
       } else if(result === "danger") {
-
+        this._tradeService.acceptTrade({
+          offeredSlotId: tradeData.otherSlot.id,
+          requestedSlotId: tradeData.ownSlot.id,
+          offeringVolunteerId: tradeData.otherVolunteer.id,
+          requestingVolunteerId: tradeData.ownVolunteer.id
+        }).pipe(
+          this._toastService.tapSuccess("Trade Declined", () => "The trade has been declined successfully."),
+          this._toastService.tapError("Decline Failed", mapValue.apiErrorToMessage)
+        ).subscribe(() => this.tradeChanged.emit());
       }
     }
 

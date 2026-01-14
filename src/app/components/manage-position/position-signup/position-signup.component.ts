@@ -52,7 +52,7 @@ interface tradeRequestOptions {
 export class PositionSignupComponent implements OnInit {
 
   @Output()
-  public positionSignupChanged = new EventEmitter<AssignmentDto>();
+  public positionSignupChanged = new EventEmitter<AssignmentDto | undefined>();
 
   protected readonly icons = icons;
 
