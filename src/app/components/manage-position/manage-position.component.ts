@@ -1,6 +1,6 @@
 import {Component, EventEmitter, inject, Input, OnDestroy, Output} from "@angular/core";
 import {
-  PositionSlotDto, PositionSlotEndpointService, RoleDto,
+  PositionSlotDto, PositionSlotEndpointService, PositionSlotTradeEndpointService, RoleDto,
   ShiftDto,
 } from "../../../shiftservice-client";
 import {InputSelectComponent, SelectOptions} from "../inputs/input-select/input-select.component";
@@ -88,6 +88,7 @@ export class ManagePositionComponent implements OnDestroy {
   private readonly _fb = inject(FormBuilder);
   private readonly _userService = inject(UserService);
   private readonly _positionService = inject(PositionSlotEndpointService);
+  private readonly _tradeService = inject(PositionSlotTradeEndpointService);
   private readonly _toastService = inject(ToastService);
 
   private readonly _updatePointsDisplaySubscription: Subscription;

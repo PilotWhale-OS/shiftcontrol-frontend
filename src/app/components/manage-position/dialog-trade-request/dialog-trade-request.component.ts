@@ -63,7 +63,7 @@ export class DialogTradeRequestComponent {
         }
 
         return value.eligibleTradeRecipients.map(rec => ({
-          name: `${rec.fistName} ${rec.lastName}`,
+          name: `${rec.firstName} ${rec.lastName}`,
           value: rec
         })) as SelectOptions<VolunteerDto>;
       })

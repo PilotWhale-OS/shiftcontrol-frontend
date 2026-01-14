@@ -4,7 +4,7 @@ import {
   AssignmentDto,
   PositionSlotDto,
   PositionSlotEndpointService, PositionSlotTradeEndpointService,
-  ShiftDto, ShiftPlanDto, TradeCandidatesDto, TradeDto, TradeAcceptDto, TradeInfoDto, VolunteerDto
+  ShiftDto, ShiftPlanDto, TradeCandidatesDto, TradeInfoDto, VolunteerDto, TradeCreateDto
 } from "../../../../shiftservice-client";
 import {icons} from "../../../util/icons";
 import {AsyncPipe} from "@angular/common";
@@ -259,13 +259,13 @@ export class PositionSignupComponent implements OnInit {
       throw new Error("one of the trading assignment couldnt not be determined");
     }
 
-    const trade: TradeAcceptDto = {
-      offeredSlot: offeringAssignment.positionSlotId,
-      requestedSlot: requestedAssignment.positionSlotId,
-      offeringVolunteer: offeringAssignment.assignedVolunteer.id
+    const trade: TradeCreateDto = {
+      requestedPositionSlotId: requestedAssignment.positionSlotId,
+      offeredPositionSlotId: offeringAssignment.positionSlotId,
+      requestedVolunteerIds: [requestedAssignment.assignedVolunteer.id] // TODO make multiselect
     };
 
-    this._tradeService.acceptTrade(trade).pipe(
+    this._tradeService.createTrade(trade).pipe(
       this._toastService.tapSuccess("Requested Trade",
         () => "The other volunteer will be notified. You can see the status on your shift plan dashboard."),
       this._toastService.tapError("Could Request Trade", mapValue.apiErrorToMessage)

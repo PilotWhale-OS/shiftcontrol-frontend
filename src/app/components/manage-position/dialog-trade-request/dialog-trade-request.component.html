@@ -24,7 +24,7 @@
             </small>
             <label for="trade-request-offering">Select one of your positions which will be offered in exchange</label>
             <xsb-input-select #offeredPosition name="trade-request-offering"
-                              [nullable]="false" nullName="No position selected"
+                              [nullable]="false" nullName="No eligible positions available"
                               [formControl]="form.controls.offeredPosition"
                               [options]="options"
                               [comparatorFn]="candidateComparatorFn"
@@ -39,7 +39,7 @@
               <fa-icon [icon]="icons.volunteers" />
               Trade Partner
             </small>
-            <label for="trade-request-offering">Select another volunteer who will recive the selected shift</label>
+            <label for="trade-request-offering">Select another volunteer who will receive the selected shift</label>
             <xsb-input-select #tradePartner name="trade-request-receiving"
                               [nullable]="false" nullName="No volunteer selected"
                               [formControl]="form.controls.tradePartner"
