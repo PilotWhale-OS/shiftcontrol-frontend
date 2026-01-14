@@ -25,6 +25,9 @@ export class DialogComponent implements AfterViewInit, OnDestroy {
   action: "danger" | "success" | "normal" = "normal";
 
   @Input()
+  bodyStyle: "card" | "plain" = "plain";
+
+  @Input()
   success?: string;
 
   @Input()

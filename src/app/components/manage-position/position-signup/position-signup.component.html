@@ -1,20 +1,58 @@
+
+
+<!-- list of available trades -->
+@if (position$ | async; as options){
+  @if (options.slot.requestedTrades.length > 0 || options.slot.offeredTrades.length > 0) {
+    <div class="flex flex-col gap-md">
+      @for (requestedTrade of options.slot.requestedTrades; track requestedTrade.createdAt) {
+        <div class="grid grid-cols-[auto_1fr] gap-md items-center">
+          <div class="badge h-fit">
+            <fa-icon [icon]="icons.trade" />
+            Trade Request
+          </div>
+          <div class="flex flex-row flex-wrap gap-x-xs items-center">
+            <span>You requested</span>
+            <xsb-input-button size="text" content="a trade" (click)="dialogTradeInfo$.next(requestedTrade)" />
+            <span>with {{requestedTrade.requestedVolunteer.firstName}} {{requestedTrade.requestedVolunteer.lastName | slice:0:1}}.</span>
+          </div>
+        </div>
+      }
+
+      @for (offeredTrade of options.slot.offeredTrades; track offeredTrade.createdAt) {
+        <div class="flex flex-row gap-sm items-center">
+          <div class="badge hint">
+            <fa-icon [icon]="icons.trade" />
+            Trade Offer
+          </div>
+          <span>{{offeredTrade.offeringVolunteer.firstName}} {{offeredTrade.offeringVolunteer.lastName | slice:0:1}}. offers</span>
+          <xsb-input-button size="text" content="a position" (click)="dialogTradeInfo$.next(offeredTrade)" />
+        </div>
+      }
+    </div>
+
+    <div class="mb-lg mt-lg border-b-ctr border-framing-card w-full"></div>
+  }
+}
+
 <div class="flex flex-col gap-md">
+
+  <!-- action title -->
   @if (header$ | async; as header) {
     <b>{{header}}</b>
   }
 
+  <!-- longer description of actions the user can take -->
   @if (body$ | async; as body) {
     <p class="whitespace-pre-line">{{body}}</p>
   }
 
-
+  <!-- action buttons -->
   @if (currentUserId$ | async; as userId) {
     @if (position$ | async; as position){
       @if (actions$ | async; as actions) {
         <div class="flex flex-row gap-sm">
           @for (action of actions; track action) {
             <div class="flex-1 flex-grow">
-
             @switch(action) {
               @case("SIGN_UP") {
                 <xsb-input-button content="Sign Up" action="success" (click)="signUp(position.slot, position.shift, userId)" />
@@ -55,6 +93,11 @@
         <app-dialog-trade-request
           [requestOptions]="(tradeRequestOptions$ | async) ?? undefined"
           (submitted)="$event !== undefined ? submitTradeRequest(position.slot, $event.partner, userId, $event.slot) : 0; tradeRequestOptions$.next(undefined)"
+        />
+
+        <app-dialog-trade-details
+          [tradeInfo]="(dialogTradeInfo$ | async) ?? undefined"
+          (tradeChanged)="positionSignupChanged.next($event)"
         />
       }
     }

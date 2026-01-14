@@ -7,7 +7,7 @@ import {
   ShiftDto, ShiftPlanDto, TradeCandidatesDto, TradeInfoDto, VolunteerDto, TradeCreateDto
 } from "../../../../shiftservice-client";
 import {icons} from "../../../util/icons";
-import {AsyncPipe} from "@angular/common";
+import {AsyncPipe, SlicePipe} from "@angular/common";
 import {InputButtonComponent} from "../../inputs/input-button/input-button.component";
 import {ToastService} from "../../../services/toast/toast.service";
 import {mapValue} from "../../../util/value-maps";
@@ -15,6 +15,8 @@ import LockStatusEnum = ShiftPlanDto.LockStatusEnum;
 import {UserService} from "../../../services/user/user.service";
 import {DialogComponent} from "../../dialog/dialog.component";
 import {DialogTradeRequestComponent} from "../dialog-trade-request/dialog-trade-request.component";
+import {FaIconComponent} from "@fortawesome/angular-fontawesome";
+import {DialogTradeDetailsComponent} from "../dialog-trade-details/dialog-trade-details.component";
 
 export interface positionSignupParams {
   slot: PositionSlotDto;
@@ -38,7 +40,10 @@ interface tradeRequestOptions {
     AsyncPipe,
     InputButtonComponent,
     DialogComponent,
-    DialogTradeRequestComponent
+    DialogTradeRequestComponent,
+    SlicePipe,
+    FaIconComponent,
+    DialogTradeDetailsComponent
   ],
   standalone: true,
   templateUrl: "./position-signup.component.html",
@@ -53,6 +58,7 @@ export class PositionSignupComponent implements OnInit {
 
   protected readonly signupOptions$ = new BehaviorSubject<signupOptions | undefined>(undefined);
   protected readonly tradeRequestOptions$ = new BehaviorSubject<tradeRequestOptions | undefined>(undefined);
+  protected readonly dialogTradeInfo$ = new BehaviorSubject<TradeInfoDto | undefined>(undefined);
   protected readonly hasInited$ = new BehaviorSubject<boolean>(false);
   protected readonly position$ = new BehaviorSubject<positionSignupParams | undefined>(undefined);
   protected readonly header$ = this.position$.pipe(

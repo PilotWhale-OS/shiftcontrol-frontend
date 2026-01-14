@@ -35,6 +35,8 @@ export const icons = {
   leaderboardFirst: faCrown,
   leaderboardPodium: faMedal,
   leaderboardOther: faCertificate,
+  position: faWrench,
+  shift: faClock,
 
   /* labels */
   calendar: faCalendar,
