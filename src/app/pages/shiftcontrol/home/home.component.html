@@ -1,56 +1,20 @@
+<!-- intro and event card list -->
+<div class="flex flex-row gap-md flex-wrap col-span-3>">
 
-<!-- card grid -->
-<div class="grid grid-cols-[repeat(3,1fr)] grid-rows-[auto_1fr] gap-md h-full">
-
-  <!-- intro and event card list -->
-  <div class="flex flex-row gap-md flex-wrap">
-
-    <div class="basis-full">
-      <div class="card w-fit flex flex-col gap-md" >
-        <h1 class="signature-gradient-font">Welcome back, {{name$ | async}}!</h1>
-        <span>
+  <div class="basis-full">
+    <div class="card w-fit flex flex-col gap-md" >
+      <h1 class="signature-gradient-font">Welcome back, {{name$ | async}}!</h1>
+      <span>
           The home screen shows your schedule and trades/auctions for all active events and shift plans.<br>
           Additionally, currently active shift plans are shown below.
         </span>
-      </div>
-    </div>
-
-    @for (card of cards; track card) {
-      <div class="card interaction" [ngClass]="card.spotlight === true ? 'spotlight' : ''" [routerLink]="card.href">
-        <h1>{{card.title}}</h1>
-        <span>{{card.content}}</span>
-      </div>
-    }
-  </div>
-
-  <!-- schedule card-->
-  <div class="card row-span-2 flex flex-col gap-md">
-
-    <!-- title -->
-    <h1 class="col-span-2 signature-gradient-font">
-      <fa-icon [icon]="icons.schedule" class="icon" />
-      Your Schedule
-    </h1>
-
-    @if(shiftsWithOrigin$ | async; as shifts) {
-      <div class="grow overflow-auto">
-        <app-shift-schedule [showShiftOrigin]="true" [shifts]="shifts"  />
-      </div>
-    }
-  </div>
-
-  <!-- auction/trade card-->
-  <div class="card row-span-2 flex flex-col gap-md">
-
-    <!-- title -->
-    <h1 class="col-span-2 signature-gradient-font">
-      <fa-icon [icon]="icons.trade" class="icon" />
-      Shift Auctions & Trades
-    </h1>
-
-    <div class="grow overflow-auto">
-      <app-shift-trade-auction [showShiftOrigin]="true" />
     </div>
   </div>
 
+  @for (card of cards; track card) {
+    <div class="card interaction" [ngClass]="card.spotlight === true ? 'spotlight' : ''" [routerLink]="card.href">
+      <h1>{{card.title}}</h1>
+      <span>{{card.content}}</span>
+    </div>
+  }
 </div>

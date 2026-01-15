@@ -28,7 +28,7 @@ export class PageService {
    */
   public withBreadcrumbs(breadcrumb?: Breadcrumb): PageService {
     this._breadcrumbs$.next(breadcrumb?.clone());
-    this._pageName$.next(breadcrumb?.name ?? "ShiftService");
+    this._pageName$.next(breadcrumb?.name);
     return this;
   }
 

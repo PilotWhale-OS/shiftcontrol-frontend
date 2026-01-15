@@ -1,5 +1,5 @@
 .card {
-  @apply bg-background-card border-framing-card border-ctr transition-colors px-8 py-6;
+  @apply bg-background-card border-framing-card border-ctr transition-colors px-8 py-6 bg-opacity-55;
   border-radius: 1.5rem;
 
   &.ghost {
@@ -26,22 +26,19 @@
     }
   }
 
-  /*&:hover:not(.ghost) {
-    box-shadow: 0px 0px 5px 0px rgb(25 28 43);
-  }*/
-
   &.interaction:not(.ghost) {
-    @apply cursor-pointer border-framing-item bg-background-item;
+    @apply cursor-pointer border-framing-item bg-background-item bg-opacity-80;
+
     &:hover {
       box-shadow: 0px 0px 8px 2px rgb(25 28 43);
       @apply border-framing-highlight;
     }
 
     &.spotlight {
-      @apply border-framing-item_hint bg-background-item_hint;
+      @apply border-framing-item_hint bg-background-item_hint  bg-opacity-80;
 
       &:hover {
-        @apply border-framing-highlight_hint;
+        @apply border-framing-highlight_hint bg-opacity-80;
       }
     }
 
@@ -85,13 +82,16 @@ small {
 
 .badge {
   @apply bg-framing-item py-xs px-sm rounded-xl text-sm font-semibold flex items-center gap-xs;
+  background: linear-gradient(45deg, rgb(76 81 157 / var(--tw-bg-opacity, 1)), rgb(57 64 175) 40%, rgb(57 64 175) 100%);
 
   &.hint {
     @apply bg-framing-highlight_hint;
+    background: linear-gradient(45deg, rgb(42 120 215 / var(--tw-bg-opacity, 1)), rgb(7, 93, 196) 40%, rgb(7, 93, 196) 100%);
   }
 
   &.success {
     @apply bg-framing-highlight_success;
+    background: linear-gradient(45deg, rgb(39 135 67 / var(--tw-bg-opacity, 1)), rgb(16, 103, 42) 40%, rgb(16, 103, 42) 100%);
   }
 
   &.deaf {
@@ -117,4 +117,13 @@ small {
 
 .cdk-overlay-pane.shiftcontrol-dialog {
   @apply desktop:min-w-[500px] max-w-[calc(100vw-(2*theme(spacing.lg)))] max-h-[calc(100vh-(2*theme(spacing.lg)))];
+}
+
+.noise:before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: url("data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Cfilter id='noise' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeBlend mode='screen'/%3E%3C/filter%3E%3Crect width='500' height='500' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E");
+  mix-blend-mode: soft-light;
 }

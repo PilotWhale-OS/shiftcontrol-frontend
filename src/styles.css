@@ -7,9 +7,9 @@ body {
   color: #c6cadf;
 }
 
-/*h1 {
+h1 {
   font-family: 'Bricolage Grotesque', sans-serif;
-}*/
+}
 
 .signature-gradient-font {
   @apply signature-gradient;
