@@ -47,15 +47,24 @@
   }
 
   <!-- action buttons -->
-  @if (currentUserId$ | async; as userId) {
-    @if (position$ | async; as position){
-      @if (actions$ | async; as actions) {
-        <div class="flex flex-row gap-sm">
-          @for (action of actions; track action) {
-            <div class="flex-1 flex-grow">
+  @if (position$ | async; as position){
+    @if (actions$ | async; as actions) {
+
+      @if (actions.includes("REQUEST_UNASSIGN_ATTENTION")) {
+        <span>
+            If your request is urgent, you can
+            <xsb-input-button class="inline" size="text" content="request planner attention."
+                              (click)="requestSignOut(position.slot, position.shift, position.currentUserAssignment)"
+            />
+          </span>
+      }
+
+      <div class="flex flex-row gap-sm">
+        @for (action of actions; track action) {
+          <div class="flex-1 flex-grow empty:hidden">
             @switch(action) {
               @case("SIGN_UP") {
-                <xsb-input-button content="Sign Up" action="success" (click)="signUp(position.slot, position.shift, userId)" />
+                <xsb-input-button content="Sign Up" action="success" (click)="signUp(position.slot, position.shift)" />
               }
 
               @case("SIGN_OUT") {
@@ -67,54 +76,48 @@
               }
 
               @case("REQUEST_SIGN_OUT") {
-                <xsb-input-button content="Request Unassign" action="success" (click)="requestSignOut(position.slot, position.shift)"  />
+                <xsb-input-button content="Request Leave" action="normal"
+                                  (click)="requestSignOut(position.slot, position.shift, position.currentUserAssignment)"
+                />
               }
 
               @case("REQUEST_TRADE") {
-                <xsb-input-button content="Request Trade" action="normal" (click)="requestTrade(position.slot, position.shift)"  />
+                <xsb-input-button content="Request Trade" action="normal" (click)="requestTrade(position.slot)"  />
               }
 
-              @case("DISABLED_REQUEST_SIGN_UP") {
-                <xsb-input-button content="Request Sign Up" action="success" [lock]="true" [disableLockIcon]="true" />
+              @case("CANCEL_REQUEST_SIGN_UP") {
+                <xsb-input-button content="Cancel Sign Up Request" action="normal"
+                                  (click)="cancelSignUpRequest(position.slot, position.shift, position.currentUserAssignment)"
+                />
               }
 
-              @case("DISABLED_REQUEST_SIGN_OUT") {
-                <xsb-input-button content="Request Leave" action="normal" [lock]="true" [disableLockIcon]="true" />
+              @case("CANCEL_REQUEST_SIGN_OUT") {
+                <xsb-input-button content="Cancel Leave Request" action="normal"
+                                  (click)="cancelSignOutRequest(position.slot, position.shift, position.currentUserAssignment)"
+                />
               }
 
               @case("DISABLED_SIGN_UP") {
                 <xsb-input-button content="Sign Up" action="success" [lock]="true" [disableLockIcon]="true" />
               }
             }
-            </div>
-          }
-        </div>
+          </div>
+        }
+      </div>
 
-        <app-dialog-trade-request
-          [requestOptions]="(tradeRequestOptions$ | async) ?? undefined"
-          (submitted)="$event !== undefined ? submitTradeRequest(position.slot, $event.partner, userId, $event.slot) : 0; tradeRequestOptions$.next(undefined)"
-        />
+      <app-dialog-trade-request
+        class="contents"
+        [requestOptions]="(tradeRequestOptions$ | async) ?? undefined"
+        (submitted)="$event !== undefined ? submitTradeRequest(position.slot, $event.partner, $event.slot) : 0; tradeRequestOptions$.next(undefined)"
+      />
 
-        <app-dialog-trade-details
-          [tradeInfo]="(dialogTradeInfo$ | async) ?? undefined"
-          (tradeChanged)="positionSignupChanged.emit(undefined); dialogTradeInfo$.next(undefined)"
-        />
-      }
+      <app-dialog-trade-details
+        class="contents"
+        [tradeInfo]="(dialogTradeInfo$ | async) ?? undefined"
+        (tradeChanged)="positionSignupChanged.emit(undefined); dialogTradeInfo$.next(undefined)"
+      />
     }
   }
+
 </div>
-
-@if (signupOptions$ | async; as signupOptions){
-  <xsb-dialog (closeDialog)="signupOptions$.next(undefined)">
-
-    <ng-container dialog-header>
-      <h2>Sign Up Options</h2>
-    </ng-container>
-
-    <ng-container dialog-body>
-      hello there
-    </ng-container>
-
-  </xsb-dialog>
-}
 

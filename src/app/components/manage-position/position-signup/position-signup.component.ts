@@ -1,5 +1,5 @@
 import {Component, EventEmitter, inject, Input, OnInit, Output} from "@angular/core";
-import {BehaviorSubject, combineLatestWith, filter, map, switchMap} from "rxjs";
+import {BehaviorSubject, map} from "rxjs";
 import {
   AssignmentDto,
   PositionSlotDto,
@@ -12,8 +12,6 @@ import {InputButtonComponent} from "../../inputs/input-button/input-button.compo
 import {ToastService} from "../../../services/toast/toast.service";
 import {mapValue} from "../../../util/value-maps";
 import LockStatusEnum = ShiftPlanDto.LockStatusEnum;
-import {UserService} from "../../../services/user/user.service";
-import {DialogComponent} from "../../dialog/dialog.component";
 import {DialogTradeRequestComponent} from "../dialog-trade-request/dialog-trade-request.component";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {DialogTradeDetailsComponent} from "../dialog-trade-details/dialog-trade-details.component";
@@ -39,7 +37,6 @@ interface tradeRequestOptions {
   imports: [
     AsyncPipe,
     InputButtonComponent,
-    DialogComponent,
     DialogTradeRequestComponent,
     SlicePipe,
     FaIconComponent,
@@ -65,28 +62,15 @@ export class PositionSignupComponent implements OnInit {
     map(position => this.getHeader(position?.slot))
   );
   protected readonly body$ = this.position$.pipe(
-    combineLatestWith(this.currentUserId$),
-    map(([position, userId]) => this.getBody(position, userId))
+    map(position => this.getBody(position))
   );
   protected readonly actions$ = this.position$.pipe(
-    combineLatestWith(this.currentUserId$),
-    map(([position, userId]) => this.getActions(position, userId))
+    map(position => this.getActions(position))
   );
 
   private readonly _positionService = inject(PositionSlotEndpointService);
   private readonly _tradeService = inject(PositionSlotTradeEndpointService);
   private readonly _toastService = inject(ToastService);
-  private readonly _userService = inject(UserService);
-
-  protected get currentUserId$() {
-    return this.hasInited$.pipe(
-      filter(inited => inited),
-      switchMap( () => this._userService.userProfile$.pipe(
-          map(profile => profile?.account?.volunteer.id ?? undefined),
-          filter(id => id !== undefined)
-        )
-      ));
-  }
 
   @Input()
   public set positionSlot(value: positionSignupParams | undefined) {
@@ -104,7 +88,7 @@ export class PositionSignupComponent implements OnInit {
    * @param userId
    * @protected
    */
-  protected signUp(slot: PositionSlotDto, shift: ShiftDto, userId: string) {
+  protected signUp(slot: PositionSlotDto, shift: ShiftDto) {
 
     /* during self-signup phase, users can freely sign up if free slots */
     if(
@@ -131,12 +115,7 @@ export class PositionSignupComponent implements OnInit {
       shift.lockStatus === LockStatusEnum.Supervised &&
       slot.positionSignupState === PositionSlotDto.PositionSignupStateEnum.SignupViaAuction
     ) {
-      const auctions = slot.auctions.filter(auc => auc.assignedVolunteer.id !== userId);
-      if(auctions.length === 0) {
-        throw new Error("No available auctions for signing up to position.");
-      }
-
-      const auctionToAccept = auctions[0];
+      const auctionToAccept = slot.auctions[0];
       this._positionService.claimAuction(auctionToAccept.positionSlotId, auctionToAccept.assignedVolunteer.id, {
         acceptedRewardPointsConfigHash: slot.rewardPointsDto.rewardPointsConfigHash
       }).pipe(
@@ -154,14 +133,13 @@ export class PositionSignupComponent implements OnInit {
       slot.positionSignupState === PositionSlotDto.PositionSignupStateEnum.SignupOrTrade ||
       slot.positionSignupState === PositionSlotDto.PositionSignupStateEnum.SignupViaTrade
     ) {
-      const trades = slot.offeredTrades.filter(trade => trade.offeringVolunteer.id !== userId);
-      if(trades.length === 0) {
+      if(slot.offeredTrades.length === 0) {
         throw new Error("No available trades for signing up to position.");
       }
 
       /* handle selection in modal */
       this.signupOptions$.next({
-        availableTrades: trades,
+        availableTrades: slot.offeredTrades,
         slot: slot
       });
       return;
@@ -180,7 +158,8 @@ export class PositionSignupComponent implements OnInit {
 
     /* during supervised, if a regular signup would be possible, allow a signup request to be accepted by the admin */
     if(shift.lockStatus === LockStatusEnum.Supervised &&
-      slot.positionSignupState === PositionSlotDto.PositionSignupStateEnum.SignupPossible
+      (slot.positionSignupState === PositionSlotDto.PositionSignupStateEnum.SignupPossible ||
+      slot.positionSignupState === PositionSlotDto.PositionSignupStateEnum.SignupOrTrade)
     ) {
       this._positionService.joinRequestPositionSlot(slot.id).pipe(
         this._toastService.tapSuccess("Requested Signup",
@@ -199,22 +178,38 @@ export class PositionSignupComponent implements OnInit {
    * Initiate sign-out that requires approval from another party
    * @param slot
    * @param shift
+   * @param assignment
    * @protected
    */
-  protected requestSignOut(slot: PositionSlotDto, shift: ShiftDto) {
+  protected requestSignOut(slot: PositionSlotDto, shift: ShiftDto, assignment: AssignmentDto | undefined) {
 
     /* during supervised phase, users can request to be unassigned */
     if(
       shift.lockStatus === LockStatusEnum.Supervised &&
-      slot.positionSignupState === PositionSlotDto.PositionSignupStateEnum.SignedUp
+      slot.positionSignupState === PositionSlotDto.PositionSignupStateEnum.SignedUp &&
+      assignment !== undefined && (
+        assignment.status === AssignmentDto.StatusEnum.Accepted ||
+        assignment.status === AssignmentDto.StatusEnum.Auction
+      )
     ) {
-      this._positionService.leaveRequestPositionSlot(slot.id).pipe(
-        this._toastService.tapSuccess("Requested Unassignment",
-          () => `You requested to be unassigned from the position "${slot.name}". A shift planner will handle your request.`),
-        this._toastService.tapError("Could Not Request Unassignment", mapValue.apiErrorToMessage)
-      ).subscribe(data => {
-        this.positionSignupChanged.emit(data);
-      });
+      if(assignment.status === AssignmentDto.StatusEnum.Auction) {
+        this._positionService.leaveRequestPositionSlot(slot.id).pipe(
+          this._toastService.tapSuccess("Requested Planner Attention",
+            () => `You requested planner attention for your request in "${slot.name}". A shift planner will handle your request.`),
+          this._toastService.tapError("Could Not Request Unassignment", mapValue.apiErrorToMessage)
+        ).subscribe(data => {
+          this.positionSignupChanged.emit(data);
+        });
+      } else if (assignment.status === AssignmentDto.StatusEnum.Accepted) {
+        this._positionService.auctionAssignment(slot.id).pipe(
+          this._toastService.tapSuccess("Requested Unassignment",
+            () => `You requested to be unassigned from the position "${slot.name}"
+            . Until another volunteer takes your spot, you are still signed up.`),
+          this._toastService.tapError("Could Not Request Unassignment", mapValue.apiErrorToMessage)
+        ).subscribe(data => {
+          this.positionSignupChanged.emit(data);
+        });
+      }
     }
 
     throw new Error("No available options for requesting position sign-out.");
@@ -226,8 +221,7 @@ export class PositionSignupComponent implements OnInit {
    * @param shift
    * @protected
    */
-  protected requestTrade(slot: PositionSlotDto, shift: ShiftDto) {
-    console.log(shift);
+  protected requestTrade(slot: PositionSlotDto) {
 
     /* if eligible and not in position, users can start a trade */
     if(
@@ -246,11 +240,6 @@ export class PositionSignupComponent implements OnInit {
     throw new Error("No available options for requesting trade.");
   }
 
-  protected acceptTrade(slot: PositionSlotDto, volunteer: VolunteerDto | undefined) {
-    console.log(slot, volunteer);
-    // TODO implement trade acceptance
-  }
-
   /**
    * Submit trade request with given selection
    * @param slot
@@ -259,17 +248,16 @@ export class PositionSignupComponent implements OnInit {
    * @param offeringSlot
    * @protected
    */
-  protected submitTradeRequest(slot: PositionSlotDto, volunteer: VolunteerDto | undefined, userId: string, offeringSlot: PositionSlotDto) {
+  protected submitTradeRequest(slot: PositionSlotDto, volunteer: VolunteerDto | undefined, offeringSlot: PositionSlotDto) {
     const requestedAssignment = slot.assignments.find(ass => ass.assignedVolunteer.id === volunteer?.id);
-    const offeringAssignment = offeringSlot.assignments.find(ass => ass.assignedVolunteer.id === userId);
 
-    if(requestedAssignment === undefined || offeringAssignment === undefined) {
-      throw new Error("one of the trading assignment couldnt not be determined");
+    if(requestedAssignment === undefined) {
+      throw new Error("requested trading assignment couldnt not be determined");
     }
 
     const trade: TradeCreateDto = {
       requestedPositionSlotId: requestedAssignment.positionSlotId,
-      offeredPositionSlotId: offeringAssignment.positionSlotId,
+      offeredPositionSlotId: offeringSlot.id,
       requestedVolunteerIds: [requestedAssignment.assignedVolunteer.id] // TODO make multiselect
     };
 
@@ -290,6 +278,57 @@ export class PositionSignupComponent implements OnInit {
     });
   }
 
+  protected cancelSignOutRequest(slot: PositionSlotDto, shift: ShiftDto, assignment: AssignmentDto | undefined) {
+
+    /* during supervised phase, while being signed up, users can cancel the request to be unassigned/cancel the auction */
+    if(
+      shift.lockStatus === LockStatusEnum.Supervised &&
+      slot.positionSignupState === PositionSlotDto.PositionSignupStateEnum.SignedUp &&
+      assignment !== undefined &&
+      (assignment.status === AssignmentDto.StatusEnum.AuctionRequestForUnassign || assignment.status === AssignmentDto.StatusEnum.Auction)
+    ) {
+      if(assignment.status === AssignmentDto.StatusEnum.Auction) {
+        this._positionService.cancelAuction(slot.id).pipe(
+          this._toastService.tapSuccess("Cancelled Leave Request",
+            () => `You have cancelled your leave request for the position "${slot.name}". You are still signed up.`),
+          this._toastService.tapError("Could Not Cancel leave Request", mapValue.apiErrorToMessage)
+        ).subscribe(data => {
+          this.positionSignupChanged.emit(data);
+        });
+      } else if (assignment.status === AssignmentDto.StatusEnum.AuctionRequestForUnassign) {
+        this._positionService.leaveRequestWithdrawPositionSlot(slot.id).pipe(
+          this._toastService.tapSuccess("Cancelled Leave Request",
+            () => `You have cancelled your leave request for the position "${slot.name}". You are still signed up.`),
+          this._toastService.tapError("Could Not Cancel Leave Request", mapValue.apiErrorToMessage)
+        ).subscribe(data => {
+          this.positionSignupChanged.emit(data);
+        });
+      }
+    }
+
+    throw new Error("No available options for cancel requested position sign-out.");
+  }
+
+  protected cancelSignUpRequest(slot: PositionSlotDto, shift: ShiftDto, assignment: AssignmentDto | undefined) {
+
+      /* during supervised phase, while not being signed up, users can cancel the request to be assigned */
+      if(
+        shift.lockStatus === LockStatusEnum.Supervised &&
+        slot.positionSignupState !== PositionSlotDto.PositionSignupStateEnum.SignedUp &&
+        assignment !== undefined && assignment.status === AssignmentDto.StatusEnum.RequestForAssignment
+      ) {
+        this._positionService.joinRequestWithdrawPositionSlot(slot.id).pipe(
+          this._toastService.tapSuccess("Cancelled Sign Up Request",
+            () => `You have cancelled your sign up request for the position "${slot.name}". You are not signed up.`),
+          this._toastService.tapError("Could Not Cancel Sign Up Request", mapValue.apiErrorToMessage)
+        ).subscribe(data => {
+          this.positionSignupChanged.emit(data);
+        });
+      }
+
+      throw new Error("No available options for cancel requested position sign-up.");
+  }
+
   private getHeader(position: PositionSlotDto | undefined): string | undefined {
     if(position?.positionSignupState !== PositionSlotDto.PositionSignupStateEnum.SignedUp) {
       return undefined;
@@ -298,8 +337,7 @@ export class PositionSignupComponent implements OnInit {
     return "You are signed up for this position!";
   }
 
-  private getBody(position: positionSignupParams | undefined, userId: string): string | undefined {
-    console.log(userId);
+  private getBody(position: positionSignupParams | undefined): string | undefined {
     if(position === undefined) {
       return undefined;
     }
@@ -309,8 +347,15 @@ export class PositionSignupComponent implements OnInit {
       if(position.currentUserAssignment.status === AssignmentDto.StatusEnum.RequestForAssignment) {
         return "You have requested to be signed up.\nYou will be notified when a shift planner accepts or denies the request.";
       }
+      if(position.currentUserAssignment.status === AssignmentDto.StatusEnum.Auction) {
+        return "You have requested to be unassigned.\n" +
+          "You will be notified when another volunteer takes your position.\n" +
+          "Until then, you are still signed up!";
+      }
       if(position.currentUserAssignment.status === AssignmentDto.StatusEnum.AuctionRequestForUnassign) {
-        return "You have requested to be unassigned.\nYou will be notified when a shift planner accepts or denies the request.";
+        return "You have requested to be unassigned urgently and notified planners.\n" +
+          "You will be notified when a shift planner accepts or denies the request, or another volunteer takes your position.\n" +
+          "Until then, you are still signed up!";
       }
     }
 
@@ -348,7 +393,8 @@ export class PositionSignupComponent implements OnInit {
           case PositionSlotDto.PositionSignupStateEnum.SignupViaAuction:
             return "Positions are currently locked, but you can accept a auction.";
           case PositionSlotDto.PositionSignupStateEnum.SignupOrTrade:
-            return "INVALID_STATE";
+            return "Positions are currently locked.\n" +
+              "You can request a sign-up which will be checked by staff, or ask for a trade with another volunteer.";
           case PositionSlotDto.PositionSignupStateEnum.SignedUp:
             return `Make sure to show up at the location ${position.shift.location?.name} at the specified time.`;
           case PositionSlotDto.PositionSignupStateEnum.NotEligible:
@@ -364,10 +410,9 @@ export class PositionSignupComponent implements OnInit {
     }
   }
 
-  private getActions(position: positionSignupParams | undefined, userId: string): Array<
+  private getActions(position: positionSignupParams | undefined): Array<
     "SIGN_UP" | "REQUEST_TRADE" | "SIGN_OUT" | "REQUEST_SIGN_UP" | "DISABLED_SIGN_UP" |
-    "DISABLED_REQUEST_SIGN_UP" | "DISABLED_REQUEST_SIGN_OUT" | "REQUEST_SIGN_OUT"> | undefined {
-    console.log(userId);
+    "CANCEL_REQUEST_SIGN_UP" | "CANCEL_REQUEST_SIGN_OUT" | "REQUEST_SIGN_OUT" | "REQUEST_UNASSIGN_ATTENTION"> | undefined {
     if (position === undefined) {
       return undefined;
     }
@@ -377,10 +422,13 @@ export class PositionSignupComponent implements OnInit {
     /* special case: assignment with request for (un)assign */
     if(position.currentUserAssignment !== undefined) {
       if(position.currentUserAssignment.status === AssignmentDto.StatusEnum.RequestForAssignment) {
-        return ["DISABLED_REQUEST_SIGN_UP", ...REQUEST_TRADE]; // can create trade to this position while being in requested state
+        return ["CANCEL_REQUEST_SIGN_UP", ...REQUEST_TRADE]; // can create trade to this position while being in requested state
       }
       if(position.currentUserAssignment.status === AssignmentDto.StatusEnum.AuctionRequestForUnassign) {
-        return ["DISABLED_REQUEST_SIGN_OUT"]; // is still signed up, cant trade to this position
+        return ["CANCEL_REQUEST_SIGN_OUT"]; // is still signed up, cant trade to this position
+      }
+      if(position.currentUserAssignment.status === AssignmentDto.StatusEnum.Auction) {
+        return ["CANCEL_REQUEST_SIGN_OUT", "REQUEST_UNASSIGN_ATTENTION"]; // is still signed up, cant trade to this position, can elevate
       }
     }
 
@@ -412,8 +460,9 @@ export class PositionSignupComponent implements OnInit {
             return ["REQUEST_SIGN_UP", ...REQUEST_TRADE];
           case PositionSlotDto.PositionSignupStateEnum.SignupViaAuction:
           case PositionSlotDto.PositionSignupStateEnum.SignupViaTrade:
-          case PositionSlotDto.PositionSignupStateEnum.SignupOrTrade:
             return ["SIGN_UP", ...REQUEST_TRADE];
+          case PositionSlotDto.PositionSignupStateEnum.SignupOrTrade:
+            return ["REQUEST_SIGN_UP", ...REQUEST_TRADE];
           case PositionSlotDto.PositionSignupStateEnum.SignedUp:
             return ["REQUEST_SIGN_OUT"];
           case PositionSlotDto.PositionSignupStateEnum.Full:

@@ -1,6 +1,5 @@
 import {Component, inject} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
-import {UserService} from "../../../services/user/user.service";
 import {ShiftPlanDashboardOverviewDto, ShiftPlanDto, ShiftPlanEndpointService} from "../../../../shiftservice-client";
 import {BC_EVENT, BC_PLAN_DASHBOARD} from "../../../breadcrumbs";
 import {PageService} from "../../../services/page/page.service";
@@ -26,7 +25,6 @@ export class ShiftPlanSignupDashboardComponent {
 
   private readonly _route = inject(ActivatedRoute);
   private readonly _router = inject(Router);
-  private readonly _userService = inject(UserService);
   private readonly _planService = inject(ShiftPlanEndpointService);
   private readonly _pageService = inject(PageService);
   private readonly _toastService = inject(ToastService);

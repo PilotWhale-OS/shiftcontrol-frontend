@@ -155,9 +155,9 @@
           {{data.position.name}}
         </h1>
 
-        <div class="col-start-1 row-start-3 col-span-2 whitespace-pre-wrap">
-          {{(data.position.description?.length ?? 0) > 0 ? data.position.description : "No description provided."}}
-        </div>
+        <div class="col-start-1 row-start-3 col-span-2 whitespace-pre-wrap">{{
+            (data.position.description?.length ?? 0) > 0 ? data.position.description : "No description provided."
+          }}</div>
 
         <!-- badges -->
         <div class="flex flex-row flex-wrap gap-sm items-center w-full row-start-4 col-start-1 col-span-2">

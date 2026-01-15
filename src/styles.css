@@ -3,9 +3,13 @@
 @tailwind utilities;
 
 body {
-  font-family: 'Source Sans 3', sans-serif;
+  font-family: 'Source Sans 3' , sans-serif;
   color: #c6cadf;
 }
+
+/*h1 {
+  font-family: 'Bricolage Grotesque', sans-serif;
+}*/
 
 .signature-gradient-font {
   @apply signature-gradient;
