@@ -1,5 +1,5 @@
 @if (requestOptions$ | async; as tradeRequestOptions){
-  <xsb-dialog (closeDialog)="submitted.emit(undefined)">
+  <xsb-dialog (closeDialog)="submitted.emit(undefined)" bodyStyle="card">
 
     <ng-container dialog-header>
       <h2>Request Shift Trade</h2>

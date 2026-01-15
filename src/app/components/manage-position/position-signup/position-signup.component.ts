@@ -1,5 +1,5 @@
 import {Component, EventEmitter, inject, Input, Output} from "@angular/core";
-import {BehaviorSubject, map} from "rxjs";
+import {BehaviorSubject, map, of, switchMap} from "rxjs";
 import {
   AssignmentDto,
   PositionSlotDto,
@@ -16,10 +16,12 @@ import {DialogTradeRequestComponent} from "../dialog-trade-request/dialog-trade-
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {DialogTradeDetailsComponent} from "../dialog-trade-details/dialog-trade-details.component";
 import {UserService} from "../../../services/user/user.service";
+import {DialogManageAssignmentsComponent, manageAssignmentsParams} from "../dialog-manage-assignments/dialog-manage-assignments.component";
 
 export interface positionSignupParams {
   slot: PositionSlotDto;
   shift: ShiftDto;
+  planId: string;
   currentUserAssignment?: AssignmentDto;
 }
 
@@ -41,7 +43,8 @@ interface tradeRequestOptions {
     DialogTradeRequestComponent,
     SlicePipe,
     FaIconComponent,
-    DialogTradeDetailsComponent
+    DialogTradeDetailsComponent,
+    DialogManageAssignmentsComponent
   ],
   standalone: true,
   templateUrl: "./position-signup.component.html",
@@ -57,6 +60,7 @@ export class PositionSignupComponent {
   protected readonly signupOptions$ = new BehaviorSubject<signupOptions | undefined>(undefined);
   protected readonly tradeRequestOptions$ = new BehaviorSubject<tradeRequestOptions | undefined>(undefined);
   protected readonly dialogTradeInfo$ = new BehaviorSubject<TradeInfoDto | undefined>(undefined);
+  protected readonly dialogAssignmentsParams$ = new BehaviorSubject<manageAssignmentsParams | undefined>(undefined);
   protected readonly position$ = new BehaviorSubject<positionSignupParams | undefined>(undefined);
   protected readonly header$ = this.position$.pipe(
     map(position => this.getHeader(position?.slot))
@@ -74,9 +78,29 @@ export class PositionSignupComponent {
   private readonly _tradeService = inject(PositionSlotTradeEndpointService);
   private readonly _toastService = inject(ToastService);
 
+  public get canManage$() {
+    return this.position$.pipe(
+      switchMap(data => data === undefined ?
+        of(false) :
+        this.userService.canManagePlan$(data.planId)
+      )
+    );
+  }
+
   @Input()
   public set positionSlot(value: positionSignupParams | undefined) {
     this.position$.next(value);
+  }
+
+  /**
+   * Open manage assignments dialog for planners
+   * @param slot
+   * @protected
+   */
+  protected manageAssignments(slot: PositionSlotDto) {
+    this.dialogAssignmentsParams$.next({
+      position: slot
+    });
   }
 
   /**

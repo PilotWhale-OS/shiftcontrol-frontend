@@ -34,9 +34,9 @@
         <div class="badge w-fit col-start-3 mb-md">
           <fa-icon [icon]="icons.trade" />
           @if (mappedInfo.isOwnRequest) {
-            Offered by {{mappedInfo.otherVolunteer.firstName}} {{mappedInfo.otherVolunteer.lastName | slice:0:1}}.
+            Requested from {{mappedInfo.otherVolunteer.firstName}} {{mappedInfo.otherVolunteer.lastName | slice:0:1}}.
           } @else {
-            Requested by {{mappedInfo.otherVolunteer.firstName}} {{mappedInfo.otherVolunteer.lastName | slice:0:1}}.
+            Offered by {{mappedInfo.otherVolunteer.firstName}} {{mappedInfo.otherVolunteer.lastName | slice:0:1}}.
           }
         </div>
 

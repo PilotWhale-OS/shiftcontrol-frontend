@@ -5,7 +5,7 @@ import {
   ShiftDto,
 } from "../../../shiftservice-client";
 import {InputSelectComponent, SelectOptions} from "../inputs/input-select/input-select.component";
-import {BehaviorSubject, catchError, combineLatestWith, map, of, startWith, Subscription, switchMap} from "rxjs";
+import {BehaviorSubject, catchError, combineLatestWith, map, Observable, of, startWith, Subscription, switchMap} from "rxjs";
 import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {UserService} from "../../services/user/user.service";
 import {AsyncPipe, DatePipe, NgClass} from "@angular/common";
@@ -63,23 +63,25 @@ export class ManagePositionComponent implements OnDestroy {
   protected readonly icons = icons;
 
   protected readonly manageData$ = new BehaviorSubject<undefined | managePositionParams>(undefined);
-  protected readonly positionSignupData$ = this.manageData$.pipe(
+  protected readonly positionSignupData$: Observable<positionSignupParams | undefined> = this.manageData$.pipe(
     switchMap(data => {
       if(data === undefined || data.position === undefined) {
         return of(undefined);
       }
 
       return this._positionService.getPositionSlotUserAssignment(data.position.id).pipe(
-        map(assignment => ({
+        map(assignment => data.position === undefined ? undefined : ({
           slot: data.position,
           shift: data.shift,
+          planId: data.planId,
           currentUserAssignment: assignment
-        } as positionSignupParams)),
-        catchError(() => of(({
+        })),
+        catchError(() => of(data.position === undefined ? undefined : ({
             slot: data.position,
             shift: data.shift,
+            planId: data.planId,
             currentUserAssignment: undefined
-          } as positionSignupParams)))
+          })))
       );
     })
   );

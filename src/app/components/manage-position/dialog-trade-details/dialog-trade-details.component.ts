@@ -44,6 +44,9 @@ export class DialogTradeDetailsComponent {
   @Output()
   tradeChanged = new EventEmitter<void>();
 
+  @Output()
+  dialogClosed = new EventEmitter<void>();
+
   protected icons = icons;
 
   protected tradeInfo$ = new BehaviorSubject<TradeInfoDto | undefined>(undefined);
@@ -110,6 +113,7 @@ export class DialogTradeDetailsComponent {
           this._toastService.tapSuccess("Trade Cancelled", () => "The trade has been cancelled successfully."),
           this._toastService.tapError("Cancel Failed", mapValue.apiErrorToMessage)
         ).subscribe(() => this.tradeChanged.emit());
+        return;
       }
     } else {
       if(result ==="success") {
@@ -122,6 +126,7 @@ export class DialogTradeDetailsComponent {
           this._toastService.tapSuccess("Trade Accepted", () => "The trade has been accepted successfully."),
           this._toastService.tapError("Trade Failed", mapValue.apiErrorToMessage)
         ).subscribe(() => this.tradeChanged.emit());
+        return;
       } else if(result === "danger") {
         this._tradeService.acceptTrade({
           offeredSlotId: tradeData.otherSlot.id,
@@ -132,9 +137,11 @@ export class DialogTradeDetailsComponent {
           this._toastService.tapSuccess("Trade Declined", () => "The trade has been declined successfully."),
           this._toastService.tapError("Decline Failed", mapValue.apiErrorToMessage)
         ).subscribe(() => this.tradeChanged.emit());
+        return;
       }
     }
 
+    this.dialogClosed.emit();
   }
 
 }

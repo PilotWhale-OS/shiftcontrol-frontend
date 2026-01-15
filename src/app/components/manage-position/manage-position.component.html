@@ -204,7 +204,9 @@
   }
 
   @if (showSlotDeleteConfirm && data.position !== undefined){
-    <xsb-dialog action="danger" danger="Delete Position" (closeDialog)="showSlotDeleteConfirm = false; $event === 'danger' && delete(data.position)">
+    <xsb-dialog action="danger" danger="Delete Position"
+                (closeDialog)="showSlotDeleteConfirm = false; $event === 'danger' && delete(data.position)"
+    >
       <ng-container dialog-header>
         <h1>Delete Position</h1>
       </ng-container>
