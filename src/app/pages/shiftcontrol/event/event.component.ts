@@ -15,7 +15,7 @@ import {
   TimeConstraintCreateDto,
   TimeConstraintDto, TimeConstraintEndpointService
 } from "../../../../shiftservice-client";
-import {Observable, shareReplay, tap} from "rxjs";
+import {combineLatest, map, Observable, shareReplay, switchMap, tap} from "rxjs";
 import {AsyncPipe, DatePipe, DecimalPipe} from "@angular/common";
 import {TooltipDirective} from "../../../directives/tooltip.directive";
 import {DialogAddEmergencyComponent} from "../../../components/dialog-add-emergency/dialog-add-emergency.component";
@@ -51,6 +51,8 @@ export class EventComponent {
   protected event$: Observable<EventShiftPlansOverviewDto>;
   protected timeConstraints$: Observable<TimeConstraintDto[]>;
   protected leaderboard$: Observable<LeaderBoardDto>;
+
+  protected readonly isPlannerInEvent$;
 
   protected readonly icons = icons;
 
@@ -89,6 +91,10 @@ export class EventComponent {
 
     this.leaderboard$ = this._leaderboardService.getLeaderboardForEvent(eventId);
     this.timeConstraints$ = this._timeConstraintService.getTimeConstraints(eventId);
+    this.isPlannerInEvent$ = this.event$.pipe(
+      switchMap(event => combineLatest(event.shiftPlans.map(plan => this._userService.canManagePlan$(plan.id)))),
+      map(plans => plans.includes(true))
+    );
   }
 
   public get userType$() {

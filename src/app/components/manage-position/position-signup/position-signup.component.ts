@@ -1,4 +1,4 @@
-import {Component, EventEmitter, inject, Input, OnInit, Output} from "@angular/core";
+import {Component, EventEmitter, inject, Input, Output} from "@angular/core";
 import {BehaviorSubject, map} from "rxjs";
 import {
   AssignmentDto,
@@ -15,6 +15,7 @@ import LockStatusEnum = ShiftPlanDto.LockStatusEnum;
 import {DialogTradeRequestComponent} from "../dialog-trade-request/dialog-trade-request.component";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {DialogTradeDetailsComponent} from "../dialog-trade-details/dialog-trade-details.component";
+import {UserService} from "../../../services/user/user.service";
 
 export interface positionSignupParams {
   slot: PositionSlotDto;
@@ -46,7 +47,7 @@ interface tradeRequestOptions {
   templateUrl: "./position-signup.component.html",
   styleUrl: "./position-signup.component.scss"
 })
-export class PositionSignupComponent implements OnInit {
+export class PositionSignupComponent {
 
   @Output()
   public positionSignupChanged = new EventEmitter<AssignmentDto | undefined>();
@@ -56,7 +57,6 @@ export class PositionSignupComponent implements OnInit {
   protected readonly signupOptions$ = new BehaviorSubject<signupOptions | undefined>(undefined);
   protected readonly tradeRequestOptions$ = new BehaviorSubject<tradeRequestOptions | undefined>(undefined);
   protected readonly dialogTradeInfo$ = new BehaviorSubject<TradeInfoDto | undefined>(undefined);
-  protected readonly hasInited$ = new BehaviorSubject<boolean>(false);
   protected readonly position$ = new BehaviorSubject<positionSignupParams | undefined>(undefined);
   protected readonly header$ = this.position$.pipe(
     map(position => this.getHeader(position?.slot))
@@ -68,6 +68,8 @@ export class PositionSignupComponent implements OnInit {
     map(position => this.getActions(position))
   );
 
+  protected readonly userService = inject(UserService);
+
   private readonly _positionService = inject(PositionSlotEndpointService);
   private readonly _tradeService = inject(PositionSlotTradeEndpointService);
   private readonly _toastService = inject(ToastService);
@@ -75,10 +77,6 @@ export class PositionSignupComponent implements OnInit {
   @Input()
   public set positionSlot(value: positionSignupParams | undefined) {
     this.position$.next(value);
-  }
-
-  public ngOnInit() {
-    this.hasInited$.next(true);
   }
 
   /**
@@ -345,16 +343,16 @@ export class PositionSignupComponent implements OnInit {
     /* special case: assignment with request for (un)assign */
     if(position.currentUserAssignment !== undefined) {
       if(position.currentUserAssignment.status === AssignmentDto.StatusEnum.RequestForAssignment) {
-        return "You have requested to be signed up.\nYou will be notified when a shift planner accepts or denies the request.";
+        return "You have requested to be signed up.\nYou will be notified when staff accepts or denies the request.";
       }
       if(position.currentUserAssignment.status === AssignmentDto.StatusEnum.Auction) {
-        return "You have requested to be unassigned.\n" +
+        return "You have requested to be unassigned and your position is up for auction.\n" +
           "You will be notified when another volunteer takes your position.\n" +
           "Until then, you are still signed up!";
       }
       if(position.currentUserAssignment.status === AssignmentDto.StatusEnum.AuctionRequestForUnassign) {
-        return "You have requested to be unassigned urgently and notified planners.\n" +
-          "You will be notified when a shift planner accepts or denies the request, or another volunteer takes your position.\n" +
+        return "You have requested to be unassigned urgently and notified staff.\n" +
+          "You will be notified when staff accepts or denies the request, or another volunteer takes your position.\n" +
           "Until then, you are still signed up!";
       }
     }
@@ -391,7 +389,7 @@ export class PositionSignupComponent implements OnInit {
           case PositionSlotDto.PositionSignupStateEnum.SignupViaTrade:
             return "Positions are currently locked, but you can accept a trade.";
           case PositionSlotDto.PositionSignupStateEnum.SignupViaAuction:
-            return "Positions are currently locked, but you can accept a auction.";
+            return "Positions are currently locked, but you can accept an auction.";
           case PositionSlotDto.PositionSignupStateEnum.SignupOrTrade:
             return "Positions are currently locked.\n" +
               "You can request a sign-up which will be checked by staff, or ask for a trade with another volunteer.";

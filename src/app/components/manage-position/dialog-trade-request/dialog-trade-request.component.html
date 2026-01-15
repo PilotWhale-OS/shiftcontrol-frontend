@@ -24,7 +24,7 @@
             </small>
             <label for="trade-request-offering">Select one of your positions which will be offered in exchange</label>
             <xsb-input-select #offeredPosition name="trade-request-offering"
-                              [nullable]="false" nullName="No eligible positions available"
+                              [nullable]="false" nullName="No positions to trade available"
                               [formControl]="form.controls.offeredPosition"
                               [options]="options"
                               [comparatorFn]="candidateComparatorFn"

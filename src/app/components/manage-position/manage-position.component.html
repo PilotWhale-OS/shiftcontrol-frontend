@@ -129,9 +129,12 @@
               <fa-icon [icon]="icons.signedUp"/>
               Signed Up Position
             </div>
-          }
-
-          @else if (isEligible(data.position)) {
+          } @else if ((isAdmin$ | async) === true) {
+            <div class="badge w-fit">
+              <fa-icon [icon]="icons.position"/>
+              Position
+            </div>
+          } @else if (isEligible(data.position)) {
             <div class="badge w-fit">
               <fa-icon [icon]="icons.signUp"/>
               Eligible Position

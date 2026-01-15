@@ -3,7 +3,6 @@ import {RouterLink} from "@angular/router";
 import {UserService} from "../../../services/user/user.service";
 import {AsyncPipe, NgClass} from "@angular/common";
 import {map} from "rxjs";
-import {EventEndpointService} from "../../../../shiftservice-client";
 import {icons} from "../../../util/icons";
 
 @Component({
@@ -24,9 +23,7 @@ export class HomeComponent {
   ];
   protected readonly icons = icons;
 
-
   private readonly _userService = inject(UserService);
-  private readonly _eventService = inject(EventEndpointService);
 
   protected get name$(){
     return this._userService.kcProfile$.pipe(

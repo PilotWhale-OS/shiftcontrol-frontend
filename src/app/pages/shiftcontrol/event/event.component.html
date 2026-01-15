@@ -11,12 +11,37 @@
 
         <!-- info caption -->
         <h1 class="compact signature-gradient-font">About the Event</h1>
-        <div class="badge w-fit justify-self-end"
-             tooltipMaxWidth="30ex"
-             [app-tooltip]="'Event dates of ' + event.eventOverview.name"
-        >
-          <fa-icon [icon]="icons.date" />
-          {{event.eventOverview.startTime | date:"shortDate"}} - {{event.eventOverview.endTime | date:"shortDate"}}
+
+        <div class="flex gap-sm justify-self-end items-center">
+
+          <div class="badge w-fit"
+               tooltipMaxWidth="30ex"
+               [app-tooltip]="'Event dates of ' + event.eventOverview.name"
+          >
+            <fa-icon [icon]="icons.date" />
+            {{event.eventOverview.startTime | date:"shortDate"}} - {{event.eventOverview.endTime | date:"shortDate"}}
+          </div>
+
+          @if ((isPlannerInEvent$ | async) === true) {
+            <div class="badge success w-fit"
+                 tooltipMaxWidth="30ex"
+                 [app-tooltip]="'Event dates of ' + event.eventOverview.name"
+            >
+              <fa-icon [icon]="icons.userType" />
+              Planner
+            </div>
+          }
+
+          @else {
+            <div class="badge success w-fit"
+                 tooltipMaxWidth="30ex"
+                 [app-tooltip]="'Event dates of ' + event.eventOverview.name"
+            >
+              <fa-icon [icon]="icons.userType" />
+              Volunteer
+            </div>
+          }
+
         </div>
 
         <!-- properties -->

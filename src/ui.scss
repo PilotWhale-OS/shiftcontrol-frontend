@@ -86,12 +86,18 @@ small {
 
   &.hint {
     @apply bg-framing-highlight_hint;
-    background: linear-gradient(45deg, rgb(42 120 215 / var(--tw-bg-opacity, 1)), rgb(7, 93, 196) 40%, rgb(7, 93, 196) 100%);
+    background: linear-gradient(45deg,
+      rgb(54, 137, 239),
+      rgb(7, 93, 196) 40%,
+      rgb(7, 93, 196) 100%);
   }
 
   &.success {
     @apply bg-framing-highlight_success;
-    background: linear-gradient(45deg, rgb(39 135 67 / var(--tw-bg-opacity, 1)), rgb(16, 103, 42) 40%, rgb(16, 103, 42) 100%);
+    background: linear-gradient(45deg,
+      rgb(55, 180, 91),
+      rgb(16, 103, 42) 40%,
+      rgb(16, 103, 42) 100%);
   }
 
   &.deaf {

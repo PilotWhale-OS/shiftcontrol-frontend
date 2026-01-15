@@ -38,6 +38,7 @@ export class AccountComponent implements OnDestroy {
   protected readonly notificationFormControls$ = new BehaviorSubject<undefined | Map<
       NotificationSettingsDto.TypeEnum, FormControl<null | notificationToggleValue>
     >>(undefined);
+  protected readonly userType$;
 
   private readonly _userService = inject(UserService);
   private readonly _fb = inject(FormBuilder);
@@ -54,6 +55,8 @@ export class AccountComponent implements OnDestroy {
       lastName: this._fb.nonNullable.control<string>(""),
       checked: this._fb.nonNullable.control<boolean>(false)
     });
+
+    this.userType$ = this._userService.userType$;
 
     this._profileSubscription = this._userService.kcProfile$.subscribe(profile => {
       if(profile) {

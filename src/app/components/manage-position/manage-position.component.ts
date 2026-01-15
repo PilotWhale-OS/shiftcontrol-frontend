@@ -1,6 +1,7 @@
 import {Component, EventEmitter, inject, Input, OnDestroy, Output} from "@angular/core";
 import {
-  PositionSlotDto, PositionSlotEndpointService, PositionSlotTradeEndpointService, RoleDto,
+  AccountInfoDto,
+  PositionSlotDto, PositionSlotEndpointService, RoleDto,
   ShiftDto,
 } from "../../../shiftservice-client";
 import {InputSelectComponent, SelectOptions} from "../inputs/input-select/input-select.component";
@@ -20,6 +21,7 @@ import {icons} from "../../util/icons";
 import {PositionSignupComponent, positionSignupParams} from "./position-signup/position-signup.component";
 import PositionSignupStateEnum = PositionSlotDto.PositionSignupStateEnum;
 import {ToastService} from "../../services/toast/toast.service";
+import UserTypeEnum = AccountInfoDto.UserTypeEnum;
 
 export interface managePositionParams {
   shift: ShiftDto;
@@ -88,7 +90,6 @@ export class ManagePositionComponent implements OnDestroy {
   private readonly _fb = inject(FormBuilder);
   private readonly _userService = inject(UserService);
   private readonly _positionService = inject(PositionSlotEndpointService);
-  private readonly _tradeService = inject(PositionSlotTradeEndpointService);
   private readonly _toastService = inject(ToastService);
 
   private readonly _updatePointsDisplaySubscription: Subscription;
@@ -131,6 +132,12 @@ export class ManagePositionComponent implements OnDestroy {
         }
         return "view";
       })
+    );
+  }
+
+  public get isAdmin$(){
+    return this._userService.userType$.pipe(
+      map(userType => userType === UserTypeEnum.Admin)
     );
   }
 
