@@ -1,6 +1,6 @@
 import {Component, inject} from "@angular/core";
 import {PageService} from "../../../services/page/page.service";
-import {BC_EVENT, BC_PLAN_DASHBOARD, BC_PLAN_ONBOARDING} from "../../../breadcrumbs";
+import {BC_EVENT, BC_PLAN_ONBOARDING} from "../../../breadcrumbs";
 import {InputButtonComponent} from "../../../components/inputs/input-button/input-button.component";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";

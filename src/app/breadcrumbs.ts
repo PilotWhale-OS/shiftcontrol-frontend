@@ -9,13 +9,8 @@ export const BC_EVENTS = new Breadcrumb("Events", "/events", BC_HOME);
 export const BC_EVENT = new Breadcrumb("Event", "event-id", BC_EVENTS);
 export const BC_EVENT_CREATE = new Breadcrumb("Create Event", "create", BC_EVENTS);
 export const BC_EVENT_EDIT = new Breadcrumb("Manage", "manage", BC_EVENT);
-export const BC_EVENT_SCHEDULE = new Breadcrumb("Calendar", "calendar", BC_EVENT);
 export const BC_EVENT_PLANS = new Breadcrumb("Shift Plans", "plans", BC_EVENT);
 
 export const BC_PLAN_ONBOARDING = new Breadcrumb("Onboarding", "onboarding", BC_EVENT);
-
-export const BC_PLAN_DASHBOARD = new Breadcrumb("Shift Dashboard", "/plans/plan-id", BC_EVENT);
-
-export const BC_SHIFT_CALENDAR = new Breadcrumb("Calendar", "calendar", BC_PLAN_DASHBOARD);
-export const BC_SHIFT_DETAILS = new Breadcrumb("Shift Details", "shift-id", BC_PLAN_DASHBOARD);
-export const BC_PLAN_SIGNUP_DASHBOARD = new Breadcrumb("Signup Dashboard", "signup-dashboard", BC_PLAN_DASHBOARD);
+export const BC_SHIFT_CALENDAR = new Breadcrumb("Calendar", "calendar", BC_EVENT);
+export const BC_SHIFT_DETAILS = new Breadcrumb("Shift Details", "shift-id", BC_EVENT);

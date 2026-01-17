@@ -160,18 +160,16 @@
         </div>
       }
 
-      @if ((userType$ | async) === "ADMIN") {
-        <!-- calendar link card -->
-        <div class="card interaction spotlight" routerLink="calendar">
-          <h1>
-            <fa-icon [icon]="icons.calendar" class="icon" />
-            View Event Calendar
-          </h1>
-          <p>
-            Manage the schedule of the event.
-          </p>
-        </div>
-      }
+      <!-- calendar link card -->
+      <div class="card interaction spotlight" routerLink="calendar">
+        <h1>
+          <fa-icon [icon]="icons.calendar" class="icon" />
+          View Shift Calendar
+        </h1>
+        <p>
+          Manage the shifts of the event.
+        </p>
+      </div>
 
       @if ((userType$ | async) === "ADMIN") {
         <!-- manage event -->
@@ -183,7 +181,7 @@
             Manage Event
           </h1>
           <p>
-            Manage event details, locations and PreTalx integration.
+            Manage event details, locations and shift plans.
           </p>
 
         </div>

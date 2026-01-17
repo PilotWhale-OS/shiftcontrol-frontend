@@ -5,7 +5,7 @@ import {
   PositionSlotDto,
   ScheduleLayoutDto,
   ShiftDto,
-  ShiftPlanScheduleContentDto
+  EventScheduleContentDto
 } from "../../../shiftservice-client";
 import {AsyncPipe, DatePipe, NgClass} from "@angular/common";
 import {
@@ -102,7 +102,7 @@ export class ShiftCalendarGridComponent {
    * The lazily loaded schedule days mapped by date string
    * @protected
    */
-  protected readonly loadedDays$ = new BehaviorSubject<Map<string, ShiftPlanScheduleContentDto>>(new Map());
+  protected readonly loadedDays$ = new BehaviorSubject<Map<string, EventScheduleContentDto>>(new Map());
 
   /**
    * The calendar configuration (externally) based on current filters
@@ -272,7 +272,7 @@ export class ShiftCalendarGridComponent {
    * Add schedule data to the calendar
    * @param schedules
    */
-  public addScheduleDays(...schedules: ShiftPlanScheduleContentDto[]) {
+  public addScheduleDays(...schedules: EventScheduleContentDto[]) {
     const currentMap = this.loadedDays$.getValue();
     for (const schedule of schedules) {
       currentMap.set(schedule.date, schedule);

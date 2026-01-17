@@ -6,7 +6,7 @@ import {
   ActivityDto,
   EventEndpointService,
   LocationDto,
-  LocationEndpointService, ShiftColumnDto, ShiftPlanScheduleContentDto
+  LocationEndpointService, ShiftColumnDto, EventScheduleEndpointService, EventScheduleContentDto
 } from "../../../../../shiftservice-client";
 import {BC_EVENT} from "../../../../breadcrumbs";
 import {ShiftCalendarFilterComponent} from "../../../../components/shift-calendar-filter/shift-calendar-filter.component";
@@ -58,6 +58,7 @@ export class ManageScheduleComponent implements OnDestroy {
   private readonly _router = inject(Router);
   private readonly _pageService = inject(PageService);
   private readonly _eventService = inject(EventEndpointService);
+  private readonly _eventScheduleService = inject(EventScheduleEndpointService);
   private readonly _locationsService = inject(LocationEndpointService);
   private readonly _userService = inject(UserService);
 
@@ -237,7 +238,7 @@ export class ManageScheduleComponent implements OnDestroy {
       switchMap(([calendar, navigation]) =>{
         const newDays = navigation.visibleDates.filter(visible =>
           !navigation.cachedDates.some(cached => cached.getTime() === visible.getTime())
-        ).map(date => this._eventService.getEventSchedule(eventId, {
+        ).map(date => this._eventScheduleService.getActivitySchedule(eventId, {
             date: mapValue.datetimeToUtcDateString(date)
           }).pipe(
 
@@ -273,7 +274,7 @@ export class ManageScheduleComponent implements OnDestroy {
                   activities: activitiesNoLocation,
                   shiftColumns: [] as ShiftColumnDto[]
                 }
-              } as ShiftPlanScheduleContentDto;
+              } as EventScheduleContentDto;
             })
           )
         );

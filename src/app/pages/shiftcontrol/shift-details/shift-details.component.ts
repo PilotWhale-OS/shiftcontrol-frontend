@@ -1,6 +1,6 @@
 import {Component, inject} from "@angular/core";
 import {PageService} from "../../../services/page/page.service";
-import {BC_PLAN_DASHBOARD, BC_SHIFT_DETAILS, BC_EVENT} from "../../../breadcrumbs";
+import {BC_SHIFT_DETAILS, BC_EVENT} from "../../../breadcrumbs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ShiftDetailsDto, ShiftEndpointService} from "../../../../shiftservice-client";
 import {BehaviorSubject, filter, map, Observable} from "rxjs";
@@ -60,7 +60,6 @@ export class ShiftDetailsComponent {
       this._pageService
         .configurePageName(shift.shift.name)
         .configureBreadcrumb(BC_EVENT, shift.event.name, shift.event.id)
-        .configureBreadcrumb(BC_PLAN_DASHBOARD, shift.shiftPlan.name, "/plans/" + shift.shiftPlan.id)
         .configureBreadcrumb(BC_SHIFT_DETAILS, shift.shift.name, shift.shift.id);
     });
   }
