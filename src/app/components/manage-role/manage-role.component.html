@@ -1,6 +1,6 @@
 @if (manageData$ | async; as manageData) {
 
-  <div class="card flex flex-col gap-lg h-fit" [style.order]="getOrder(manageData.role)" [ngClass]="{
+  <div class="card grid grid-cols-1 gap-lg h-fit" [style.order]="getOrder(manageData.role)" [ngClass]="{
     'success': manageData.role === undefined,
   }">
     <div class="flex flex-row gap-sm items-center">
@@ -29,11 +29,12 @@
 
     </div>
 
-    @if(manageData.role === undefined) {
-      <span>Create a new role to manage volunteer sign-up requirements for shift positions.</span>
-    }
+    <div class="grid grid-cols-[15rem_15rem] gap-lg">
 
-    <div class="grid grid-cols-2 gap-lg">
+      @if(manageData.role === undefined) {
+        <span class="col-span-2">Create a new role to manage volunteer sign-up requirements for shift positions.</span>
+      }
+
       <div class="flex flex-col gap-sm">
         <small><fa-icon [icon]="icons.name" class="pr-sm" />Role Name</small>
         <xsb-input-text #name

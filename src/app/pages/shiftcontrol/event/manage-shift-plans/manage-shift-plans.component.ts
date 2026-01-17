@@ -2,7 +2,7 @@ import {Component, inject} from "@angular/core";
 import {PageService} from "../../../../services/page/page.service";
 import { icons } from "../../../../util/icons";
 import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {
   EventEndpointService,
   EventShiftPlansOverviewDto, RoleEndpointService,
@@ -19,7 +19,7 @@ import {
   startWith,
   switchMap,
   take,
-  tap, withLatestFrom
+  tap,
 } from "rxjs";
 import {BC_EVENT} from "../../../../breadcrumbs";
 import {InputMultiToggleComponent, MultiToggleOptions} from "../../../../components/inputs/input-multitoggle/input-multi-toggle.component";

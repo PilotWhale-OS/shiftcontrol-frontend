@@ -1,13 +1,14 @@
 import {Component, inject, Input, Output} from "@angular/core";
 import {BehaviorSubject, Subject} from "rxjs";
 import {
+  RoleDto,
   ShiftPlanDto,
   ShiftPlanEndpointService
 } from "../../../shiftservice-client";
 import { icons } from "../../util/icons";
 import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {ToastService} from "../../services/toast/toast.service";
-import {AsyncPipe} from "@angular/common";
+import {AsyncPipe, NgClass} from "@angular/common";
 import {DialogComponent} from "../dialog/dialog.component";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
@@ -26,7 +27,8 @@ import {planManagementNavigation} from "../../pages/shiftcontrol/event/manage-sh
     InputNumberComponent,
     InputTextComponent,
     ReactiveFormsModule,
-    TypedFormControlDirective
+    TypedFormControlDirective,
+    NgClass
   ],
   templateUrl: "./manage-plan-details.component.html",
   styleUrl: "./manage-plan-details.component.scss"
@@ -113,5 +115,13 @@ export class ManagePlanDetailsComponent {
     } else {
       this._toastService.showError("Invalid Shift Plan", "Please provide valid shift plan details.");
     }
+  }
+
+  protected getOrder(plan?: ShiftPlanDto) {
+    const order = Number(plan?.id) * -1 + Number.MIN_SAFE_INTEGER / -2;
+    if(isNaN(order)) {
+      return Number.MIN_SAFE_INTEGER + Number.MIN_SAFE_INTEGER / -2;
+    }
+    return order;
   }
 }

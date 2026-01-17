@@ -38,10 +38,10 @@ module.exports = {
           item: "rgb(23 24 45)",
           card_danger: "rgb(16 8 15)",
           card_success: "#0e1413",
-          card_hint: "rgb(13 24 53)",
+          card_hint: "#101625",
           item_danger: "rgb(46,2,14)",
           item_success: "rgb(24 41 29)",
-          item_hint: "#101625",
+          item_hint: "rgb(13 24 53)",
 
           /* light */
           light: {

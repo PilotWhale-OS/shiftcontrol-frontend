@@ -1,6 +1,6 @@
 @if (manageData$ | async; as manageData) {
 
-  <div class="card flex flex-col gap-lg h-fit" [style.order]="getOrder(manageData.invite)" [ngClass]="{
+  <div class="card grid grid-cols-1 gap-lg h-fit" [style.order]="getOrder(manageData.invite)" [ngClass]="{
   'success': manageData.invite === undefined,
 }">
     <div class="flex flex-row gap-sm items-center">
@@ -31,11 +31,7 @@
 
     </div>
 
-    @if (manageData.invite === undefined) {
-      <span>Create a new invite to let other users join as planner or volunteer to this shift plan.</span>
-    }
-
-    <div class="grid grid-cols-[1fr_1fr] gap-md">
+    <div class="grid grid-cols-[10rem_10rem] gap-md">
 
       <!-- show details -->
       @if (manageData.invite !== undefined) {
@@ -67,6 +63,8 @@
 
       }
       @else {
+
+        <span class="col-span-2">Create a new invite to let other users join as planner or volunteer to this shift plan.</span>
 
         <!--show form-->
         <div class="flex flex-col gap-sm">

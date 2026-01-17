@@ -1,6 +1,6 @@
 @if (event$ | async; as event) {
 
-  <div class="flex flex-row flex-wrap gap-lg w-full">
+  <div class="grid grid-cols-[auto_1fr] w-full gap-lg">
 
     <div class="card grid grid-cols-2 gap-lg gap-x-xl h-fit w-fit">
 
@@ -41,9 +41,54 @@
 
     </div>
 
+    <div class="card spotlight w-fit h-fit justify-self-start self-end">
+      @switch (mode$ | async) {
+        @case ("invites") {
+          <h2>
+            <fa-icon class="pr-sm opacity-50" [icon]="icons.info" />
+            About Invites
+          </h2>
+          <p>
+            Volunteers can be invited to join a shift plan via invite links.<br>
+            Invite links determine the access level: Planners have access to this management page, volunteers only to sign-up features.<br>
+            If an invite has roles assigned, the volunteer will automatically get these roles when accepting the invite.
+          </p>
+        }
+        @case ("roles") {
+          <h2>
+            <fa-icon class="pr-sm opacity-50" [icon]="icons.info" />
+            About Roles
+          </h2>
+          <p>
+            Roles define the qualifications of volunteers in a shift plan.<br>
+            When a volunteer signs up for a position, the reward points are calculated based on the role's reward rate.<br>
+            Volunteers are also only able to sign up for positions with their role.
+          </p>
+        }
+        @case ("assignments") {
+          <h2>
+            <fa-icon class="pr-sm opacity-50" [icon]="icons.info" />
+            About Shift Assignments
+          </h2>
+          <p>
+            TODO
+          </p>
+        }
+        @case ("users") {
+          <h2>
+            <fa-icon class="pr-sm opacity-50" [icon]="icons.info" />
+            About Shift Users
+          </h2>
+          <p>
+            TODO
+          </p>
+        }
+      }
+    </div>
+
     @if (planManageData$ | async; as plan){
 
-      <div class="card flex flex-col gap-md flex-1">
+      <div class="card flex flex-col gap-lg w-full col-span-2">
 
         <h1 class="compact signature-gradient-font">{{ plan.plan?.name }}: Manage {{selectedMode$ | async}}</h1>
 

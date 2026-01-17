@@ -1,16 +1,12 @@
 @if (event$ | async; as event) {
 
-  <div class="flex flex-row flex-wrap gap-lg w-full">
+  <div class="grid grid-cols-[auto_1fr] w-full gap-lg">
 
     <!-- manage info card -->
     <div class="card grid grid-cols-2 gap-lg gap-x-xl h-fit w-fit">
 
       <!-- info caption -->
       <h1 class="compact signature-gradient-font col-span-2">Manage Event</h1>
-
-      <span class="col-span-2">
-        Only administrators can manage events. (.. more infos?)
-      </span>
 
       <div class="flex flex-col gap-sm">
         <small><fa-icon [icon]="icons.manage" class="pr-sm" />Topic</small>
@@ -24,26 +20,71 @@
       </div>
     </div>
 
-    @switch (mode$ | async){
-      @case ("details") {
-        @if (event$ | async; as event) {
-          <app-manage-event-details [event]="event?.eventOverview ?? undefined" (eventChanged)="0" />
+    <div class="card spotlight w-fit h-fit justify-self-start self-end">
+      @switch (mode$ | async) {
+        @case ("details") {
+          <h2>
+            <fa-icon class="pr-sm opacity-50" [icon]="icons.info" />
+            About Events
+          </h2>
+          <p>
+            Events are the core organizational units of ShiftControl. <br>
+            An event has a schedule and locations that is shares with all shift plans.
+          </p>
+        }
+        @case ("plans") {
+          <h2>
+            <fa-icon class="pr-sm opacity-50" [icon]="icons.info" />
+            About Shift Plans
+          </h2>
+          <p>
+            Shift Plans organize groups of volunteers that work independently in an event.<br>
+            You can configure access control, roles, shifts and assignments in the <a [routerLink]="'../plans'">plan management</a>.
+          </p>
+        }
+        @case ("locations") {
+          <h2>
+            <fa-icon class="pr-sm opacity-50" [icon]="icons.info" />
+            About Locations
+          </h2>
+          <p>
+            Locations are physical places where volunteers can work during an event.<br>
+            You can set a map url so that volunteers can find their way around.
+          </p>
         }
       }
-      @case ("plans") {
-        @if (planManageData$ | async; as manageData) {
-          @for (planManageData of manageData; track planManageData.plan?.id){
-            <app-manage-plan-details [manageData]="planManageData ?? undefined" (planChanged)="0" />
+    </div>
+
+    @if (event$ | async; as event){
+
+      <div class="card col-span-2 flex flex-col gap-lg w-full">
+
+        <h1 class="compact signature-gradient-font">Manage {{selectedMode$ | async}}</h1>
+
+        <div class="flex flex-row flex-wrap gap-md">
+          @switch (mode$ | async){
+            @case ("details") {
+              @if (event$ | async; as event) {
+                <app-manage-event-details [event]="event?.eventOverview ?? undefined" (eventChanged)="0" />
+              }
+            }
+            @case ("plans") {
+              @if (planManageData$ | async; as manageData) {
+                @for (planManageData of manageData; track planManageData.plan?.id){
+                  <app-manage-plan-details [manageData]="planManageData ?? undefined" (planChanged)="0" />
+                }
+              }
+            }
+            @case ("locations") {
+              @if (locationsManageData$ | async; as manageData) {
+                @for (locationManageData of manageData; track locationManageData.location?.id){
+                  <app-manage-location [manageData]="locationManageData" (locationChanged)="0" />
+                }
+              }
+            }
           }
-        }
-      }
-      @case ("locations") {
-        @if (locationsManageData$ | async; as manageData) {
-          @for (locationManageData of manageData; track locationManageData.location?.id){
-            <app-manage-location [manageData]="locationManageData" (locationChanged)="0" />
-          }
-        }
-      }
+        </div>
+      </div>
     }
   </div>
 }

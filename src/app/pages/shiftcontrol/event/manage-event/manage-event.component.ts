@@ -3,7 +3,7 @@ import {InputMultiToggleComponent, MultiToggleOptions} from "../../../../compone
 import { icons } from "../../../../util/icons";
 import {PageService} from "../../../../services/page/page.service";
 import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {EventEndpointService, EventShiftPlansOverviewDto, LocationEndpointService} from "../../../../../shiftservice-client";
 import {BehaviorSubject, combineLatestWith, map, of, shareReplay, startWith, switchMap, tap} from "rxjs";
 import {BC_EVENT} from "../../../../breadcrumbs";
@@ -27,6 +27,7 @@ export type managementMode = "details" | "locations" | "plans";
     ManagePlanDetailsComponent,
     ManageEventDetailsComponent,
     ManageLocationComponent,
+    RouterLink
   ],
   templateUrl: "./manage-event.component.html",
   styleUrl: "./manage-event.component.scss"
@@ -37,6 +38,7 @@ export class ManageEventComponent {
   protected readonly planManageData$;
   protected readonly locationsManageData$;
   protected readonly mode$;
+  protected readonly selectedMode$;
   protected readonly icons = icons;
 
   protected readonly modeOptions: MultiToggleOptions<managementMode> = [
@@ -74,6 +76,10 @@ export class ManageEventComponent {
     this.mode$ = this.form.controls.managementMode.valueChanges.pipe(
       startWith(this.form.controls.managementMode.value),
       shareReplay()
+    );
+
+    this.selectedMode$ = this.mode$.pipe(
+      map(value => this.modeOptions.find(mode => mode.value === value)?.name)
     );
 
     /* set plans when event changes */

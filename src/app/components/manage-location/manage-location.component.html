@@ -1,6 +1,6 @@
 @if (manageData$ | async; as manageData) {
 
-  <div class="card flex flex-col gap-lg h-fit" [style.order]="getOrder(manageData.location)" [ngClass]="{
+  <div class="card grid grid-cols-[20rem] gap-lg h-fit" [style.order]="getOrder(manageData.location)" [ngClass]="{
     'success': manageData.location === undefined,
   }">
     <div class="flex flex-row gap-sm items-center">
