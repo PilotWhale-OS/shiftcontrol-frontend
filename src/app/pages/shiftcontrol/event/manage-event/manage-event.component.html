@@ -8,6 +8,13 @@
       <!-- info caption -->
       <h1 class="compact signature-gradient-font col-span-2">Manage Event</h1>
 
+      <span class="col-span-2">
+        Events are the core organizational units of ShiftControl. <br>
+        An event has a schedule and locations that is shares with all shift plans.
+      </span>
+
+      <hr class="col-span-2" />
+
       <div class="flex flex-col gap-sm">
         <small><fa-icon [icon]="icons.manage" class="pr-sm" />Topic</small>
         <label for="event-manage-topic">Select a topic to manage</label>
@@ -20,17 +27,17 @@
       </div>
     </div>
 
-    <div class="card spotlight w-fit h-fit justify-self-start self-end">
+    <div class="card spotlight w-fit h-fit justify-self-start self-end empty:hidden">
       @switch (mode$ | async) {
         @case ("details") {
-          <h2>
+         <!-- <h2>
             <fa-icon class="pr-sm opacity-50" [icon]="icons.info" />
             About Events
           </h2>
           <p>
             Events are the core organizational units of ShiftControl. <br>
             An event has a schedule and locations that is shares with all shift plans.
-          </p>
+          </p>-->
         }
         @case ("plans") {
           <h2>

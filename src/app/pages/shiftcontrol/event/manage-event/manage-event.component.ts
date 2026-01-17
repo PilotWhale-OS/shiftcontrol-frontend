@@ -14,7 +14,7 @@ import {ManagePlanDetailsComponent} from "../../../../components/manage-plan-det
 import {ManageEventDetailsComponent} from "../../../../components/manage-event-details/manage-event-details.component";
 import {ManageLocationComponent} from "../../../../components/manage-location/manage-location.component";
 
-export type managementMode = "details" | "locations" | "plans" | "pretalx";
+export type managementMode = "details" | "locations" | "plans";
 
 @Component({
   selector: "app-manage-event",
@@ -44,8 +44,7 @@ export class ManageEventComponent {
   protected readonly modeOptions: MultiToggleOptions<managementMode> = [
     {name: "Details", value: "details"},
     {name: "Shift Plans", value: "plans"},
-    {name: "Locations", value: "locations"},
-    {name: "PreTalx", value: "pretalx"}
+    {name: "Locations", value: "locations"}
   ];
 
   private readonly _pageService = inject(PageService);

@@ -16,6 +16,8 @@
         Shift plans are management groups for different tasks.<br>Each plan has its own set of roles and shift configurations.
       </span>
 
+      <hr class="col-span-2" />
+
       <div class="flex flex-col gap-sm ">
         <small><fa-icon [icon]="icons.plan" class="pr-sm" />Shift Plan</small>
         <label for="event-plans-plan">Select a shift plan to manage</label>
@@ -41,7 +43,7 @@
 
     </div>
 
-    <div class="card spotlight w-fit h-fit justify-self-start self-end">
+    <div class="card spotlight w-fit h-fit justify-self-start self-end empty:hidden">
       @switch (mode$ | async) {
         @case ("invites") {
           <h2>
@@ -66,22 +68,8 @@
           </p>
         }
         @case ("assignments") {
-          <h2>
-            <fa-icon class="pr-sm opacity-50" [icon]="icons.info" />
-            About Shift Assignments
-          </h2>
-          <p>
-            TODO
-          </p>
         }
         @case ("users") {
-          <h2>
-            <fa-icon class="pr-sm opacity-50" [icon]="icons.info" />
-            About Shift Users
-          </h2>
-          <p>
-            TODO
-          </p>
         }
       }
     </div>
@@ -107,6 +95,9 @@
                   <app-manage-role [manageData]="roleManageData ?? undefined" (roleChanged)="refreshData()" />
                 }
               }
+            }
+            @case ("assignments") {
+              <app-manage-assignments [plan]="plan.plan" (planChanged)="refreshData()" />
             }
           }
         </div>

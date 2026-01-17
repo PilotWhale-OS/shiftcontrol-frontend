@@ -137,3 +137,7 @@ small {
 a {
   @apply underline cursor-pointer;
 }
+
+hr {
+  @apply h-0 border-0 border-b-ctr border-b-framing-card w-full;
+}

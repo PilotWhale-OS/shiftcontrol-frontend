@@ -24,6 +24,7 @@ import {ManagePositionComponent, managePositionParams} from "../manage-position/
 import {icons} from "../../util/icons";
 import {InputNumberComponent} from "../inputs/input-number/input-number.component";
 import {ToastService} from "../../services/toast/toast.service";
+import {LockStatusPipe} from "../../pipes/lock-status.pipe";
 
 export interface manageShiftParams {
   planId: string;
@@ -51,7 +52,8 @@ export interface manageShiftParams {
     DialogComponent,
     TooltipDirective,
     ManagePositionComponent,
-    InputNumberComponent
+    InputNumberComponent,
+    LockStatusPipe
   ],
   providers: [
     DatePipe

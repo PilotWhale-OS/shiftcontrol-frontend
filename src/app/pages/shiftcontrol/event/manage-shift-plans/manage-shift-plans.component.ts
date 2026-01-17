@@ -29,6 +29,7 @@ import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {TypedFormControlDirective} from "../../../../directives/typed-form-control.directive";
 import {ManageInviteComponent} from "../../../../components/manage-invite/manage-invite.component";
 import {ManageRoleComponent} from "../../../../components/manage-role/manage-role.component";
+import {ManageAssignmentsComponent} from "../../../../components/manage-assignments/manage-assignments.component";
 
 export type managementMode = "invites" | "assignments" | "users" | "roles";
 export interface planManagementNavigation {
@@ -46,7 +47,8 @@ export interface planManagementNavigation {
     ReactiveFormsModule,
     InputMultiToggleComponent,
     ManageInviteComponent,
-    ManageRoleComponent
+    ManageRoleComponent,
+    ManageAssignmentsComponent
   ],
   templateUrl: "./manage-shift-plans.component.html",
   styleUrl: "./manage-shift-plans.component.scss"
@@ -116,7 +118,11 @@ export class ManageShiftPlansComponent {
       combineLatestWith(this.form.controls.shiftPlan.valueChanges.pipe(
         startWith(this.form.controls.shiftPlan.value)
       )),
-      map(([event, shiftPlan]) => ({plan: shiftPlan ?? undefined, eventId: event.eventOverview.id})),
+      map(([event, shiftPlan]) => ({
+        plan: event.shiftPlans.find(plan => plan.id === shiftPlan?.id),
+        eventId: event.eventOverview.id
+      })),
+      tap(p => console.log({p})),
       shareReplay()
     );
 

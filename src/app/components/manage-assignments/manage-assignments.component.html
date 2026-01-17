@@ -1,0 +1,77 @@
+@if (plan$ | async; as plan) {
+  <div class="flex flex-row flex-wrap gap-lg w-full">
+
+    <!-- status widget -->
+    <div class="card success flex flex-col gap-lg w-[30rem]">
+
+      <div class="flex flex-row gap-md items-center">
+        <div class="badge success h-ft self-end flex items-center gap-sm">
+          <fa-icon [icon]="icons.phase" class="pr-sm" />
+          Assignment Phase
+        </div>
+        <h2 class="compact">{{plan.lockStatus | lockStatus}}</h2>
+      </div>
+
+      <p>
+        This shift plan is currently in the phase "{{plan.lockStatus | lockStatus}}".<br>
+        {{plan.lockStatus | lockStatus:"description"}}
+      </p>
+
+      <hr />
+
+      <div class="flex flex-row gap-md">
+
+        <xsb-input-multitoggle #assignmentPhase
+                               [formControl]="form.controls.assignmentPhase"
+                               [options]="phaseOptions"
+                               [xsb-typed]="[assignmentPhase, form.controls.assignmentPhase]"
+        />
+        <xsb-input-button class="grow" size="minimal" content="Change Phase" action="success"
+                          [disableLockIcon]="true"
+                          (click)="updatePhase(plan)"
+                          [lock]="plan.lockStatus === form.controls.assignmentPhase.value" />
+      </div>
+
+      @if (plan.lockStatus !== form.controls.assignmentPhase.value){
+        <p class="whitespace-pre-line">
+          {{getChanges(plan.lockStatus, form.controls.assignmentPhase.value)}}{{form.controls.assignmentPhase.value | lockStatus:"description"}}
+        </p>
+      } @else {
+        <span>Select another phase to preview changes.</span>
+      }
+    </div>
+
+    <!-- assignment action list -->
+    <div class="card flex-1  flex flex-col gap-lg">
+
+      <!-- header -->
+      <div class="flex flex-row gap-md items-center">
+        <div class="badge h-ft self-end flex items-center gap-sm">
+          <fa-icon [icon]="icons.signedUp" class="pr-sm" />
+          Volunteer Assignments
+        </div>
+      </div>
+
+      <!-- filter-->
+      <div class="flex flex-col gap-sm w-fit">
+        <div class="flex items-center gap-sm">
+          <fa-icon [icon]="icons.volunteers" />
+          <label for="plan-assignments-filter">Assignment Status</label>
+        </div>
+        <xsb-input-multitoggle #assignmentStatus
+                               name="plan-assignments-filter"
+                               [formControl]="form.controls.assignmentStatus"
+                               [options]="statusOptions"
+                               [xsb-typed]="[assignmentStatus, form.controls.assignmentStatus]"
+        />
+      </div>
+
+      <hr>
+
+      @for (assignment of (assignments$ | async) ?? []; track assignment.shiftId) {
+        {{assignment.shiftName}}
+      }
+
+    </div>
+  </div>
+}

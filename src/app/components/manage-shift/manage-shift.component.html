@@ -146,8 +146,8 @@
           </div>
 
           <div class="badge" [app-tooltip]="getLockStatusDescription(data.shift)" tooltipMaxWidth="10rem" >
-            <fa-icon [icon]="icons.signUp"/>
-            <span>{{getLockStatusName(data.shift)}}</span>
+            <fa-icon [icon]="icons.phase"/>
+            <span>{{data.shift.lockStatus | lockStatus}}</span>
           </div>
 
           @if(data.shift.bonusRewardPoints > 0) {
