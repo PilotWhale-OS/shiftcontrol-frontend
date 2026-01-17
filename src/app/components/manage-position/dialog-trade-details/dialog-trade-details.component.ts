@@ -16,6 +16,7 @@ import {ToastService} from "../../../services/toast/toast.service";
 import {mapValue} from "../../../util/value-maps";
 
 interface mappedInfo {
+  tradeId: string;
   isOwnRequest: boolean;
   ownRewardPoints: number;
   otherRewardPoints: number;
@@ -80,6 +81,7 @@ export class DialogTradeDetailsComponent {
           const isOwnRequest = info.offeringVolunteer.id === user.account.volunteer.id;
 
           return {
+            tradeId: info.id,
             isOwnRequest,
             ownRewardPoints: isOwnRequest ? info.offeredPositionSlotRewardPoints : info.requestedPositionSlotRewardPoints,
             otherRewardPoints: isOwnRequest ? info.requestedPositionSlotRewardPoints : info.offeredPositionSlotRewardPoints,
@@ -104,12 +106,7 @@ export class DialogTradeDetailsComponent {
 
     if(tradeData.isOwnRequest) {
       if(result === "danger") {
-        this._tradeService.cancelTrade({
-          offeredSlotId: tradeData.ownSlot.id,
-          requestedSlotId: tradeData.otherSlot.id,
-          offeringVolunteerId: tradeData.ownVolunteer.id,
-          requestingVolunteerId: tradeData.otherVolunteer.id
-        }).pipe(
+        this._tradeService.cancelTrade(tradeData.tradeId).pipe(
           this._toastService.tapSuccess("Trade Cancelled", () => "The trade has been cancelled successfully."),
           this._toastService.tapError("Cancel Failed", mapValue.apiErrorToMessage)
         ).subscribe(() => this.tradeChanged.emit());
@@ -117,23 +114,13 @@ export class DialogTradeDetailsComponent {
       }
     } else {
       if(result ==="success") {
-        this._tradeService.acceptTrade({
-          offeredSlotId: tradeData.otherSlot.id,
-          requestedSlotId: tradeData.ownSlot.id,
-          offeringVolunteerId: tradeData.otherVolunteer.id,
-          requestingVolunteerId: tradeData.ownVolunteer.id
-        }).pipe(
+        this._tradeService.acceptTrade(tradeData.tradeId).pipe(
           this._toastService.tapSuccess("Trade Accepted", () => "The trade has been accepted successfully."),
           this._toastService.tapError("Trade Failed", mapValue.apiErrorToMessage)
         ).subscribe(() => this.tradeChanged.emit());
         return;
       } else if(result === "danger") {
-        this._tradeService.acceptTrade({
-          offeredSlotId: tradeData.otherSlot.id,
-          requestedSlotId: tradeData.ownSlot.id,
-          offeringVolunteerId: tradeData.otherVolunteer.id,
-          requestingVolunteerId: tradeData.ownVolunteer.id
-        }).pipe(
+        this._tradeService.acceptTrade(tradeData.tradeId).pipe(
           this._toastService.tapSuccess("Trade Declined", () => "The trade has been declined successfully."),
           this._toastService.tapError("Decline Failed", mapValue.apiErrorToMessage)
         ).subscribe(() => this.tradeChanged.emit());
