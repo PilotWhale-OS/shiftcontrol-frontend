@@ -38,7 +38,7 @@ export class ManageEventDetailsComponent {
   protected readonly form;
   protected readonly icons = icons;
 
-  protected readonly event$ = new BehaviorSubject<EventDto | undefined>(undefined);
+  protected readonly manageData$ = new BehaviorSubject<{ event: undefined | EventDto } | undefined>(undefined);
 
   protected showEventDeleteConfirm = false;
 
@@ -61,16 +61,16 @@ export class ManageEventDetailsComponent {
   }
 
   @Input()
-  public set event(value: EventDto | undefined) {
-    this.event$.next(value);
+  public set event(value: { event: EventDto | undefined }) {
+    this.manageData$.next(value);
 
-    if(value !== undefined) {
+    if(value?.event !== undefined) {
       this.form.setValue({
-        name: value.name,
-        shortDescription: value.shortDescription ?? "",
-        longDescription: value.longDescription ?? "",
-        startDate: new Date(value.startTime),
-        endDate: new Date(value.endTime)
+        name: value.event.name,
+        shortDescription: value.event.shortDescription ?? "",
+        longDescription: value.event.longDescription ?? "",
+        startDate: new Date(value.event.startTime),
+        endDate: new Date(value.event.endTime)
       });
     } else {
       this.form.reset();
@@ -90,7 +90,7 @@ export class ManageEventDetailsComponent {
         endTime: mapValue.dateAsLocalDateEndOfDayString(this.form.controls.endDate.value)
       }).pipe(
         this._toastService.tapCreating("Event", event => event.name)
-      ).subscribe(() => this.eventChanged.next());
+      ).subscribe(created => this._router.navigate([`../${created.id}/manage`], {relativeTo: this._route}));
     } else {
       this._toastService.showError("Invalid Event", "Please provide valid event details.");
     }

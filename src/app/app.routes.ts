@@ -21,12 +21,12 @@ import {ShiftPlanComponent} from "./pages/shiftcontrol/shift-plan/shift-plan.com
 import {ShiftCalendarComponent} from "./pages/shiftcontrol/shift-calendar/shift-calendar.component";
 import {ShiftDetailsComponent} from "./pages/shiftcontrol/shift-details/shift-details.component";
 import {PlanOnboardingComponent} from "./pages/shiftcontrol/plan-onboarding/plan-onboarding.component";
-import {ManageEventDetailsComponent} from "./components/manage-event-details/manage-event-details.component";
 import {ManageScheduleComponent} from "./pages/shiftcontrol/event/manage-schedule/manage-schedule.component";
 import {NotificationsComponent} from "./pages/shiftcontrol/notifications/notifications.component";
 import {ShiftPlanSignupDashboardComponent} from "./pages/shiftcontrol/shift-plan-signup-dashboard/shift-plan-signup-dashboard.component";
 import {ManageShiftPlansComponent} from "./pages/shiftcontrol/event/manage-shift-plans/manage-shift-plans.component";
 import {ManageEventComponent} from "./pages/shiftcontrol/event/manage-event/manage-event.component";
+import {CreateEventComponent} from "./pages/shiftcontrol/event/create-event/create-event.component";
 
 export const routes: Routes = ([
   { path: "", component: HomeComponent, pathMatch: "full", data: {breadcrumbs: BC_HOME}, canActivate: [accessAllowedGuard] },
@@ -36,10 +36,15 @@ export const routes: Routes = ([
   { path: "notifications", component: NotificationsComponent,
     data: {breadcrumbs: BC_NOTIFICATIONS}, canActivate: [accessAllowedGuard]},
 
+  /* onboarding */
+  { path: "join/:shiftPlanInvite", redirectTo: "onboarding/:shiftPlanInvite", pathMatch: "full" },
+  { path: "onboarding/:shiftPlanInvite", component: PlanOnboardingComponent,
+    data: { breadcrumbs: BC_PLAN_ONBOARDING }, canActivate: [accessAllowedGuard]},
+
   /* events */
   { path: "events", component: EventsComponent,
     data: {breadcrumbs: BC_EVENTS}, canActivate: [accessAllowedGuard]},
-  { path: "events/create", component: ManageEventDetailsComponent,
+  { path: "events/create", component: CreateEventComponent,
     data: {breadcrumbs: BC_EVENT_CREATE}, canActivate: [accessAllowedGuard]},
   { path: "events/:eventId", component: EventComponent,
     data: {breadcrumbs: BC_EVENT}, canActivate: [accessAllowedGuard]},
@@ -47,7 +52,7 @@ export const routes: Routes = ([
     data: {breadcrumbs: BC_EVENT_SCHEDULE}, canActivate: [accessAllowedGuard]},
   { path: "events/:eventId/plans", component: ManageShiftPlansComponent,
     data: {breadcrumbs: BC_EVENT_PLANS}, canActivate: [accessAllowedGuard]},
-  { path: "events/:eventId/edit", component: ManageEventComponent,
+  { path: "events/:eventId/manage", component: ManageEventComponent,
     data: {breadcrumbs: BC_EVENT_EDIT}, canActivate: [accessAllowedGuard]},
 
 
@@ -58,9 +63,6 @@ export const routes: Routes = ([
     data: { breadcrumbs: BC_PLAN_SIGNUP_DASHBOARD }, canActivate: [accessAllowedGuard]},
   { path: "plans/:shiftPlanId/calendar", component: ShiftCalendarComponent,
     data: { breadcrumbs: BC_SHIFT_CALENDAR }, canActivate: [accessAllowedGuard]},
-  { path: "join/:shiftPlanInvite", redirectTo: "onboarding/:shiftPlanInvite", pathMatch: "full" },
-  { path: "onboarding/:shiftPlanInvite", component: PlanOnboardingComponent,
-    data: { breadcrumbs: BC_PLAN_ONBOARDING }, canActivate: [accessAllowedGuard]},
   { path: "shifts/:shiftId", component: ShiftDetailsComponent,
     data: { breadcrumbs: BC_SHIFT_DETAILS }, canActivate: [accessAllowedGuard]}
 

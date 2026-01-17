@@ -90,7 +90,7 @@
 
       <div class="card flex flex-col gap-lg w-full col-span-2">
 
-        <h1 class="compact signature-gradient-font">{{ plan.plan?.name }}: Manage {{selectedMode$ | async}}</h1>
+        <h1 class="compact signature-gradient-font">{{ plan.plan?.name }}: {{selectedMode$ | async}}</h1>
 
         <div class="flex flex-row flex-wrap gap-md">
           @switch (mode$ | async){

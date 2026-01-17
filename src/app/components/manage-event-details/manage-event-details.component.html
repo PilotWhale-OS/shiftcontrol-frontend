@@ -1,4 +1,4 @@
-@if (event$ | async; as event) {
+@if (manageData$ | async; as manageData) {
 
   <!-- manage details -->
   <div class="grid grid-cols-[25rem_25rem] gap-x-xl gap-y-md w-fit h-fit">
@@ -51,16 +51,16 @@
     </div>
 
     <div class="col-span-2 flex gap-x-lg items-center  pt-md">
-      @if (event === undefined){
+      @if (manageData.event === undefined){
         <xsb-input-button content="Create Event" action="success" (click)="create()" />
       }
       @else {
-        <xsb-input-button content="Clone Event" action="normal" (click)="clone(event)" />
-        <xsb-input-button content="Update Event" action="success" (click)="update(event)" />
+        <xsb-input-button content="Clone Event" action="normal" (click)="clone(manageData.event)" />
+        <xsb-input-button content="Update Event" action="success" (click)="update(manageData.event)" />
         <xsb-input-button content="Delete Event" action="danger" (click)="showEventDeleteConfirm = true" />
 
         @if (showEventDeleteConfirm){
-          <xsb-dialog action="danger" danger="Delete Event" (closeDialog)="showEventDeleteConfirm = false; $event === 'danger' && delete(event)">
+          <xsb-dialog action="danger" danger="Delete Event" (closeDialog)="showEventDeleteConfirm = false; $event === 'danger' && delete(manageData.event)">
             <ng-container dialog-header>
               <h1>Delete Event</h1>
             </ng-container>

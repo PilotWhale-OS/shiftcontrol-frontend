@@ -59,13 +59,13 @@
 
       <div class="card col-span-2 flex flex-col gap-lg w-full">
 
-        <h1 class="compact signature-gradient-font">Manage {{selectedMode$ | async}}</h1>
+        <h1 class="compact signature-gradient-font">Event {{selectedMode$ | async}}</h1>
 
         <div class="flex flex-row flex-wrap gap-md">
           @switch (mode$ | async){
             @case ("details") {
               @if (event$ | async; as event) {
-                <app-manage-event-details [event]="event?.eventOverview ?? undefined" (eventChanged)="0" />
+                <app-manage-event-details [event]="{event: event?.eventOverview ?? undefined}" (eventChanged)="0" />
               }
             }
             @case ("plans") {

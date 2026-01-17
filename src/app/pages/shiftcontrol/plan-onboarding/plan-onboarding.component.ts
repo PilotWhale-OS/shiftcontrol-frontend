@@ -67,11 +67,6 @@ export class PlanOnboardingComponent {
             details.eventDto.id
           )
           .configureBreadcrumb(
-            BC_PLAN_DASHBOARD,
-            details.inviteDto.shiftPlanDto.name,
-            `/plans/${details.inviteDto.shiftPlanDto.id}`
-          )
-          .configureBreadcrumb(
             BC_PLAN_ONBOARDING,
             "Onboarding",
             "/onboarding/" + inviteCode
