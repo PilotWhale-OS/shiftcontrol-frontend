@@ -1,4 +1,4 @@
-import {Component, EventEmitter, inject, Input, Output} from "@angular/core";
+import {Component, inject, Input, Output} from "@angular/core";
 import {
   EventDto,
   LocationDto, LocationEndpointService,
@@ -10,10 +10,11 @@ import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {InputTextComponent} from "../inputs/input-text/input-text.component";
 import {TypedFormControlDirective} from "../../directives/typed-form-control.directive";
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
-import {NgClass} from "@angular/common";
+import {AsyncPipe, NgClass} from "@angular/common";
 import {DialogComponent} from "../dialog/dialog.component";
 import {icons} from "../../util/icons";
 import {ToastService} from "../../services/toast/toast.service";
+import {BehaviorSubject, map, Subject} from "rxjs";
 
 @Component({
   selector: "app-manage-location",
@@ -24,22 +25,24 @@ import {ToastService} from "../../services/toast/toast.service";
     TypedFormControlDirective,
     InputButtonComponent,
     NgClass,
-    DialogComponent
+    DialogComponent,
+    AsyncPipe
   ],
   templateUrl: "./manage-location.component.html",
   styleUrl: "./manage-location.component.scss"
 })
 export class ManageLocationComponent {
 
-  @Input({required: true})
-  public event?: EventDto;
-
   @Output()
-  public locationChanged = new EventEmitter<void>();
+  public locationChanged = new Subject<void>();
 
   protected readonly icons = icons;
   protected readonly form;
-  protected _location?: LocationDto;
+  protected readonly manageData$ =
+    new BehaviorSubject<undefined | { location: LocationDto | undefined; event: EventDto }>(undefined);
+  protected readonly isPretalxManaged$ =this.manageData$.pipe(
+    map(data => data?.location?.readOnly ?? false)
+  );
 
   protected showDeleteConfirm = false;
 
@@ -55,34 +58,28 @@ export class ManageLocationComponent {
     });
   }
 
-  public get isPretalxManaged(){
-    return this?._location?.readOnly === true;
-  }
-
   @Input()
-  public set location(value: LocationDto) {
-    this._location = value;
+  public set manageData(value: { location: LocationDto | undefined; event: EventDto } | undefined) {
+    this.manageData$.next(value);
 
+    if(value !== undefined) {
+      this.form.setValue({
+        name: value.location?.name ?? "",
+        description: value.location?.description ?? "",
+        url: value.location?.url ?? ""
+      });
+    } else {
+      this.form.reset();
+    }
     this.form.markAsPristine();
-
-    this.form.setValue({
-      name: value.name,
-      description: value.description ?? "",
-      url: value.url ?? ""
-    });
   }
 
-  protected save() {
+  protected save(location: LocationDto | undefined, event: EventDto) {
     this.form.markAllAsTouched();
 
     if(this.form.invalid) {
       this._toastService.showError("Invalid Location", "Please provide valid location details.");
       return;
-    }
-
-    const event = this.event;
-    if(event === undefined) {
-      throw new Error("Event is required to save location");
     }
 
     const locationData: LocationModificationDto = {
@@ -91,40 +88,35 @@ export class ManageLocationComponent {
       url: mapValue.undefinedIfEmptyString(this.form.controls.url.value),
     };
 
-    (this._location === undefined ?
+    (location === undefined ?
       this._locationService.createLocation(event.id, locationData) :
-      this._locationService.updateLocation(this._location.id, locationData)
+      this._locationService.updateLocation(location.id, locationData)
     ).pipe(
-      this._location === undefined ?
+      location === undefined ?
         this._toastService.tapCreating("Location", item => item.name) :
         this._toastService.tapSaving("Location", item => item.name)
     ).subscribe(() => {
-      this.locationChanged.emit();
+      this.locationChanged.next();
 
-      if(this._location === undefined) {
+      if(location === undefined) {
         this.form.reset();
       }
     });
   }
 
-  protected delete() {
-    if(this._location === undefined) {
-      throw new Error("Could not delete location in create mode");
-    }
-
-    this._locationService.deleteLocation(this._location.id).pipe(
+  protected delete(location: LocationDto) {
+    this._locationService.deleteLocation(location.id).pipe(
       this._toastService.tapDeleting("Location")
     ).subscribe(() => {
-      this.locationChanged.emit();
+      this.locationChanged.next();
     });
   }
 
-  protected getOrder() {
-    const order = Number(this._location?.id) * -1;
+  protected getOrder(location: LocationDto | undefined) {
+    const order = Number(location?.id) * -1 + Number.MIN_SAFE_INTEGER / -2;
     if(isNaN(order)) {
-      return Number.MIN_SAFE_INTEGER;
+      return Number.MIN_SAFE_INTEGER + Number.MIN_SAFE_INTEGER / -2;
     }
     return order;
   }
-
 }

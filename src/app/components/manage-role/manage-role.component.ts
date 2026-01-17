@@ -1,4 +1,4 @@
-import {Component, EventEmitter, inject, Input, Output} from "@angular/core";
+import {Component, inject, Input, Output} from "@angular/core";
 import {
   RoleDto, RoleEndpointService, RoleModificationDto, ShiftPlanDto
 } from "../../../shiftservice-client";
@@ -8,11 +8,13 @@ import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {InputTextComponent} from "../inputs/input-text/input-text.component";
 import {TypedFormControlDirective} from "../../directives/typed-form-control.directive";
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
-import {NgClass} from "@angular/common";
+import {AsyncPipe, NgClass} from "@angular/common";
 import {DialogComponent} from "../dialog/dialog.component";
 import {icons} from "../../util/icons";
 import {InputNumberComponent} from "../inputs/input-number/input-number.component";
 import {ToastService} from "../../services/toast/toast.service";
+import {BehaviorSubject, Subject} from "rxjs";
+import {planManagementNavigation} from "../../pages/shiftcontrol/event/manage-shift-plans/manage-shift-plans.component";
 
 @Component({
   selector: "app-manage-role",
@@ -24,7 +26,8 @@ import {ToastService} from "../../services/toast/toast.service";
     InputButtonComponent,
     NgClass,
     DialogComponent,
-    InputNumberComponent
+    InputNumberComponent,
+    AsyncPipe
   ],
   standalone: true,
   templateUrl: "./manage-role.component.html",
@@ -32,15 +35,14 @@ import {ToastService} from "../../services/toast/toast.service";
 })
 export class ManageRoleComponent {
 
-  @Input({required: true})
-  public plan?: ShiftPlanDto;
-
   @Output()
-  public roleChanged = new EventEmitter<void>();
+  roleChanged = new Subject<planManagementNavigation>();
+
+  protected readonly manageData$ =
+    new BehaviorSubject<undefined | { plan: ShiftPlanDto; role: RoleDto | undefined }>(undefined);
 
   protected readonly icons = icons;
   protected readonly form;
-  protected _role?: RoleDto;
 
   protected showDeleteConfirm = false;
 
@@ -57,29 +59,24 @@ export class ManageRoleComponent {
   }
 
   @Input()
-  public set role(value: RoleDto) {
-    this._role = value;
+  set manageData(data: { plan: ShiftPlanDto; role: RoleDto | undefined } | undefined) {
+    this.manageData$.next(data);
 
-    this.form.markAsPristine();
-
-    this.form.setValue({
-      name: value.name,
-      description: value.description ?? "",
-      rewardPointsPerMinute: value.rewardPointsPerMinute
-    });
+    if(data?.role !== undefined) {
+      this.form.controls.name.setValue(data.role.name);
+      this.form.controls.description.setValue(data.role.description ?? "");
+      this.form.controls.rewardPointsPerMinute.setValue(data.role.rewardPointsPerMinute);
+    } else {
+      this.form.reset();
+    }
   }
 
-  protected save() {
+  protected save(role: RoleDto | undefined, plan: ShiftPlanDto) {
     this.form.markAllAsTouched();
 
     if(this.form.invalid) {
       this._toastService.showError("Invalid Role", "Please provide valid role details.");
       return;
-    }
-
-    const plan = this.plan;
-    if(plan === undefined) {
-      throw new Error("Plan is required to save role");
     }
 
     const roleData: RoleModificationDto = {
@@ -89,38 +86,34 @@ export class ManageRoleComponent {
       rewardPointsPerMinute: this.form.controls.rewardPointsPerMinute.value
     };
 
-    (this._role === undefined ?
+    (role === undefined ?
       this._roleService.createRole(plan.id, roleData) :
-      this._roleService.updateRole(this._role.id, roleData)
+      this._roleService.updateRole(role.id, roleData)
     ).pipe(
-      this._role === undefined ?
+      role === undefined ?
         this._toastService.tapCreating("Role", item => item.name) :
         this._toastService.tapSaving("Role", item => item.name)
     ).subscribe(() => {
-      this.roleChanged.emit();
+      this.roleChanged.next({navigateTo: plan, mode: "roles"});
 
-      if(this._role === undefined) {
+      if(role === undefined) {
         this.form.reset();
       }
     });
   }
 
-  protected delete() {
-    if(this._role === undefined) {
-      throw new Error("Could not delete role in create mode");
-    }
-
-    this._roleService.deleteRole(this._role.id).pipe(
+  protected delete(role: RoleDto, plan: ShiftPlanDto) {
+    this._roleService.deleteRole(role.id).pipe(
       this._toastService.tapDeleting("Role")
     ).subscribe(() =>{
-      this.roleChanged.emit();
+      this.roleChanged.next({navigateTo: plan, mode: "roles"});
     });
   }
 
-  protected getOrder() {
-    const order = Number(this._role?.id) * -1;
+  protected getOrder(role?: RoleDto) {
+    const order = Number(role?.id) * -1 + Number.MIN_SAFE_INTEGER / -2;
     if(isNaN(order)) {
-      return Number.MIN_SAFE_INTEGER;
+      return Number.MIN_SAFE_INTEGER + Number.MIN_SAFE_INTEGER / -2;
     }
     return order;
   }

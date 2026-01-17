@@ -1,6 +1,6 @@
-import {Component, EventEmitter, inject, Input, OnDestroy, Output} from "@angular/core";
+import {Component, inject, Input, OnDestroy, Output} from "@angular/core";
 import {
-  RoleDto, ShiftPlanDto, ShiftPlanInviteCreateRequestDto, ShiftPlanInviteDto, ShiftPlanInviteEndpointService
+  RoleEndpointService, ShiftPlanDto, ShiftPlanInviteCreateRequestDto, ShiftPlanInviteDto, ShiftPlanInviteEndpointService
 } from "../../../shiftservice-client";
 import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
@@ -11,11 +11,12 @@ import {InputSelectComponent, SelectOptions} from "../inputs/input-select/input-
 import {InputMultiselectComponent} from "../inputs/input-multiselect/input-multiselect.component";
 import {InputToggleComponent} from "../inputs/input-toggle/input-toggle.component";
 import {InputDateComponent} from "../inputs/input-date/input-date.component";
-import {BehaviorSubject, Subscription} from "rxjs";
+import {BehaviorSubject, map, of, Subject, Subscription, switchMap} from "rxjs";
 import {InputNumberComponent} from "../inputs/input-number/input-number.component";
 import {icons} from "../../util/icons";
 import {ToastService} from "../../services/toast/toast.service";
 import {mapValue} from "../../util/value-maps";
+import {planManagementNavigation} from "../../pages/shiftcontrol/event/manage-shift-plans/manage-shift-plans.component";
 
 @Component({
   selector: "app-manage-invite",
@@ -38,14 +39,11 @@ import {mapValue} from "../../util/value-maps";
 })
 export class ManageInviteComponent implements OnDestroy {
 
-  @Input({required: true})
-  public plan?: ShiftPlanDto;
-
-  @Input()
-  public invite?: ShiftPlanInviteDto;
-
   @Output()
-  public inviteChanged = new EventEmitter<void>();
+  inviteChanged = new Subject<planManagementNavigation>();
+
+  protected readonly manageData$ =
+    new BehaviorSubject<undefined | { plan: ShiftPlanDto; invite: ShiftPlanInviteDto | undefined }>(undefined);
 
   protected readonly icons = icons;
   protected readonly form;
@@ -54,10 +52,11 @@ export class ManageInviteComponent implements OnDestroy {
     {name: "Planner Join", value: ShiftPlanInviteCreateRequestDto.TypeEnum.PlannerJoin},
     {name: "Volunteer Join", value: ShiftPlanInviteCreateRequestDto.TypeEnum.VolunteerJoin}
   ];
-  protected roleOptions$ = new BehaviorSubject<SelectOptions<string>>([]);
+  protected roleOptions$;
 
   private readonly _fb = inject(FormBuilder);
   private readonly _inviteService = inject(ShiftPlanInviteEndpointService);
+  private readonly _rolesService = inject(RoleEndpointService);
   private readonly _toastService = inject(ToastService);
 
   private readonly _expiryEnabledSubscription?: Subscription;
@@ -93,11 +92,29 @@ export class ManageInviteComponent implements OnDestroy {
         this.form.controls.maxUses.disable();
       }
     });
+
+    this.roleOptions$ = this.manageData$.pipe(
+      switchMap(data => data === undefined ? of([]) : this._rolesService.getRoles(data.plan.id)),
+      map(roles => roles.map(role => ({name: role.name, value: role.id})) as SelectOptions<string>)
+    );
   }
 
   @Input()
-  public set roles(value: RoleDto[]) {
-    this.roleOptions$.next(value.map(role => ({name: role.name, value:role.id})));
+  set manageData(data: { plan: ShiftPlanDto; invite: ShiftPlanInviteDto | undefined } | undefined) {
+    this.manageData$.next(data);
+
+    if(data?.invite !== undefined) {
+      this.form.setValue({
+        roles: data.invite.autoAssignedRoles?.map(role => role.id) ?? [],
+        expiry: data.invite.expiresAt ? new Date(data.invite.expiresAt) : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        maxUses: data.invite.maxUses ?? 100,
+        type: data.invite.type,
+        enableExpiry: data.invite.expiresAt !== undefined,
+        enableMaxUses: data.invite.maxUses !== undefined
+      });
+    } else {
+      this.form.reset();
+    }
   }
 
   ngOnDestroy() {
@@ -132,17 +149,12 @@ export class ManageInviteComponent implements OnDestroy {
     return invite.autoAssignedRoles.map(role => role.name).join(", ");
   }
 
-  protected create() {
+  protected create(plan: ShiftPlanDto) {
     this.form.markAllAsTouched();
 
     if(this.form.invalid) {
       this._toastService.showError("Invalid Invite", "Please provide valid invite details.");
       return;
-    }
-
-    const plan = this.plan;
-    if(plan === undefined) {
-      throw new Error("Plan is required to create an invite");
     }
 
     const createData: ShiftPlanInviteCreateRequestDto = {
@@ -157,34 +169,33 @@ export class ManageInviteComponent implements OnDestroy {
     this._inviteService.createShiftPlanInvite(plan.id, createData).pipe(
       this._toastService.tapCreating("Invite", item => item.code)
     ).subscribe(() => {
-      this.inviteChanged.emit();
+      this.inviteChanged.next({navigateTo: plan, mode: "invites"});
       this.form.reset();
     });
   }
 
-  protected revoke(invite: ShiftPlanInviteDto) {
+  protected revoke(invite: ShiftPlanInviteDto, plan: ShiftPlanDto) {
     this._inviteService.revokeShiftPlanInvite(invite.id).pipe(
       this._toastService.tapSuccess("Invite Revoked"),
       this._toastService.tapError("Error revoking invite", mapValue.apiErrorToMessage)
     ).subscribe(() => {
-      console.log(invite);
-      this.inviteChanged.emit();
+      this.inviteChanged.next({navigateTo: plan, mode: "invites"});
     });
   }
 
-  protected remove(invite: ShiftPlanInviteDto) {
+  protected remove(invite: ShiftPlanInviteDto, plan: ShiftPlanDto) {
     this._inviteService.deleteShiftPlanInvite(invite.id).pipe(
       this._toastService.tapDeleting("Invite", () => invite.code)
     ).subscribe(() => {
-      this.inviteChanged.emit();
+      this.inviteChanged.next({navigateTo: plan, mode: "invites"});
     });
   }
 
-  protected getOrder() {
-    if(this.invite === undefined) {
-      return Number.MIN_SAFE_INTEGER;
+  protected getOrder(invite?: ShiftPlanInviteDto) {
+    if(invite === undefined) {
+      return Number.MIN_SAFE_INTEGER + Number.MIN_SAFE_INTEGER / -2;
     }
-    return Math.floor((new Date(this.invite.createdAt).getTime() / 1000)) * -1;
+    return Math.floor((new Date(invite.createdAt).getTime() / 1000)) * -1 + Number.MIN_SAFE_INTEGER / -2;
   }
 
 }

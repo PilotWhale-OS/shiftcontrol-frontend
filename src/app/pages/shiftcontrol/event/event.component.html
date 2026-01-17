@@ -188,30 +188,20 @@
 
         </div>
       }
-    </div>
 
-    <!-- shift plans list -->
-    <div class="grid gap-md auto-rows-fr grid-cols-[repeat(auto-fit,min(100%,20rem))] grow h-fit">
+      @if ((isPlannerInEvent$ | async) === true) {
+        <!-- manage plans -->
+        <div class="card interaction" routerLink="plans">
 
-      @if (userType$ | async; as userType) {
-        @if (userType === 'ADMIN') {
-          <div class="card spotlight interaction grid place-items-center p-lg"
-               [routerLink]="'create-plan'">
-            <h2 class="compact">
-              <fa-icon [icon]="icons.create" class="pr-sm" />
-              Create new shift plan
-            </h2>
-          </div>
-        }
-      }
-
-      @for (plan of event.shiftPlans; track plan) {
-        <div class="card interaction" [routerLink]="'/plans/' + plan.id">
-          <small>Shift Plan</small>
-          <h1>{{plan.name}}</h1>
+          <!-- info -->
+          <h1>
+            <fa-icon [icon]="icons.manage" class="icon" />
+            Manage Shift Plans
+          </h1>
           <p>
-            {{plan.shortDescription ?? "No description provided."}}
+            Manage shift plan invites, roles, shifts, and assignments.
           </p>
+
         </div>
       }
     </div>

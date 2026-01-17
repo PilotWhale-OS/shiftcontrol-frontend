@@ -1,0 +1,68 @@
+@if (event$ | async; as event) {
+
+  <div class="flex flex-row flex-wrap gap-lg w-full">
+
+    <div class="card grid grid-cols-2 gap-lg gap-x-xl h-fit w-fit">
+
+      <!-- info caption -->
+      <h1 class="compact signature-gradient-font">Manage Shift Plans</h1>
+
+      <div class="badge w-fit place-self-end">
+        <fa-icon [icon]="icons.plan" />
+        {{ event.shiftPlans.length }} Shift Plan{{event.shiftPlans.length > 1 ? 's' : ''}}
+      </div>
+
+      <span class="col-span-2">
+        Shift plans are management groups for different tasks.<br>Each plan has its own set of roles and shift configurations.
+      </span>
+
+      <div class="flex flex-col gap-sm ">
+        <small><fa-icon [icon]="icons.plan" class="pr-sm" />Shift Plan</small>
+        <label for="event-plans-plan">Select a shift plan to manage</label>
+        <xsb-input-select #shiftPlan
+                        [formControl]="form.controls.shiftPlan"
+                        [xsb-typed]="[shiftPlan, form.controls.shiftPlan]"
+                        [options]="(shiftPlanOptions$ | async) ?? []"
+                        [nullable]="true"
+                        [comparatorFn]="idComparatorFn"
+                        nullName="New Shift Plan"
+                        name="event-plans-plan"
+        />
+      </div>
+
+      <div class="flex flex-col gap-sm">
+        <small><fa-icon [icon]="icons.manage" class="pr-sm" />Topic</small>
+        <label for="event-plans-topic">Select a topic to manage</label>
+        <xsb-input-multitoggle #managementMode
+                          [formControl]="form.controls.managementMode"
+                          [xsb-typed]="[managementMode, form.controls.managementMode]"
+                          [options]="modeOptions"
+                          name="event-plans-topic"
+        />
+      </div>
+
+    </div>
+
+    @switch (mode$ | async){
+      @case ("details") {
+        @if (planManageData$ | async; as manageData) {
+          <app-manage-plan-details [manageData]="manageData ?? undefined" (planChanged)="refreshData($event)" />
+        }
+      }
+      @case ("invites") {
+        @if (invitesManageData$ | async; as manageData) {
+          @for (inviteManageData of manageData; track inviteManageData.invite?.id){
+            <app-manage-invite [manageData]="inviteManageData ?? undefined" (inviteChanged)="refreshData($event)" />
+          }
+        }
+      }
+      @case ("roles") {
+        @if (rolesManageData$ | async; as manageData) {
+          @for (roleManageData of manageData; track roleManageData.role?.id){
+            <app-manage-role [manageData]="roleManageData ?? undefined" (roleChanged)="refreshData($event)" />
+          }
+        }
+      }
+    }
+  </div>
+}

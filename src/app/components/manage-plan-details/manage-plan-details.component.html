@@ -1,0 +1,88 @@
+<!-- manage details -->
+<div class="card grid grid-cols-2 gap-x-xl gap-y-lg h-fit row-start-1">
+
+  <h1 class="signature-gradient-font compact">{{(manageData$ | async)?.plan?.name ?? "Create New Plan"}}</h1>
+
+  @if ((manageData$ | async)?.plan !== undefined){
+    <div class="badge w-fit justify-self-end hint" >
+      <fa-icon [icon]="icons.plan" />
+      Shift Plan
+    </div>
+  } @else {
+    <div class="badge w-fit justify-self-end success" >
+      <fa-icon [icon]="icons.plan" />
+      New Shift Plan
+    </div>
+  }
+
+  <div class="flex flex-col gap-sm col-start-1 row-start-2">
+    <small><fa-icon [icon]="icons.name" class="pr-sm" />Plan Name</small>
+    <label for="plan-manage-name">Expressive name for the plan</label>
+    <xsb-input-text #name
+                    [formControl]="form.controls.name"
+                    [xsb-typed]="[name, form.controls.name]"
+                    name="plan-manage-name" placeholder="Plan name"
+    />
+  </div>
+
+  <div class="flex flex-col gap-sm col-start-2 row-start-2">
+    <small><fa-icon [icon]="icons.rewards" class="pr-sm" />Reward Points</small>
+    <label for="plan-manage-points">Points per minute, if no role selected</label>
+    <xsb-input-number #defaultRewardPointsPerMinute
+                      [formControl]="form.controls.defaultRewardPointsPerMinute"
+                      [xsb-typed]="[defaultRewardPointsPerMinute, form.controls.defaultRewardPointsPerMinute]"
+                      name="plan-manage-points" placeholder="Default points per minute"
+    />
+  </div>
+
+  <div class="flex flex-col gap-sm col-start-1 row-start-3 col-span-2">
+    <small><fa-icon [icon]="icons.shortDescription" class="pr-sm" />Caption</small>
+    <label for="plan-manage-caption">Short description, shown in the plan preview</label>
+    <xsb-input-text #shortDescription
+                    [formControl]="form.controls.shortDescription"
+                    [xsb-typed]="[shortDescription, form.controls.shortDescription]"
+                    name="plan-manage-caption" placeholder="Plan caption"
+    />
+  </div>
+
+  <div class="flex flex-col gap-sm col-start-1 row-start-4 col-span-2">
+    <small><fa-icon [icon]="icons.longDescription" class="pr-sm" />Description</small>
+    <label for="plan-manage-description">Detailed description, shown in the plan overview</label>
+    <xsb-input-text #longDescription
+                    [formControl]="form.controls.longDescription"
+                    type="area"
+                    [xsb-typed]="[longDescription, form.controls.longDescription]"
+                    name="plan-manage-description" placeholder="Plan description"
+    />
+  </div>
+
+  @if (manageData$ | async; as manageData){
+    <div class="col-span-2 flex gap-x-lg items-center justify-center pt-md">
+      @if (manageData.plan === undefined){
+        <xsb-input-button content="Create Plan" action="success" (click)="create(manageData.eventId)" />
+      }
+      @else {
+        <xsb-input-button content="Update Plan" action="success" (click)="update(manageData.plan)" />
+        <xsb-input-button content="Delete Plan" action="danger" (click)="showPlanDeleteConfirm = true" />
+
+        @if (showPlanDeleteConfirm){
+          <xsb-dialog action="danger" danger="Delete Plan" (closeDialog)="showPlanDeleteConfirm = false; $event === 'danger' && delete(manageData.plan)">
+            <ng-container dialog-header>
+              <h1>Delete Shift Plan</h1>
+            </ng-container>
+
+            <ng-container dialog-body>
+              <p>
+                Are you sure you want to delete this shift plan?<br>
+                This cannot be made undone.<br>
+                All associated data (roles, shifts, positions, signups) will be deleted.
+              </p>
+            </ng-container>
+          </xsb-dialog>
+        }
+      }
+    </div>
+  }
+</div>
+
+
