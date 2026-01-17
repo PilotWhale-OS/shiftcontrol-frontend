@@ -65,7 +65,7 @@
   </div>
 
   @if (showDeleteConfirm && manageData.role !== undefined){
-    <xsb-dialog action="danger" danger="Delete Role" (closeDialog)="showDeleteConfirm = false; $event === 'danger' && delete(manageData.role, manageData.plan)">
+    <xsb-dialog action="danger" danger="Delete Role" (closeDialog)="showDeleteConfirm = false; $event === 'danger' && delete(manageData.role)">
       <ng-container dialog-header>
         <h1>Delete Role "{{manageData.role.name}}"</h1>
       </ng-container>

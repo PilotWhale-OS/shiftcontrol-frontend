@@ -23,10 +23,10 @@
         <xsb-input-button content="Create" size="text" (click)="create(manageData.plan)" />
       }
       @else if(manageData.invite.active) {
-        <xsb-input-button content="Revoke" size="text" (click)="revoke(manageData.invite, manageData.plan)" />
+        <xsb-input-button content="Revoke" size="text" (click)="revoke(manageData.invite)" />
       }
       @else {
-        <xsb-input-button content="Remove" size="text" (click)="remove(manageData.invite, manageData.plan)" />
+        <xsb-input-button content="Remove" size="text" (click)="remove(manageData.invite)" />
       }
 
     </div>

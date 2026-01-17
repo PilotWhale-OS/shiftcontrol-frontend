@@ -23,9 +23,7 @@
                         [formControl]="form.controls.shiftPlan"
                         [xsb-typed]="[shiftPlan, form.controls.shiftPlan]"
                         [options]="(shiftPlanOptions$ | async) ?? []"
-                        [nullable]="true"
                         [comparatorFn]="idComparatorFn"
-                        nullName="New Shift Plan"
                         name="event-plans-plan"
         />
       </div>
@@ -43,26 +41,32 @@
 
     </div>
 
-    @switch (mode$ | async){
-      @case ("details") {
-        @if (planManageData$ | async; as manageData) {
-          <app-manage-plan-details [manageData]="manageData ?? undefined" (planChanged)="refreshData($event)" />
-        }
-      }
-      @case ("invites") {
-        @if (invitesManageData$ | async; as manageData) {
-          @for (inviteManageData of manageData; track inviteManageData.invite?.id){
-            <app-manage-invite [manageData]="inviteManageData ?? undefined" (inviteChanged)="refreshData($event)" />
+    @if (planManageData$ | async; as plan){
+
+      <div class="card flex flex-col gap-md flex-1">
+
+        <h1 class="compact signature-gradient-font">{{ plan.plan?.name }}: Manage {{selectedMode$ | async}}</h1>
+
+        <div class="flex flex-row flex-wrap gap-md">
+          @switch (mode$ | async){
+            @case ("invites") {
+              @if (invitesManageData$ | async; as manageData) {
+                @for (inviteManageData of manageData; track inviteManageData.invite?.id){
+                  <app-manage-invite [manageData]="inviteManageData ?? undefined" (inviteChanged)="refreshData()" />
+                }
+              }
+            }
+            @case ("roles") {
+              @if (rolesManageData$ | async; as manageData) {
+                @for (roleManageData of manageData; track roleManageData.role?.id){
+                  <app-manage-role [manageData]="roleManageData ?? undefined" (roleChanged)="refreshData()" />
+                }
+              }
+            }
           }
-        }
-      }
-      @case ("roles") {
-        @if (rolesManageData$ | async; as manageData) {
-          @for (roleManageData of manageData; track roleManageData.role?.id){
-            <app-manage-role [manageData]="roleManageData ?? undefined" (roleChanged)="refreshData($event)" />
-          }
-        }
-      }
+        </div>
+      </div>
+
     }
   </div>
 }

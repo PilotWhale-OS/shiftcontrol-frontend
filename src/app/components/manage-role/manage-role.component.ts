@@ -14,7 +14,6 @@ import {icons} from "../../util/icons";
 import {InputNumberComponent} from "../inputs/input-number/input-number.component";
 import {ToastService} from "../../services/toast/toast.service";
 import {BehaviorSubject, Subject} from "rxjs";
-import {planManagementNavigation} from "../../pages/shiftcontrol/event/manage-shift-plans/manage-shift-plans.component";
 
 @Component({
   selector: "app-manage-role",
@@ -36,7 +35,7 @@ import {planManagementNavigation} from "../../pages/shiftcontrol/event/manage-sh
 export class ManageRoleComponent {
 
   @Output()
-  roleChanged = new Subject<planManagementNavigation>();
+  roleChanged = new Subject<void>();
 
   protected readonly manageData$ =
     new BehaviorSubject<undefined | { plan: ShiftPlanDto; role: RoleDto | undefined }>(undefined);
@@ -94,7 +93,7 @@ export class ManageRoleComponent {
         this._toastService.tapCreating("Role", item => item.name) :
         this._toastService.tapSaving("Role", item => item.name)
     ).subscribe(() => {
-      this.roleChanged.next({navigateTo: plan, mode: "roles"});
+      this.roleChanged.next();
 
       if(role === undefined) {
         this.form.reset();
@@ -102,11 +101,11 @@ export class ManageRoleComponent {
     });
   }
 
-  protected delete(role: RoleDto, plan: ShiftPlanDto) {
+  protected delete(role: RoleDto) {
     this._roleService.deleteRole(role.id).pipe(
       this._toastService.tapDeleting("Role")
     ).subscribe(() =>{
-      this.roleChanged.next({navigateTo: plan, mode: "roles"});
+      this.roleChanged.next();
     });
   }
 

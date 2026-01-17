@@ -16,7 +16,6 @@ import {InputNumberComponent} from "../inputs/input-number/input-number.componen
 import {icons} from "../../util/icons";
 import {ToastService} from "../../services/toast/toast.service";
 import {mapValue} from "../../util/value-maps";
-import {planManagementNavigation} from "../../pages/shiftcontrol/event/manage-shift-plans/manage-shift-plans.component";
 
 @Component({
   selector: "app-manage-invite",
@@ -40,7 +39,7 @@ import {planManagementNavigation} from "../../pages/shiftcontrol/event/manage-sh
 export class ManageInviteComponent implements OnDestroy {
 
   @Output()
-  inviteChanged = new Subject<planManagementNavigation>();
+  inviteChanged = new Subject<void>();
 
   protected readonly manageData$ =
     new BehaviorSubject<undefined | { plan: ShiftPlanDto; invite: ShiftPlanInviteDto | undefined }>(undefined);
@@ -169,25 +168,25 @@ export class ManageInviteComponent implements OnDestroy {
     this._inviteService.createShiftPlanInvite(plan.id, createData).pipe(
       this._toastService.tapCreating("Invite", item => item.code)
     ).subscribe(() => {
-      this.inviteChanged.next({navigateTo: plan, mode: "invites"});
+      this.inviteChanged.next();
       this.form.reset();
     });
   }
 
-  protected revoke(invite: ShiftPlanInviteDto, plan: ShiftPlanDto) {
+  protected revoke(invite: ShiftPlanInviteDto) {
     this._inviteService.revokeShiftPlanInvite(invite.id).pipe(
       this._toastService.tapSuccess("Invite Revoked"),
       this._toastService.tapError("Error revoking invite", mapValue.apiErrorToMessage)
     ).subscribe(() => {
-      this.inviteChanged.next({navigateTo: plan, mode: "invites"});
+      this.inviteChanged.next();
     });
   }
 
-  protected remove(invite: ShiftPlanInviteDto, plan: ShiftPlanDto) {
+  protected remove(invite: ShiftPlanInviteDto) {
     this._inviteService.deleteShiftPlanInvite(invite.id).pipe(
       this._toastService.tapDeleting("Invite", () => invite.code)
     ).subscribe(() => {
-      this.inviteChanged.next({navigateTo: plan, mode: "invites"});
+      this.inviteChanged.next();
     });
   }
 

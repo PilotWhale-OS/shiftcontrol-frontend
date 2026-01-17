@@ -34,7 +34,7 @@ import {planManagementNavigation} from "../../pages/shiftcontrol/event/manage-sh
 export class ManagePlanDetailsComponent {
 
   @Output()
-  planChanged = new Subject<planManagementNavigation>();
+  planChanged = new Subject<void>();
 
   protected readonly form;
   protected readonly icons = icons;
@@ -84,7 +84,7 @@ export class ManagePlanDetailsComponent {
         defaultNoRolePointsPerMinute: this.form.controls.defaultRewardPointsPerMinute.value
       }).pipe(
         this._toastService.tapCreating("Shift Plan", item => item.shiftPlan.name)
-      ).subscribe((created) => this.planChanged.next({navigateTo: created.shiftPlan, mode: "invites"}));
+      ).subscribe(() => this.planChanged.next());
     } else {
       this._toastService.showError("Invalid Shift Plan", "Please provide valid shift plan details.");
     }
@@ -94,7 +94,7 @@ export class ManagePlanDetailsComponent {
 
     this._planService.deleteShiftPlan(shiftPlan.id).pipe(
       this._toastService.tapDeleting("Shift Plan")
-    ).subscribe(() => this.planChanged.next({navigateTo: null, mode: "details"}));
+    ).subscribe(() => this.planChanged.next());
   }
 
   protected update(shiftPlan: ShiftPlanDto) {
@@ -109,7 +109,7 @@ export class ManagePlanDetailsComponent {
         defaultNoRolePointsPerMinute: this.form.controls.defaultRewardPointsPerMinute.value
       }).pipe(
         this._toastService.tapSaving("Shift Plan", item => item.name)
-      ).subscribe(() => this.planChanged.next({navigateTo: shiftPlan, mode: "details"}));
+      ).subscribe(() => this.planChanged.next());
     } else {
       this._toastService.showError("Invalid Shift Plan", "Please provide valid shift plan details.");
     }

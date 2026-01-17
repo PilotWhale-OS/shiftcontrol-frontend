@@ -1,4 +1,4 @@
-import {Component, inject, OnDestroy} from "@angular/core";
+import {Component, inject} from "@angular/core";
 import {PageService} from "../../../../services/page/page.service";
 import { icons } from "../../../../util/icons";
 import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
@@ -12,14 +12,14 @@ import {
 import {
   BehaviorSubject,
   combineLatestWith,
-  debounceTime,
+  delay,
   filter,
   map, of,
-  shareReplay, skip,
+  shareReplay,
   startWith,
-  Subscription, switchMap,
+  switchMap,
   take,
-  tap
+  tap, withLatestFrom
 } from "rxjs";
 import {BC_EVENT} from "../../../../breadcrumbs";
 import {InputMultiToggleComponent, MultiToggleOptions} from "../../../../components/inputs/input-multitoggle/input-multi-toggle.component";
@@ -27,11 +27,10 @@ import {AsyncPipe} from "@angular/common";
 import {InputSelectComponent, SelectOptions} from "../../../../components/inputs/input-select/input-select.component";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {TypedFormControlDirective} from "../../../../directives/typed-form-control.directive";
-import {ManagePlanDetailsComponent} from "../../../../components/manage-plan-details/manage-plan-details.component";
 import {ManageInviteComponent} from "../../../../components/manage-invite/manage-invite.component";
 import {ManageRoleComponent} from "../../../../components/manage-role/manage-role.component";
 
-export type managementMode = "details" | "invites" | "assignments" | "users" | "roles";
+export type managementMode = "invites" | "assignments" | "users" | "roles";
 export interface planManagementNavigation {
   navigateTo: ShiftPlanDto | null;
   mode: managementMode;
@@ -46,14 +45,13 @@ export interface planManagementNavigation {
     TypedFormControlDirective,
     ReactiveFormsModule,
     InputMultiToggleComponent,
-    ManagePlanDetailsComponent,
     ManageInviteComponent,
     ManageRoleComponent
   ],
   templateUrl: "./manage-shift-plans.component.html",
   styleUrl: "./manage-shift-plans.component.scss"
 })
-export class ManageShiftPlansComponent implements OnDestroy {
+export class ManageShiftPlansComponent {
 
   protected readonly form;
   protected readonly event$ = new BehaviorSubject<EventShiftPlansOverviewDto | undefined>(undefined);
@@ -62,10 +60,10 @@ export class ManageShiftPlansComponent implements OnDestroy {
   protected readonly rolesManageData$;
   protected readonly shiftPlanOptions$;
   protected readonly mode$;
+  protected readonly selectedMode$;
   protected readonly icons = icons;
 
   protected readonly modeOptions: MultiToggleOptions<managementMode> = [
-    {name: "Details", value: "details"},
     {name: "Invites", value: "invites"},
     {name: "Roles", value: "roles"},
     {name: "Assignments", value: "assignments"},
@@ -80,8 +78,6 @@ export class ManageShiftPlansComponent implements OnDestroy {
   private readonly _inviteService = inject(ShiftPlanInviteEndpointService);
   private readonly _roleService = inject(RoleEndpointService);
 
-  private readonly _formValueSubscription: Subscription;
-
   constructor() {
     const eventId = this._route.snapshot.paramMap.get("eventId");
     if(eventId === null) {
@@ -91,7 +87,7 @@ export class ManageShiftPlansComponent implements OnDestroy {
 
     this.form = this._fb.group({
       shiftPlan: this._fb.nonNullable.control<ShiftPlanDto | null>(null),
-      managementMode: this._fb.nonNullable.control<managementMode>("details")
+      managementMode: this._fb.nonNullable.control<managementMode>("invites")
     });
 
     this._eventService.getShiftPlansOverviewOfEvent(eventId).pipe(
@@ -107,6 +103,12 @@ export class ManageShiftPlansComponent implements OnDestroy {
       map(event => event.shiftPlans.map(plan => ({name: plan.name, value: plan})) as SelectOptions<ShiftPlanDto>),
       shareReplay()
     );
+
+    /* init selection so with hacky delay so that options loaded */
+    this.shiftPlanOptions$.pipe(
+      take(1),
+      delay(100)
+    ).subscribe(data => this.form.controls.shiftPlan.setValue(data[0].value));
 
     /* load plan when selection changes */
     this.planManageData$ = this.event$.pipe(
@@ -159,64 +161,22 @@ export class ManageShiftPlansComponent implements OnDestroy {
       shareReplay()
     );
 
-    /* UI function to disable modes during create */
-    this._formValueSubscription = this.form.valueChanges.pipe(
-      startWith(this.form.value),
-      debounceTime(100)
-    ).subscribe(value => {
-
-      /* disable management mode when creating new plan */
-      if(value.shiftPlan === null && this.form.controls.managementMode.enabled) {
-        this.form.controls.managementMode.setValue("details");
-        this.form.controls.managementMode.disable();
-      }
-
-      /* enable otherwise */
-      if(value.shiftPlan !== null && this.form.controls.managementMode.disabled) {
-        this.form.controls.managementMode.enable();
-        this.form.controls.managementMode.setValue("details");
-      }
-    });
-  }
-
-  ngOnDestroy(): void {
-    this._formValueSubscription.unsubscribe();
+    this.selectedMode$ = this.mode$.pipe(
+      map(value => this.modeOptions.find(mode => mode.value === value)?.name)
+    );
   }
 
   protected idComparatorFn(a: {id: string} | null, b: {id: string} | null): boolean {
     return a?.id === b?.id;
   }
 
-  protected refreshData(navigation: planManagementNavigation) {
-    this.planManageData$.pipe(
+  protected refreshData() {
+    this.event$.pipe(
       take(1),
-      switchMap(data => this._eventService.getShiftPlansOverviewOfEvent(data.eventId)),
-      combineLatestWith(this.shiftPlanOptions$.pipe(
-        skip(1), // skip current options
-        take(1), // new one after refresh
-        startWith(undefined), // trigger initial emission
-      )),
-      tap(([event, options]) => {
-        if(options === undefined) {
-          this.event$.next(event);
-        } else {
-          if(navigation.navigateTo === null) {
-            this.form.controls.shiftPlan.setValue(null);
-          } else {
-            const plan = navigation.navigateTo;
-            const matchingOption = options.find(option => option.value.id === plan.id);
-            if(matchingOption !== undefined) {
-              setTimeout(() => {
-                /* hack so that input has time to load new options */
-                this.form.controls.shiftPlan.setValue(matchingOption.value, {emitEvent: true});
-                setTimeout(() => {
-                  this.form.controls.managementMode.setValue(navigation.mode, {emitEvent: true});
-                },100);
-              }, 50);
-            }
-          }
-        }
-      })
-    ).subscribe();
+      switchMap(event =>
+        event === undefined ? of(undefined) :
+        this._eventService.getShiftPlansOverviewOfEvent(event?.eventOverview.id)
+      )
+    ).subscribe(event => this.event$.next(event));
   }
 }
