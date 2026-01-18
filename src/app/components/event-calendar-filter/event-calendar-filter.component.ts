@@ -16,7 +16,7 @@ export enum ShiftCalendarViewMode {
 }
 
 @Component({
-  selector: "app-shift-calendar-filter",
+  selector: "app-event-calendar-filter",
   imports: [
     InputTextComponent,
     TypedFormControlDirective,
@@ -28,16 +28,16 @@ export enum ShiftCalendarViewMode {
     DecimalPipe
   ],
   standalone: true,
-  templateUrl: "./shift-calendar-filter.component.html",
-  styleUrl: "./shift-calendar-filter.component.scss"
+  templateUrl: "./event-calendar-filter.component.html",
+  styleUrl: "./event-calendar-filter.component.scss"
 })
-export class ShiftCalendarFilterComponent {
+export class EventCalendarFilterComponent {
 
   @Input()
   public showFilters = false;
 
   @Input()
-  public showFilterForm = true;
+  public showShiftFilterForm = true;
 
   @Input()
   public statistics?: ScheduleStatisticsDto;
@@ -47,6 +47,9 @@ export class ShiftCalendarFilterComponent {
 
   @Input()
   public locationsOptions: SelectOptions<string> = [];
+
+  @Input()
+  public plansOptions: SelectOptions<string> = [];
 
   public readonly availabilityOptions: SelectOptions<ShiftRelevancesEnum> = [
     {name: "Your Shifts", value: ShiftRelevancesEnum.MyShifts},
@@ -75,6 +78,7 @@ export class ShiftCalendarFilterComponent {
     this.searchForm = this._fb.group({
       shiftName: this._fb.nonNullable.control<string>(""),
       rolesList: this._fb.nonNullable.control<string[]>([]),
+      plansList: this._fb.nonNullable.control<string[]>([]),
       locationsList: this._fb.nonNullable.control<string[]>([]),
       relevanceList: this._fb.nonNullable.control<ShiftRelevancesEnum[]>([])
     });

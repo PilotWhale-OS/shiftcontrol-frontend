@@ -9,7 +9,7 @@ import {
   LocationEndpointService, ShiftColumnDto, EventScheduleEndpointService, EventScheduleContentDto
 } from "../../../../../shiftservice-client";
 import {BC_EVENT} from "../../../../breadcrumbs";
-import {ShiftCalendarFilterComponent} from "../../../../components/shift-calendar-filter/shift-calendar-filter.component";
+import {EventCalendarFilterComponent} from "../../../../components/event-calendar-filter/event-calendar-filter.component";
 import {calendarConfig, ShiftCalendarGridComponent} from "../../../../components/shift-calendar-grid/shift-calendar-grid.component";
 import {
   BehaviorSubject,
@@ -34,7 +34,7 @@ import UserTypeEnum = AccountInfoDto.UserTypeEnum;
 @Component({
   selector: "app-manage-schedule",
   imports: [
-    ShiftCalendarFilterComponent,
+    EventCalendarFilterComponent,
     ShiftCalendarGridComponent,
     DialogComponent,
     AsyncPipe,
@@ -52,7 +52,7 @@ export class ManageScheduleComponent implements OnDestroy {
   private readonly _subscriptions: Subscription[];
 
   private readonly _shiftPlanSchedule = viewChild(ShiftCalendarGridComponent);
-  private readonly _filterComponent = viewChild(ShiftCalendarFilterComponent);
+  private readonly _filterComponent = viewChild(EventCalendarFilterComponent);
 
   private readonly _route = inject(ActivatedRoute);
   private readonly _router = inject(Router);

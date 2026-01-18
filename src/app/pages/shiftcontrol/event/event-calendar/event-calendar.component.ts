@@ -1,6 +1,6 @@
 import {Component, inject, OnDestroy, viewChild} from "@angular/core";
 import {calendarConfig, ShiftCalendarGridComponent} from "../../../../components/shift-calendar-grid/shift-calendar-grid.component";
-import {ShiftCalendarFilterComponent} from "../../../../components/shift-calendar-filter/shift-calendar-filter.component";
+import {EventCalendarFilterComponent} from "../../../../components/event-calendar-filter/event-calendar-filter.component";
 import {PageService} from "../../../../services/page/page.service";
 import {BC_EVENT} from "../../../../breadcrumbs";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -38,7 +38,7 @@ import UserTypeEnum = AccountInfoDto.UserTypeEnum;
   selector: "app-event-calendar",
   imports: [
     ShiftCalendarGridComponent,
-    ShiftCalendarFilterComponent,
+    EventCalendarFilterComponent,
     AsyncPipe,
     DialogComponent,
     ManageShiftComponent
@@ -53,7 +53,7 @@ export class EventCalendarComponent implements OnDestroy {
   protected shiftChanged$ = new Subject<ShiftDto>();
 
   private readonly _shiftPlanSchedule = viewChild(ShiftCalendarGridComponent);
-  private readonly _filterComponent = viewChild(ShiftCalendarFilterComponent);
+  private readonly _filterComponent = viewChild(EventCalendarFilterComponent);
 
   private readonly _subscriptions: Subscription[];
 
@@ -105,7 +105,7 @@ export class EventCalendarComponent implements OnDestroy {
       switchMap(component => component?.searchForm?.valueChanges ?? of(undefined)),
       filter(data => data !== undefined),
       debounceTime(200),
-      startWith({} as Partial<ShiftCalendarFilterComponent["searchForm"]["value"]>)
+      startWith({} as Partial<EventCalendarFilterComponent["searchForm"]["value"]>)
     );
 
     /* observable containing form view options values */
@@ -171,10 +171,11 @@ export class EventCalendarComponent implements OnDestroy {
 
     /* set filter values with api data */
     subs.push(filterComponent$.pipe(
-      combineLatestWith(filterData$)
-    ).subscribe(([filterComponent, filterData]) => {
+      combineLatestWith(filterData$, event$)
+    ).subscribe(([filterComponent, filterData, event]) => {
       filterComponent.rolesOptions = filterData.roles.map(role => ({name: role.name, value: role.id}));
       filterComponent.locationsOptions = filterData.locations.map(location => ({name: location.name, value: location.id}));
+      filterComponent.plansOptions = event.shiftPlans.map(plan => ({name: plan.name, value: plan.id}));
     }));
 
     /* react to calendar config and set in component */
@@ -281,6 +282,7 @@ export class EventCalendarComponent implements OnDestroy {
             shiftName: mapValue.undefinedIfEmptyString(filters?.shiftName),
             locationIds: filters?.locationsList,
             roleIds: filters?.rolesList,
+            shiftPlanIds: filters?.plansList,
             shiftRelevances: filters?.relevanceList
           })
         );
