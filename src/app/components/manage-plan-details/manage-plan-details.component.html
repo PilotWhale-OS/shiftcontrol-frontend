@@ -31,7 +31,7 @@
 
     <div class="grid grid-cols-[20rem_20rem] gap-lg">
 
-      <div class="flex flex-col gap-sm col-start-1 row-start-1">
+      <div class="flex flex-col gap-xs col-start-1 row-start-1">
         <small><fa-icon [icon]="icons.name" class="pr-sm" />Plan Name</small>
         <label for="plan-manage-name">Expressive name for the plan</label>
         <xsb-input-text #name
@@ -41,7 +41,7 @@
         />
       </div>
 
-      <div class="flex flex-col gap-sm col-start-2 row-start-1">
+      <div class="flex flex-col gap-xs col-start-2 row-start-1">
         <small><fa-icon [icon]="icons.rewards" class="pr-sm" />Reward Points</small>
         <label for="plan-manage-points">Points per minute, if no role selected</label>
         <xsb-input-number #defaultRewardPointsPerMinute
@@ -51,7 +51,7 @@
         />
       </div>
 
-      <div class="flex flex-col gap-sm col-start-1 row-start-2 col-span-2">
+      <div class="flex flex-col gap-xs col-start-1 row-start-2 col-span-2">
         <small><fa-icon [icon]="icons.shortDescription" class="pr-sm" />Caption</small>
         <label for="plan-manage-caption">Short description, shown in the plan preview</label>
         <xsb-input-text #shortDescription
@@ -61,7 +61,7 @@
         />
       </div>
 
-      <div class="flex flex-col gap-sm col-start-1 row-start-3 col-span-2">
+      <div class="flex flex-col gap-xs col-start-1 row-start-3 col-span-2">
         <small><fa-icon [icon]="icons.longDescription" class="pr-sm" />Description</small>
         <label for="plan-manage-description">Detailed description, shown in the plan overview</label>
         <xsb-input-text #longDescription

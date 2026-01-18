@@ -39,11 +39,6 @@ export type SelectOptions<TData> = Array<{ name: string; value: TData }>;
 })
 export class InputSelectComponent<TData> implements TypedControlValueAccessor<TData | null>, OnInit, OnDestroy {
 
-  /**
-   * the selection items that can be chosen of
-   */
-  @Input()
-  options: SelectOptions<TData> = [];
 
   /**
    * border display
@@ -111,6 +106,7 @@ export class InputSelectComponent<TData> implements TypedControlValueAccessor<TD
   private injector = inject(Injector);
   private _changeDetector = inject(ChangeDetectorRef);
   private _statusSubscription?: Subscription;
+  private _options: SelectOptions<TData> = [];
 
   @HostBinding("attr.id") get hideIdAttr() { return null; }
   @HostBinding("attr.name") get hideNameAttr() { return null; }
@@ -134,6 +130,19 @@ export class InputSelectComponent<TData> implements TypedControlValueAccessor<TD
 
   get allOptions() {
     return [...this.options, ...(this.nullable ? [{ value: null, name: this.nullName }] : [])];
+  }
+
+  get options(){
+    return this._options;
+  }
+
+  /**
+   * the selection items that can be chosen of
+   */
+  @Input()
+  set options(value: SelectOptions<TData>) {
+    this._options = value;
+    this.writeValue(this.value);
   }
 
   @Input()
@@ -185,7 +194,7 @@ export class InputSelectComponent<TData> implements TypedControlValueAccessor<TD
     this.onChange = fn;
 
     /* check if init value has changed before onchange was registered */
-    if (this.initModified !== undefined) {
+    if (this.initModified !== undefined && this.value === this.initModified) {
       this.onChange(this.initModified);
     }
   }

@@ -35,7 +35,7 @@
         <span class="col-span-2">Create a new role to manage volunteer sign-up requirements for shift positions.</span>
       }
 
-      <div class="flex flex-col gap-sm">
+      <div class="flex flex-col gap-xs">
         <small><fa-icon [icon]="icons.name" class="pr-sm" />Role Name</small>
         <xsb-input-text #name
                         [formControl]="form.controls.name"
@@ -44,7 +44,7 @@
         />
       </div>
 
-      <div class="flex flex-col gap-sm">
+      <div class="flex flex-col gap-xs">
         <small><fa-icon [icon]="icons.rewards" class="pr-sm" />Reward Points per minute</small>
         <xsb-input-number #rewardPointsPerMinute
                           [formControl]="form.controls.rewardPointsPerMinute"
@@ -53,7 +53,7 @@
         />
       </div>
 
-      <div class="flex flex-col gap-sm col-span-2">
+      <div class="flex flex-col gap-xs col-span-2">
         <small><fa-icon [icon]="icons.description" class="pr-sm" />Description</small>
         <xsb-input-text #description
                         [formControl]="form.controls.description"

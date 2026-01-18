@@ -31,12 +31,12 @@
 
     </div>
 
-    <div class="grid grid-cols-[10rem_10rem] gap-md">
+    <div class="grid grid-cols-[10rem_10rem] gap-lg">
 
       <!-- show details -->
       @if (manageData.invite !== undefined) {
 
-        <div class="flex flex-col gap-sm">
+        <div class="flex flex-col gap-xs">
           <small><fa-icon [icon]="icons.userType" class="pr-sm" />Invite Type</small> {{getInviteName(manageData.invite)}}
         </div>
 
@@ -44,19 +44,19 @@
           <small><fa-icon [icon]="icons.role" class="pr-sm" />Assigned Roles</small> {{getAssignedRolesList(manageData.invite)}}
         </div>
 
-        <div class="flex flex-col gap-sm">
+        <div class="flex flex-col gap-xs">
           <small><fa-icon [icon]="icons.expiry" class="pr-sm" />Expiry</small> {{
             manageData.invite.expiresAt ? (manageData.invite.expiresAt | date:'mediumDate') : 'No Expiry'
           }}
         </div>
 
-        <div class="flex flex-col gap-sm">
+        <div class="flex flex-col gap-xs">
           <small><fa-icon [icon]="icons.limit" class="pr-sm" />Usage Count Limit</small> {{
             manageData.invite.maxUses ? (manageData.invite.maxUses + " Uses") : 'No Usage Count limit'
           }}
         </div>
 
-        <div class="flex flex-col gap-sm col-span-2">
+        <div class="flex flex-col gap-xs col-span-2">
           <small><fa-icon [icon]="icons.url" class="pr-sm" />Invite Link</small> {{ getInviteLink(manageData.invite) }}
           <xsb-input-button content="Copy Link" size="text" (click)="copyInviteLinkToClipboard(manageData.invite)" />
         </div>
@@ -67,7 +67,7 @@
         <span class="col-span-2">Create a new invite to let other users join as planner or volunteer to this shift plan.</span>
 
         <!--show form-->
-        <div class="flex flex-col gap-sm">
+        <div class="flex flex-col gap-xs">
           <small><fa-icon [icon]="icons.userType" class="pr-sm" />Invite Type</small>
           <xsb-input-select #type
                             [options]="inviteOptions"
@@ -77,7 +77,7 @@
           />
         </div>
 
-        <div class="flex flex-col gap-sm">
+        <div class="flex flex-col gap-xs">
           <small><fa-icon [icon]="icons.role" class="pr-sm" />Assigned Roles</small>
           @if (roleOptions$ | async; as roleOptions) {
             <xsb-input-multiselect #roles
@@ -89,7 +89,7 @@
           }
         </div>
 
-        <div class="flex flex-col gap-sm col-span-2">
+        <div class="flex flex-col gap-xs col-span-2">
           <small><fa-icon [icon]="icons.expiry" class="pr-sm" />Expiry</small>
           <div class="flex flex-row gap-sm items-center">
 
@@ -106,7 +106,7 @@
           </div>
         </div>
 
-        <div class="flex flex-col gap-sm col-span-2">
+        <div class="flex flex-col gap-xs col-span-2">
           <small><fa-icon [icon]="icons.limit" class="pr-sm" />Usage Count Limit</small>
           <div class="flex flex-row gap-sm items-center">
 

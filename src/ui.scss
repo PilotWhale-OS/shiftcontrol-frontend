@@ -1,5 +1,5 @@
 .card {
-  @apply bg-background-card border-framing-card border-ctr transition-colors px-8 py-6 bg-opacity-55;
+  @apply bg-background-card border-framing-card border-ctr transition-colors px-8 py-6 bg-opacity-60;
   border-radius: 1.5rem;
 
   &.ghost {
@@ -12,6 +12,7 @@
 
   &.success {
     @apply border-framing-default_success bg-background-card_success;
+    background: linear-gradient(145deg, rgb(16 83 11 / 10%), rgb(39 89 26 / 14%) 40%, rgb(8 79 3 / 4%) 100%);
 
     &:hover {
       @apply border-framing-item_success;
@@ -20,6 +21,7 @@
 
   &.spotlight {
     @apply border-framing-default_hint bg-background-card_hint;
+    background: linear-gradient(145deg, rgb(54 78 141 / 16%), rgb(37 42 125 / 13%) 40%, rgb(65 66 149 / 11%) 100%);
 
     &:hover {
       @apply border-framing-item_hint;
@@ -50,6 +52,7 @@
 
     &.success {
       @apply border-framing-item_success bg-background-item_success;
+      background: linear-gradient(145deg, rgb(16 83 11 / 15%), rgb(39 89 26 / 21%) 40%, rgb(8 79 3 / 11%) 100%);
 
       &:hover {
         @apply border-framing-highlight_success;

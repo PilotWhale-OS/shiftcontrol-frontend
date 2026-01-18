@@ -1,7 +1,7 @@
-import {Component, inject} from "@angular/core";
+import {Component, inject, OnDestroy} from "@angular/core";
 import {PageService} from "../../../../services/page/page.service";
 import { icons } from "../../../../util/icons";
-import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
+import {FormBuilder,  ReactiveFormsModule} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {
   EventEndpointService,
@@ -12,14 +12,13 @@ import {
 import {
   BehaviorSubject,
   combineLatestWith,
-  delay,
   filter,
   map, of,
   shareReplay,
   startWith,
   switchMap,
   take,
-  tap,
+  tap, withLatestFrom,
 } from "rxjs";
 import {BC_EVENT} from "../../../../breadcrumbs";
 import {InputMultiToggleComponent, MultiToggleOptions} from "../../../../components/inputs/input-multitoggle/input-multi-toggle.component";
@@ -30,12 +29,9 @@ import {TypedFormControlDirective} from "../../../../directives/typed-form-contr
 import {ManageInviteComponent} from "../../../../components/manage-invite/manage-invite.component";
 import {ManageRoleComponent} from "../../../../components/manage-role/manage-role.component";
 import {ManageAssignmentsComponent} from "../../../../components/manage-assignments/manage-assignments.component";
+import {FormRouteSyncService} from "../../../../services/form-route-sync.service";
 
 export type managementMode = "invites" | "assignments" | "users" | "roles";
-export interface planManagementNavigation {
-  navigateTo: ShiftPlanDto | null;
-  mode: managementMode;
-}
 
 @Component({
   selector: "app-manage-shift-plans",
@@ -53,7 +49,7 @@ export interface planManagementNavigation {
   templateUrl: "./manage-shift-plans.component.html",
   styleUrl: "./manage-shift-plans.component.scss"
 })
-export class ManageShiftPlansComponent {
+export class ManageShiftPlansComponent implements OnDestroy {
 
   protected readonly form;
   protected readonly event$ = new BehaviorSubject<EventShiftPlansOverviewDto | undefined>(undefined);
@@ -79,6 +75,7 @@ export class ManageShiftPlansComponent {
   private readonly _eventService = inject(EventEndpointService);
   private readonly _inviteService = inject(ShiftPlanInviteEndpointService);
   private readonly _roleService = inject(RoleEndpointService);
+  private readonly _formSyncService = inject(FormRouteSyncService);
 
   constructor() {
     const eventId = this._route.snapshot.paramMap.get("eventId");
@@ -106,12 +103,6 @@ export class ManageShiftPlansComponent {
       shareReplay()
     );
 
-    /* init selection so with hacky delay so that options loaded */
-    this.shiftPlanOptions$.pipe(
-      take(1),
-      delay(100)
-    ).subscribe(data => this.form.controls.shiftPlan.setValue(data[0].value));
-
     /* load plan when selection changes */
     this.planManageData$ = this.event$.pipe(
       filter(event => event !== undefined),
@@ -123,6 +114,32 @@ export class ManageShiftPlansComponent {
         eventId: event.eventOverview.id
       })),
       shareReplay()
+    );
+
+    this.mode$ = this.form.controls.managementMode.valueChanges.pipe(
+      startWith(this.form.controls.managementMode.value),
+      shareReplay()
+    );
+
+    this.selectedMode$ = this.mode$.pipe(
+      map(value => this.modeOptions.find(mode => mode.value === value)?.name)
+    );
+
+    this._formSyncService.registerForm(
+      "manage-shift-plans",
+      this.form,
+      form => ({
+        planId: form.controls.shiftPlan.value?.id ?? "",
+        mode: form.controls.managementMode.value
+      }),
+      params => this.shiftPlanOptions$.pipe(
+        withLatestFrom(this.planManageData$, this.mode$), /* just to instantly subscribe (exec) plan manage data */
+        take(1),
+        map(([options]) => ({
+            managementMode: params.mode,
+            shiftPlan: options.find(option => option.value.id === params.planId)?.value ?? null,
+          })
+        ))
     );
 
     /* fetch invites when plan changes */
@@ -160,15 +177,10 @@ export class ManageShiftPlansComponent {
         }
       )
     );
+  }
 
-    this.mode$ = this.form.controls.managementMode.valueChanges.pipe(
-      startWith(this.form.controls.managementMode.value),
-      shareReplay()
-    );
-
-    this.selectedMode$ = this.mode$.pipe(
-      map(value => this.modeOptions.find(mode => mode.value === value)?.name)
-    );
+  ngOnDestroy() {
+     this._formSyncService.unregisterForm("manage-shift-plans");
   }
 
   protected idComparatorFn(a: {id: string} | null, b: {id: string} | null): boolean {

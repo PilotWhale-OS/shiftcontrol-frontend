@@ -39,7 +39,7 @@ export class ShiftDetailsComponent {
       filter(shift => shift !== undefined),
       map(shift => ({
         planId: shift.shiftPlan.id,
-        eventId: shift.shiftPlan.id,
+        eventId: shift.event.id,
         shift: shift.shift,
         availableActivities: shift.shift.relatedActivity === undefined ?
           [] :

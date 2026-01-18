@@ -1,5 +1,13 @@
 @if (size === "text") {
-  <input [type]="type" class="" [ngClass]="{
+  <div class="flex flex-row items-center gap-sm">
+    @if (icon && !lock) {
+      <fa-icon [icon]="icon" class="opacity-50" [ngClass]="{
+      'text-text-danger' : action === 'danger',
+      'text-text-success' : action === 'success',
+      'text-default' : action === 'normal',
+    }" />
+    }
+    <input [type]="type" class="" [ngClass]="{
     'pointer-events-none opacity-60' : lock,
 
     'text-framing-default_danger' : action === 'danger',
@@ -8,6 +16,7 @@
 
     'cursor-pointer transition-all opacity-100 hover:opacity-80 underline' : !lock
   }" (click)="preventDefault($event)" [name]="name" tabindex="0" [value]="content" />
+  </div>
 }
 
 @else {

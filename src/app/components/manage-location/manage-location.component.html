@@ -40,7 +40,7 @@
       <span>Create a new location to organize activities and shifts of this event.</span>
     }
 
-    <div class="flex flex-col gap-sm">
+    <div class="flex flex-col gap-xs">
       <small><fa-icon [icon]="icons.name" class="pr-sm" />Location Name</small>
       <xsb-input-text #name [disguise]="(isPretalxManaged$ | async) ?? false"
                       [formControl]="form.controls.name"
@@ -49,7 +49,7 @@
       />
     </div>
 
-    <div class="flex flex-col gap-sm">
+    <div class="flex flex-col gap-xs">
       <small><fa-icon [icon]="icons.description" class="pr-sm" />Description</small>
       <xsb-input-text #description [disguise]="(isPretalxManaged$ | async) ?? false"
                       [formControl]="form.controls.description"
@@ -58,7 +58,7 @@
       />
     </div>
 
-    <div class="flex flex-col gap-sm">
+    <div class="flex flex-col gap-xs">
       <small><fa-icon [icon]="icons.url" class="pr-sm" />Map URL</small>
       <xsb-input-text #url [disguise]="(isPretalxManaged$ | async) ?? false"
                       [formControl]="form.controls.url"

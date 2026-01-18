@@ -4,8 +4,8 @@ import {
   faCalendar,
   faCalendarDay,
   faCalendarDays, faCaretSquareUp, faCertificate, faChartGantt, faCheckCircle, faCircleInfo,
-  faCircleQuestion, faClock, faCrown, faFilter, faForward,
-  faGift, faHashtag,
+  faClock, faCrown, faFilter, faForward,
+  faGift, faHandSparkles, faHashtag,
   faHourglass, faKey, faLink, faLocationPin, faLock, faMedal, faMessage, faMoon, faPause,
   faPeopleGroup, faPlusCircle,
   faShuffle, faSignsPost, faStar, faTableColumns, faTag, faTrophy, faUser,
@@ -40,7 +40,7 @@ export const icons = {
   leaderboardPodium: faMedal,
   leaderboardOther: faCertificate,
   position: faWrench,
-  shift: faClock,
+  shift: faHandSparkles,
 
   /* labels */
   calendar: faCalendar,
