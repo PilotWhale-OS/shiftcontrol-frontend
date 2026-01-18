@@ -1,7 +1,7 @@
 import {Breadcrumb} from "./util/breadcrumb";
 
 /* note: name and href should be customized by the component specifically to selected path, if applicable */
-export const BC_HOME = new Breadcrumb("Home", "/");
+export const BC_HOME = new Breadcrumb("ShiftControl", "/");
 export const BC_ACCOUNT = new Breadcrumb("Account", "/account", BC_HOME);
 export const BC_NOTIFICATIONS = new Breadcrumb("Notifications", "/notifications", BC_HOME);
 

@@ -41,7 +41,7 @@
 
     &.spotlight {
       @apply border-framing-item_hint bg-background-item_hint  bg-opacity-80;
-      background: linear-gradient(149deg, rgba(54, 137, 239, 0.1), rgba(20, 100, 196, 0.15) 40%, rgb(12 14 77 / 20%) 100%);
+      background: linear-gradient(149deg, rgba(54, 137, 239, 0.1), rgb(44 82 221 / 15%) 40%, rgba(12, 14, 77, 0.2) 100%);
 
       &:hover {
         @apply border-framing-highlight_hint bg-opacity-80;

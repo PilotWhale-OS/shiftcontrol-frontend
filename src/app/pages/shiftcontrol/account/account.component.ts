@@ -53,6 +53,8 @@ export class AccountComponent implements OnDestroy {
       notification: this._fb.control<string | null>(null),
       givenName: this._fb.nonNullable.control<string>(""),
       lastName: this._fb.nonNullable.control<string>(""),
+      email: this._fb.nonNullable.control<string>(""),
+      username: this._fb.nonNullable.control<string>(""),
       checked: this._fb.nonNullable.control<boolean>(false)
     });
 
@@ -63,6 +65,8 @@ export class AccountComponent implements OnDestroy {
         this.form.setValue({
           givenName: profile.firstName ?? "",
           lastName: profile.lastName ?? "",
+          email: profile.email ?? "",
+          username: profile.username ?? "",
           checked: false,
           notification: null
         });

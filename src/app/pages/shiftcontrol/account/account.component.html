@@ -3,21 +3,35 @@
 <div class="flex flex-wrap flex-row gap-xl">
 
   <!-- user management card -->
-  <div class="card grid grid-cols-2 w-fit h-fit gap-sm">
+  <div class="card grid grid-cols-[auto_1fr] w-[30rem] h-fit gap-sm gap-x-md items-center">
     <h1 class="col-span-2 signature-gradient-font">Account Information</h1>
 
-    <span>Given Name:</span>
+    <span class="badge w-fit">Given Name</span>
     <xsb-input-text #givenName name="userGivenName"
                     [disguise]="true"
                     [formControl]="form.controls.givenName"
                     [xsb-typed]="[givenName, form.controls.givenName]"
     />
 
-    <span>Last Name:</span>
+    <span class="badge w-fit">Last Name</span>
     <xsb-input-text #lastName name="userLastName"
                     [disguise]="true"
                     [formControl]="form.controls.lastName"
                     [xsb-typed]="[lastName, form.controls.lastName]"
+    />
+
+    <span class="badge w-fit">E-Mail</span>
+    <xsb-input-text #email name="userEmail"
+                    [disguise]="true"
+                    [formControl]="form.controls.email"
+                    [xsb-typed]="[email, form.controls.email]"
+    />
+
+    <span class="badge w-fit">Username</span>
+    <xsb-input-text #username name="userUsername"
+                    [disguise]="true"
+                    [formControl]="form.controls.username"
+                    [xsb-typed]="[username, form.controls.username]"
     />
 
     @if ((userType$ | async) === "ADMIN") {
