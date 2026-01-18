@@ -8,7 +8,7 @@ import {TypedFormControlDirective} from "../../directives/typed-form-control.dir
 import {InputDateComponent} from "../inputs/input-date/input-date.component";
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
 import {AccountInfoDto, ActivityDto, ActivityEndpointService, LocationDto, LocationEndpointService} from "../../../shiftservice-client";
-import {AsyncPipe, DatePipe, NgClass} from "@angular/common";
+import {AsyncPipe, DatePipe} from "@angular/common";
 import {InputSelectComponent, SelectOptions} from "../inputs/input-select/input-select.component";
 import {InputTimeComponent, time} from "../inputs/input-time/input-time.component";
 import {mapValue} from "../../util/value-maps";

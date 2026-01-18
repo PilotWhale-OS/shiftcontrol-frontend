@@ -1,7 +1,6 @@
 import {Component, inject, Input, Output} from "@angular/core";
 import {BehaviorSubject, Subject} from "rxjs";
 import {
-  RoleDto,
   ShiftPlanDto,
   ShiftPlanEndpointService
 } from "../../../shiftservice-client";
@@ -15,7 +14,6 @@ import {InputButtonComponent} from "../inputs/input-button/input-button.componen
 import {InputNumberComponent} from "../inputs/input-number/input-number.component";
 import {InputTextComponent} from "../inputs/input-text/input-text.component";
 import {TypedFormControlDirective} from "../../directives/typed-form-control.directive";
-import {planManagementNavigation} from "../../pages/shiftcontrol/event/manage-shift-plans/manage-shift-plans.component";
 
 @Component({
   selector: "app-manage-plan-details",

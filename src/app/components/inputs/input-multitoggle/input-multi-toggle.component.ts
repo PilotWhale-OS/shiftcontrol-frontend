@@ -94,7 +94,6 @@ export class InputMultiToggleComponent<TData> implements TypedControlValueAccess
 
   private injector = inject(Injector);
   private changeDetectorRef = inject(ChangeDetectorRef);
-  @Input("xyb-typed") xybTyped!: undefined;
 
   @HostBinding("attr.id") get hideIdAttr() { return null; }
   @HostBinding("attr.name") get hideNameAttr() { return null; }

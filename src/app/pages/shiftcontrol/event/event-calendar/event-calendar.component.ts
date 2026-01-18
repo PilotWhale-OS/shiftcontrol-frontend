@@ -98,12 +98,12 @@ export class EventCalendarComponent implements OnDestroy {
     this._subscriptions = this.setupWithObservables(eventId);
   }
 
-  ngOnDestroy() {
-    this._subscriptions.forEach(subscription => subscription.unsubscribe());
-  }
-
   protected get userType$(){
     return this._userService.userType$;
+  }
+
+  ngOnDestroy() {
+    this._subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   private setupWithObservables(eventId: string): Subscription[]{
