@@ -21,7 +21,6 @@ import {DialogManageAssignmentsComponent, manageAssignmentsParams} from "../dial
 export interface positionSignupParams {
   slot: PositionSlotDto;
   shift: ShiftDto;
-  planId: string;
   currentUserAssignment?: AssignmentDto;
 }
 
@@ -82,7 +81,7 @@ export class PositionSignupComponent {
     return this.position$.pipe(
       switchMap(data => data === undefined ?
         of(false) :
-        this.userService.canManagePlan$(data.planId)
+        this.userService.canManagePlan$(data.shift.shiftPlan.id)
       )
     );
   }

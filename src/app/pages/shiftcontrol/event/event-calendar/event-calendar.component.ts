@@ -1,15 +1,14 @@
 import {Component, inject, OnDestroy, viewChild} from "@angular/core";
-import {calendarConfig, ShiftCalendarGridComponent} from "../../../components/shift-calendar-grid/shift-calendar-grid.component";
-import {ShiftCalendarFilterComponent} from "../../../components/shift-calendar-filter/shift-calendar-filter.component";
-import {PageService} from "../../../services/page/page.service";
-import {BC_EVENT} from "../../../breadcrumbs";
+import {calendarConfig, ShiftCalendarGridComponent} from "../../../../components/shift-calendar-grid/shift-calendar-grid.component";
+import {ShiftCalendarFilterComponent} from "../../../../components/shift-calendar-filter/shift-calendar-filter.component";
+import {PageService} from "../../../../services/page/page.service";
+import {BC_EVENT} from "../../../../breadcrumbs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {
-  AccountInfoDto, ActivityDto,
-  ActivityEndpointService, EventEndpointService, EventScheduleEndpointService, LocationDto, LocationEndpointService,
-  RoleDto, RoleEndpointService,
+  AccountInfoDto,
+  EventEndpointService, EventScheduleEndpointService,
   ShiftDto
-} from "../../../../shiftservice-client";
+} from "../../../../../shiftservice-client";
 import {
   BehaviorSubject,
   catchError,
@@ -28,16 +27,15 @@ import {
   withLatestFrom,
 } from "rxjs";
 import {toObservable} from "@angular/core/rxjs-interop";
-import {mapValue} from "../../../util/value-maps";
+import {mapValue} from "../../../../util/value-maps";
 import {AsyncPipe} from "@angular/common";
-import {DialogComponent} from "../../../components/dialog/dialog.component";
-import {ManageShiftComponent, manageShiftParams} from "../../../components/manage-shift/manage-shift.component";
-import {UserService} from "../../../services/user/user.service";
+import {DialogComponent} from "../../../../components/dialog/dialog.component";
+import {ManageShiftComponent, manageShiftParams} from "../../../../components/manage-shift/manage-shift.component";
+import {UserService} from "../../../../services/user/user.service";
 import UserTypeEnum = AccountInfoDto.UserTypeEnum;
-import {SelectOptions} from "../../../components/inputs/input-select/input-select.component";
 
 @Component({
-  selector: "app-shift-calendar",
+  selector: "app-event-calendar",
   imports: [
     ShiftCalendarGridComponent,
     ShiftCalendarFilterComponent,
@@ -46,10 +44,10 @@ import {SelectOptions} from "../../../components/inputs/input-select/input-selec
     ManageShiftComponent
   ],
   standalone: true,
-  templateUrl: "./shift-calendar.component.html",
-  styleUrl: "./shift-calendar.component.scss"
+  templateUrl: "./event-calendar.component.html",
+  styleUrl: "./event-calendar.component.scss"
 })
-export class ShiftCalendarComponent implements OnDestroy {
+export class EventCalendarComponent implements OnDestroy {
 
   protected selectedShift$ = new BehaviorSubject<manageShiftParams | undefined>(undefined);
   protected shiftChanged$ = new Subject<ShiftDto>();
@@ -62,9 +60,6 @@ export class ShiftCalendarComponent implements OnDestroy {
   private readonly _pageService = inject(PageService);
   private readonly _eventScheduleService = inject(EventScheduleEndpointService);
   private readonly _eventService = inject(EventEndpointService);
-  private readonly _activityService = inject(ActivityEndpointService);
-  private readonly _locationService = inject(LocationEndpointService);
-  private readonly _rolesService = inject(RoleEndpointService);
   private readonly _route = inject(ActivatedRoute);
   private readonly _router = inject(Router);
   private readonly _userService = inject(UserService);
@@ -203,10 +198,6 @@ export class ShiftCalendarComponent implements OnDestroy {
       const endDate = filterData.lastDate ?
         mapValue.dateStringAsEndOfDayDatetime(filterData.lastDate) : new Date();
 
-      const availableActivities = [] as SelectOptions<ActivityDto>;
-      const availableLocations = [] as SelectOptions<LocationDto>;
-      const availableRoles = [] as SelectOptions<RoleDto>;
-
       const config: calendarConfig = {
         startDate,
         endDate,
@@ -217,25 +208,12 @@ export class ShiftCalendarComponent implements OnDestroy {
         shiftPaddingColumn: true,
         shiftClickCallback: shift => this.selectedShift$.next({
           shift,
-          planId: "",
-          eventId: plan.eventOverview.id,
-          availableLocations: availableLocations ??
-            (shift.location ? [{name: shift.location.name, value: shift.location}] : []),
-          availableActivities: availableActivities ??
-            (shift.relatedActivity ? [{name: shift.relatedActivity.name, value: shift.relatedActivity}] : []),
-          availableRoles: availableRoles ?? shift.positionSlots
-            .map(slot => slot.role)
-            .filter(role=>role !== undefined)
-            .map(role => ({name: role.name, value: role}))
+          eventId: plan.eventOverview.id
         }),
         emptySpaceClickCallback: !isAdmin ? undefined : (date, location) => this.selectedShift$.next({
-          planId: "",
           eventId: plan.eventOverview.id,
           suggestedLocation: location,
-          suggestedDate: date,
-          availableLocations: availableLocations ?? [],
-          availableActivities: availableActivities ?? [],
-          availableRoles: availableRoles ?? []
+          suggestedDate: date
         })
       };
       const calendarViewInited = navigation.visibleDates.length > 0;

@@ -7,7 +7,7 @@ import LockStatusEnum = ShiftDto.LockStatusEnum;
 })
 export class LockStatusPipe implements PipeTransform {
 
-  transform(value: LockStatusEnum, mode: "name" | "description" = "name"): unknown {
+  transform(value: LockStatusEnum, mode: "name" | "description" | "info" = "name"): string {
     switch (mode) {
       case "description":
         switch (value) {
@@ -18,6 +18,17 @@ export class LockStatusPipe implements PipeTransform {
           case LockStatusEnum.Supervised:
             return "No changes to assignment count can be made. " +
               "Volunteers can only trade positions. Planners can still manually adjust assignments.";
+          default:
+            return "Unknown";
+        }
+      case "info":
+        switch (value) {
+          case LockStatusEnum.Locked:
+            return "Shift sign-ups can no longer be changed.";
+          case LockStatusEnum.SelfSignup:
+            return "You can sign-up and withdraw from shifts freely.";
+          case LockStatusEnum.Supervised:
+            return "You can only sign-up or withdraw from shifts with approval from a manager or by trading with other volunteers.";
           default:
             return "Unknown";
         }

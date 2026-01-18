@@ -16,7 +16,7 @@ import { breadcrumbsGuard } from "./guards/breadcrumbs/breadcrumbs.guard";
 import {accessAllowedGuard, notLoggedInGuard} from "./guards/keycloak/keycloak.guard";
 import {AccountComponent} from "./pages/shiftcontrol/account/account.component";
 import {HomeComponent} from "./pages/shiftcontrol/home/home.component";
-import {ShiftCalendarComponent} from "./pages/shiftcontrol/shift-calendar/shift-calendar.component";
+import {EventCalendarComponent} from "./pages/shiftcontrol/event/event-calendar/event-calendar.component";
 import {ShiftDetailsComponent} from "./pages/shiftcontrol/shift-details/shift-details.component";
 import {PlanOnboardingComponent} from "./pages/shiftcontrol/plan-onboarding/plan-onboarding.component";
 import {NotificationsComponent} from "./pages/shiftcontrol/notifications/notifications.component";
@@ -48,7 +48,7 @@ export const routes: Routes = ([
     data: {breadcrumbs: BC_EVENT_PLANS}, canActivate: [accessAllowedGuard]},
   { path: "events/:eventId/manage", component: ManageEventComponent,
     data: {breadcrumbs: BC_EVENT_EDIT}, canActivate: [accessAllowedGuard]},
-  { path: "events/:eventId/calendar", component: ShiftCalendarComponent,
+  { path: "events/:eventId/calendar", component: EventCalendarComponent,
     data: { breadcrumbs: BC_SHIFT_CALENDAR }, canActivate: [accessAllowedGuard]},
 
 

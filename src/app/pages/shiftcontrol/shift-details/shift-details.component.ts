@@ -68,7 +68,10 @@ export class ShiftDetailsComponent {
     this._shiftService.getShiftDetails(this._shiftId).subscribe(shift => this.shift$.next(shift));
   }
 
-  public goToPlanDashboard(planId: string) {
+  public goToPlanDashboard(planId?: string) {
+    if(planId === undefined) {
+      throw new Error("PlanId is required");
+    }
     this._router.navigateByUrl(`/plans/${planId}`);
   }
 

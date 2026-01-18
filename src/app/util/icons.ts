@@ -7,7 +7,7 @@ import {
   faGift, faHashtag,
   faHourglass, faKey, faLink, faLocationPin, faLock, faMedal, faMessage, faMoon, faPause,
   faPeopleGroup, faPlusCircle,
-  faShuffle, faStar, faStop, faTag, faTrophy, faUser,
+  faShuffle, faStar, faStop, faTableColumns, faTag, faTrophy, faUser,
   faWrench
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -32,7 +32,7 @@ export const icons = {
   unassigned: faBan,
   eligible: faCertificate,
   ineligible: faBan,
-  plan: faCalendar,
+  plan: faTableColumns,
   phase: faChartGantt,
   leaderboard: faTrophy,
   leaderboardFirst: faCrown,

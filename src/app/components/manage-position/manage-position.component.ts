@@ -25,7 +25,6 @@ import UserTypeEnum = AccountInfoDto.UserTypeEnum;
 
 export interface managePositionParams {
   shift: ShiftDto;
-  planId: string;
   position?: PositionSlotDto;
   availableRoles: SelectOptions<RoleDto>;
 }
@@ -73,13 +72,11 @@ export class ManagePositionComponent implements OnDestroy {
         map(assignment => data.position === undefined ? undefined : ({
           slot: data.position,
           shift: data.shift,
-          planId: data.planId,
           currentUserAssignment: assignment
         })),
         catchError(() => of(data.position === undefined ? undefined : ({
             slot: data.position,
             shift: data.shift,
-            planId: data.planId,
             currentUserAssignment: undefined
           })))
       );
@@ -147,7 +144,7 @@ export class ManagePositionComponent implements OnDestroy {
     return this.manageData$.pipe(
       switchMap(data => data === undefined ?
         of(false) :
-        this._userService.canManagePlan$(data.planId)
+        this._userService.canManagePlan$(data.shift.shiftPlan.id)
       )
     );
   }

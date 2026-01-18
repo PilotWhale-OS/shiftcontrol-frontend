@@ -26,12 +26,14 @@
         </div>
 
         <div class="flex flex-col gap-sm col-start-2 row-start-2">
-          <small><fa-icon [icon]="icons.name" class="pr-sm" />Bonus Points</small>
-          <label for="shift-manage-bonusPoints">Make this shift more attractive to sign up</label>
-          <xsb-input-number #bonusPoints
-                          [formControl]="form.controls.bonusPoints"
-                          [xsb-typed]="[bonusPoints, form.controls.bonusPoints]"
-                          name="shift-manage-bonusPoints" placeholder="Bonus Points"
+          <small><fa-icon [icon]="icons.plan" class="pr-sm" />Shift Plan</small>
+          <label for="shift-manage-plan">Shift Plan which this shift is associated to</label>
+          <xsb-input-select #plan name="shift-manage-plan"
+                            nullName="Select Shift Plan"
+                            [formControl]="form.controls.plan"
+                            [options]="(shiftPlanOptions$ | async) ?? []"
+                            [comparatorFn]="idComparatorFn"
+                            [xsb-typed]="[plan, form.controls.plan]"
           />
         </div>
 
@@ -69,7 +71,7 @@
           <xsb-input-select #activity name="shift-manage-activity"
                             [nullable]="true" nullName="No Activity"
                             [formControl]="form.controls.activity"
-                            [options]="data.availableActivities"
+                            [options]="(activityOptions$ | async) ?? []"
                             [comparatorFn]="idComparatorFn"
                             [xsb-typed]="[activity, form.controls.activity]"
           />
@@ -81,13 +83,13 @@
           <xsb-input-select #location name="shift-manage-location"
                             [nullable]="true" nullName="No Location"
                             [formControl]="form.controls.location"
-                            [options]="data.availableLocations"
+                            [options]="(locationOptions$ | async) ?? []"
                             [comparatorFn]="idComparatorFn"
                             [xsb-typed]="[location, form.controls.location]"
           />
         </div>
 
-        <div class="flex flex-col gap-sm col-start-1 row-start-5 col-span-2">
+        <div class="flex flex-col gap-sm col-start-1 row-start-5">
           <small><fa-icon [icon]="icons.description" class="pr-sm" />Description</small>
           <label for="shift-manage-description">Relevant infos about the shift</label>
           <xsb-input-text #description
@@ -96,6 +98,16 @@
                           type="area"
                           name="shift-manage-description" placeholder="Shift description"
                           class="grow"
+          />
+        </div>
+
+        <div class="flex flex-col gap-sm col-start-2 row-start-5">
+          <small><fa-icon [icon]="icons.name" class="pr-sm" />Bonus Points</small>
+          <label for="shift-manage-bonusPoints">Make this shift more attractive to sign up</label>
+          <xsb-input-number #bonusPoints
+                            [formControl]="form.controls.bonusPoints"
+                            [xsb-typed]="[bonusPoints, form.controls.bonusPoints]"
+                            name="shift-manage-bonusPoints" placeholder="Bonus Points"
           />
         </div>
 
@@ -119,7 +131,7 @@
 
         <div class="col-span-2 row-start-7 flex gap-x-lg items-center justify-center pt-md">
           @if (data.shift === undefined){
-            <xsb-input-button content="Create Shift" action="success" (click)="create(data.planId)" />
+            <xsb-input-button content="Create Shift" action="success" (click)="create()" />
           }
         </div>
       </div>
@@ -145,9 +157,14 @@
             <span>{{getDateRange(data.shift)}}</span>
           </div>
 
-          <div class="badge" [app-tooltip]="getLockStatusDescription(data.shift)" tooltipMaxWidth="10rem" >
+          <div class="badge" [app-tooltip]="data.shift.lockStatus | lockStatus:'info'" tooltipMaxWidth="10rem" >
             <fa-icon [icon]="icons.phase"/>
             <span>{{data.shift.lockStatus | lockStatus}}</span>
+          </div>
+
+          <div class="badge" [app-tooltip]="'Associated shift plan of this shift'" tooltipMaxWidth="10rem" >
+            <fa-icon [icon]="icons.plan"/>
+            <span>{{data.shift.shiftPlan.name}}</span>
           </div>
 
           @if(data.shift.bonusRewardPoints > 0) {
@@ -179,7 +196,7 @@
     <div class="flex flex-row flex-wrap gap-lg">
 
       <!-- manage data from observable for change detection issues -->
-      @if (slotManageData$ | async; as slotData) {
+      @if (positionManageData$ | async; as slotData) {
         @for (slot of slotData; track slot){
           <!--why contents necessary to make parent not wider than content??-->
           <app-manage-position
