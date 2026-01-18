@@ -46,9 +46,8 @@ export class FormRouteSyncService {
       filter(([, hasEmitted]) => hasEmitted)
     ).subscribe(() => {
       const params = syncToParams(form);
-      this._router.navigate([], { queryParams: params, queryParamsHandling: "merge" });
+      this._router.navigate([], { queryParams: params, queryParamsHandling: "merge", replaceUrl: true });
     });
-
 
     this._forms.set(key, {
       subscriptions: [formSub]
