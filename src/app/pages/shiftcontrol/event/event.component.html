@@ -186,10 +186,25 @@
 
         </div>
       }
+
+      @if ((userType$ | async) !== "ADMIN") {
+        <!-- help page -->
+        <div class="card interaction" routerLink="help">
+
+          <!-- info -->
+          <h1>
+            <fa-icon [icon]="icons.help" class="icon" />
+            Are you lost?
+          </h1>
+          <p>
+            View contact info and help.
+          </p>
+
+        </div>
+      }
     </div>
 
   <!-- leaderboard and calendar link -->
-
   <div class="flex flex-col gap-lg">
 
 

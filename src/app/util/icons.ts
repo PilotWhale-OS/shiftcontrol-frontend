@@ -3,11 +3,12 @@ import {
   faBarsProgress, faBell, faBook,
   faCalendar,
   faCalendarDay,
-  faCalendarDays, faCaretSquareUp, faCertificate, faChartGantt, faCheckCircle, faCircleInfo, faClock, faCrown, faFilter, faForward,
+  faCalendarDays, faCaretSquareUp, faCertificate, faChartGantt, faCheckCircle, faCircleInfo,
+  faCircleQuestion, faClock, faCrown, faFilter, faForward,
   faGift, faHashtag,
   faHourglass, faKey, faLink, faLocationPin, faLock, faMedal, faMessage, faMoon, faPause,
   faPeopleGroup, faPlusCircle,
-  faShuffle, faStar, faTableColumns, faTag, faTrophy, faUser,
+  faShuffle, faSignsPost, faStar, faTableColumns, faTag, faTrophy, faUser,
   faWrench
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -58,6 +59,7 @@ export const icons = {
   notification: faBell,
   noNotification: faMoon,
   info: faCircleInfo,
+  help: faSignsPost,
 
   /* time */
   hour: faHourglass,

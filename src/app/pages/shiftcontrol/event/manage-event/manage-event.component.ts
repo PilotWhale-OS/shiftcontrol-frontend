@@ -5,7 +5,7 @@ import {PageService} from "../../../../services/page/page.service";
 import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {EventEndpointService, EventShiftPlansOverviewDto, LocationEndpointService} from "../../../../../shiftservice-client";
-import {BehaviorSubject, combineLatestWith, map, of, shareReplay, startWith, switchMap, tap} from "rxjs";
+import {BehaviorSubject, combineLatestWith, map, of, shareReplay, startWith, switchMap, take, tap} from "rxjs";
 import {BC_EVENT} from "../../../../breadcrumbs";
 import {AsyncPipe} from "@angular/common";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
@@ -114,4 +114,13 @@ export class ManageEventComponent {
     );
   }
 
+  protected refreshData() {
+    this.event$.pipe(
+      take(1),
+      switchMap(event =>
+        event === undefined ? of(undefined) :
+          this._eventService.getShiftPlansOverviewOfEvent(event?.eventOverview.id)
+      )
+    ).subscribe(event => this.event$.next(event));
+  }
 }

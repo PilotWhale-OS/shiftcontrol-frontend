@@ -10,6 +10,7 @@ export const BC_EVENT = new Breadcrumb("Event", "event-id", BC_EVENTS);
 export const BC_EVENT_CREATE = new Breadcrumb("Create Event", "create", BC_EVENTS);
 export const BC_EVENT_EDIT = new Breadcrumb("Manage", "manage", BC_EVENT);
 export const BC_EVENT_PLANS = new Breadcrumb("Shift Plans", "plans", BC_EVENT);
+export const BC_EVENT_HELP = new Breadcrumb("Help", "help", BC_EVENT);
 
 export const BC_PLAN_ONBOARDING = new Breadcrumb("Onboarding", "onboarding", BC_EVENT);
 export const BC_SHIFT_CALENDAR = new Breadcrumb("Calendar", "calendar", BC_EVENT);

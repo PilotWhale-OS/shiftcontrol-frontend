@@ -72,20 +72,20 @@
           @switch (mode$ | async){
             @case ("details") {
               @if (event$ | async; as event) {
-                <app-manage-event-details [event]="{event: event?.eventOverview ?? undefined}" (eventChanged)="0" />
+                <app-manage-event-details [event]="{event: event?.eventOverview ?? undefined}" (eventChanged)="refreshData()" />
               }
             }
             @case ("plans") {
               @if (planManageData$ | async; as manageData) {
                 @for (planManageData of manageData; track planManageData.plan?.id){
-                  <app-manage-plan-details [manageData]="planManageData ?? undefined" (planChanged)="0" />
+                  <app-manage-plan-details [manageData]="planManageData ?? undefined" (planChanged)="refreshData()" />
                 }
               }
             }
             @case ("locations") {
               @if (locationsManageData$ | async; as manageData) {
                 @for (locationManageData of manageData; track locationManageData.location?.id){
-                  <app-manage-location [manageData]="locationManageData" (locationChanged)="0" />
+                  <app-manage-location [manageData]="locationManageData" (locationChanged)="refreshData()" />
                 }
               }
             }
