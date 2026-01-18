@@ -28,6 +28,11 @@
 
   &.interaction:not(.ghost) {
     @apply cursor-pointer border-framing-item bg-background-item bg-opacity-80;
+    background: linear-gradient(
+        145deg,
+        rgb(76 81 157 / 10%),
+        rgb(97 57 175 / 15%) 40%,
+        rgb(98 57 175 / 20%) 100%);
 
     &:hover {
       box-shadow: 0px 0px 8px 2px rgb(25 28 43);
@@ -36,6 +41,7 @@
 
     &.spotlight {
       @apply border-framing-item_hint bg-background-item_hint  bg-opacity-80;
+      background: linear-gradient(149deg, rgb(54 137 239 / 10%), rgb(20 100 196 / 15%) 40%, rgb(15 145 168 / 20%) 100%);
 
       &:hover {
         @apply border-framing-highlight_hint bg-opacity-80;
@@ -82,22 +88,16 @@ small {
 
 .badge {
   @apply bg-framing-item py-xs px-sm rounded-xl text-sm font-semibold flex items-center gap-xs;
-  background: linear-gradient(45deg, rgb(76 81 157 / var(--tw-bg-opacity, 1)), rgb(57 64 175) 40%, rgb(57 64 175) 100%);
+  background: linear-gradient(45deg, rgb(76, 81, 157, var(--tw-bg-opacity, 1)), rgb(97 57 175) 40%, rgb(98, 57, 175) 100%);
 
   &.hint {
     @apply bg-framing-highlight_hint;
-    background: linear-gradient(45deg,
-      rgb(54, 137, 239),
-      rgb(7, 93, 196) 40%,
-      rgb(7, 93, 196) 100%);
+    background: linear-gradient(45deg, rgb(54, 137, 239), rgb(20 100 196) 40%, rgb(15 145 168) 100%)
   }
 
   &.success {
     @apply bg-framing-highlight_success;
-    background: linear-gradient(45deg,
-      rgb(55, 180, 91),
-      rgb(16, 103, 42) 40%,
-      rgb(16, 103, 42) 100%);
+    background: linear-gradient(45deg, rgb(55, 180, 91), rgb(24 114 51) 40%, rgb(40 123 92) 100%)
   }
 
   &.deaf {

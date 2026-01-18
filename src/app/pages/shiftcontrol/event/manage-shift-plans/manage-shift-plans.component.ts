@@ -2,7 +2,7 @@ import {Component, inject} from "@angular/core";
 import {PageService} from "../../../../services/page/page.service";
 import { icons } from "../../../../util/icons";
 import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
-import {ActivatedRoute, Router, RouterLink} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {
   EventEndpointService,
   EventShiftPlansOverviewDto, RoleEndpointService,
@@ -122,7 +122,6 @@ export class ManageShiftPlansComponent {
         plan: event.shiftPlans.find(plan => plan.id === shiftPlan?.id),
         eventId: event.eventOverview.id
       })),
-      tap(p => console.log({p})),
       shareReplay()
     );
 

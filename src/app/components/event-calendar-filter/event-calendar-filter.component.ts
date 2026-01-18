@@ -34,7 +34,7 @@ export enum ShiftCalendarViewMode {
 export class EventCalendarFilterComponent {
 
   @Input()
-  public showFilters = false;
+  public showFilters = true;
 
   @Input()
   public showShiftFilterForm = true;

@@ -80,7 +80,8 @@
 
         &:last-child {
           @apply rounded-r-lg;
-          background: rgba(55, 63, 101, 30%);
+          /*background: rgba(55, 63, 101, 30%);*/
+          background: linear-gradient(145deg, rgb(33 48 87 / 43%), rgb(57 63 175 / 23%) 40%, rgb(51 52 150 / 55%) 100%);
         }
 
         &:first-child {

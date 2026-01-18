@@ -1,14 +1,14 @@
 import {Component, EventEmitter, inject, Input, Output} from "@angular/core";
 import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import {BehaviorSubject, map} from "rxjs";
+import {BehaviorSubject, filter, map, Observable, switchMap} from "rxjs";
 import {DialogComponent} from "../dialog/dialog.component";
 import {InputTextComponent} from "../inputs/input-text/input-text.component";
 import {TypedFormControlDirective} from "../../directives/typed-form-control.directive";
 import {InputDateComponent} from "../inputs/input-date/input-date.component";
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
-import {AccountInfoDto, ActivityDto, ActivityEndpointService, LocationDto} from "../../../shiftservice-client";
-import {AsyncPipe} from "@angular/common";
+import {AccountInfoDto, ActivityDto, ActivityEndpointService, LocationDto, LocationEndpointService} from "../../../shiftservice-client";
+import {AsyncPipe, DatePipe, NgClass} from "@angular/common";
 import {InputSelectComponent, SelectOptions} from "../inputs/input-select/input-select.component";
 import {InputTimeComponent, time} from "../inputs/input-time/input-time.component";
 import {mapValue} from "../../util/value-maps";
@@ -22,7 +22,10 @@ export interface manageActivityParams {
   activity?: ActivityDto;
   suggestedDate?: Date;
   suggestedLocation?: LocationDto;
-  availableLocations: SelectOptions<string>;
+}
+
+interface manageActivityData extends manageActivityParams {
+  locations: LocationDto[];
 }
 
 @Component({
@@ -37,7 +40,8 @@ export interface manageActivityParams {
     DialogComponent,
     AsyncPipe,
     InputSelectComponent,
-    InputTimeComponent
+    InputTimeComponent,
+    DatePipe
   ],
   templateUrl: "./manage-activity.component.html",
   styleUrl: "./manage-activity.component.scss"
@@ -50,12 +54,15 @@ export class ManageActivityComponent {
   public readonly form;
   protected readonly icons = icons;
 
-  protected readonly manageData$ = new BehaviorSubject<undefined | manageActivityParams>(undefined);
+  protected readonly manageParams$ = new BehaviorSubject<undefined | manageActivityParams>(undefined);
+  protected readonly mangeData$: Observable<manageActivityData>;
+  protected readonly locationOptions$: Observable<SelectOptions<string>>;
 
   protected showActivityDeleteConfirm = false;
 
   private readonly _fb = inject(FormBuilder);
   private readonly _activityService = inject(ActivityEndpointService);
+  private readonly _locationService = inject(LocationEndpointService);
   private readonly _userService = inject(UserService);
   private readonly _toastService = inject(ToastService);
 
@@ -69,6 +76,25 @@ export class ManageActivityComponent {
       endTime: this._fb.nonNullable.control<time>({hour: 0, minute: 0}, [Validators.required]),
       location: this._fb.control<string | null>(null)
     });
+
+    this.mangeData$ = this.manageParams$.pipe(
+      filter((params): params is manageActivityParams => params !== undefined),
+      switchMap(params =>
+        this._locationService.getAllLocationsForEvent(params.eventId).pipe(
+          map(locations => ({
+            ...params,
+            locations: locations
+          }))
+        )
+      )
+    );
+
+    this.locationOptions$ = this.mangeData$.pipe(
+      map(data => data.locations.map(loc => ({
+        name: loc.name,
+        value: loc.id
+      })))
+    );
   }
 
   public get canManage$() {
@@ -79,7 +105,7 @@ export class ManageActivityComponent {
 
   @Input({required: true})
   public set manageData(value: manageActivityParams) {
-    this.manageData$.next(value);
+    this.manageParams$.next(value);
 
     if(value.activity !== undefined) {
       this.form.setValue({

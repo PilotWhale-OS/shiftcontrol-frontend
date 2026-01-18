@@ -1,75 +1,79 @@
-  @if(manageData$ | async; as data) {
-    <!-- manage details -->
-    <div class="grid grid-cols-2 gap-x-xl gap-y-lg w-fit h-fit">
+  @if(manageParams$ | async; as data) {
 
-      <div class="flex flex-col gap-sm col-start-1 row-start-2">
-        <small><fa-icon [icon]="icons.name" class="pr-sm" />Activity Name</small>
-        <label for="activity-manage-name">Expressive name for the activity</label>
-        <xsb-input-text #name
-                        [disguise]="(canManage$ | async) !== true"
-                        [formControl]="form.controls.name"
-                        [xsb-typed]="[name, form.controls.name]"
-                        name="activity-manage-name" placeholder="Activity name"
-        />
-      </div>
+    @if((canManage$ | async) === true) {
+      <!-- manage details -->
+      <div class="grid grid-cols-[20rem_20rem] gap-x-xl gap-y-lg h-fit">
 
-      <div class="flex flex-col gap-sm col-start-2 row-start-2">
-        <small><fa-icon [icon]="icons.shortDescription" class="pr-sm" />Description</small>
-        <label for="activity-manage-description">Description, shown ??? nowhere yet TODO</label>
-        <xsb-input-text #description
-                        [disguise]="(canManage$ | async) !== true"
-                        [formControl]="form.controls.description"
-                        [xsb-typed]="[description, form.controls.description]"
-                        name="activity-manage-description" placeholder="Activity description"
-        />
-      </div>
-
-      <div class="flex flex-col gap-sm col-start-1 row-start-3">
-        <small><fa-icon [icon]="icons.startDate" class="pr-sm" />Activity Start</small>
-        <label for="activity-manage-from">Start time, in your timezone</label>
-
-        <div class="flex flex-row gap-sm">
-          <xsb-input-date #startDate name="activity-manage-from"
-                          [disguise]="(canManage$ | async) !== true"
-                          [formControl]="form.controls.startDate"
-                          [xsb-typed]="[startDate, form.controls.startDate]" />
-          <xsb-input-time #startTime name="activity-manage-from-time"
-                          [disguise]="(canManage$ | async) !== true"
-                          [formControl]="form.controls.startTime"
-                          [xsb-typed]="[startTime, form.controls.startTime]" />
+        <div class="flex flex-col gap-sm col-start-1 row-start-2">
+          <small><fa-icon [icon]="icons.name" class="pr-sm" />Activity Name</small>
+          <label for="activity-manage-name">
+            Expressive name for the activity
+          </label>
+          <xsb-input-text #name
+                          [formControl]="form.controls.name"
+                          [xsb-typed]="[name, form.controls.name]"
+                          name="activity-manage-name" placeholder="Activity name"
+          />
         </div>
-      </div>
 
-      <div class="flex flex-col gap-sm col-start-2 row-start-3">
-        <small><fa-icon [icon]="icons.endDate" class="pr-sm" />Activity End</small>
-        <label for="activity-manage-to">End time, in your timezone </label>
-
-        <div class="flex flex-row gap-sm">
-          <xsb-input-date #endDate name="activity-manage-to"
-                          [disguise]="(canManage$ | async) !== true"
-                          [formControl]="form.controls.endDate"
-                          [xsb-typed]="[endDate, form.controls.endDate]" />
-          <xsb-input-time #endTime name="activity-manage-to-time"
-                          [disguise]="(canManage$ | async) !== true"
-                          [formControl]="form.controls.endTime"
-                          [xsb-typed]="[endTime, form.controls.endTime]" />
+        <div class="flex flex-col gap-sm col-start-2 row-start-2">
+          <small><fa-icon [icon]="icons.shortDescription" class="pr-sm" />Description</small>
+          <label for="activity-manage-description">
+            Description in the event schedule
+          </label>
+          <xsb-input-text #description
+                          [formControl]="form.controls.description"
+                          [xsb-typed]="[description, form.controls.description]"
+                          name="activity-manage-description" placeholder="Activity description"
+          />
         </div>
-      </div>
 
-      <div class="flex flex-col gap-sm col-start-1 row-start-4 col-span-2">
-        <small><fa-icon [icon]="icons.location" class="pr-sm" />Location</small>
-        <label for="activity-manage-to">Location where the activity takes place</label>
-        <xsb-input-select #location name="activity-manage-location"
-                          [disguise]="(canManage$ | async) !== true"
-                          [nullable]="true" nullName="No Location"
-                          [formControl]="form.controls.location"
-                          [options]="data.availableLocations"
-                          [xsb-typed]="[location, form.controls.location]"
-        />
-      </div>
+        <div class="flex flex-col gap-sm col-start-1 row-start-3">
+          <small><fa-icon [icon]="icons.startDate" class="pr-sm" />Activity Start</small>
+          <label for="activity-manage-from">
+            Start time, in your timezone
+          </label>
 
-      <div class="col-span-2 row-start-5 flex gap-x-lg items-center justify-center pt-md">
-        @if((canManage$ | async) === true){
+          <div class="flex flex-row gap-sm">
+            <xsb-input-date #startDate name="activity-manage-from"
+                            [formControl]="form.controls.startDate"
+                            [xsb-typed]="[startDate, form.controls.startDate]" />
+            <xsb-input-time #startTime name="activity-manage-from-time"
+                            [formControl]="form.controls.startTime"
+                            [xsb-typed]="[startTime, form.controls.startTime]" />
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-sm col-start-2 row-start-3">
+          <small><fa-icon [icon]="icons.endDate" class="pr-sm" />Activity End</small>
+          <label for="activity-manage-to">
+            End time, in your timezone
+          </label>
+
+          <div class="flex flex-row gap-sm">
+            <xsb-input-date #endDate name="activity-manage-to"
+                            [formControl]="form.controls.endDate"
+                            [xsb-typed]="[endDate, form.controls.endDate]" />
+            <xsb-input-time #endTime name="activity-manage-to-time"
+                            [formControl]="form.controls.endTime"
+                            [xsb-typed]="[endTime, form.controls.endTime]" />
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-sm col-start-1 row-start-4 col-span-2">
+          <small><fa-icon [icon]="icons.location" class="pr-sm" />Location</small>
+          <label for="activity-manage-to">
+            Location where the activity takes place
+          </label>
+          <xsb-input-select #location name="activity-manage-location"
+                            [nullable]="true" nullName="No Location"
+                            [formControl]="form.controls.location"
+                            [options]="(locationOptions$ | async) ?? []"
+                            [xsb-typed]="[location, form.controls.location]"
+          />
+        </div>
+
+        <div class="col-span-2 row-start-5 flex gap-x-lg items-center justify-center pt-md">
           @if (data.activity === undefined){
             <xsb-input-button content="Create Activity" action="success" (click)="create(data.eventId)" />
           }
@@ -77,23 +81,39 @@
             <xsb-input-button content="Update Activity" action="success" (click)="update(data.activity)" />
             <xsb-input-button content="Delete Activity" action="danger" (click)="showActivityDeleteConfirm = true" />
           }
-        }
+        </div>
       </div>
-    </div>
 
-    @if (showActivityDeleteConfirm && data.activity !== undefined){
-      <xsb-dialog action="danger" danger="Delete Activity" (closeDialog)="showActivityDeleteConfirm = false; $event === 'danger' && delete(data.activity)">
-        <ng-container dialog-header>
-          <h1>Delete Activity</h1>
-        </ng-container>
+      @if (showActivityDeleteConfirm && data.activity !== undefined){
+        <xsb-dialog action="danger" danger="Delete Activity" (closeDialog)="showActivityDeleteConfirm = false; $event === 'danger' && delete(data.activity)">
+          <ng-container dialog-header>
+            <h1>Delete Activity</h1>
+          </ng-container>
 
-        <ng-container dialog-body>
-          <p>
-            Are you sure you want to delete this activity?<br>
-            This cannot be made undone.<br>
-            Associated shifts will not be deleted.
-          </p>
-        </ng-container>
-      </xsb-dialog>
+          <ng-container dialog-body>
+            <p>
+              Are you sure you want to delete this activity?<br>
+              This cannot be made undone.<br>
+              Associated shifts will not be deleted.
+            </p>
+          </ng-container>
+        </xsb-dialog>
+      }
+    } @else if(data.activity !== undefined) {
+
+      <div class="flex flex-col w-[30rem] gap-md">
+
+        <div class="flex flex-row flew-wrap gap-sm">
+          <div class="badge flex items-center"><fa-icon [icon]="icons.startDate"/>{{data.activity.startTime | date:"short"}}</div>
+          <div class="badge"><fa-icon [icon]="icons.endDate"/>{{data.activity.endTime | date:"short"}}</div>
+          <div class="badge flex items-center"><fa-icon [icon]="icons.location"/>{{data.activity.location?.name ?? "No Location"}}</div>
+        </div>
+
+        <p class="pre-line">
+          {{(data.activity.description?.length ?? 0) > 0 ? data.activity.description : "No description provided."}}
+        </p>
+
+      </div>
+
     }
   }

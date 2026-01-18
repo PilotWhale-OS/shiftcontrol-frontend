@@ -5,8 +5,9 @@ import {PageService} from "../../../../services/page/page.service";
 import {BC_EVENT} from "../../../../breadcrumbs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {
-  AccountInfoDto,
-  EventEndpointService, EventScheduleEndpointService,
+  AccountInfoDto, ActivityDto, ActivityScheduleDto,
+  EventEndpointService, EventScheduleContentDto, EventScheduleEndpointService, EventScheduleLayoutDto, LocationDto, LocationEndpointService,
+  ShiftColumnDto,
   ShiftDto
 } from "../../../../../shiftservice-client";
 import {
@@ -18,7 +19,7 @@ import {
   EMPTY,
   filter,
   forkJoin,
-  map,
+  map, mergeWith, Observable,
   of,
   shareReplay,
   startWith, Subject,
@@ -33,6 +34,12 @@ import {DialogComponent} from "../../../../components/dialog/dialog.component";
 import {ManageShiftComponent, manageShiftParams} from "../../../../components/manage-shift/manage-shift.component";
 import {UserService} from "../../../../services/user/user.service";
 import UserTypeEnum = AccountInfoDto.UserTypeEnum;
+import {InputMultiToggleComponent, MultiToggleOptions} from "../../../../components/inputs/input-multitoggle/input-multi-toggle.component";
+import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
+import {TypedFormControlDirective} from "../../../../directives/typed-form-control.directive";
+import {ManageActivityComponent, manageActivityParams} from "../../../../components/manage-activity/manage-activity.component";
+
+type viewMode = "shift" | "activity";
 
 @Component({
   selector: "app-event-calendar",
@@ -41,7 +48,11 @@ import UserTypeEnum = AccountInfoDto.UserTypeEnum;
     EventCalendarFilterComponent,
     AsyncPipe,
     DialogComponent,
-    ManageShiftComponent
+    ManageShiftComponent,
+    InputMultiToggleComponent,
+    ReactiveFormsModule,
+    TypedFormControlDirective,
+    ManageActivityComponent
   ],
   standalone: true,
   templateUrl: "./event-calendar.component.html",
@@ -50,16 +61,25 @@ import UserTypeEnum = AccountInfoDto.UserTypeEnum;
 export class EventCalendarComponent implements OnDestroy {
 
   protected selectedShift$ = new BehaviorSubject<manageShiftParams | undefined>(undefined);
+  protected selectedActivity$ = new BehaviorSubject<manageActivityParams | undefined>(undefined);
+  protected activityChanged$ = new Subject<ActivityDto>();
   protected shiftChanged$ = new Subject<ShiftDto>();
+  protected readonly form;
+  protected readonly calendarModeOptions: MultiToggleOptions<viewMode> = [
+    {name: "Shifts", value: "shift"},
+    {name: "Schedule", value: "activity"}
+  ];
 
   private readonly _shiftPlanSchedule = viewChild(ShiftCalendarGridComponent);
   private readonly _filterComponent = viewChild(EventCalendarFilterComponent);
 
   private readonly _subscriptions: Subscription[];
 
+  private readonly _fb = inject(FormBuilder);
   private readonly _pageService = inject(PageService);
   private readonly _eventScheduleService = inject(EventScheduleEndpointService);
   private readonly _eventService = inject(EventEndpointService);
+  private readonly _locationsService = inject(LocationEndpointService);
   private readonly _route = inject(ActivatedRoute);
   private readonly _router = inject(Router);
   private readonly _userService = inject(UserService);
@@ -71,6 +91,10 @@ export class EventCalendarComponent implements OnDestroy {
       throw new Error("Event ID is required");
     }
 
+    this.form = this._fb.group({
+      calendarMode: this._fb.nonNullable.control<viewMode>("shift")
+    });
+
     this._subscriptions = this.setupWithObservables(eventId);
   }
 
@@ -78,7 +102,11 @@ export class EventCalendarComponent implements OnDestroy {
     this._subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
-  setupWithObservables(eventId: string): Subscription[]{
+  protected get userType$(){
+    return this._userService.userType$;
+  }
+
+  private setupWithObservables(eventId: string): Subscription[]{
 
     /* details about the selected event */
     const event$ = this._eventService.getShiftPlansOverviewOfEvent(eventId).pipe(
@@ -91,6 +119,19 @@ export class EventCalendarComponent implements OnDestroy {
 
     const isAdmin$ = this._userService.userType$.pipe(
       map(userType => userType === UserTypeEnum.Admin),
+      shareReplay()
+    );
+
+    /* activity / shift mode */
+    const calendarMode$ = this.form.controls.calendarMode.valueChanges.pipe(
+      startWith(this.form.controls.calendarMode.value),
+      distinctUntilChanged(),
+      debounceTime(50),
+      shareReplay()
+    );
+
+    /* observable with locations */
+    const locations$ = this._locationsService.getAllLocationsForEvent(eventId).pipe(
       shareReplay()
     );
 
@@ -115,18 +156,39 @@ export class EventCalendarComponent implements OnDestroy {
     );
 
     /* observable containing the current calendar layout config */
-    const layout$ = filters$.pipe(
-      switchMap(filters =>
-        this._eventScheduleService.getEventScheduleLayout(eventId, {
-          shiftName: mapValue.undefinedIfEmptyString(filters?.shiftName),
-          locationIds: filters?.locationsList,
-          roleIds: filters?.rolesList,
-          shiftRelevances: filters?.relevanceList
-        })),
-      catchError(() => {
-        this._router.navigateByUrl("/");
-        return EMPTY;
-      }),
+    const layout$: Observable<EventScheduleLayoutDto> = calendarMode$.pipe(
+      switchMap(mode => mode === "activity" ?
+
+        /* schedule mode */
+        locations$.pipe(
+          map(locations => locations.map(location => ({location, requiredShiftColumns: 0}))),
+          map(locationLayouts => ({
+            scheduleLayoutDtos: locationLayouts,
+            scheduleStatistics: {
+              totalShifts: 0,
+              totalHours: 0,
+              unassignedCount: 0
+            },
+            scheduleLayoutNoLocationDto: {
+              requiredShiftColumns: 0
+            }
+          }))
+        ) :
+
+        /* shifts mode */
+        filters$.pipe(
+        switchMap(filters =>
+          this._eventScheduleService.getEventScheduleLayout(eventId, {
+            shiftName: mapValue.undefinedIfEmptyString(filters?.shiftName),
+            locationIds: filters?.locationsList,
+            roleIds: filters?.rolesList,
+            shiftRelevances: filters?.relevanceList
+          })),
+        catchError(() => {
+          this._router.navigateByUrl("/");
+          return EMPTY;
+        })
+      )),
       shareReplay()
     );
 
@@ -151,6 +213,15 @@ export class EventCalendarComponent implements OnDestroy {
 
     const subs: Subscription[] = [];
 
+    /* toggle filter mode depending on calendar mode */
+    subs.push(calendarMode$.pipe(
+      withLatestFrom(filterComponent$)
+    ).subscribe(([mode, filterComponent]) => {
+      if(filterComponent !== undefined) {
+        filterComponent.showShiftFilterForm = mode === "shift";
+      }
+    }));
+
     /* Update page properties */
     subs.push(event$.subscribe(dashboard => {
       this._pageService
@@ -162,8 +233,9 @@ export class EventCalendarComponent implements OnDestroy {
         );
     }));
 
-    /* clear cache when shift changed */
+    /* clear cache when shift or activity changed */
     subs.push(this.shiftChanged$.pipe(
+      mergeWith(this.activityChanged$),
       withLatestFrom(calendarComponent$)
     ).subscribe(([,calendar]) => {
       calendar.clearLoadedDays();
@@ -180,12 +252,12 @@ export class EventCalendarComponent implements OnDestroy {
 
     /* react to calendar config and set in component */
     subs.push(filterData$.pipe(
-      combineLatestWith(calendarComponent$, layout$, filterComponent$),
+      combineLatestWith(calendarComponent$, layout$, filterComponent$, calendarMode$),
       withLatestFrom(calendarNavigation$.pipe(
         startWith({visibleDates: [], cachedDates: []})
       ), event$, isAdmin$)
     ).subscribe((
-      [[filterData, calendar, layout, filterComponent],
+      [[filterData, calendar, layout, filterComponent, calendarMode],
         navigation, plan, isAdmin
       ]) => {
 
@@ -202,20 +274,38 @@ export class EventCalendarComponent implements OnDestroy {
       const config: calendarConfig = {
         startDate,
         endDate,
+        activityWidth: calendarMode === "activity" ? "10rem" : undefined,
         locationLayouts: layout.scheduleLayoutDtos,
-        noLocationLayout: {
-          requiredShiftColumns: 1
-        },
-        shiftPaddingColumn: true,
-        shiftClickCallback: shift => this.selectedShift$.next({
+        noLocationLayout: layout.scheduleLayoutNoLocationDto,
+        shiftPaddingColumn: calendarMode === "shift",
+        shiftClickCallback: calendarMode === "activity" ? undefined : shift => this.selectedShift$.next({
           shift,
           eventId: plan.eventOverview.id
         }),
-        emptySpaceClickCallback: !isAdmin ? undefined : (date, location) => this.selectedShift$.next({
+        activityClickCallback: calendarMode === "shift" ? undefined : activity => {
+          this.selectedActivity$.next({
+            eventId: plan.eventOverview.id,
+            activity
+          });
+        },
+        emptySpaceClickCallback: calendarMode === "shift" ?
+
+          /* shift mode*/
+          (!isAdmin ? undefined : (date, location) => this.selectedShift$.next({
           eventId: plan.eventOverview.id,
           suggestedLocation: location,
           suggestedDate: date
-        })
+        })) :
+
+          /* activity mode */
+          (!isAdmin ? undefined : (date, location) => {
+              this.selectedActivity$.next({
+                suggestedDate: date,
+                suggestedLocation: location,
+                eventId: plan.eventOverview.id
+              });
+            }
+        )
       };
       const calendarViewInited = navigation.visibleDates.length > 0;
       calendar.setConfig(config);
@@ -273,21 +363,32 @@ export class EventCalendarComponent implements OnDestroy {
 
     /* load schedule when filter or navigated date changes */
     subs.push(filters$.pipe(
-      combineLatestWith(calendarComponent$, filterData$, calendarNavigation$),
-      switchMap(([filters, calendar, , navigation]) =>{
+      combineLatestWith(calendarComponent$, filterData$, calendarNavigation$, calendarMode$),
+      switchMap(([filters, calendar, , navigation, calendarMode]) =>{
         const newDays = navigation.visibleDates.filter(visible =>
           !navigation.cachedDates.some(cached => cached.getTime() === visible.getTime())
-        ).map(date => this._eventScheduleService.getEventScheduleContent(eventId, {
+        );
+
+        const scheduleDays = calendarMode === "shift" ?
+
+          /* shift schedule mode */
+          newDays.map(date => this._eventScheduleService.getEventScheduleContent(eventId, {
             date: mapValue.datetimeToUtcDateString(date),
             shiftName: mapValue.undefinedIfEmptyString(filters?.shiftName),
             locationIds: filters?.locationsList,
             roleIds: filters?.rolesList,
             shiftPlanIds: filters?.plansList,
             shiftRelevances: filters?.relevanceList
-          })
-        );
+          })) :
 
-        return forkJoin(newDays).pipe(
+          /* event schedule mode */
+          newDays.map(date => this._eventScheduleService.getActivitySchedule(eventId, {
+            date: mapValue.datetimeToUtcDateString(date)
+          }).pipe(
+            map(schedule => this.mapActivityScheduleToEventSchedule(schedule, date))
+        ));
+
+        return forkJoin(scheduleDays).pipe(
           map(schedules => ({calendar, schedules}))
         );
       })
@@ -296,5 +397,39 @@ export class EventCalendarComponent implements OnDestroy {
     }));
 
     return subs;
+  }
+
+  private mapActivityScheduleToEventSchedule(schedule: ActivityScheduleDto, date: Date): EventScheduleContentDto {
+    const locationMap = new Map<string, ActivityDto[]>();
+    const locationIdMap = new Map<string, LocationDto>();
+    const activitiesNoLocation: ActivityDto[] = [];
+
+    schedule.activities.forEach(activity => {
+      if(activity.location === undefined) {
+        activitiesNoLocation.push(activity);
+        return;
+      }
+
+      locationIdMap.set(activity.location.id, activity.location);
+
+      if(!locationMap.has(activity.location.id)) {
+        locationMap.set(activity.location.id, []);
+      }
+      locationMap.get(activity.location.id)?.push(activity);
+    });
+
+    return {
+      date: mapValue.datetimeToUtcDateString(date),
+      scheduleContentDtos: [...locationIdMap.entries()]
+        .map(([id, location]) => ({
+          location,
+          activities: locationMap.get(id) ?? [],
+          shiftColumns: [] as ShiftColumnDto[]
+        })),
+      scheduleContentNoLocationDto: {
+        activities: activitiesNoLocation,
+        shiftColumns: [] as ShiftColumnDto[]
+      }
+    } as EventScheduleContentDto;
   }
 }
