@@ -94,67 +94,6 @@
 
       </div>
 
-      <!-- availability times card -->
-      @if((userType$ | async) === "ASSIGNED") {
-        <div class="card col-start-1 col-span-2 row-span-2 grid grid-columns-2 gap-lg h-fit">
-
-          <!-- info -->
-          <h1 class="compact signature-gradient-font">
-            <fa-icon class="icon" [icon]="icons.unavailable" />
-            Manage Absence
-          </h1>
-          <p class="col-span-2">
-            Set your absence times for calendar filtering and better shift suggestions.
-          </p>
-
-          <!-- set unavailability -->
-          <div class="grid grid-cols-[1fr_auto] col-span-2 gap-xs">
-
-            @if(timeConstraints$ | async; as timeConstraints) {
-              @if (timeConstraints.length === 0) {
-                <small class="col-span-2">You have not set any absence for this event.</small>
-              }
-
-              @for (constraint of timeConstraints; track constraint.id) {
-                <div class="flex gap-sm items-center">
-
-                  @if (constraint.type === "EMERGENCY") {
-                    <div class="badge hint">
-                      <fa-icon [icon]="icons.unavailable" />
-                      Emergency
-                    </div>
-
-                    {{
-                      constraint.from | date:'dd.MM.yyyy'
-                    }}
-                  }
-
-                  @else {
-                    <div class="badge success">
-                      <fa-icon [icon]="icons.unavailable" />
-                      {{ getUnavailabilityDayLength(constraint) }}
-                    </div>
-
-                    {{
-                      constraint.from | date:'dd.MM.yyyy HH:mm'
-                    }} - {{
-                      constraint.to | date:'dd.MM.yyyy HH:mm'
-                    }}
-                  }
-
-                </div>
-                <xsb-input-button action="normal" content="Remove {{constraint.type === 'EMERGENCY' ? 'Emergency' : 'Absence'}}" size="minimal" (click)="removeUnavailability(constraint, event)" />
-              }
-            }
-          </div>
-          <div class="flex gap-sm">
-            <xsb-input-button content="Add Absence" (click)="showUnavailabilityDialog = true" size="minimal" class="w-fit" />
-            <xsb-input-button content="Set Emergency" (click)="showEmergencyDialog = true" action="danger" size="minimal" class="w-fit" />
-          </div>
-
-        </div>
-      }
-
       @if ((userType$ | async) === "ADMIN") {
         <!-- manage event -->
         <div class="card interaction" routerLink="manage">
@@ -178,7 +117,7 @@
           <!-- info -->
           <h1>
             <fa-icon [icon]="icons.plan" class="icon" />
-            Manage Shift Plans
+            Planner Dashboard
           </h1>
           <p>
             Manage shift plan invites, roles, shifts, and assignments.
@@ -204,40 +143,50 @@
       }
     </div>
 
-  <!-- leaderboard and calendar link -->
-  <div class="flex flex-col gap-lg">
+    <!-- volunteer cards -->
+    <div class="flex flex-col gap-lg">
 
+      <!-- leaderboard -->
+      @if (leaderboard$ | async; as leaderboard) {
+        <app-event-leaderboard [leaderboard]="leaderboard ?? undefined"  />
+      }
 
-    <!-- leaderboard -->
-    @if (leaderboard$ | async; as leaderboard) {
-      <app-event-leaderboard [leaderboard]="leaderboard ?? undefined"  />
-    }
+      <!-- calendar link card -->
+      <div class="card interaction spotlight" routerLink="calendar">
+        <h1>
+          <fa-icon [icon]="icons.calendar" class="icon" />
+          View Event Calendar
+        </h1>
+        <p>
+          @if ((userType$ | async) === "ADMIN"){
+            Manage the event schedule and shifts.
+          }
+          @else if ((isPlannerInEvent$ | async) === true){
+            Manage and explore the shifts of the event.
+          }
+          @else {
+            Explore your shifts in the event.
+          }
+        </p>
+      </div>
 
-    <!-- calendar link card -->
-    <div class="card interaction spotlight" routerLink="calendar">
-      <h1>
-        <fa-icon [icon]="icons.calendar" class="icon" />
-        View Event Calendar
-      </h1>
-      <p>
-        @if ((userType$ | async) === "ADMIN"){
-          Manage the event schedule and shifts.
-        }
-        @else if ((isPlannerInEvent$ | async) === true){
-          Manage and explore the shifts of the event.
-        }
-        @else {
-          Explore your shifts in the event.
-        }
-      </p>
+      @if ((userType$ | async) !== "ADMIN") {
+        <!-- help page -->
+        <div class="card interaction" routerLink="volunteer">
+
+          <!-- info -->
+          <h1>
+            <fa-icon [icon]="icons.signedUp" class="icon" />
+            Volunteer Dashboard
+          </h1>
+          <p>
+            View your shifts and trade with other volunteers.
+          </p>
+
+        </div>
+      }
+
     </div>
-
   </div>
-
-
-  </div>
-
-  <app-dialog-add-unavailability [viewWhen]="showUnavailabilityDialog" (result)="unavailabilitySubmitted($event, event)" />
-  <app-dialog-add-emergency [viewWhen]="showEmergencyDialog" (result)="emergencySubmitted($event, event)" />
 }
 

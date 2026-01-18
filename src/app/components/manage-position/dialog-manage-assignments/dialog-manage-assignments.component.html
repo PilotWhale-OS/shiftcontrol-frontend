@@ -27,6 +27,7 @@
           <small><fa-icon [icon]="icons.signedUp" class="pr-sm" />Filter State</small>
           <xsb-input-multitoggle #filterType
                           [formControl]="form.controls.filterType"
+                           class="w-fit"
                           [xsb-typed]="[filterType, form.controls.filterType]"
                           name="position-assignments-type" [options]="filterOptions"
           />

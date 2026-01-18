@@ -311,6 +311,7 @@ export class ManageShiftComponent implements OnDestroy {
     });
 
     if (value.shift !== undefined) {
+      this.form.controls.plan.disable();
       this.form.setValue({
         name: value.shift.name,
         description: value.shift.longDescription ?? "",
@@ -324,6 +325,7 @@ export class ManageShiftComponent implements OnDestroy {
         bonusPoints: value.shift.bonusRewardPoints
       });
     } else {
+      this.form.controls.plan.enable();
       this.form.setValue({
         name: "",
         description: "",

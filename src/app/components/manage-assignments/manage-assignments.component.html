@@ -69,7 +69,11 @@
       <hr>
 
       @for (assignment of (assignments$ | async) ?? []; track assignment.shiftId) {
-        {{assignment.shiftName}}
+
+        @if (assignment.requests.length > 0){
+          {{assignment.shiftName}}
+        }
+
       }
 
     </div>
