@@ -202,10 +202,18 @@
     <div class="card interaction spotlight" routerLink="calendar">
       <h1>
         <fa-icon [icon]="icons.calendar" class="icon" />
-        View Shift Calendar
+        View Event Calendar
       </h1>
       <p>
-        Manage the shifts of the event.
+        @if ((userType$ | async) === "ADMIN"){
+          Manage the event schedule and shifts.
+        }
+        @else if ((isPlannerInEvent$ | async) === true){
+          Manage and explore the shifts of the event.
+        }
+        @else {
+          Explore your shifts in the event.
+        }
       </p>
     </div>
 
