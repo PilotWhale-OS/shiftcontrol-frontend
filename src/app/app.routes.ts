@@ -18,7 +18,7 @@ import {AccountComponent} from "./pages/shiftcontrol/account/account.component";
 import {HomeComponent} from "./pages/shiftcontrol/home/home.component";
 import {EventCalendarComponent} from "./pages/shiftcontrol/event/event-calendar/event-calendar.component";
 import {ShiftDetailsComponent} from "./pages/shiftcontrol/shift-details/shift-details.component";
-import {PlanOnboardingComponent} from "./pages/shiftcontrol/plan-onboarding/plan-onboarding.component";
+import {PlanOnboardingComponent} from "./pages/public/plan-onboarding/plan-onboarding.component";
 import {NotificationsComponent} from "./pages/shiftcontrol/notifications/notifications.component";
 import {ManageShiftPlansComponent} from "./pages/shiftcontrol/event/manage-shift-plans/manage-shift-plans.component";
 import {ManageEventComponent} from "./pages/shiftcontrol/event/manage-event/manage-event.component";
@@ -36,7 +36,7 @@ export const routes: Routes = ([
   /* onboarding */
   { path: "join/:shiftPlanInvite", redirectTo: "onboarding/:shiftPlanInvite", pathMatch: "full" },
   { path: "onboarding/:shiftPlanInvite", component: PlanOnboardingComponent,
-    data: { breadcrumbs: BC_PLAN_ONBOARDING }, canActivate: [accessAllowedGuard]},
+    data: { breadcrumbs: BC_PLAN_ONBOARDING }},
 
   /* events */
   { path: "events", component: EventsComponent,

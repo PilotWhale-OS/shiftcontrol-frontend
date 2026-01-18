@@ -1,11 +1,11 @@
-import {Component, inject} from "@angular/core";
+import {Component, inject, OnDestroy} from "@angular/core";
 import {PageService} from "../../../services/page/page.service";
 import {BC_EVENT, BC_PLAN_ONBOARDING} from "../../../breadcrumbs";
 import {InputButtonComponent} from "../../../components/inputs/input-button/input-button.component";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {ShiftPlanInviteDto, ShiftPlanInviteEndpointService, ShiftPlanInviteDetailsDto} from "../../../../shiftservice-client";
-import {BehaviorSubject, map, switchMap} from "rxjs";
+import {BehaviorSubject, map, Subscription, switchMap, take, takeWhile, withLatestFrom} from "rxjs";
 import {AsyncPipe, DatePipe} from "@angular/common";
 import {TooltipDirective} from "../../../directives/tooltip.directive";
 import {icons} from "../../../util/icons";
@@ -27,7 +27,7 @@ import {ToastService} from "../../../services/toast/toast.service";
   templateUrl: "./plan-onboarding.component.html",
   styleUrl: "./plan-onboarding.component.scss"
 })
-export class PlanOnboardingComponent {
+export class PlanOnboardingComponent implements OnDestroy {
 
   protected readonly icons = icons;
   protected readonly invite$ = new BehaviorSubject<ShiftPlanInviteDetailsDto | null | "INVALID">(null);
@@ -49,12 +49,16 @@ export class PlanOnboardingComponent {
   private readonly _router = inject(Router);
   private readonly _toastService = inject(ToastService);
 
+  private readonly _inviteSubscription?: Subscription;
+
   constructor() {
     const inviteCode = this._activatedRoute.snapshot.paramMap.get("shiftPlanInvite");
     if(inviteCode === null) {
       this._router.navigateByUrl("/");
       return;
     }
+
+    const accept = this._activatedRoute.snapshot.queryParamMap.get("accept");
 
     this._planService.getShiftPlanInviteDetails(inviteCode).subscribe({
       next: details => {
@@ -76,17 +80,39 @@ export class PlanOnboardingComponent {
         this.invite$.next("INVALID");
       }
     });
+
+    this._inviteSubscription = this.inviteMode$.pipe(
+      withLatestFrom(this.invite$)
+    ).subscribe(([mode, invite]) => {
+      if(invite !== "INVALID" && invite !== null && accept !== null &&
+        (mode === "JOIN" || mode === "UPGRADE_ACCESS" || mode === "UPGRADE_ROLES")) {
+        this.joinShiftPlan(invite);
+      }
+    });
   }
 
-  joinShiftPlan(invite: ShiftPlanInviteDto) {
-    this._planService.joinShiftPlan({
-      inviteCode: invite.code
-    }).pipe(
-      this._toastService.tapSuccess("Joined Shift Plan", () => `You have joined the shift plan "${invite.shiftPlanDto.name}"`),
-      this._toastService.tapError("Error joining shift plan", mapValue.apiErrorToMessage),
-      switchMap(() => this._userService.refreshProfile())
+  ngOnDestroy() {
+    this._inviteSubscription?.unsubscribe();
+  }
+
+  joinShiftPlan(invite: ShiftPlanInviteDetailsDto) {
+    this._userService.kcProfile$.pipe(
+      switchMap(profile => {
+        if(profile === null) {
+          this._userService.login(window.location.href + "?accept=true");
+        }
+
+        return this._planService.joinShiftPlan({
+          inviteCode: invite.inviteDto.code
+        }).pipe(
+          this._toastService.tapSuccess("Joined Shift Plan",
+            () => `You have joined the shift plan "${invite.inviteDto.shiftPlanDto.name}"`),
+          this._toastService.tapError("Error joining shift plan", mapValue.apiErrorToMessage),
+          switchMap(() => this._userService.refreshProfile())
+        );
+      })
     ).subscribe(() => {
-      this._router.navigateByUrl(`/plans/${invite.shiftPlanDto.id}`);
+      this._router.navigateByUrl(`/events/${invite.eventDto.id}`);
     });
   }
 }

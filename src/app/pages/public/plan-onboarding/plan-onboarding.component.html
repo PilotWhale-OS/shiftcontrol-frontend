@@ -44,7 +44,7 @@
 
               <div class="flex flex-col gap-sm justify-center items-center pt-lg">
                 <small>You have already joined this plan, but this invite makes you a shift planner.</small>
-                <xsb-input-button class="w-fit" action="success" content="Upgrade Access" (click)="joinShiftPlan(invite.inviteDto)" name="onboarding-upgrade" />
+                <xsb-input-button class="w-fit" action="success" content="Upgrade Access" (click)="joinShiftPlan(invite)" name="onboarding-upgrade" />
               </div>
             }
 
@@ -55,7 +55,7 @@
 
               <div class="flex flex-col gap-sm justify-center items-center pt-lg">
                 <small>You have already joined this plan, but this invite grants you extra shift qualifications.</small>
-                <xsb-input-button class="w-fit" action="success" content="Unlock Qualificatins" (click)="joinShiftPlan(invite.inviteDto)" name="onboarding-extend" />
+                <xsb-input-button class="w-fit" action="success" content="Unlock Qualificatins" (click)="joinShiftPlan(invite)" name="onboarding-extend" />
               </div>
             }
 
@@ -78,9 +78,9 @@
 
               <div class="flex flex-col gap-sm justify-center items-center pt-lg">
                 @if (invite.inviteDto.type === "VOLUNTEER_JOIN") {
-                  <xsb-input-button action="success" content="Join Event as Volunteer" (click)="joinShiftPlan(invite.inviteDto)" name="onboarding-join-planner" />
+                  <xsb-input-button action="success" content="Join Event as Volunteer" (click)="joinShiftPlan(invite)" name="onboarding-join-planner" />
                 } @else {
-                  <xsb-input-button action="success" content="Join Event as Planner" (click)="joinShiftPlan(invite.inviteDto)" name="onboarding-join-planner" />
+                  <xsb-input-button action="success" content="Join Event as Planner" (click)="joinShiftPlan(invite)" name="onboarding-join-planner" />
                 }
               </div>
             }
