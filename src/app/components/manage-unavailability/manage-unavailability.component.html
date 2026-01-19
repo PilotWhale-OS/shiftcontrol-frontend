@@ -12,7 +12,7 @@
     </p>
 
     <!-- set unavailability -->
-    <div class="grid grid-cols-[1fr_auto] col-span-2 gap-xs">
+    <div class="grid grid-cols-[1fr_auto] col-span-2 gap-xs max-h-[15vh] overflow-y-auto">
 
       @if(timeConstraints$ | async; as timeConstraints) {
         @if (timeConstraints.length === 0) {
@@ -47,7 +47,7 @@
             }
 
           </div>
-          <xsb-input-button action="normal" content="Remove {{constraint.type === 'EMERGENCY' ? 'Emergency' : 'Absence'}}" size="minimal" (click)="removeUnavailability(constraint, event)" />
+          <xsb-input-button action="normal" content="Remove {{constraint.type === 'EMERGENCY' ? 'Emergency' : 'Absence'}}" size="text" (click)="removeUnavailability(constraint, event)" />
         }
       }
     </div>
@@ -55,10 +55,8 @@
       <xsb-input-button content="Add Absence" (click)="showUnavailabilityDialog = true" size="minimal" class="w-fit" />
       <xsb-input-button content="Set Emergency" (click)="showEmergencyDialog = true" action="danger" size="minimal" class="w-fit" />
     </div>
-
-
-    <app-dialog-add-unavailability [viewWhen]="showUnavailabilityDialog" (result)="unavailabilitySubmitted($event, event)" />
-    <app-dialog-add-emergency [viewWhen]="showEmergencyDialog" (result)="emergencySubmitted($event, event)" />
-
   </div>
+
+  <app-dialog-add-unavailability [viewWhen]="showUnavailabilityDialog" (result)="unavailabilitySubmitted($event, event)" />
+  <app-dialog-add-emergency [viewWhen]="showEmergencyDialog" (result)="emergencySubmitted($event, event)" />
 }

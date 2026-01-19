@@ -10,15 +10,17 @@
 
       @for (shift of day[1]; track shift.shift.id) {
         <div
-          class="border-ctr border-framing-item hover:border-framing-highlight transition-colors bg-background-item cursor-pointer rounded-xl p-md grid grid-cols-2 gap-md"
-          [routerLink]="'/shifts/' + shift.shift.id"
+          class="card compact interaction grid grid-cols-2 gap-sm"
+          [ngClass]="{
+             'spotlight' : isRequested(shift.shift)
+          }" [routerLink]="'/shifts/' + shift.shift.id"
         >
           <b>{{shift.shift.name}}</b>
           <small class="justify-self-end" >{{shift.shift.startTime | date:"shortTime"}} - {{shift.shift.endTime | date:"shortTime"}}</small>
 
-          @if (showShiftDescription) {
+          @if (showShiftDescription && shift.shift.shortDescription !== undefined && shift.shift.shortDescription.length > 0) {
             <p class="col-span-2">
-              {{shift.shift.shortDescription ?? "No  Description"}}
+              {{shift.shift.shortDescription}}
             </p>
           }
 
@@ -39,6 +41,13 @@
           <!-- personal details badges -->
           @if (showShiftPersonalDetails) {
             <div class="flex gap-md col-span-2">
+              @if(isRequested(shift.shift)) {
+                <div class="badge hint" [app-tooltip]="'You have requested to be assigned.\nYou are not yet signed up!'">
+                  <fa-icon [icon]="icons.signupRequested" />
+                  Requested
+                </div>
+              }
+
               @for(slot of getAssignedPositionSlots(shift.shift); track slot.id) {
                 <div class="badge" [app-tooltip]="'Your position in this shift'">
                   <fa-icon [icon]="icons.role" />

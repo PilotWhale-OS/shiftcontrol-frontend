@@ -128,6 +128,22 @@
 
       @if ((userType$ | async) !== "ADMIN") {
         <!-- help page -->
+        <div class="card interaction" routerLink="volunteer">
+
+          <!-- info -->
+          <h1>
+            <fa-icon [icon]="icons.signedUp" class="icon" />
+            Volunteer Dashboard
+          </h1>
+          <p>
+            View your shifts and trade with other volunteers.
+          </p>
+
+        </div>
+      }
+
+      @if ((userType$ | async) !== "ADMIN") {
+        <!-- help page -->
         <div class="card interaction" routerLink="help">
 
           <!-- info -->
@@ -169,22 +185,6 @@
           }
         </p>
       </div>
-
-      @if ((userType$ | async) !== "ADMIN") {
-        <!-- help page -->
-        <div class="card interaction" routerLink="volunteer">
-
-          <!-- info -->
-          <h1>
-            <fa-icon [icon]="icons.signedUp" class="icon" />
-            Volunteer Dashboard
-          </h1>
-          <p>
-            View your shifts and trade with other volunteers.
-          </p>
-
-        </div>
-      }
 
     </div>
   </div>

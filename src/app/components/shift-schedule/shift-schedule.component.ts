@@ -4,10 +4,10 @@ import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {TooltipDirective} from "../../directives/tooltip.directive";
 import {EventDto, PositionSlotDto, ShiftDto, ShiftPlanDto} from "../../../shiftservice-client";
 import {BehaviorSubject} from "rxjs";
-import {AsyncPipe, DatePipe} from "@angular/common";
+import {AsyncPipe, DatePipe, NgClass} from "@angular/common";
 import {icons} from "../../util/icons";
 
-type groupedShifts = Map<Date, shiftWithOrigin[]>;
+type groupedShifts = Map<number, shiftWithOrigin[]>;
 
 export interface shiftWithOrigin {
   shift: ShiftDto;
@@ -22,7 +22,8 @@ export interface shiftWithOrigin {
     FaIconComponent,
     TooltipDirective,
     AsyncPipe,
-    DatePipe
+    DatePipe,
+    NgClass
   ],
   standalone: true,
   templateUrl: "./shift-schedule.component.html",
@@ -52,17 +53,31 @@ export class ShiftScheduleComponent {
     for (const shift of shifts) {
       const localDate = new Date(shift.shift.startTime);
       localDate.setHours(0, 0, 0, 0);
-      if (!map.has(localDate)) {
-        map.set(localDate, []);
+      const key = localDate.getTime();
+      if (!map.has(key)) {
+        map.set(key, []);
       }
-      map.get(localDate)?.push(shift);
+      map.get(key)?.push(shift);
     }
 
     return map;
   }
 
   protected getAssignedPositionSlots(shift: ShiftDto) {
-    return shift.positionSlots.filter(slot => slot.positionSignupState === PositionSlotDto.PositionSignupStateEnum.SignedUp);
+    return shift.positionSlots.filter(slot =>
+      slot.positionSignupState === PositionSlotDto.PositionSignupStateEnum.SignedUp
+    );
+  }
+
+  /**
+   * If no position as signed up, it is only requested to join
+   * @param shift
+   * @protected
+   */
+  protected isRequested(shift: ShiftDto) {
+    return shift.positionSlots
+      .filter(slot => slot.positionSignupState === PositionSlotDto.PositionSignupStateEnum.SignedUp)
+      .length === 0;
   }
 
 }

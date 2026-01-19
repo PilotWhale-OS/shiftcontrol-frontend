@@ -28,14 +28,14 @@ export class HomeComponent {
   private readonly _eventService = inject(EventEndpointService);
 
   constructor() {
-    this._eventService.getAllOngoingEvents().pipe(
+    this._eventService.getAllOpenEvents().pipe(
       withLatestFrom(this.cards$)
     ).subscribe(([events, cards]) => {
       this.cards$.next([
         ...cards,
         ...events.map(event => ({
           title: event.name,
-          content: event.shortDescription ?? `${event.name} is currently ongoing. Click to view details.`,
+          content: event.shortDescription ?? "No event description provided.",
           href: `events/${event.id}`,
           spotlight: true
         }))

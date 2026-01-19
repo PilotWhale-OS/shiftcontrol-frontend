@@ -1,14 +1,10 @@
 <!-- list of trades/auctions -->
-<small>Coming Soon</small>
-<div class="flex flex-col gap-md grow overflow-auto hidden">
+<div class="flex flex-col gap-md grow overflow-auto">
 
   @for (card of [1,2]; track card) {
 
     <!-- card for item: trade -->
-    <div class="border-ctr border-framing-card bg-background-card rounded-xl p-md flex flex-col gap-md">
-
-      <!-- caption-->
-      <small>Paul wants to trade their shift "Shift 2"</small>
+    <div class="card interaction compact flex flex-col gap-md">
 
       <!-- badges -->
       <div class="flex flex-wrap gap-sm gap-y-xxs items-center">
@@ -18,80 +14,36 @@
           PS
         </div>
 
-        @if (showShiftOrigin) {
-
-          <!-- event trade origin badge -->
-          <div class="badge success" [app-tooltip]="'The event\n of Pauls shift'">
-            <fa-icon [icon]="iconEvent" />
-            Pilot Event
-          </div>
-
-          <!-- plan trade origin badge -->
-          <div class="badge success" [app-tooltip]="'The shift plan\n of Pauls shift'">
-            <fa-icon [icon]="iconPlan" />
-            Pilot Plan
-          </div>
-
-          <!-- clear row -->
-          <div style="flex-basis: 100%" class=""></div>
-        }
-
-        <!-- type badge -->
-        <div class="badge" [app-tooltip]="'Trade request to swap their\nshift agains yours'">
-          <fa-icon [icon]="iconTrade" />
-          Trade
-        </div>
-
-        @if (showShiftOrigin) {
-
-          <!-- event origin badge -->
-          <div class="badge" [app-tooltip]="'The event of\n your shift'">
-            <fa-icon [icon]="iconEvent" />
-            Pilot Event
-          </div>
-
-          <!-- plan origin badge -->
-          <div class="badge" [app-tooltip]="'The shift plan\n of your shift'">
-            <fa-icon [icon]="iconPlan" />
-            Pilot Plan
-          </div>
-        }
+        <!-- caption-->
+        <span><b>Paul S.</b> wants to trade their shift <b>Some Shift</b></span>
       </div>
 
-      <!-- trade: left and right info -->
-      <div class="grid grid-cols-[1fr_2rem_1fr] rounded-lg border-framing-item border-ctr">
-        <div class="flex flex-col items-center gap-xs bg-background-item rounded-l-lg p-sm cursor-pointer" [routerLink]="'/shifts/shiftId'">
-          <b>Shift 1</b>
-          <b>Pilot Position</b>
-          <small>01.12.2025 08:00</small>
-          <xsb-input-button [icon]="iconKeep" size="minimal" content="Keep yours" name="trade-view-shift" />
+      <!-- trade info badges -->
+      <div class="flex flex-wrap gap-sm gap-y-xxs items-center">
+
+        <!-- traded shift badge -->
+        <div class="badge" [app-tooltip]="'The shift plan\n of your shift'">
+          <fa-icon [icon]="icons.shift" />
+          Pilot Shift
+          <fa-icon [icon]="icons.trade" />
+          Other Shift
         </div>
 
-        <svg viewBox="0 0 100 100" preserveAspectRatio="none" class="h-full w-full">
-          <!-- Right angle at top-left -->
-          <polygon
-            points="0,0 100,0 0,100"
-            class="fill-background-item"
-          />
-        </svg>
-
-        <div class="flex flex-col items-center p-sm gap-xs cursor-pointer" [routerLink]="'/shifts/shiftId'">
-          <b>Shift 2</b>
-          <b>Pilot Position</b>
-          <small>01.12.2025 08:00</small>
-          <xsb-input-button [icon]="iconAccept" size="minimal" content="Accept Theirs" action="success" name="trade-accept" />
+        <!-- trade date badge -->
+        <div class="badge" [app-tooltip]="'The shift plan\n of your shift'">
+          <fa-icon [icon]="icons.date" />
+          11.11.2026
+          <fa-icon [icon]="icons.trade" />
+          12.11.2026
         </div>
       </div>
 
     </div>
 
     <!-- card for item: auction -->
-    <div class="border-ctr border-framing-card bg-background-card rounded-xl p-md flex flex-col gap-md">
+    <div class="card interaction spotlight compact flex flex-col gap-md">
 
-      <!-- caption  -->
-      <small class="col-span-3">Paul offered their shift "Shift 1"</small>
-
-      <!-- badges -->
+      <!-- title -->
       <div class="flex flex-wrap gap-sm gap-y-xxs items-center">
 
         <!-- from user -->
@@ -99,33 +51,31 @@
           PS
         </div>
 
-        @if (showShiftOrigin) {
-
-          <!-- event trade origin badge -->
-          <div class="badge success" [app-tooltip]="'The event\n of Pauls shift'">
-            <fa-icon [icon]="iconEvent" />
-            Pilot Event
-          </div>
-
-          <!-- plan trade origin badge -->
-          <div class="badge success" [app-tooltip]="'The shift plan\n of Pauls shift'">
-            <fa-icon [icon]="iconPlan" />
-            Pilot Plan
-          </div>
-        }
-
-        <!-- type badge -->
-        <div class="badge" [app-tooltip]="'Auction offer to\nfreely claim shift'">
-          <fa-icon [icon]="iconTrade" />
-          Auction
-        </div>
+        <!-- caption-->
+        <span><b>Paul S.</b> offers their shift <b>Some Shift</b></span>
       </div>
 
-      <!-- auction: offered shift info -->
-      <div class="flex flex-col bg-background-item border-ctr border-framing-item rounded-lg items-center gap-xs p-sm cursor-pointer" [routerLink]="'/shifts/shiftId'">
-        <b>Shift 1: Pilot Position</b>
-        <small>01.12.2025 08:00</small>
-        <xsb-input-button [icon]="iconAccept" size="minimal" content="Claim offer" action="success" name="auction-claim" />
+
+      <!-- auction info badges -->
+      <div class="flex flex-wrap gap-sm gap-y-xxs items-center">
+
+        <!-- traded shift badge -->
+        <div class="badge" [app-tooltip]="'The shift plan\n of your shift'">
+          <fa-icon [icon]="icons.shift" />
+          Pilot Shift
+        </div>
+
+        <!-- traded position badge -->
+        <div class="badge" [app-tooltip]="'The shift plan\n of your shift'">
+          <fa-icon [icon]="icons.position" />
+          Some Position
+        </div>
+
+        <!-- trade date badge -->
+        <div class="badge" [app-tooltip]="'The shift plan\n of your shift'">
+          <fa-icon [icon]="icons.date" />
+          11.11.2026 12:20
+        </div>
       </div>
 
     </div>

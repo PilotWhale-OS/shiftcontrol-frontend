@@ -29,6 +29,7 @@ export const icons = {
   role: faHashtag,
   signUp: faKey,
   signedUp: faCertificate,
+  signupRequested: faLock,
   assigned: faCheckCircle,
   unassigned: faBan,
   eligible: faCertificate,
