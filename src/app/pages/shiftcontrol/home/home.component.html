@@ -11,8 +11,8 @@
     </div>
   </div>
 
-  @for (card of cards; track card) {
-    <div class="card interaction" [ngClass]="card.spotlight === true ? 'spotlight' : ''" [routerLink]="card.href">
+  @for (card of cards$ | async; track card) {
+    <div class="card interaction" [ngClass]="card.spotlight ? 'spotlight' : ''" [routerLink]="card.href">
       <h1>{{card.title}}</h1>
       <span>{{card.content}}</span>
     </div>

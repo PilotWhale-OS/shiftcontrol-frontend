@@ -17,12 +17,24 @@
   @for (event of (events$ | async); track event) {
     <div class="card interaction grid grid-columns-2 gap-2" [routerLink]="'/events/' + event.id">
       <h1>{{event.name}}</h1>
-      <div class="badge w-fit"
-           tooltipMaxWidth="30ex"
-           [app-tooltip]="'The event dates of ' + event.name"
-      >
-        <fa-icon [icon]="icons.date" />
-        {{event.startTime | date:"mediumDate"}} - {{event.endTime | date:"mediumDate"}}
+      <div class="flex flex-row gap-sm items-center">
+        <div class="badge w-fit"
+             tooltipMaxWidth="30ex"
+             [app-tooltip]="'The event dates of ' + event.name"
+        >
+          <fa-icon [icon]="icons.date" />
+          {{event.startTime | date:"mediumDate"}} - {{event.endTime | date:"mediumDate"}}
+        </div>
+
+        @if (event.active) {
+          <div class="badge hint w-fit"
+               tooltipMaxWidth="30ex"
+               [app-tooltip]="'This event is currently active'"
+          >
+            <fa-icon [icon]="icons.signedUp" />
+            Active
+          </div>
+        }
       </div>
       <p>
         {{event.shortDescription ?? "No description provided."}}
