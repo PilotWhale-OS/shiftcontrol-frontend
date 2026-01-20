@@ -1,10 +1,13 @@
 <!-- list of trades/auctions -->
 <div class="flex flex-col gap-md grow overflow-auto">
 
-  @for (trade of tradeData$ | async; track trade.trade.offeringAssignment.id) {
+  @for (trade of tradeData$ | async; track trade.trade.offeringAssignment.assignment.id) {
 
     <!-- card for item: trade -->
-    <div class="card interaction compact flex flex-col gap-md">
+    <div class="card interaction compact flex flex-col gap-md"
+         tabindex="0" (keyup)="0"
+        (click)="previewTrade(trade.trade)"
+    >
 
       <!-- badges -->
       <div class="flex flex-wrap gap-sm gap-y-xxs items-center">
@@ -20,10 +23,10 @@
         <!-- action(s) -->
         <div class="grow flex flex-row justify-end gap-sm">
           @if (trade.isOwnRequest){
-            <xsb-input-button size="text" content="Cancel" />
+            <xsb-input-button size="text" content="Cancel" (click)="cancelTrade(trade.trade)" />
           } @else {
-            <xsb-input-button size="text" content="Accept" />
-            <xsb-input-button size="text" content="Decline" />
+            <xsb-input-button size="text" content="Accept" (click)="acceptTrade(trade.trade)" />
+            <xsb-input-button size="text" content="Decline" (click)="declineTrade(trade.trade)" />
           }
         </div>
       </div>
@@ -34,25 +37,24 @@
         <!-- traded shift badge -->
         <div class="badge" [app-tooltip]="'The shift plan\n of your shift'">
           <fa-icon [icon]="icons.shift" />
-          {{trade.ownShift?.name}}
+          {{trade.ownShift.name}}
           <fa-icon [icon]="icons.trade" />
-          {{trade.otherShift?.name}}
+          {{trade.otherShift.name}}
         </div>
 
         <!-- trade date badge -->
         <div class="badge" [app-tooltip]="'The shift plan\n of your shift'">
           <fa-icon [icon]="icons.date" />
-          {{trade.ownShift?.startTime | date:"shortDate"}}
+          {{trade.ownShift.startTime | date:"shortDate"}}
           <fa-icon [icon]="icons.trade" />
-          {{trade.otherShift?.startTime | date:"shortDate"}}
+          {{trade.otherShift.startTime | date:"shortDate"}}
         </div>
       </div>
 
     </div>
   }
 
-  @for(auction of auctionData$ | async; track auction.auction.id) {
-
+  @for(auction of auctionData$ | async; track auction.auction.assignment.id) {
 
     <!-- card for item: auction -->
     <div class="card interaction spotlight compact flex flex-col gap-md"
@@ -74,9 +76,9 @@
         <!-- action(s) -->
         <div class="grow flex flex-row justify-end">
           @if (auction.isOwnRequest){
-            <xsb-input-button size="text" content="Cancel" />
+            <xsb-input-button size="text" content="Cancel" (click)="cancelAuction(auction.auction)" />
           } @else {
-            <xsb-input-button size="text" content="Accept" />
+            <xsb-input-button size="text" content="Accept" (click)="acceptAuction(auction.auction)" />
           }
         </div>
       </div>
@@ -88,19 +90,19 @@
         <!-- traded shift badge -->
         <div class="badge" [app-tooltip]="'The shift plan\n of your shift'">
           <fa-icon [icon]="icons.shift" />
-          {{auction.shift?.name}}
+          {{auction.shift.name}}
         </div>
 
         <!-- traded position badge -->
         <div class="badge" [app-tooltip]="'The shift plan\n of your shift'">
           <fa-icon [icon]="icons.position" />
-          {{auction.slot?.name}}
+          {{auction.slot.name}}
         </div>
 
         <!-- auction date badge -->
         <div class="badge" [app-tooltip]="'The shift plan\n of your shift'">
           <fa-icon [icon]="icons.date" />
-          {{auction.shift?.startTime | date:"shortDate"}}
+          {{auction.shift.startTime | date:"shortDate"}}
         </div>
       </div>
 
@@ -119,7 +121,10 @@
 @if (selectedShift$ | async; as shiftParams){
   @if (shiftParams !== null && shiftParams !== undefined){
 
-    <xsb-dialog #dialog (closeDialog)="selectedShift$.next(undefined)" [maxSize]="true">
+    <xsb-dialog #dialog
+                (closeDialog)="selectedShift$.next(undefined)" [maxSize]="true"
+                [expandUrl]="shiftParams.shift?.id !== undefined ? '/shifts/' + shiftParams.shift?.id : undefined"
+    >
 
       <ng-container dialog-header>
         <h1 class="signature-gradient-font">

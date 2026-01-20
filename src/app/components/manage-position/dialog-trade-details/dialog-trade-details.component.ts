@@ -1,7 +1,8 @@
 import {Component, EventEmitter, inject, Input, Output} from "@angular/core";
 import {
+  PositionSlotContextDto,
   PositionSlotDto,
-  PositionSlotEndpointService, PositionSlotTradeEndpointService, ShiftDetailsDto,
+  PositionSlotEndpointService, PositionSlotTradeEndpointService, ShiftContextDto, ShiftDetailsDto,
   ShiftEndpointService,
   TradeInfoDto,
   VolunteerDto
@@ -14,6 +15,7 @@ import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {icons} from "../../../util/icons";
 import {ToastService} from "../../../services/toast/toast.service";
 import {mapValue} from "../../../util/value-maps";
+import {RouterLink} from "@angular/router";
 
 interface mappedInfo {
   tradeId: string;
@@ -22,10 +24,10 @@ interface mappedInfo {
   otherRewardPoints: number;
   ownVolunteer: VolunteerDto;
   otherVolunteer: VolunteerDto;
-  ownSlot: PositionSlotDto;
-  otherSlot: PositionSlotDto;
-  ownShift: ShiftDetailsDto;
-  otherShift: ShiftDetailsDto;
+  ownSlot: PositionSlotContextDto;
+  otherSlot: PositionSlotContextDto;
+  ownShift: ShiftContextDto;
+  otherShift: ShiftContextDto;
 }
 
 @Component({
@@ -35,7 +37,8 @@ interface mappedInfo {
     SlicePipe,
     DialogComponent,
     FaIconComponent,
-    DatePipe
+    DatePipe,
+    RouterLink
   ],
   templateUrl: "./dialog-trade-details.component.html",
   styleUrl: "./dialog-trade-details.component.scss"
@@ -54,8 +57,6 @@ export class DialogTradeDetailsComponent {
   protected mappedInfo$: Observable<mappedInfo | undefined>;
 
   private readonly _userService = inject(UserService);
-  private readonly _positionService = inject(PositionSlotEndpointService);
-  private readonly _shiftService = inject(ShiftEndpointService);
   private readonly _tradeService = inject(PositionSlotTradeEndpointService);
   private readonly _toastService = inject(ToastService);
 
@@ -65,32 +66,22 @@ export class DialogTradeDetailsComponent {
         combineLatestWith(this._userService.userProfile$.pipe(
           filter(user => user !== null)
         )),
-        switchMap(([info, user]) => of([info, user] as const).pipe(
-          combineLatestWith(
-            this._positionService.getPositionSlot(info.offeredPositionSlotId),
-            this._positionService.getPositionSlot(info.requestedPositionSlotId)
-          )
-        )),
-        switchMap(([[info, user], offeredSlot, requestedSlot]) => of([info, user, offeredSlot, requestedSlot] as const).pipe(
-          combineLatestWith(
-            this._shiftService.getShiftDetails(offeredSlot.associatedShiftId),
-            this._shiftService.getShiftDetails(requestedSlot.associatedShiftId)
-          ),
-        )),
-        map(([[info, user, offeredSlot, requestedSlot], offeredShift, requestedShift]) => {
-          const isOwnRequest = info.offeringVolunteer.id === user.account.volunteer.id;
+        map(([info, user]) => {
+          const isOwnRequest = info.offeringAssignment.assignment.assignedVolunteer.id === user.account.volunteer.id;
 
           return {
             tradeId: info.id,
             isOwnRequest,
             ownRewardPoints: isOwnRequest ? info.offeredPositionSlotRewardPoints : info.requestedPositionSlotRewardPoints,
             otherRewardPoints: isOwnRequest ? info.requestedPositionSlotRewardPoints : info.offeredPositionSlotRewardPoints,
-            ownVolunteer: isOwnRequest ? info.offeringVolunteer : info.requestedVolunteer,
-            otherVolunteer: isOwnRequest ? info.requestedVolunteer : info.offeringVolunteer,
-            ownSlot: isOwnRequest ? offeredSlot : requestedSlot,
-            otherSlot: isOwnRequest ? requestedSlot : offeredSlot,
-            ownShift: isOwnRequest ? offeredShift : requestedShift,
-            otherShift: isOwnRequest ? requestedShift : offeredShift,
+            ownVolunteer: isOwnRequest ? info.offeringAssignment.assignment.assignedVolunteer :
+              info.requestedAssignment.assignment.assignedVolunteer,
+            otherVolunteer: isOwnRequest ? info.requestedAssignment.assignment.assignedVolunteer :
+              info.offeringAssignment.assignment.assignedVolunteer,
+            ownSlot: isOwnRequest ? info.offeringAssignment.positionSlotContext : info.requestedAssignment.positionSlotContext,
+            otherSlot: isOwnRequest ? info.requestedAssignment.positionSlotContext : info.offeringAssignment.positionSlotContext,
+            ownShift: isOwnRequest ? info.offeringAssignment.shiftContext : info.requestedAssignment.shiftContext,
+            otherShift: isOwnRequest ? info.requestedAssignment.shiftContext : info.offeringAssignment.shiftContext
           };
         })
       )

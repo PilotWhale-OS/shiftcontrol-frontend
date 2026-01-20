@@ -35,7 +35,10 @@
 @if (selectedShift$ | async; as shiftParams){
   @if (shiftParams !== null && shiftParams !== undefined){
 
-    <xsb-dialog #dialog (closeDialog)="selectedShift$.next(undefined)" [maxSize]="true">
+    <xsb-dialog #dialog
+                (closeDialog)="selectedShift$.next(undefined)" [maxSize]="true"
+                [expandUrl]="shiftParams.shift?.id !== undefined ? '/shifts/' + shiftParams.shift?.id : undefined"
+    >
 
       <ng-container dialog-header>
         <h1 class="signature-gradient-font">

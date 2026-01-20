@@ -1,6 +1,6 @@
 import {Component, inject} from "@angular/core";
 import {ManageUnavailabilityComponent} from "../../../../components/manage-unavailability/manage-unavailability.component";
-import {map, Observable, shareReplay, tap} from "rxjs";
+import {combineLatestWith, map, Observable, shareReplay, startWith, Subject, switchMap, tap} from "rxjs";
 import {
   EventEndpointService,
   EventShiftPlansOverviewDto,
@@ -31,6 +31,7 @@ import {ShiftTradeAuctionComponent} from "../../../../components/shift-trade-auc
 export class VolunteerDashboardComponent {
   protected readonly event$: Observable<EventShiftPlansOverviewDto>;
   protected readonly eventDashboard$: Observable<ShiftPlanDashboardOverviewDto[]>;
+  protected readonly reloadTradeAuctions$ = new Subject<void>();
   protected readonly shifts$: Observable<shiftWithOrigin[]>;
   protected readonly auctions$;
   protected readonly trades$;
@@ -49,7 +50,8 @@ export class VolunteerDashboardComponent {
       throw new Error("Event ID is required");
     }
 
-    this.eventDashboard$ = this._eventService.getEventsDashboard().pipe(
+    this.eventDashboard$ = this.reloadTradeAuctions$.pipe(startWith(undefined)).pipe(
+      switchMap(() => this._eventService.getEventsDashboard()),
       map(dashboard => dashboard.shiftPlanDashboardOverviewDtos
         .filter(plan => plan.eventOverview.id === eventId) // todo via call
       ),
@@ -66,11 +68,11 @@ export class VolunteerDashboardComponent {
     );
 
     this.auctions$ = this.eventDashboard$.pipe(
-      map(plans => plans.flatMap(plan => plan.auctions))
+      map((plans) => plans.flatMap(plan => plan.auctions))
     );
 
     this.trades$ = this.eventDashboard$.pipe(
-      map(plans => plans.flatMap(plan => plan.trades))
+      map((plans) => plans.flatMap(plan => plan.trades))
     );
 
     this.event$ = this._eventService.getShiftPlansOverviewOfEvent(eventId).pipe(

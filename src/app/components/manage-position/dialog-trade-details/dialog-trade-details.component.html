@@ -41,28 +41,28 @@
         </div>
 
         <small class="flex flex-row gap-sm"><fa-icon [icon]="icons.shift"/>Shift</small>
-        <span>{{mappedInfo.ownShift.shift.name}}</span>
-        <span>{{mappedInfo.otherShift.shift.name}}</span>
+        <a [routerLink]="'/shifts/' + mappedInfo.ownShift.id">{{mappedInfo.ownShift.name}}</a>
+        <a [routerLink]="'/shifts/' + mappedInfo.otherShift.id">{{mappedInfo.otherShift.name}}</a>
 
         <small class="flex flex-row gap-sm"><fa-icon [icon]="icons.rewards"/>Reward</small>
         <span>{{mappedInfo.ownRewardPoints}} Points</span>
         <span>{{mappedInfo.otherRewardPoints}} Points</span>
 
         <small class="flex flex-row gap-sm"><fa-icon [icon]="icons.location"/>Location</small>
-        <span>{{mappedInfo.ownShift.shift.location?.name ?? "No Location"}}</span>
-        <span>{{mappedInfo.otherShift.shift.location?.name ?? "No Location"}}</span>
+        <span>{{mappedInfo.ownShift.location?.name ?? "No Location"}}</span>
+        <span>{{mappedInfo.otherShift.location?.name ?? "No Location"}}</span>
 
         <small class="flex flex-row gap-sm"><fa-icon [icon]="icons.position"/>Position</small>
         <span>{{mappedInfo.ownSlot.name}}</span>
         <span>{{mappedInfo.otherSlot.name}}</span>
 
         <small class="flex flex-row gap-sm"><fa-icon [icon]="icons.startDate"/>Start</small>
-        <span>{{mappedInfo.ownShift.shift.startTime | date:"short"}}</span>
-        <span>{{mappedInfo.otherShift.shift.startTime | date:"short"}}</span>
+        <span>{{mappedInfo.ownShift.startTime | date:"short"}}</span>
+        <span>{{mappedInfo.otherShift.startTime | date:"short"}}</span>
 
         <small class="flex flex-row gap-sm"><fa-icon [icon]="icons.startDate"/>End</small>
-        <span>{{mappedInfo.ownShift.shift.endTime | date:"short"}}</span>
-        <span>{{mappedInfo.otherShift.shift.endTime | date:"short"}}</span>
+        <span>{{mappedInfo.ownShift.endTime | date:"short"}}</span>
+        <span>{{mappedInfo.otherShift.endTime | date:"short"}}</span>
 
 
       </div>

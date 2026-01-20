@@ -3,14 +3,12 @@ import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {TooltipDirective} from "../../directives/tooltip.directive";
 import {icons} from "../../util/icons";
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
-import {BehaviorSubject, combineLatestWith, filter, forkJoin, map, Subject, switchMap} from "rxjs";
+import {BehaviorSubject, combineLatestWith, filter, map, Subject} from "rxjs";
 import {
-  AssignmentDto,
-  EventDto,
-  PositionSlotEndpointService,
-  ShiftDto,
+  AssignmentContextDto,
+  EventDto, PositionSlotEndpointService, PositionSlotTradeEndpointService,
+  ShiftContextDto,
   ShiftEndpointService,
-  TradeDto,
   TradeInfoDto
 } from "../../../shiftservice-client";
 import {UserService} from "../../services/user/user.service";
@@ -19,6 +17,8 @@ import {RouterLink} from "@angular/router";
 import {ManageShiftComponent, manageShiftParams} from "../manage-shift/manage-shift.component";
 import {DialogComponent} from "../dialog/dialog.component";
 import {DialogTradeDetailsComponent} from "../manage-position/dialog-trade-details/dialog-trade-details.component";
+import {ToastService} from "../../services/toast/toast.service";
+import {mapValue} from "../../util/value-maps";
 
 @Component({
   selector: "app-shift-trade-auction",
@@ -43,50 +43,33 @@ export class ShiftTradeAuctionComponent {
   public readonly itemsChanged = new Subject<void>();
 
   protected readonly event$ = new BehaviorSubject<EventDto | undefined>(undefined);
-  protected readonly trades$ = new BehaviorSubject<TradeDto[]>([]);
-  protected readonly auctions$ = new BehaviorSubject<AssignmentDto[]>([]);
+  protected readonly trades$ = new BehaviorSubject<TradeInfoDto[]>([]);
+  protected readonly auctions$ = new BehaviorSubject<AssignmentContextDto[]>([]);
 
   protected readonly selectedTrade$ = new BehaviorSubject<TradeInfoDto | undefined>(undefined);
   protected readonly selectedShift$ = new BehaviorSubject<manageShiftParams | undefined>(undefined);
 
-  protected readonly relevantSlots$ = this.trades$.pipe(
-    map(trades => trades.flatMap(trade => [trade.requestedAssignment.positionSlotId, trade.offeringAssignment.positionSlotId])),
-    combineLatestWith(this.auctions$.pipe(
-      map(auctions => auctions.map(auction => auction.positionSlotId))
-    )),
-    map(([tradeSlots, auctionSlots]) => [...tradeSlots, ...auctionSlots]),
-    map(ids => Array.from(new Set(ids))),
-    switchMap(ids => forkJoin(ids.map(id => this._positionService.getPositionSlot(id)))),
-    map(slots => new Map(slots.map(slot => [slot.id, slot])))
-  );
-
-  protected readonly relevantShifts$ = this.relevantSlots$.pipe(
-    map(positions => [...positions.values()].map(position => position.associatedShiftId)),
-    map(ids => Array.from(new Set(ids))),
-    switchMap(ids => forkJoin(ids.map(id => this._shiftService.getShiftDetails(id)))),
-    map(shifts => new Map(shifts.map(shift => [shift.shift.id, shift.shift])))
-  );
-
   protected readonly auctionData$;
-
   protected readonly tradeData$;
 
   protected readonly icons = icons;
 
-  private readonly _positionService = inject(PositionSlotEndpointService);
-  private readonly _shiftService = inject(ShiftEndpointService);
   private readonly _userService = inject(UserService);
+  private readonly _shiftService = inject(ShiftEndpointService);
+  private readonly _tradeService = inject(PositionSlotTradeEndpointService);
+  private readonly _positionService = inject(PositionSlotEndpointService);
+  private readonly _toastService = inject(ToastService);
 
   constructor() {
     this.tradeData$ = this.trades$.pipe(
-      combineLatestWith(this.relevantSlots$, this.relevantShifts$, this._userService.userProfile$, this.event$.pipe(
+      combineLatestWith(this._userService.userProfile$, this.event$.pipe(
         filter(event => event !== undefined)
       )),
-      map(([trades, slots, shifts, user, event]) => trades.map(trade => {
-        const isOwnRequest = trade.offeringAssignment.assignedVolunteer.id === user?.account.volunteer.id;
+      map(([trades, user, event]) => trades.map(trade => {
+        const isOwnRequest = trade.offeringAssignment.assignment.assignedVolunteer.id === user?.account.volunteer.id;
         const otherVolunteer = isOwnRequest ?
-          trade.requestedAssignment.assignedVolunteer :
-          trade.offeringAssignment.assignedVolunteer;
+          trade.requestedAssignment.assignment.assignedVolunteer :
+          trade.offeringAssignment.assignment.assignedVolunteer;
         const otherAssignment = isOwnRequest ?
           trade.requestedAssignment :
           trade.offeringAssignment;
@@ -100,41 +83,46 @@ export class ShiftTradeAuctionComponent {
           isOwnRequest,
           otherVolunteer,
           initials: `${otherVolunteer.firstName.substring(0,1)}${otherVolunteer.lastName.substring(0,1)}`,
-          otherPosition: slots.get(otherAssignment.positionSlotId),
-          otherShift: shifts.get(slots.get(otherAssignment.positionSlotId)?.associatedShiftId ?? ""),
-          ownPosition: slots.get(ownAssignment.positionSlotId),
-          ownShift: shifts.get(slots.get(ownAssignment.positionSlotId)?.associatedShiftId ?? ""),
+          otherPosition: otherAssignment.positionSlotContext,
+          otherShift: trade.requestedAssignment.shiftContext,
+          ownPosition: ownAssignment.positionSlotContext,
+          ownShift: trade.offeringAssignment.shiftContext,
           caption: {
             pre: isOwnRequest ? "You asked " : "",
             name: isOwnRequest ?
               `${otherVolunteer.firstName} ${otherVolunteer.lastName.substring(0,1)}.` :
               `${otherVolunteer.firstName} ${otherVolunteer.lastName.substring(0,1)}.`,
             middle: isOwnRequest ? " to trade their position in " : " wants to trade their position in ",
-            shiftName: shifts.get(slots.get(otherAssignment.positionSlotId)?.associatedShiftId ?? "")?.name ?? ""
+            shiftName: otherAssignment.shiftContext.name
           }
         };
       }))
     );
 
     this.auctionData$ = this.auctions$.pipe(
-      combineLatestWith(this.relevantSlots$, this.relevantShifts$, this._userService.userProfile$, this.event$.pipe(
+      combineLatestWith(this._userService.userProfile$, this.event$.pipe(
         filter(event => event !== undefined)
       )),
-      map(([auctions, slots, shifts, user, event]) => auctions.map(auction => {
-        const isOwnRequest = auction.assignedVolunteer.id === user?.account.volunteer.id;
+      map(([auctions, user, event]) => auctions.map(auction => {
+        const isOwnRequest = auction.assignment.assignedVolunteer.id === user?.account.volunteer.id;
         return {
           event,
           auction,
           isOwnRequest,
-          initials: `${auction.assignedVolunteer.firstName.substring(0,1)}${auction.assignedVolunteer.lastName.substring(0,1)}`,
-          title: `${auction.assignedVolunteer.firstName} ${auction.assignedVolunteer.lastName.substring(0,1)}. offers their position in ` +
-            `${slots.get(auction.positionSlotId)?.name}`,
-          slot: slots.get(auction.positionSlotId),
-          shift: shifts.get(slots.get(auction.positionSlotId)?.associatedShiftId ?? ""),
+          initials: `${
+            auction.assignment.assignedVolunteer.firstName.substring(0,1)}${auction.assignment.assignedVolunteer.lastName.substring(0,1)
+          }`,
+          title: `${
+            auction.assignment.assignedVolunteer.firstName} ${auction.assignment.assignedVolunteer.lastName.substring(0,1)
+          }. offers their position in ${auction.shiftContext.name}`,
+          slot: auction.positionSlotContext,
+          shift: auction.shiftContext,
           caption: {
-            name: isOwnRequest ? "You" : `${auction.assignedVolunteer.firstName} ${auction.assignedVolunteer.lastName.substring(0,1)}.`,
+            name: isOwnRequest ? "You" : `${
+              auction.assignment.assignedVolunteer.firstName} ${auction.assignment.assignedVolunteer.lastName.substring(0,1)
+            }.`,
             middle: isOwnRequest ? " offered your position in " : " offers their position in ",
-            shiftName: shifts.get(slots.get(auction.positionSlotId)?.associatedShiftId ?? "")?.name ?? ""
+            shiftName: auction.shiftContext.name
           }
         };
       }))
@@ -142,12 +130,12 @@ export class ShiftTradeAuctionComponent {
   }
 
   @Input()
-  public set trades(trades: TradeDto[]) {
+  public set trades(trades: TradeInfoDto[]) {
     this.trades$.next(trades);
   }
 
   @Input()
-  public set auctions(auctions: AssignmentDto[]) {
+  public set auctions(auctions: AssignmentContextDto[]) {
     this.auctions$.next(auctions);
   }
 
@@ -156,13 +144,65 @@ export class ShiftTradeAuctionComponent {
     this.event$.next(event);
   }
 
-  protected previewAuction(shift?: ShiftDto, event?: EventDto){
+  protected previewAuction(shift?: ShiftContextDto, event?: EventDto){
     if(shift === undefined || event === undefined) {
       throw new Error("Shift and Event are required");
     }
-    this.selectedShift$.next({
-      shift, eventId: event.id
-    });
+
+    this._shiftService.getShiftDetails(shift.id).subscribe(shiftDetails => this.selectedShift$.next({
+      shift: shiftDetails.shift, eventId: event.id
+    }));
+  }
+
+  protected previewTrade(trade: TradeInfoDto) {
+    this.selectedTrade$.next(trade);
+  }
+
+  protected acceptAuction(auction: AssignmentContextDto) {
+    this._positionService.claimAuction(auction.positionSlotContext.id, auction.assignment.assignedVolunteer.id, {
+      acceptedRewardPointsConfigHash: "" // TODO get hash?
+    }).pipe(
+      this._toastService.tapSuccess("Offer Accepted", () => "You have accepted the position offer."),
+      this._toastService.tapError("Error Accepting Offer", mapValue.apiErrorToMessage)
+    ).subscribe(() =>
+      this.itemsChanged.next()
+    );
+  }
+
+  protected cancelAuction(auction: AssignmentContextDto) {
+    this._positionService.cancelAuction(auction.positionSlotContext.id).pipe(
+      this._toastService.tapSuccess("Auction Canceled", () => "You have canceled your position offer."),
+      this._toastService.tapError("Error Canceling Auction", mapValue.apiErrorToMessage)
+    ).subscribe(() =>
+      this.itemsChanged.next()
+    );
+  }
+
+  protected cancelTrade(trade: TradeInfoDto) {
+    this._tradeService.cancelTrade(trade.id).pipe(
+      this._toastService.tapSuccess("Trade Canceled", () => "You have canceled your trade request."),
+      this._toastService.tapError("Error Canceling Trade", mapValue.apiErrorToMessage)
+    ).subscribe(() =>
+      this.itemsChanged.next()
+    );
+  }
+
+  protected acceptTrade(trade: TradeInfoDto) {
+    this._tradeService.acceptTrade(trade.id).pipe(
+      this._toastService.tapSuccess("Trade Accepted", () => "You have accepted the trade offer."),
+      this._toastService.tapError("Error Accepting Trade", mapValue.apiErrorToMessage)
+    ).subscribe(() =>
+      this.itemsChanged.next()
+    );
+  }
+
+  protected declineTrade(trade: TradeInfoDto) {
+    this._tradeService.declineTrade(trade.id).pipe(
+      this._toastService.tapSuccess("Trade Declined", () => "You have declined the trade offer."),
+      this._toastService.tapError("Error Declining Trade", mapValue.apiErrorToMessage)
+    ).subscribe(() =>
+      this.itemsChanged.next()
+    );
   }
 
 }

@@ -9,7 +9,7 @@
 ">
 
     <!-- header -->
-    <div class="grid grid-cols-[5rem_1fr_5rem] place-content-center justify-between  border-framing-card" [ngClass]="{
+    <div class="grid grid-cols-[5rem_1fr__2rem_2rem] place-content-center justify-between  border-framing-card" [ngClass]="{
       'border-b-ctr': bodyStyle === 'plain'
     }">
 
@@ -20,10 +20,19 @@
         <ng-content select="[dialog-header]"></ng-content>
       </div>
 
+      <!-- expand -->
+      @if (expandUrl !== undefined) {
+        <a [routerLink]="expandUrl" class="opacity-60 hover:opacity-100">
+          <fa-icon [icon]="icons.expand" />
+        </a>
+      }
+
       <!-- close -->
-      <div class="text-md opacity-60 hover:opacity-100 cursor-pointer font-semibold justify-self-end" tabindex="0"
-        (keydown)="closeDialog.next('close')" (click)="closeDialog.next('close')">Close</div>
+      <div class="opacity-60 hover:opacity-100 cursor-pointer justify-self-end text-[1.4rem] leading-4" tabindex="0"
+        (keydown)="closeDialog.next('close')" (click)="closeDialog.next('close')">
+        <fa-icon [icon]="icons.close" />
       </div>
+    </div>
 
     <!-- body -->
     <div class="grow overflow-auto" [ngClass]="{

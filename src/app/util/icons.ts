@@ -1,4 +1,5 @@
 import {
+  faArrowUpRightFromSquare,
   faBackward, faBan,
   faBarsProgress, faBell, faBook,
   faCalendar,
@@ -8,8 +9,8 @@ import {
   faGift, faHandSparkles, faHashtag,
   faHourglass, faKey, faLink, faLocationPin, faLock, faMedal, faMessage, faMoon, faPause,
   faPeopleGroup, faPlusCircle,
-  faShuffle, faSignsPost, faStar, faTableColumns, faTag, faTrophy, faUser,
-  faWrench
+  faShuffle, faSignsPost, faStar, faTableColumns, faTag, faTimes, faTrophy, faUser,
+  faWrench, faXmark
 } from "@fortawesome/free-solid-svg-icons";
 
 export const icons = {
@@ -61,6 +62,8 @@ export const icons = {
   noNotification: faMoon,
   info: faCircleInfo,
   help: faSignsPost,
+  expand: faArrowUpRightFromSquare,
+  close: faXmark,
 
   /* time */
   hour: faHourglass,
@@ -68,7 +71,5 @@ export const icons = {
   date: faCalendarDays,
   startDate: faForward,
   endDate: faBackward,
-  expiry: faClock,
-
-
+  expiry: faClock
 };

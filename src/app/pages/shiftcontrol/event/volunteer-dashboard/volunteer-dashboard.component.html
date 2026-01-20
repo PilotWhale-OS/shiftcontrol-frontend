@@ -9,7 +9,12 @@
       </h1>
 
       <div class="overflow-y-auto">
-        <app-shift-trade-auction [event]="(event$ | async)?.eventOverview" [trades]="(trades$ | async) ?? []" [auctions]="(auctions$ | async) ?? []" />
+        <app-shift-trade-auction
+          [event]="(event$ | async)?.eventOverview"
+          [trades]="(trades$ | async) ?? []"
+          [auctions]="(auctions$ | async) ?? []"
+          (itemsChanged)="reloadTradeAuctions$.next()"
+        />
       </div>
     </div>
 

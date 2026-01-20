@@ -4,6 +4,9 @@ import {AfterViewInit, Component, EventEmitter, inject, Input, OnDestroy, Output
 import {NgClass} from "@angular/common";
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
 import {Subscription} from "rxjs";
+import {FaIconComponent} from "@fortawesome/angular-fontawesome";
+import {icons} from "../../util/icons";
+import {RouterLink} from "@angular/router";
 
 export type dialogResult = "success" | "danger" | "close";
 
@@ -15,7 +18,9 @@ export type dialogResult = "success" | "danger" | "close";
   imports: [
     NgClass,
     InputButtonComponent,
-    CdkPortal
+    CdkPortal,
+    FaIconComponent,
+    RouterLink
   ],
   encapsulation: ViewEncapsulation.None
 })
@@ -34,6 +39,9 @@ export class DialogComponent implements AfterViewInit, OnDestroy {
   danger?: string;
 
   @Input()
+  expandUrl?: string;
+
+  @Input()
   maxSize = false;
 
   /**
@@ -47,6 +55,8 @@ export class DialogComponent implements AfterViewInit, OnDestroy {
    */
   @Output()
   public readonly closeDialog = new EventEmitter<dialogResult>();
+
+  protected readonly icons = icons;
 
   private readonly _overlay = inject(Overlay);
 

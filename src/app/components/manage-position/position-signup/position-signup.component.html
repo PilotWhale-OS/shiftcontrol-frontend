@@ -13,7 +13,10 @@
             <div class="flex flex-row flex-wrap gap-x-xs items-center">
               <span>You requested</span>
               <xsb-input-button size="text" content="a trade" (click)="dialogTradeInfo$.next(requestedTrade)" />
-              <span>with {{requestedTrade.requestedVolunteer.firstName}} {{requestedTrade.requestedVolunteer.lastName | slice:0:1}}.</span>
+              <span>
+                with {{requestedTrade.requestedAssignment.assignment.assignedVolunteer.firstName}}
+                {{requestedTrade.requestedAssignment.assignment.assignedVolunteer.lastName | slice:0:1}}.
+              </span>
             </div>
           </div>
         }
@@ -24,7 +27,10 @@
               <fa-icon [icon]="icons.trade" />
               Trade Offer
             </div>
-            <span>{{offeredTrade.offeringVolunteer.firstName}} {{offeredTrade.offeringVolunteer.lastName | slice:0:1}}. offers</span>
+            <span>
+              {{offeredTrade.offeringAssignment.assignment.assignedVolunteer.firstName}}
+              {{offeredTrade.offeringAssignment.assignment.assignedVolunteer.lastName | slice:0:1}}. offers
+            </span>
             <xsb-input-button size="text" content="a position" (click)="dialogTradeInfo$.next(offeredTrade)" />
           </div>
         }
