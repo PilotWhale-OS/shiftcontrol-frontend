@@ -1,6 +1,6 @@
 @if (event$ | async; as event) {
 
-  <div class="card grid grid-columns-2 gap-lg h-fit">
+  <div class="card grid grid-columns-2 gap-md h-fit">
 
     <!-- info -->
     <h1 class="compact signature-gradient-font">
@@ -15,12 +15,9 @@
     <div class="grid grid-cols-[1fr_auto] col-span-2 gap-xs max-h-[15vh] overflow-y-auto">
 
       @if(timeConstraints$ | async; as timeConstraints) {
-        @if (timeConstraints.length === 0) {
-          <small class="col-span-2">You have not set any absence for this event.</small>
-        }
 
         @for (constraint of timeConstraints; track constraint.id) {
-          <div class="flex gap-sm items-center">
+          <div class="flex gap-lg items-center">
 
             @if (constraint.type === "EMERGENCY") {
               <div class="badge hint">

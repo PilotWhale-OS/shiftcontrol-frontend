@@ -1,6 +1,6 @@
 @if (event$ | async; as event) {
 
-  <div class="grid grid-cols-2 grid-rows-[auto_1fr] gap-lg w-full h-full">
+  <div class="grid grid-cols-2 grid-rows-[auto_1fr] gap-md w-full h-full">
 
     <div class="col-start-1 row-start-1 card h-fit max-h-full flex flex-col gap-md overflow-y-auto">
       <h1 class="compact signature-gradient-font">
@@ -9,7 +9,7 @@
       </h1>
 
       <div class="overflow-y-auto">
-        <app-shift-trade-auction />
+        <app-shift-trade-auction [trades]="(trades$ | async) ?? []" [auctions]="(auctions$ | async) ?? []" />
       </div>
     </div>
 

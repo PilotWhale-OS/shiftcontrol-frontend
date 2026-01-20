@@ -1,7 +1,7 @@
 <!-- list of trades/auctions -->
 <div class="flex flex-col gap-md grow overflow-auto">
 
-  @for (card of [1,2]; track card) {
+  @for (trade of tradeData$ | async; track trade.trade.offeringAssignment.id) {
 
     <!-- card for item: trade -->
     <div class="card interaction compact flex flex-col gap-md">
@@ -11,11 +11,17 @@
 
         <!-- from user -->
         <div class="badge hint h-full padding-eq aspect-square" [app-tooltip]="'Requested by \nPaul Spörker'">
-          PS
+          {{trade.initials}}
         </div>
 
         <!-- caption-->
-        <span><b>Paul S.</b> wants to trade their shift <b>Some Shift</b></span>
+        <span>{{trade.caption.pre}}<b>{{trade.caption.name}}</b>{{trade.caption.middle}}<b>{{trade.caption.shiftName}}</b></span>
+
+        <!-- action(s) -->
+        <div class="grow flex flex-row justify-end gap-sm">
+          <xsb-input-button size="text" content="Accept" />
+          <xsb-input-button size="text" content="Decline" />
+        </div>
       </div>
 
       <!-- trade info badges -->
@@ -24,21 +30,25 @@
         <!-- traded shift badge -->
         <div class="badge" [app-tooltip]="'The shift plan\n of your shift'">
           <fa-icon [icon]="icons.shift" />
-          Pilot Shift
+          {{trade.ownShift?.name}}
           <fa-icon [icon]="icons.trade" />
-          Other Shift
+          {{trade.otherShift?.name}}
         </div>
 
         <!-- trade date badge -->
         <div class="badge" [app-tooltip]="'The shift plan\n of your shift'">
           <fa-icon [icon]="icons.date" />
-          11.11.2026
+          {{trade.ownShift?.startTime | date:"shortDate"}}
           <fa-icon [icon]="icons.trade" />
-          12.11.2026
+          {{trade.otherShift?.startTime | date:"shortDate"}}
         </div>
       </div>
 
     </div>
+  }
+
+  @for(auction of auctionData$ | async; track auction.auction.id) {
+
 
     <!-- card for item: auction -->
     <div class="card interaction spotlight compact flex flex-col gap-md">
@@ -48,11 +58,16 @@
 
         <!-- from user -->
         <div class="badge hint h-full padding-eq aspect-square" [app-tooltip]="'Requested by \nPaul Spörker'">
-          PS
+          {{auction.initials}}
         </div>
 
         <!-- caption-->
-        <span><b>Paul S.</b> offers their shift <b>Some Shift</b></span>
+        <span><b>{{auction.caption.name}}</b>{{auction.caption.middle}}<b>{{auction.caption.shiftName}}</b></span>
+
+        <!-- action(s) -->
+        <div class="grow flex flex-row justify-end">
+          <xsb-input-button size="text" content="Accept" />
+        </div>
       </div>
 
 
@@ -62,23 +77,29 @@
         <!-- traded shift badge -->
         <div class="badge" [app-tooltip]="'The shift plan\n of your shift'">
           <fa-icon [icon]="icons.shift" />
-          Pilot Shift
+          {{auction.shift?.name}}
         </div>
 
         <!-- traded position badge -->
         <div class="badge" [app-tooltip]="'The shift plan\n of your shift'">
           <fa-icon [icon]="icons.position" />
-          Some Position
+          {{auction.slot?.name}}
         </div>
 
-        <!-- trade date badge -->
+        <!-- auction date badge -->
         <div class="badge" [app-tooltip]="'The shift plan\n of your shift'">
           <fa-icon [icon]="icons.date" />
-          11.11.2026 12:20
+          {{auction.shift?.startTime | date:"shortDate"}}
         </div>
       </div>
 
     </div>
+  }
+
+  @if ((auctions$ | async)?.length === 0 && (trades$ | async)?.length === 0) {
+    <p>There are no offers or requests yet.<br>
+      Explore the <a routerLink="../calendar">event calendar</a> and be the first!
+    </p>
   }
 
 </div>
