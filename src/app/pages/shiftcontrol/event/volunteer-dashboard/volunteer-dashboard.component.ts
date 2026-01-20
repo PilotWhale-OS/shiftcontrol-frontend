@@ -1,6 +1,6 @@
 import {Component, inject} from "@angular/core";
 import {ManageUnavailabilityComponent} from "../../../../components/manage-unavailability/manage-unavailability.component";
-import {combineLatestWith, map, Observable, shareReplay, startWith, Subject, switchMap, tap} from "rxjs";
+import {map, Observable, shareReplay, startWith, Subject, switchMap, tap} from "rxjs";
 import {
   EventEndpointService,
   EventShiftPlansOverviewDto,

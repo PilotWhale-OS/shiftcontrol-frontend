@@ -9,7 +9,7 @@ import {
   faGift, faHandSparkles, faHashtag,
   faHourglass, faKey, faLink, faLocationPin, faLock, faMedal, faMessage, faMoon, faPause,
   faPeopleGroup, faPlusCircle,
-  faShuffle, faSignsPost, faStar, faTableColumns, faTag, faTimes, faTrophy, faUser,
+  faShuffle, faSignsPost, faStar, faTableColumns, faTag, faTrophy, faUser,
   faWrench, faXmark
 } from "@fortawesome/free-solid-svg-icons";
 

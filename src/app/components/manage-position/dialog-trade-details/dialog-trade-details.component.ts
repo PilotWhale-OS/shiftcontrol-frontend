@@ -1,9 +1,7 @@
 import {Component, EventEmitter, inject, Input, Output} from "@angular/core";
 import {
   PositionSlotContextDto,
-  PositionSlotDto,
-  PositionSlotEndpointService, PositionSlotTradeEndpointService, ShiftContextDto, ShiftDetailsDto,
-  ShiftEndpointService,
+  PositionSlotTradeEndpointService, ShiftContextDto,
   TradeInfoDto,
   VolunteerDto
 } from "../../../../shiftservice-client";
