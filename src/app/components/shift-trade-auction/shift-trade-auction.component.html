@@ -19,8 +19,12 @@
 
         <!-- action(s) -->
         <div class="grow flex flex-row justify-end gap-sm">
-          <xsb-input-button size="text" content="Accept" />
-          <xsb-input-button size="text" content="Decline" />
+          @if (trade.isOwnRequest){
+            <xsb-input-button size="text" content="Cancel" />
+          } @else {
+            <xsb-input-button size="text" content="Accept" />
+            <xsb-input-button size="text" content="Decline" />
+          }
         </div>
       </div>
 
@@ -51,7 +55,10 @@
 
 
     <!-- card for item: auction -->
-    <div class="card interaction spotlight compact flex flex-col gap-md">
+    <div class="card interaction spotlight compact flex flex-col gap-md"
+         tabindex="0" (keyup)="0"
+         (click)="previewAuction(auction.shift, auction.event)"
+    >
 
       <!-- title -->
       <div class="flex flex-wrap gap-sm gap-y-xxs items-center">
@@ -66,7 +73,11 @@
 
         <!-- action(s) -->
         <div class="grow flex flex-row justify-end">
-          <xsb-input-button size="text" content="Accept" />
+          @if (auction.isOwnRequest){
+            <xsb-input-button size="text" content="Cancel" />
+          } @else {
+            <xsb-input-button size="text" content="Accept" />
+          }
         </div>
       </div>
 
@@ -103,3 +114,38 @@
   }
 
 </div>
+
+<!-- preview shift -->
+@if (selectedShift$ | async; as shiftParams){
+  @if (shiftParams !== null && shiftParams !== undefined){
+
+    <xsb-dialog #dialog (closeDialog)="selectedShift$.next(undefined)" [maxSize]="true">
+
+      <ng-container dialog-header>
+        <h1 class="signature-gradient-font">
+          {{manage.title$ | async}}
+        </h1>
+      </ng-container>
+
+      <ng-container dialog-body>
+        <app-manage-shift #manage
+                          [manageData]="shiftParams"
+                          (shiftChanged)="itemsChanged.next()"
+                          (navigateOut)="dialog.close()"
+        />
+      </ng-container>
+    </xsb-dialog>
+  }
+}
+
+<!-- manage trade-->
+@if (selectedTrade$ | async; as trade) {
+  <app-dialog-trade-details
+    class="contents"
+    [tradeInfo]="trade"
+    (dialogClosed)="selectedTrade$.next(undefined)"
+    (tradeChanged)="itemsChanged.next(); selectedTrade$.next(undefined)"
+  />
+}
+
+

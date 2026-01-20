@@ -24,7 +24,7 @@ import {
   shareReplay,
   startWith, Subject,
   Subscription,
-  switchMap,
+  switchMap, take,
   withLatestFrom,
 } from "rxjs";
 import {toObservable} from "@angular/core/rxjs-interop";
@@ -119,6 +119,14 @@ export class EventCalendarComponent implements OnDestroy {
 
     const isAdmin$ = this._userService.userType$.pipe(
       map(userType => userType === UserTypeEnum.Admin),
+      shareReplay()
+    );
+
+    const isPlanner$ = event$.pipe(
+      switchMap(event => forkJoin(
+        event.shiftPlans.map(plan => this._userService.canManagePlan$(plan.id).pipe(take(1)))
+      )),
+      map(canManageList => canManageList.some(canManage => canManage)),
       shareReplay()
     );
 
@@ -255,10 +263,10 @@ export class EventCalendarComponent implements OnDestroy {
       combineLatestWith(calendarComponent$, layout$, filterComponent$, calendarMode$),
       withLatestFrom(calendarNavigation$.pipe(
         startWith({visibleDates: [], cachedDates: []})
-      ), event$, isAdmin$)
+      ), event$, isAdmin$, isPlanner$)
     ).subscribe((
       [[filterData, calendar, layout, filterComponent, calendarMode],
-        navigation, plan, isAdmin
+        navigation, plan, isAdmin, isPlanner
       ]) => {
 
       /*
@@ -291,7 +299,7 @@ export class EventCalendarComponent implements OnDestroy {
         emptySpaceClickCallback: calendarMode === "shift" ?
 
           /* shift mode*/
-          (!isAdmin ? undefined : (date, location) => this.selectedShift$.next({
+          (!isPlanner ? undefined : (date, location) => this.selectedShift$.next({
           eventId: plan.eventOverview.id,
           suggestedLocation: location,
           suggestedDate: date

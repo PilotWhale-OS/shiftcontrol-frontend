@@ -3,11 +3,22 @@ import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {TooltipDirective} from "../../directives/tooltip.directive";
 import {icons} from "../../util/icons";
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
-import {BehaviorSubject, combineLatestWith, forkJoin, map, Subject, switchMap} from "rxjs";
-import {AssignmentDto, PositionSlotEndpointService, ShiftEndpointService, TradeDto} from "../../../shiftservice-client";
+import {BehaviorSubject, combineLatestWith, filter, forkJoin, map, Subject, switchMap} from "rxjs";
+import {
+  AssignmentDto,
+  EventDto,
+  PositionSlotEndpointService,
+  ShiftDto,
+  ShiftEndpointService,
+  TradeDto,
+  TradeInfoDto
+} from "../../../shiftservice-client";
 import {UserService} from "../../services/user/user.service";
 import {AsyncPipe, DatePipe} from "@angular/common";
 import {RouterLink} from "@angular/router";
+import {ManageShiftComponent, manageShiftParams} from "../manage-shift/manage-shift.component";
+import {DialogComponent} from "../dialog/dialog.component";
+import {DialogTradeDetailsComponent} from "../manage-position/dialog-trade-details/dialog-trade-details.component";
 
 @Component({
   selector: "app-shift-trade-auction",
@@ -17,7 +28,10 @@ import {RouterLink} from "@angular/router";
     InputButtonComponent,
     AsyncPipe,
     DatePipe,
-    RouterLink
+    RouterLink,
+    DialogComponent,
+    ManageShiftComponent,
+    DialogTradeDetailsComponent
   ],
   standalone: true,
   templateUrl: "./shift-trade-auction.component.html",
@@ -28,8 +42,12 @@ export class ShiftTradeAuctionComponent {
   @Output()
   public readonly itemsChanged = new Subject<void>();
 
+  protected readonly event$ = new BehaviorSubject<EventDto | undefined>(undefined);
   protected readonly trades$ = new BehaviorSubject<TradeDto[]>([]);
   protected readonly auctions$ = new BehaviorSubject<AssignmentDto[]>([]);
+
+  protected readonly selectedTrade$ = new BehaviorSubject<TradeInfoDto | undefined>(undefined);
+  protected readonly selectedShift$ = new BehaviorSubject<manageShiftParams | undefined>(undefined);
 
   protected readonly relevantSlots$ = this.trades$.pipe(
     map(trades => trades.flatMap(trade => [trade.requestedAssignment.positionSlotId, trade.offeringAssignment.positionSlotId])),
@@ -49,22 +67,7 @@ export class ShiftTradeAuctionComponent {
     map(shifts => new Map(shifts.map(shift => [shift.shift.id, shift.shift])))
   );
 
-  protected readonly auctionData$ = this.auctions$.pipe(
-    combineLatestWith(this.relevantSlots$, this.relevantShifts$),
-    map(([auctions, slots, shifts]) => auctions.map(auction => ({
-      auction,
-      initials: `${auction.assignedVolunteer.firstName.substring(0,1)}${auction.assignedVolunteer.lastName.substring(0,1)}`,
-      title: `${auction.assignedVolunteer.firstName} ${auction.assignedVolunteer.lastName.substring(0,1)}. offers their position in ` +
-        `${slots.get(auction.positionSlotId)?.name}`,
-      slot: slots.get(auction.positionSlotId),
-      shift: shifts.get(slots.get(auction.positionSlotId)?.associatedShiftId ?? ""),
-      caption: {
-        name: `${auction.assignedVolunteer.firstName} ${auction.assignedVolunteer.lastName.substring(0,1)}.`,
-        middle: " offers their position in ",
-        shiftName: shifts.get(slots.get(auction.positionSlotId)?.associatedShiftId ?? "")?.name ?? ""
-      }
-    })))
-  );
+  protected readonly auctionData$;
 
   protected readonly tradeData$;
 
@@ -76,8 +79,10 @@ export class ShiftTradeAuctionComponent {
 
   constructor() {
     this.tradeData$ = this.trades$.pipe(
-      combineLatestWith(this.relevantSlots$, this.relevantShifts$, this._userService.userProfile$),
-      map(([trades, slots, shifts, user]) => trades.map(trade => {
+      combineLatestWith(this.relevantSlots$, this.relevantShifts$, this._userService.userProfile$, this.event$.pipe(
+        filter(event => event !== undefined)
+      )),
+      map(([trades, slots, shifts, user, event]) => trades.map(trade => {
         const isOwnRequest = trade.offeringAssignment.assignedVolunteer.id === user?.account.volunteer.id;
         const otherVolunteer = isOwnRequest ?
           trade.requestedAssignment.assignedVolunteer :
@@ -91,6 +96,7 @@ export class ShiftTradeAuctionComponent {
 
         return {
           trade,
+          event,
           isOwnRequest,
           otherVolunteer,
           initials: `${otherVolunteer.firstName.substring(0,1)}${otherVolunteer.lastName.substring(0,1)}`,
@@ -109,6 +115,30 @@ export class ShiftTradeAuctionComponent {
         };
       }))
     );
+
+    this.auctionData$ = this.auctions$.pipe(
+      combineLatestWith(this.relevantSlots$, this.relevantShifts$, this._userService.userProfile$, this.event$.pipe(
+        filter(event => event !== undefined)
+      )),
+      map(([auctions, slots, shifts, user, event]) => auctions.map(auction => {
+        const isOwnRequest = auction.assignedVolunteer.id === user?.account.volunteer.id;
+        return {
+          event,
+          auction,
+          isOwnRequest,
+          initials: `${auction.assignedVolunteer.firstName.substring(0,1)}${auction.assignedVolunteer.lastName.substring(0,1)}`,
+          title: `${auction.assignedVolunteer.firstName} ${auction.assignedVolunteer.lastName.substring(0,1)}. offers their position in ` +
+            `${slots.get(auction.positionSlotId)?.name}`,
+          slot: slots.get(auction.positionSlotId),
+          shift: shifts.get(slots.get(auction.positionSlotId)?.associatedShiftId ?? ""),
+          caption: {
+            name: isOwnRequest ? "You" : `${auction.assignedVolunteer.firstName} ${auction.assignedVolunteer.lastName.substring(0,1)}.`,
+            middle: isOwnRequest ? " offered your position in " : " offers their position in ",
+            shiftName: shifts.get(slots.get(auction.positionSlotId)?.associatedShiftId ?? "")?.name ?? ""
+          }
+        };
+      }))
+    );
   }
 
   @Input()
@@ -119,6 +149,20 @@ export class ShiftTradeAuctionComponent {
   @Input()
   public set auctions(auctions: AssignmentDto[]) {
     this.auctions$.next(auctions);
+  }
+
+  @Input()
+  public set event(event: EventDto | undefined) {
+    this.event$.next(event);
+  }
+
+  protected previewAuction(shift?: ShiftDto, event?: EventDto){
+    if(shift === undefined || event === undefined) {
+      throw new Error("Shift and Event are required");
+    }
+    this.selectedShift$.next({
+      shift, eventId: event.id
+    });
   }
 
 }
