@@ -29,6 +29,15 @@ module.exports = {
         xxl: "42px",
         xxxl: "60px",
       },
+      backgroundImage: {
+        gradient_card_hint: "linear-gradient(145deg, rgb(54 78 141 / 16%), rgb(37 42 125 / 13%) 40%, rgb(65 66 149 / 11%) 100%)",
+        gradient_item: "linear-gradient(145deg, rgb(76 81 157 / 10%), rgb(97 57 175 / 15%) 40%, rgb(98 57 175 / 20%) 100%)",
+        gradient_item_hint: "linear-gradient(149deg, rgba(54, 137, 239, 0.1), rgb(44 82 221 / 15%) 40%, rgba(12, 14, 77, 0.2) 100%)",
+        gradient_item_success: "linear-gradient(145deg, rgb(16 83 11 / 15%), rgb(39 89 26 / 21%) 40%, rgb(8 79 3 / 11%) 100%)",
+        gradient_badge: "linear-gradient(45deg, rgb(76, 81, 157), rgb(97 57 175) 40%, rgb(98, 57, 175) 100%)",
+        gradient_badge_hint: "linear-gradient(45deg, rgb(54, 137, 239), rgb(20 100 196) 40%, rgb(15 145 168) 100%)",
+        gradient_badge_success: "linear-gradient(45deg, rgb(55, 180, 91), rgb(24 114 51) 40%, rgb(40 123 92) 100%)",
+      },
       colors: {
         background: {
 
