@@ -1,0 +1,18 @@
+@if (shares$ | async; as shares) {
+
+  <div class="flex flex-row gap-lg flex-wrap">
+
+    <div class="w-fit">
+      <app-manage-rewards-share-token [manageData]="{token: undefined}" (tokenChanged)="fetchTokens()" />
+    </div>
+
+    @for (share of shares; track share.id) {
+      <div class="w-fit">
+        <app-manage-rewards-share-token [manageData]="{token: share}" (tokenChanged)="fetchTokens()" />
+      </div>
+    }
+
+  </div>
+
+
+}

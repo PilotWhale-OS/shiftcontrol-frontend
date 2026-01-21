@@ -2,9 +2,10 @@ import {Component, inject} from "@angular/core";
 import {RouterLink} from "@angular/router";
 import {UserService} from "../../../services/user/user.service";
 import {AsyncPipe, NgClass} from "@angular/common";
-import {BehaviorSubject, map, withLatestFrom} from "rxjs";
+import {BehaviorSubject, combineLatestWith, map, withLatestFrom} from "rxjs";
 import {icons} from "../../../util/icons";
-import {EventEndpointService} from "../../../../shiftservice-client";
+import {AccountInfoDto, EventEndpointService} from "../../../../shiftservice-client";
+import UserTypeEnum = AccountInfoDto.UserTypeEnum;
 
 @Component({
   selector: "app-home",
@@ -29,10 +30,17 @@ export class HomeComponent {
 
   constructor() {
     this._eventService.getAllOpenEvents().pipe(
-      withLatestFrom(this.cards$)
-    ).subscribe(([events, cards]) => {
+      withLatestFrom(this.cards$),
+      combineLatestWith(this.isAdmin$)
+    ).subscribe(([[events, cards], isAdmin]) => {
       this.cards$.next([
         ...cards,
+        ...(isAdmin ? [{
+          title:"Reward Points Sync",
+          content: "Share reward points with third-party-applications",
+          href: "rewards-sync",
+          spotlight: false
+        }] : []),
         ...events.map(event => ({
           title: event.name,
           content: event.shortDescription ?? "No event description provided.",
@@ -46,6 +54,12 @@ export class HomeComponent {
   protected get name$(){
     return this._userService.kcProfile$.pipe(
       map(user => `${user?.firstName}`)
+    );
+  }
+
+  protected get isAdmin$(){
+    return this._userService.userType$.pipe(
+      map(type => type === UserTypeEnum.Admin)
     );
   }
 
