@@ -40,6 +40,11 @@ export class HomeComponent {
           content: "Share reward points with third-party-applications",
           href: "rewards-sync",
           spotlight: false
+        }, {
+          title:"Pretalx Sync",
+          content: "Import events from pretalx",
+          href: "pretalx-sync",
+          spotlight: false
         }] : []),
         ...events.map(event => ({
           title: event.name,

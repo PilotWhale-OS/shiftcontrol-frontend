@@ -30,12 +30,6 @@
     </div>
 
     @if (manageData.token === undefined) {
-      <span class="w-[20rem]">
-        Create a share token to allow external applications to fetch volunteer reward points of all events.
-      </span>
-    }
-
-    @if (manageData.token === undefined) {
       <div class="flex flex-col gap-xs w-[20rem]">
         <small><fa-icon [icon]="icons.name" class="pr-sm" />Share Token Name</small>
         <xsb-input-text #name

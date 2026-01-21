@@ -5,7 +5,8 @@ export const BC_HOME = new Breadcrumb("ShiftControl", "/");
 export const BC_ACCOUNT = new Breadcrumb("Account", "/account", BC_HOME);
 export const BC_NOTIFICATIONS = new Breadcrumb("Notifications", "/notifications", BC_HOME);
 
-export const BC_REWARDS_SYNC = new Breadcrumb("Reward Point Sync", "/rewards-sync", BC_HOME);
+export const BC_REWARDS_SYNC = new Breadcrumb("Reward Points Sync", "/rewards-sync", BC_HOME);
+export const BC_PRETALX_SYNC = new Breadcrumb("Pretalx Sync", "/pretalx-sync", BC_HOME);
 
 export const BC_EVENTS = new Breadcrumb("Events", "/events", BC_HOME);
 export const BC_EVENT = new Breadcrumb("Event", "event-id", BC_EVENTS);

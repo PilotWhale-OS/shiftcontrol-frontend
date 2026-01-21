@@ -10,7 +10,7 @@ import {
   BC_SHIFT_CALENDAR,
   BC_SHIFT_DETAILS,
   BC_PLAN_ONBOARDING, BC_EVENT_EDIT, BC_EVENT_CREATE, BC_NOTIFICATIONS,
-  BC_EVENT_PLANS, BC_EVENT_HELP, BC_EVENT_VOLUNTEER_DASHBOARD, BC_REWARDS_SYNC
+  BC_EVENT_PLANS, BC_EVENT_HELP, BC_EVENT_VOLUNTEER_DASHBOARD, BC_REWARDS_SYNC, BC_PRETALX_SYNC
 } from "./breadcrumbs";
 import { breadcrumbsGuard } from "./guards/breadcrumbs/breadcrumbs.guard";
 import {accessAllowedGuard, notLoggedInGuard} from "./guards/keycloak/keycloak.guard";
@@ -26,6 +26,7 @@ import {CreateEventComponent} from "./pages/shiftcontrol/event/create-event/crea
 import {EventHelpComponent} from "./pages/shiftcontrol/event/event-help/event-help.component";
 import {VolunteerDashboardComponent} from "./pages/shiftcontrol/event/volunteer-dashboard/volunteer-dashboard.component";
 import {RewardsSyncComponent} from "./pages/shiftcontrol/rewards-sync/rewards-sync.component";
+import {PretalxSyncComponent} from "./pages/shiftcontrol/pretalx-sync/pretalx-sync.component";
 
 export const routes: Routes = ([
   { path: "", component: HomeComponent, pathMatch: "full", data: {breadcrumbs: BC_HOME}, canActivate: [accessAllowedGuard] },
@@ -58,14 +59,15 @@ export const routes: Routes = ([
   { path: "events/:eventId/volunteer", component: VolunteerDashboardComponent,
     data: { breadcrumbs: BC_EVENT_VOLUNTEER_DASHBOARD }, canActivate: [accessAllowedGuard]},
 
-
   /* shifts */
   { path: "shifts/:shiftId", component: ShiftDetailsComponent,
     data: { breadcrumbs: BC_SHIFT_DETAILS }, canActivate: [accessAllowedGuard]},
 
   /* admin */
   { path: "rewards-sync", component: RewardsSyncComponent,
-    data: {breadcrumbs: BC_REWARDS_SYNC}, canActivate: [accessAllowedGuard]}
+    data: {breadcrumbs: BC_REWARDS_SYNC}, canActivate: [accessAllowedGuard]},
+  { path: "pretalx-sync", component: PretalxSyncComponent,
+    data: {breadcrumbs: BC_PRETALX_SYNC}, canActivate: [accessAllowedGuard]}
 
   /* add breadcrumbs guard to each route definition*/
 ] as Routes).map(
