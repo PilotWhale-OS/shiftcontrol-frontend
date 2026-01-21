@@ -21,7 +21,7 @@
         <span>{{trade.caption.pre}}<b>{{trade.caption.name}}</b>{{trade.caption.middle}}<b>{{trade.caption.shiftName}}</b></span>
 
         <!-- action(s) -->
-        <div class="grow flex flex-row justify-end gap-sm">
+        <div class="pl-lg grow flex flex-row justify-end gap-sm">
           @if (trade.isOwnRequest){
             <xsb-input-button size="text" content="Cancel" (click)="cancelTrade(trade.trade)" />
           } @else {
@@ -74,7 +74,7 @@
         <span><b>{{auction.caption.name}}</b>{{auction.caption.middle}}<b>{{auction.caption.shiftName}}</b></span>
 
         <!-- action(s) -->
-        <div class="grow flex flex-row justify-end">
+        <div class="pl-lg grow flex flex-row justify-end">
           @if (auction.isOwnRequest){
             <xsb-input-button size="text" content="Cancel" (click)="cancelAuction(auction.auction)" />
           } @else {
