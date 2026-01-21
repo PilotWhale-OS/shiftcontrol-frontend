@@ -160,7 +160,7 @@ export class ShiftTradeAuctionComponent {
 
   protected acceptAuction(auction: AssignmentContextDto) {
     this._positionService.claimAuction(auction.positionSlotContext.id, auction.assignment.assignedVolunteer.id, {
-      acceptedRewardPointsConfigHash: "" // TODO get hash?
+      acceptedRewardPointsConfigHash: auction.positionSlotContext.rewardPointsDto.rewardPointsConfigHash
     }).pipe(
       this._toastService.tapSuccess("Offer Accepted", () => "You have accepted the position offer."),
       this._toastService.tapError("Error Accepting Offer", mapValue.apiErrorToMessage)

@@ -3,8 +3,8 @@
   <!-- select anchor -->
   @if (!disguise) {
     <div tabindex="0" role="button"
-         class="flex items-center cursor-pointer transition-all rounded-md select-none
-         border-framing-item bg-background-item active:border-framing-highlight
+         class="flex items-center cursor-pointer transition-all rounded-2xl select-none
+         border-framing-item bg-gradient_item active:border-framing-highlight
     hover:border-framing-highlight focus-within:border-framing-highlight"
          [ngClass]="{
       'border-ctr' : border,
@@ -15,10 +15,10 @@
 
         <button
           [id]="name + '-option-' + option.value"
-          class=" px-sm py-xs first:rounded-l-md last:rounded-r-md transition-all"
+          class=" px-sm py-xs first:rounded-l-2xl last:rounded-r-2xl transition-all"
           (click)="selectValue(option.value)"
           [ngClass]="{
-            'bg-framing-item' : option.value === value,
+            'bg-gradient_badge' : option.value === value,
             'hover:bg-framing-card' : option.value !== value
           }"
         >
