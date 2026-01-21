@@ -79,13 +79,13 @@
         }
 
         &:last-child {
-          @apply rounded-r-lg;
+          @apply rounded-r-[1rem];
           /*background: rgba(55, 63, 101, 30%);*/
           background: linear-gradient(145deg, rgb(33 48 87 / 43%), rgb(57 63 175 / 23%) 40%, rgb(51 52 150 / 55%) 100%);
         }
 
         &:first-child {
-          @apply rounded-l-lg;
+          @apply rounded-l-[1rem];
         }
       }
     }
