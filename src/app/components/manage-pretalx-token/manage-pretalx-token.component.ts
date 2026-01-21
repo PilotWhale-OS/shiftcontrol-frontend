@@ -7,7 +7,7 @@ import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {InputTextComponent} from "../inputs/input-text/input-text.component";
 import {TypedFormControlDirective} from "../../directives/typed-form-control.directive";
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
-import {AsyncPipe, DatePipe, NgClass} from "@angular/common";
+import {AsyncPipe, NgClass} from "@angular/common";
 import {DialogComponent} from "../dialog/dialog.component";
 import {icons} from "../../util/icons";
 import {ToastService} from "../../services/toast/toast.service";
@@ -23,8 +23,7 @@ import {BehaviorSubject, Subject} from "rxjs";
     InputButtonComponent,
     NgClass,
     DialogComponent,
-    AsyncPipe,
-    DatePipe
+    AsyncPipe
   ],
   templateUrl: "./manage-pretalx-token.component.html",
   styleUrl: "./manage-pretalx-token.component.scss"
