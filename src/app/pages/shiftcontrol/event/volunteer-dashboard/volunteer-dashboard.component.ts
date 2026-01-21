@@ -51,10 +51,8 @@ export class VolunteerDashboardComponent {
     }
 
     this.eventDashboard$ = this.reloadTradeAuctions$.pipe(startWith(undefined)).pipe(
-      switchMap(() => this._eventService.getEventsDashboard()),
-      map(dashboard => dashboard.shiftPlanDashboardOverviewDtos
-        .filter(plan => plan.eventOverview.id === eventId) // todo via call
-      ),
+      switchMap(() => this._eventService.getEventsDashboard(eventId)),
+      map(dashboard => dashboard.shiftPlanDashboardOverviewDtos),
       shareReplay()
     );
 
