@@ -13,10 +13,17 @@
   <div class="card grid card grid-cols-[10rem_1fr_1fr_1fr] gap-y-xs gap-x-md h-fit w-[min(100%,70rem)] items-center">
     <h1 class="signature-gradient-font col-span-4">Application Users</h1>
 
-    <small class="pb-sm">Full name</small>
-    <small class="pb-sm">E-Mail</small>
-    <small class="pb-sm">Joined Plans</small>
-    <small class="pb-sm justify-self-end"></small>
+    <small class="pb-sm self-end">Full name</small>
+    <small class="pb-sm self-end">E-Mail</small>
+    <small class="pb-sm self-end">Joined Plans</small>
+    <div class="pb-sm justify-self-end self-end">
+      <xsb-input-text #search
+        [formControl]="form.controls.search"
+        [xsb-typed]="[search, form.controls.search]"
+        placeholder="Filter Users"
+        name="application-users-search"
+      />
+    </div>
 
     <hr class="col-span-4 mb-sm" />
 
