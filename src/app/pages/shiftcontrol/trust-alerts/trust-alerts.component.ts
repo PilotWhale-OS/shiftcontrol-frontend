@@ -5,13 +5,15 @@ import {TrustAlertDisplayDto, TrustAlertEndpointService} from "../../../../shift
 import {debounceTime, shareReplay, startWith, switchMap} from "rxjs";
 import {AsyncPipe, DatePipe} from "@angular/common";
 import {InputButtonComponent} from "../../../components/inputs/input-button/input-button.component";
+import {RouterLink} from "@angular/router";
 
 @Component({
   selector: "app-trust-alerts",
   imports: [
     AsyncPipe,
     DatePipe,
-    InputButtonComponent
+    InputButtonComponent,
+    RouterLink
   ],
   templateUrl: "./trust-alerts.component.html",
   styleUrl: "./trust-alerts.component.scss"

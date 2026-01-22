@@ -1,5 +1,5 @@
 import {
-  faArrowUpRightFromSquare,
+  faArrowUpRightFromSquare, faAt,
   faBackward, faBan,
   faBarsProgress, faBell, faBook,
   faCalendar,
@@ -46,6 +46,7 @@ export const icons = {
   rewardShare: faShareNodes,
   pretalxKey: faKey,
   pretalxHost: faServer,
+  email: faAt,
 
   /* labels */
   calendar: faCalendar,

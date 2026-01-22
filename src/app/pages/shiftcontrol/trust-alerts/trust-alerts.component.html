@@ -3,11 +3,16 @@
   <div class="card flex flex-col gap-md h-fit max-w-[30rem]">
 
     <h1 class="signature-gradient-font">Trust Alerts</h1>
-    <span>
+    <p>
       Trust Alerts monitor volunteer behavior and notify you of any actions that may require your attention.
-    </span>
+    </p>
+    <p>
+      Alerts are not proof for malicious behavior. Contacting the volunteer before taking action is recommended.
+    </p>
 
-    <div class="grid grid-cols-[auto_1fr] items-center gap-md">
+    <hr>
+
+    <div class="grid grid-cols-[auto_1fr] items-center gap-sm">
       <div class="badge w-fit h-fit">Spam</div>
       <span>A volunteer has repeated a similar action N times in X minutes</span>
 
@@ -23,14 +28,15 @@
 
   </div>
 
-  <div class="card grid card grid-cols-[10rem_1fr_1fr_1fr] gap-y-xs gap-x-md w-[min(100%,70rem)] items-center">
+  <div class="card grid card grid-cols-[10rem_1fr_1fr_1fr] gap-y-xs gap-x-md h-fit w-[min(100%,70rem)] items-center">
+    <h1 class="signature-gradient-font col-span-4">Pending Alerts</h1>
 
     <small class="pb-sm">Behavior Type</small>
     <small class="pb-sm">Volunteer</small>
     <small class="pb-sm">Date</small>
     <small class="pb-sm justify-self-end">Actions</small>
 
-    <hr class="col-span-4 mb-lg" />
+    <hr class="col-span-4 mb-sm" />
 
     @if (page$ | async; as page) {
 
@@ -46,14 +52,13 @@
           <span>{{alert.createdAt | date:"short"}}</span>
 
           <div class="flex flex-row gap-md justify-end">
-            <xsb-input-button size="text" content="Lock" />
-            <xsb-input-button size="text" content="Reset" />
+            <a [routerLink]="'/volunteer/' + alert.volunteerDto.id">Manage Volunteer</a>
             <xsb-input-button size="text" content="Ignore" (click)="dismissTrustAlert(alert)" />
           </div>
         }
       }
 
-      <hr class="col-span-4 mt-lg" />
+      <hr class="col-span-4 mt-sm" />
 
       <div class="col-span-3 flex flex-row gap-md items-center pt-sm">
         <xsb-input-button size="text" content="Previous"
