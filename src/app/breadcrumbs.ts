@@ -7,6 +7,8 @@ export const BC_NOTIFICATIONS = new Breadcrumb("Notifications", "/notifications"
 
 export const BC_REWARDS_SYNC = new Breadcrumb("Reward Points Sync", "/rewards-sync", BC_HOME);
 export const BC_PRETALX_SYNC = new Breadcrumb("Pretalx Sync", "/pretalx-sync", BC_HOME);
+export const BC_AUDIT_LOG = new Breadcrumb("Audit Log", "/audit", BC_HOME);
+export const BC_TRUST_ALERTS = new Breadcrumb("Trust Alerts", "/trust", BC_HOME);
 
 export const BC_EVENTS = new Breadcrumb("Events", "/events", BC_HOME);
 export const BC_EVENT = new Breadcrumb("Event", "event-id", BC_EVENTS);

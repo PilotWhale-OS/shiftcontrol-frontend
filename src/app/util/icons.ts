@@ -8,7 +8,7 @@ import {
   faClock, faCrown, faFilter, faForward,
   faGift, faHandSparkles, faHashtag,
   faHourglass, faKey, faLink, faLocationPin, faLock, faMedal, faMessage, faMoon, faPause,
-  faPeopleGroup, faPlusCircle, faShareNodes,
+  faPeopleGroup, faPlusCircle, faServer, faShareNodes,
   faShuffle, faSignsPost, faStar, faTableColumns, faTag, faTrophy, faUser,
   faWrench, faXmark
 } from "@fortawesome/free-solid-svg-icons";
@@ -44,6 +44,8 @@ export const icons = {
   position: faWrench,
   shift: faHandSparkles,
   rewardShare: faShareNodes,
+  pretalxKey: faKey,
+  pretalxHost: faServer,
 
   /* labels */
   calendar: faCalendar,

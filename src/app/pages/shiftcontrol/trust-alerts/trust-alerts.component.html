@@ -1,0 +1,76 @@
+<div class="flex flex-row gap-lg">
+
+  <div class="card flex flex-col gap-md h-fit max-w-[30rem]">
+
+    <h1 class="signature-gradient-font">Trust Alerts</h1>
+    <span>
+      Trust Alerts monitor volunteer behavior and notify you of any actions that may require your attention.
+    </span>
+
+    <div class="grid grid-cols-[auto_1fr] items-center gap-md">
+      <div class="badge w-fit h-fit">Spam</div>
+      <span>A volunteer has repeated a similar action N times in X minutes</span>
+
+      <div class="badge w-fit h-fit">Overload</div>
+      <span>A volunteer has ??</span>
+
+      <div class="badge w-fit h-fit">Trade</div>
+      <span>A volunteer has requested N trades in X minutes</span>
+
+      <div class="badge w-fit h-fit">Auction</div>
+      <span>A volunteer has created N auctions in X minutes</span>
+    </div>
+
+  </div>
+
+  <div class="card grid card grid-cols-[10rem_1fr_1fr_1fr] gap-y-xs gap-x-md w-[min(100%,70rem)] items-center">
+
+    <small class="pb-sm">Behavior Type</small>
+    <small class="pb-sm">Volunteer</small>
+    <small class="pb-sm">Date</small>
+    <small class="pb-sm justify-self-end">Actions</small>
+
+    <hr class="col-span-4 mb-lg" />
+
+    @if (page$ | async; as page) {
+
+      @if(page.items.length === 0) {
+        <span class="col-span-4">
+          No trust alerts at this time.
+        </span>
+      } @else {
+        @for (alert of page.items; track alert.id) {
+
+          <span class="badge h-fit w-fit mr-xl case capitalize">{{alert.alertType.toString().toLowerCase()}}</span>
+          <span>{{alert.volunteerDto.firstName}} {{alert.volunteerDto.lastName}}</span>
+          <span>{{alert.createdAt | date:"short"}}</span>
+
+          <div class="flex flex-row gap-md justify-end">
+            <xsb-input-button size="text" content="Lock" />
+            <xsb-input-button size="text" content="Reset" />
+            <xsb-input-button size="text" content="Ignore" (click)="dismissTrustAlert(alert)" />
+          </div>
+        }
+      }
+
+      <hr class="col-span-4 mt-lg" />
+
+      <div class="col-span-3 flex flex-row gap-md items-center pt-sm">
+        <xsb-input-button size="text" content="Previous"
+                          (click)="form.controls.paginationIndex.setValue(page.page - 1)"
+                          [lock]="page.page <= 0"
+        />
+
+        <span>Page {{page.page + 1}}/{{page.pages}}</span>
+
+        <xsb-input-button size="text" content="Next"
+                          (click)="form.controls.paginationIndex.setValue(page.page + 1)"
+                          [lock]="page.page >= page.pages - 1"
+        />
+      </div>
+      <small class="justify-self-end">Viewing {{page.items.length}} of {{page.total}} Trust Alerts</small>
+    }
+
+  </div>
+
+</div>

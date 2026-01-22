@@ -20,7 +20,7 @@ import UserTypeEnum = AccountInfoDto.UserTypeEnum;
 export class HomeComponent {
 
   protected readonly cards$ = new BehaviorSubject([
-    {title:"User Account", content: "View your account and set preferences", href: "me", spotlight: false},
+    /* {title:"User Account", content: "View your account and set preferences", href: "me", spotlight: false},*/
     {title:"Events", content: "Browse all your events", href: "events", spotlight: false},
   ]);
   protected readonly icons = icons;
@@ -41,9 +41,19 @@ export class HomeComponent {
           href: "rewards-sync",
           spotlight: false
         }, {
+          title:"Trust Alerts",
+          content: "Supervise volunteer behavior and prevent abuse",
+          href: "trust",
+          spotlight: false
+        }, {
           title:"Pretalx Sync",
-          content: "Import events from pretalx",
+          content: "Import and sync events from pretalx",
           href: "pretalx-sync",
+          spotlight: false
+        }, {
+          title:"Audit Log",
+          content: "Track changes and activities within the system",
+          href: "audit",
           spotlight: false
         }] : []),
         ...events.map(event => ({

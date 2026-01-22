@@ -55,6 +55,6 @@ export class InputButtonComponent {
   preventDefault(event: MouseEvent) {
     event.preventDefault();
     event.stopPropagation();
-    this.click.emit(event);
+    if(!this.lock) {this.click.emit(event);}
   }
 }
