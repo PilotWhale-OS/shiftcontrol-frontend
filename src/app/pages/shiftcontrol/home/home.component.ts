@@ -45,6 +45,11 @@ export class HomeComponent {
           content: "Supervise volunteer behavior and prevent abuse",
           href: "trust",
           spotlight: false
+        },{
+          title:"App Users",
+          content: "Manage users and their access",
+          href: "volunteers",
+          spotlight: false
         }, {
           title:"Pretalx Sync",
           content: "Import and sync events from pretalx",

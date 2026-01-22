@@ -39,7 +39,9 @@ export class VolunteerComponent implements OnDestroy {
       filter(v => v !== undefined)
     ).subscribe(v => {
       this._pageService.configurePageName(`${v.volunteer.firstName} ${v.volunteer.lastName}`);
-      this._pageService.configureBreadcrumb(BC_VOLUNTEER, "Volunteer", `/volunteers/${v.volunteer.id}`);
+      this._pageService.configureBreadcrumb(BC_VOLUNTEER,
+        `${v.volunteer.firstName} ${v.volunteer.lastName.substring(0,1)}.`, `${v.volunteer.id}`
+      );
     });
   }
 

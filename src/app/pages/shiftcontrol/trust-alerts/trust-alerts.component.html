@@ -52,7 +52,7 @@
           <span>{{alert.createdAt | date:"short"}}</span>
 
           <div class="flex flex-row gap-md justify-end">
-            <a [routerLink]="'/volunteer/' + alert.volunteerDto.id">Manage Volunteer</a>
+            <a [routerLink]="'/volunteers/' + alert.volunteerDto.id">Manage Volunteer</a>
             <xsb-input-button size="text" content="Ignore" (click)="dismissTrustAlert(alert)" />
           </div>
         }

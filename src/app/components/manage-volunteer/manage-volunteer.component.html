@@ -34,14 +34,18 @@
 
       <app-manage-volunteer-plan [manageData]="(newPlanData$ | async) ?? undefined" (planChanged)="volunteerChanged.next(volunteer)" />
 
-      <hr class="col-span-4 mb-sm mt-sm" />
 
       @if (volunteerPlanRows$ | async; as plans) {
+
+        <hr class="col-span-4 mb-sm mt-sm" />
+
         @for (plan of plans; track plan.plan?.id) {
           <app-manage-volunteer-plan [manageData]="plan" (planChanged)="volunteerChanged.next(volunteer)" />
         }
 
-        <hr class="col-span-4 mt-sm" />
+        @if (plans.length > 0) {
+          <hr class="col-span-4 mt-sm" />
+        }
 
         <small class="col-span-4 pt-sm">Viewing {{plans.length}} Shift Plans</small>
       }
