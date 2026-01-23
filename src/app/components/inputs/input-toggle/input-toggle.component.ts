@@ -1,9 +1,10 @@
-import { Component, HostBinding, Injector, Input, OnInit, inject } from "@angular/core";
+import {Component, HostBinding, Injector, Input, OnInit, inject, OnDestroy, ChangeDetectorRef} from "@angular/core";
 import {FormsModule, NG_VALUE_ACCESSOR, NgControl} from "@angular/forms";
 import {TypedControlValueAccessor} from "../../../util/typedControlValueAccessor";
 import {NgClass} from "@angular/common";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {faCheckCircle, faTimesCircle} from "@fortawesome/free-solid-svg-icons";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: "xsb-input-toggle",
@@ -23,7 +24,7 @@ import {faCheckCircle, faTimesCircle} from "@fortawesome/free-solid-svg-icons";
     }
   ]
 })
-export class InputToggleComponent implements TypedControlValueAccessor<boolean>, OnInit {
+export class InputToggleComponent implements TypedControlValueAccessor<boolean>, OnInit, OnDestroy {
 
   /**
    * the size style of the input. minimal will have less border and padding
@@ -68,6 +69,8 @@ export class InputToggleComponent implements TypedControlValueAccessor<boolean>,
   ngControl?: NgControl;
 
   private injector = inject(Injector);
+  private _changeDetector = inject(ChangeDetectorRef);
+  private _statusSubscription?: Subscription;
 
   /* hide actual properties from html to prevent accessibility isues */
   @HostBinding("attr.name") get hideNameAttr() { return null; }
@@ -86,6 +89,12 @@ export class InputToggleComponent implements TypedControlValueAccessor<boolean>,
    */
   ngOnInit(): void {
     this.ngControl = this.injector.get(NgControl);
+
+    this._statusSubscription = this.ngControl.statusChanges?.subscribe(() => this._changeDetector.detectChanges());
+  }
+
+  ngOnDestroy() {
+    this._statusSubscription?.unsubscribe();
   }
 
   /**
@@ -95,6 +104,7 @@ export class InputToggleComponent implements TypedControlValueAccessor<boolean>,
    */
   writeValue(value: boolean): void {
     this.value = value;
+    this._changeDetector.markForCheck();
   }
 
   /**

@@ -1,8 +1,9 @@
-<div class="grid grid-cols-[10rem_1fr_1fr_1fr] gap-y-xs gap-x-md w-full h-fit items-center">
+<div class="grid grid-cols-[10rem_auto_auto_auto_auto] gap-y-xs gap-x-xl w-full h-fit items-center">
 
   <small class="pb-sm self-end">Full name</small>
   <small class="pb-sm self-end">E-Mail</small>
   <small class="pb-sm self-end">Roles</small>
+  <small class="pb-sm self-end">Locked</small>
   <div class="pb-sm justify-self-end self-end">
     <xsb-input-text #search
                     [formControl]="form.controls.search"
@@ -12,56 +13,76 @@
     />
   </div>
 
-  <hr class="col-span-4 mb-sm" />
+  <hr class="col-span-5 mb-sm" />
 
-  @if (page$ | async; as page) {
+  @if (manageData$ | async; as manageData) {
 
-    @if(page.items.length === 0) {
-      <span class="col-span-4">
+    @if (page$ | async; as page) {
+
+      @if(page.items.length === 0) {
+        <span class="col-span-5">
           No plan volunteers at this time.
         </span>
-    } @else {
-      @if (roleSelectControls$ | async; as controls) {
-        @for (volunteer of page.items; track volunteer.volunteer.id) {
+      } @else {
+        @if (roleSelectControls$ | async; as roleControls) {
+          @if (lockControls$ | async; as lockControls){
+            @for (volunteer of page.items; track volunteer.volunteer.id) {
 
-          <span>{{volunteer.volunteer.firstName}} {{volunteer.volunteer.lastName}}</span>
-          <span>{{volunteer.email}}</span>
+              <span>{{volunteer.volunteer.firstName}} {{volunteer.volunteer.lastName}}</span>
+              <span>{{volunteer.email}}</span>
 
-          <div>
-            @if (controls.controls.get(volunteer.volunteer.id); as control) {
-              <xsb-input-multiselect #roles
-                                     [formControl]="control"
-                                     [xsb-typed]="[roles, control]"
-                                     [options]="controls.options"
-                                     name="plan-user-roles-{{volunteer.volunteer.id}}"
-                                     naming="Roles"
-              />
+              <div>
+                @if (roleControls.controls.get(volunteer.volunteer.id); as control) {
+                  <xsb-input-multiselect #roles
+                                         [formControl]="control"
+                                         [xsb-typed]="[roles, control]"
+                                         [options]="roleControls.options"
+                                         [comparatorFn]="idComparator"
+                                         name="plan-user-roles-{{volunteer.volunteer.id}}"
+                                         naming="Roles"
+                  />
+                }
+              </div>
+
+              <div class="flex flex-row gap-sm items-center">
+                @if (lockControls.controls.get(volunteer.volunteer.id); as control) {
+                  <xsb-input-toggle #locked
+                                    [formControl]="control"
+                                    name="plan-user-locked-{{volunteer.volunteer.id}}"
+                                    [xsb-typed]="[locked, control]"
+                  />
+                  <label for="plan-user-locked-{{volunteer.volunteer.id}}">
+                    {{ control.value ? "Locked" : "Not Locked" }}
+                  </label>
+                }
+              </div>
+
+              <div class="flex flex-row gap-md justify-end">
+                <xsb-input-button size="text" content="Reset Assignments" (click)="resetInPlan(volunteer.volunteer, manageData.plan)" />
+                <xsb-input-button size="text" content="Remove from Plan" (click)="removeFromPlan(volunteer.volunteer, manageData.plan)" />
+              </div>
             }
-          </div>
-
-          <div class="flex flex-row gap-md justify-end">
-            hi :)
-          </div>
+          }
         }
       }
+
+      <hr class="col-span-5 mt-sm" />
+
+      <div class="col-span-4 flex flex-row gap-md items-center pt-sm">
+        <xsb-input-button size="text" content="Previous"
+                          (click)="form.controls.paginationIndex.setValue(page.page - 1)"
+                          [lock]="page.page <= 0"
+        />
+
+        <span>Page {{page.page + 1}}/{{page.pages}}</span>
+
+        <xsb-input-button size="text" content="Next"
+                          (click)="form.controls.paginationIndex.setValue(page.page + 1)"
+                          [lock]="page.page >= page.pages - 1"
+        />
+      </div>
+      <small class="justify-self-end">Viewing {{page.items.length}} of {{page.total}} Volunteers</small>
     }
-
-    <hr class="col-span-4 mt-sm" />
-
-    <div class="col-span-3 flex flex-row gap-md items-center pt-sm">
-      <xsb-input-button size="text" content="Previous"
-                        (click)="form.controls.paginationIndex.setValue(page.page - 1)"
-                        [lock]="page.page <= 0"
-      />
-
-      <span>Page {{page.page + 1}}/{{page.pages}}</span>
-
-      <xsb-input-button size="text" content="Next"
-                        (click)="form.controls.paginationIndex.setValue(page.page + 1)"
-                        [lock]="page.page >= page.pages - 1"
-      />
-    </div>
-    <small class="justify-self-end">Viewing {{page.items.length}} of {{page.total}} Volunteers</small>
   }
 
 </div>

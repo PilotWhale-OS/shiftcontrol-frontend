@@ -1,25 +1,25 @@
 import {Component, inject, Input, OnDestroy} from "@angular/core";
-import {RoleDto, ShiftPlanDto, UserPlanEndpointService} from "../../../shiftservice-client";
+import {RoleDto, ShiftPlanDto, UserEventEndpointService, UserPlanEndpointService, VolunteerDto} from "../../../shiftservice-client";
 import {
   BehaviorSubject, catchError,
   combineLatest,
   combineLatestWith,
   debounceTime, distinctUntilChanged,
   filter,
-  forkJoin,
   map, of,
   shareReplay,
   startWith,
   switchMap
 } from "rxjs";
 import { icons } from "../../util/icons";
-import {FormBuilder, FormControl, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FormBuilder, FormControl, ReactiveFormsModule} from "@angular/forms";
 import {AsyncPipe} from "@angular/common";
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
 import {InputTextComponent} from "../inputs/input-text/input-text.component";
 import {TypedFormControlDirective} from "../../directives/typed-form-control.directive";
 import {ToastService} from "../../services/toast/toast.service";
 import {InputMultiselectComponent} from "../inputs/input-multiselect/input-multiselect.component";
+import {InputToggleComponent} from "../inputs/input-toggle/input-toggle.component";
 
 export interface planVolunteersData {
   plan: ShiftPlanDto;
@@ -34,7 +34,8 @@ export interface planVolunteersData {
     InputTextComponent,
     ReactiveFormsModule,
     TypedFormControlDirective,
-    InputMultiselectComponent
+    InputMultiselectComponent,
+    InputToggleComponent
   ],
   templateUrl: "./manage-plan-volunteers.component.html",
   styleUrl: "./manage-plan-volunteers.component.scss"
@@ -51,6 +52,7 @@ export class ManagePlanVolunteersComponent implements OnDestroy {
     })))
   );
   protected readonly roleSelectControls$;
+  protected readonly lockControls$;
   protected readonly icons = icons;
   protected readonly form;
   protected readonly pageSize = 20;
@@ -58,7 +60,9 @@ export class ManagePlanVolunteersComponent implements OnDestroy {
   private readonly _fb = inject(FormBuilder);
   private readonly _toastService = inject(ToastService);
   private readonly _userPlanService = inject(UserPlanEndpointService);
+  private readonly _userEventService = inject(UserEventEndpointService);
   private readonly _roleChangesSubscription;
+  private readonly _lockChangesSubscription;
 
   constructor() {
     this.form = this._fb.group({
@@ -89,9 +93,35 @@ export class ManagePlanVolunteersComponent implements OnDestroy {
       map(([page, options, data]) => {
         const controls = new Map<string, FormControl<RoleDto[]>>();
 
-        page.items.forEach(v => controls.set(v.volunteer.id, this._fb.nonNullable.control<RoleDto[]>(v.roles, [Validators.required])));
+        page.items.forEach(v => {
+          const control = this._fb.nonNullable.control<RoleDto[]>([]);
+          control.setValue(v.roles);
+          control.markAsUntouched();
+
+          controls.set(v.volunteer.id, control);
+        });
 
         return {controls, options, data};
+      }),
+      shareReplay()
+    );
+
+    this.lockControls$ = this.page$.pipe(
+      combineLatestWith(this.manageData$.pipe(
+        filter((data): data is planVolunteersData => data !== undefined
+      ))),
+      map(([page, data]) => {
+        const controls = new Map<string, FormControl<boolean>>();
+
+        page.items.forEach(v => {
+          const control = this._fb.nonNullable.control<boolean>(false);
+          control.setValue(v.isLocked);
+          control.markAsUntouched();
+
+          controls.set(v.volunteer.id, control);
+        });
+
+        return {controls, data};
       }),
       shareReplay()
     );
@@ -100,17 +130,39 @@ export class ManagePlanVolunteersComponent implements OnDestroy {
       switchMap(({controls, data}) => {
         const changes = Array.from(controls.entries()).map(([userId, control]) =>
           control.valueChanges.pipe(
-            filter(() => control.dirty && control.valid),
+            filter(() => control.touched),
             distinctUntilChanged(),
             debounceTime(100),
             switchMap(roles => this._userPlanService.updateUserRoles(data.plan.id, userId, {
               roles: roles.map(r => r.id)
-            })),
-            this._toastService.tapSaving("Volunteer Roles"),
-            catchError(() => of(undefined))
+            }).pipe(
+              this._toastService.tapSaving("Volunteer Roles"),
+              catchError(() => of(undefined))
+            )),
           )
         );
-        return forkJoin(changes);
+        return combineLatest(changes);
+      })
+    ).subscribe();
+
+    this._lockChangesSubscription = this.lockControls$.pipe(
+      switchMap(({controls, data}) => {
+        const changes = Array.from(controls.entries()).map(([userId, control]) =>
+          control.valueChanges.pipe(
+            filter(() => control.touched),
+            distinctUntilChanged(),
+            debounceTime(100),
+            switchMap(isLocked => (isLocked ? this._userEventService.lockUserInPlan(userId, {
+              shiftPlanIds: [data.plan.id]
+            }) : this._userEventService.unlockUserInPlan(userId, {
+              shiftPlanIds: [data.plan.id]
+            })).pipe(
+              (isLocked ? this._toastService.tapSaving("Access Lock") : this._toastService.tapDeleting("Access Lock")),
+              catchError(() => of(undefined))
+            )),
+          )
+        );
+        return combineLatest(changes);
       })
     ).subscribe();
   }
@@ -123,6 +175,28 @@ export class ManagePlanVolunteersComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this._roleChangesSubscription.unsubscribe();
+    this._lockChangesSubscription.unsubscribe();
+  }
+
+  protected idComparator(a: RoleDto | null, b: RoleDto | null) {
+    return a?.id === b?.id;
+  }
+
+  protected removeFromPlan(volunteer: VolunteerDto, plan: ShiftPlanDto){
+    this._userEventService.bulkRemoveVolunteeringPlans({
+      volunteers: [volunteer.id],
+      plans: [plan.id]
+    }).pipe(
+      this._toastService.tapDeleting("Plan Access")
+    ).subscribe(() => this.form.patchValue(this.form.value));
+  }
+
+  protected resetInPlan(volunteer: VolunteerDto, plan: ShiftPlanDto){
+    this._userEventService.resetUserInPlan(volunteer.id, {
+      shiftPlanIds: [plan.id]
+    }).pipe(
+      this._toastService.tapDeleting("Volunteer Assignments")
+    ).subscribe(() => this.form.patchValue(this.form.value));
   }
 
 }
