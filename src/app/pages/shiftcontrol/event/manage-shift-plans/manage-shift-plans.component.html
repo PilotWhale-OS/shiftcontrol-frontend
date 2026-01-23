@@ -76,7 +76,7 @@
 
     @if (planManageData$ | async; as plan){
 
-      <div class="card flex flex-col gap-lg w-full col-span-2">
+      <div class="card flex flex-col gap-lg w-fit col-span-2">
 
         <h1 class="compact signature-gradient-font">{{ plan.plan?.name }}: {{selectedMode$ | async}}</h1>
 
