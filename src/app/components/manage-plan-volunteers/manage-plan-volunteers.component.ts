@@ -7,7 +7,6 @@ import {AsyncPipe} from "@angular/common";
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
 import {InputTextComponent} from "../inputs/input-text/input-text.component";
 import {TypedFormControlDirective} from "../../directives/typed-form-control.directive";
-import {RouterLink} from "@angular/router";
 
 export interface planVolunteersData {
   plan: ShiftPlanDto;
@@ -21,8 +20,7 @@ export interface planVolunteersData {
     InputButtonComponent,
     InputTextComponent,
     ReactiveFormsModule,
-    TypedFormControlDirective,
-    RouterLink
+    TypedFormControlDirective
   ],
   templateUrl: "./manage-plan-volunteers.component.html",
   styleUrl: "./manage-plan-volunteers.component.scss"

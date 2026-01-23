@@ -1,15 +1,15 @@
 import {Component, inject, Input, OnDestroy, Output} from "@angular/core";
 import {
-  BehaviorSubject,
+  BehaviorSubject, catchError,
   debounceTime,
   distinctUntilChanged,
   filter,
   forkJoin,
-  map, of,
+  map, merge, of,
   shareReplay,
   Subject,
   Subscription,
-  switchMap, withLatestFrom,
+  switchMap, take, tap, withLatestFrom,
 } from "rxjs";
 import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import { icons } from "../../../util/icons";
@@ -120,15 +120,15 @@ export class ManageVolunteerPlanComponent implements OnDestroy {
         /* lock plan */
         if(locked && !isLocked) {
           return this._userEventService.lockUserInPlan(data.volunteer.volunteer.id, {
-            shiftPlanId: data.plan.id
+            shiftPlanIds: [data.plan.id]
           }).pipe(
             this._toastService.tapSaving("Access Lock", () => data.plan.name)
           );
         } /* unlock plan */ else if(!locked && isLocked) {
           return this._userEventService.unlockUserInPlan(data.volunteer.volunteer.id, {
-            shiftPlanId: data.plan.id
+            shiftPlanIds: [data.plan.id]
           }).pipe(
-            this._toastService.tapSaving("Access Unlock", () => data.plan.name)
+            this._toastService.tapDeleting("Access Lock", () => data.plan.name)
           );
         } else {
           return of(undefined);
@@ -153,7 +153,7 @@ export class ManageVolunteerPlanComponent implements OnDestroy {
             planningPlans: newPlanningPlans,
             volunteeringPlans: data.volunteer.volunteeringPlans
           }).pipe(
-            this._toastService.tapSaving("Plan Access Grant", () => data.plan.name)
+            this._toastService.tapSaving("Planner Access", () => data.plan.name)
           );
         } /* revoke planning access */ else if(level === "volunteer" && isPlanner) {
           const newPlanningPlans = data.volunteer.planningPlans.filter(id => id !== data.plan.id);
@@ -161,7 +161,7 @@ export class ManageVolunteerPlanComponent implements OnDestroy {
             planningPlans: newPlanningPlans,
             volunteeringPlans: data.volunteer.volunteeringPlans
           }).pipe(
-            this._toastService.tapSaving("Plan Access Revoke", () => data.plan.name)
+            this._toastService.tapDeleting("Planner Access", () => data.plan.name)
           );
         } else {
           return of(undefined);
@@ -169,8 +169,18 @@ export class ManageVolunteerPlanComponent implements OnDestroy {
       }),
     );
 
-    this._saveSubscription = forkJoin([lockedChanges$, accessLevelChanges$]).subscribe(() => {
-      filter(data => data !== undefined);
+    this._saveSubscription = merge(lockedChanges$, accessLevelChanges$).pipe(
+
+      /* reset component on error */
+      catchError(e => this.manageData$.pipe(
+          take(1),
+          tap(data => this.manageData = data),
+          tap(() => {
+            throw e;
+          })
+        )),
+      filter(data => data !== undefined)
+    ).subscribe(() => {
       this.planChanged.next();
     });
   }
@@ -232,6 +242,12 @@ export class ManageVolunteerPlanComponent implements OnDestroy {
   }
 
   protected resetAssignments(volunteer: UserEventDto, plan: ShiftPlanDto) {
-    throw new Error("not implemented" + volunteer + plan); // TODO wait for backend
+    this._userEventService.resetUserInPlan(volunteer.volunteer.id, {
+      shiftPlanIds: [plan.id]
+    }).pipe(
+      this._toastService.tapDeleting("User Assignments", () => plan.name)
+    ).subscribe(() => {
+      this.planChanged.next();
+    });
   }
 }
