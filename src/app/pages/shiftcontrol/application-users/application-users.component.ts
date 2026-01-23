@@ -3,7 +3,7 @@ import { icons } from "../../../util/icons";
 import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
 import {UserEventEndpointService} from "../../../../shiftservice-client";
 import {debounceTime, shareReplay, startWith, switchMap} from "rxjs";
-import {AsyncPipe, DatePipe} from "@angular/common";
+import {AsyncPipe} from "@angular/common";
 import {InputButtonComponent} from "../../../components/inputs/input-button/input-button.component";
 import {RouterLink} from "@angular/router";
 import {InputTextComponent} from "../../../components/inputs/input-text/input-text.component";

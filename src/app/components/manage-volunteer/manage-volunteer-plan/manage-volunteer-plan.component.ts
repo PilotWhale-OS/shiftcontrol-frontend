@@ -1,6 +1,6 @@
-import {Component, inject, Input, OnDestroy, OnInit, Output} from "@angular/core";
+import {Component, inject, Input, OnDestroy, Output} from "@angular/core";
 import {
-  BehaviorSubject, combineLatestWith,
+  BehaviorSubject,
   debounceTime,
   distinctUntilChanged,
   filter,
