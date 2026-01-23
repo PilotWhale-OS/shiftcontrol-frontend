@@ -1,1 +1,64 @@
-<p>audit-log works!</p>
+<div class="flex flex-row gap-lg">
+
+  <div class="card flex flex-col gap-md h-fit max-w-[30rem]">
+
+    <h1 class="signature-gradient-font">Audit Log</h1>
+    <p>
+      The audit log contains all recorded application events of ShiftControl.<br>
+    </p>
+
+  </div>
+
+  <div class="card grid card grid-cols-[10rem_1fr_1fr_1fr] gap-y-xs gap-x-md h-fit w-[min(100%,90rem)] items-center">
+    <h1 class="signature-gradient-font col-span-4">Events</h1>
+
+    <small class="pb-sm">Time</small>
+    <small class="pb-sm">Type</small>
+    <small class="pb-sm">Trace</small>
+    <small class="pb-sm"></small>
+
+    <hr class="col-span-4 mb-sm" />
+
+    @if (page$ | async; as page) {
+
+      @if(page.items.length === 0) {
+        <span class="col-span-4">
+          No events at this time.
+        </span>
+      } @else {
+        @for (event of page.items; track event.id) {
+
+          <span>{{event.timestamp | date:"short"}}</span>
+          <span>{{event.routingKey}}</span>
+          <span>{{event.traceId}}</span>
+
+          <div class="flex flex-row gap-md justify-end">
+            @if ((event.actingUserId?.length ?? 0) > 0) {
+              <a routerLink="/volunteers/{{event.actingUserId}}">View acting User</a>
+            }
+            <xsb-input-button size="text" content="View Event JSON" (click)="viewEventDetails(event)" />
+          </div>
+        }
+      }
+
+      <hr class="col-span-4 mt-sm" />
+
+      <div class="col-span-3 flex flex-row gap-md items-center pt-sm">
+        <xsb-input-button size="text" content="Previous"
+                          (click)="form.controls.paginationIndex.setValue(page.page - 1)"
+                          [lock]="page.page <= 0"
+        />
+
+        <span>Page {{page.page + 1}}/{{page.pages}}</span>
+
+        <xsb-input-button size="text" content="Next"
+                          (click)="form.controls.paginationIndex.setValue(page.page + 1)"
+                          [lock]="page.page >= page.pages - 1"
+        />
+      </div>
+      <small class="justify-self-end">Viewing {{page.items.length}} of {{page.total}} Events</small>
+    }
+
+  </div>
+
+</div>
