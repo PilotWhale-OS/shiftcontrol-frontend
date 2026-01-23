@@ -1,7 +1,7 @@
 import {Component, inject} from "@angular/core";
 import { icons } from "../../../util/icons";
 import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
-import {TrustAlertDisplayDto, TrustAlertEndpointService, UserEventEndpointService} from "../../../../shiftservice-client";
+import {UserEventEndpointService} from "../../../../shiftservice-client";
 import {debounceTime, shareReplay, startWith, switchMap} from "rxjs";
 import {AsyncPipe, DatePipe} from "@angular/common";
 import {InputButtonComponent} from "../../../components/inputs/input-button/input-button.component";
@@ -14,7 +14,6 @@ import {TypedFormControlDirective} from "../../../directives/typed-form-control.
   standalone: true,
   imports: [
     AsyncPipe,
-    DatePipe,
     InputButtonComponent,
     RouterLink,
     InputTextComponent,

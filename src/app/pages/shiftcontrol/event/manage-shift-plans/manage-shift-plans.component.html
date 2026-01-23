@@ -99,6 +99,11 @@
             @case ("assignments") {
               <app-manage-assignments [plan]="plan.plan" (planChanged)="refreshData()" />
             }
+            @case ("users") {
+              <div class="grow">
+                <app-manage-plan-volunteers [manageData]="(volunteersManageData$ | async) ?? undefined" />
+              </div>
+            }
           }
         </div>
       </div>

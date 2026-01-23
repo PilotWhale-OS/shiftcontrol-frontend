@@ -1,0 +1,54 @@
+<div class="grid grid-cols-[10rem_1fr_1fr_1fr] gap-y-xs gap-x-md w-full h-fit items-center">
+
+  <small class="pb-sm self-end">Full name</small>
+  <small class="pb-sm self-end">E-Mail</small>
+  <small class="pb-sm self-end">Roles</small>
+  <div class="pb-sm justify-self-end self-end">
+    <xsb-input-text #search
+                    [formControl]="form.controls.search"
+                    [xsb-typed]="[search, form.controls.search]"
+                    placeholder="Filter Volunteers"
+                    name="plan-users-search"
+    />
+  </div>
+
+  <hr class="col-span-4 mb-sm" />
+
+  @if (page$ | async; as page) {
+
+    @if(page.items.length === 0) {
+      <span class="col-span-4">
+          No plan volunteers at this time.
+        </span>
+    } @else {
+      @for (volunteer of page.items; track volunteer.volunteer.id) {
+
+        <span>{{volunteer.volunteer.firstName}} {{volunteer.volunteer.lastName}}</span>
+        <span>{{volunteer.email}}</span>
+        <span>{{volunteer.roles.length}} Roles</span>
+
+        <div class="flex flex-row gap-md justify-end">
+          hi :)
+        </div>
+      }
+    }
+
+    <hr class="col-span-4 mt-sm" />
+
+    <div class="col-span-3 flex flex-row gap-md items-center pt-sm">
+      <xsb-input-button size="text" content="Previous"
+                        (click)="form.controls.paginationIndex.setValue(page.page - 1)"
+                        [lock]="page.page <= 0"
+      />
+
+      <span>Page {{page.page + 1}}/{{page.pages}}</span>
+
+      <xsb-input-button size="text" content="Next"
+                        (click)="form.controls.paginationIndex.setValue(page.page + 1)"
+                        [lock]="page.page >= page.pages - 1"
+      />
+    </div>
+    <small class="justify-self-end">Viewing {{page.items.length}} of {{page.total}} Volunteers</small>
+  }
+
+</div>

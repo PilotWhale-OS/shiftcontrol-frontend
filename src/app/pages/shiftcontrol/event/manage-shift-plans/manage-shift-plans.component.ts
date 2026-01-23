@@ -30,6 +30,7 @@ import {ManageInviteComponent} from "../../../../components/manage-invite/manage
 import {ManageRoleComponent} from "../../../../components/manage-role/manage-role.component";
 import {ManageAssignmentsComponent} from "../../../../components/manage-assignments/manage-assignments.component";
 import {FormRouteSyncService} from "../../../../services/form-route-sync.service";
+import {ManagePlanVolunteersComponent} from "../../../../components/manage-plan-volunteers/manage-plan-volunteers.component";
 
 export type managementMode = "invites" | "assignments" | "users" | "roles";
 
@@ -44,7 +45,8 @@ export type managementMode = "invites" | "assignments" | "users" | "roles";
     InputMultiToggleComponent,
     ManageInviteComponent,
     ManageRoleComponent,
-    ManageAssignmentsComponent
+    ManageAssignmentsComponent,
+    ManagePlanVolunteersComponent
   ],
   templateUrl: "./manage-shift-plans.component.html",
   styleUrl: "./manage-shift-plans.component.scss"
@@ -56,6 +58,7 @@ export class ManageShiftPlansComponent implements OnDestroy {
   protected readonly planManageData$;
   protected readonly invitesManageData$;
   protected readonly rolesManageData$;
+  protected readonly volunteersManageData$;
   protected readonly shiftPlanOptions$;
   protected readonly mode$;
   protected readonly selectedMode$;
@@ -65,7 +68,7 @@ export class ManageShiftPlansComponent implements OnDestroy {
     {name: "Invites", value: "invites"},
     {name: "Roles", value: "roles"},
     {name: "Assignments", value: "assignments"},
-    {name: "Users", value: "users"}
+    {name: "Volunteers", value: "users"}
   ];
 
   private readonly _pageService = inject(PageService);
@@ -158,6 +161,24 @@ export class ManageShiftPlansComponent implements OnDestroy {
           );
         }
       )
+    );
+
+    /* fetch roles when plan changes for volunteer management */
+    this.volunteersManageData$ = this.planManageData$.pipe(
+      switchMap(planData => {
+        const plan = planData?.plan;
+        if(plan === undefined) {
+          return of(undefined);
+        }
+
+        return this._roleService.getRoles(plan.id).pipe(
+          map(roles => ({
+              plan,
+              roles: roles
+            })
+          )
+        );
+      })
     );
 
     /* fetch roles when plan changes */
