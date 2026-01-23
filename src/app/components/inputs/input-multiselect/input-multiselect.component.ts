@@ -17,8 +17,7 @@ import {FlyoutTriggerDirective} from "../../../directives/flyout-trigger.directi
 import {NgClass} from "@angular/common";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {FlyoutComponent} from "../../flyout/flyout.component";
-import {combineLatestWith, merge, of, Subscription} from "rxjs";
-import {combineLatest} from "rxjs/internal/operators/combineLatest";
+import {merge, of, Subscription} from "rxjs";
 
 @Component({
   selector: "xsb-input-multiselect",
