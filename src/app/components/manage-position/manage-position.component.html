@@ -35,7 +35,7 @@
 
         <div class="flex flex-col gap-sm col-start-1 row-start-2">
           <small><fa-icon [icon]="icons.name" class="pr-sm" />Position Name</small>
-          <label for="position-manage-name">Expressive name for the position</label>
+          <label for="position-manage-name">Brief name that describes the task</label>
           <xsb-input-text #name
                           [formControl]="form.controls.name"
                           [xsb-typed]="[name, form.controls.name]"
@@ -45,7 +45,7 @@
 
         <div class="flex flex-col gap-sm col-start-2 row-start-2 row-span-3">
           <small><fa-icon [icon]="icons.description" class="pr-sm" />Description</small>
-          <label for="position-manage-description">Relevant infos about the position</label>
+          <label for="position-manage-description">Explanation of specific requirements of volunteer tasks</label>
           <xsb-input-text #description
                           type="area"
                           [formControl]="form.controls.description"
@@ -68,7 +68,7 @@
 
         <div class="flex flex-col gap-sm col-start-1 row-start-4">
           <small><fa-icon [icon]="icons.rewards" class="pr-sm" />Reward Points</small>
-          <span>Reward Points are calculated by role and shift bonus</span>
+          <span>If no custom points are set, Reward Points are calculated by role and shift bonus</span>
 
           <div class="grid grid-cols-[auto_1fr_auto] gap-sm items-center">
             <xsb-input-toggle #enableCustomPoints
@@ -87,7 +87,7 @@
 
         <div class="flex flex-col gap-sm col-start-1 row-start-5">
           <small><fa-icon [icon]="icons.activity" class="pr-sm" />Required Role</small>
-          <label for="position-manage-role">Required roles for volunteer sign-up</label>
+          <label for="position-manage-role">Allow sign-up only for volunteers with a role</label>
           <xsb-input-select #role name="position-manage-role"
                             [nullable]="true" nullName="No Role Required"
                             [formControl]="form.controls.role"
