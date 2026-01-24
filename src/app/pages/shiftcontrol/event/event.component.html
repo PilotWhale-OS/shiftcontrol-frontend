@@ -10,9 +10,9 @@
       <div class="card col-start-1 col-span-2 row-span-2 grid grid-columns-2 gap-lg h-fit">
 
         <!-- info caption -->
-        <h1 class="compact signature-gradient-font">About the Event</h1>
+        <h1 class="col-start-1 row-start-1 compact signature-gradient-font">About the Event</h1>
 
-        <div class="flex gap-sm justify-self-end items-center">
+        <div class="col-start-2 row-start-1 row-span-2 flex flex-col gap-sm justify-self-end items-end">
 
           <div class="badge w-fit"
                tooltipMaxWidth="30ex"
@@ -23,7 +23,7 @@
           </div>
 
           @if ((isPlannerInEvent$ | async) === true) {
-            <div class="badge success w-fit"
+            <div class="badge w-fit"
                  tooltipMaxWidth="30ex"
                  [app-tooltip]="'Event dates of ' + event.eventOverview.name"
             >
@@ -33,7 +33,7 @@
           }
 
           @else {
-            <div class="badge success w-fit"
+            <div class="badge w-fit"
                  tooltipMaxWidth="30ex"
                  [app-tooltip]="'Event dates of ' + event.eventOverview.name"
             >
@@ -42,13 +42,38 @@
             </div>
           }
 
+          <div class="badge"
+               tooltipMaxWidth="30ex"
+               [app-tooltip]="'Volunteers participating in this event'"
+          >
+            <fa-icon [icon]="icons.volunteers" />
+            {{event.overallEventStatistics.volunteerCount}} Volunteers
+          </div>
+          <div class="badge"
+               tooltipMaxWidth="30ex"
+               [app-tooltip]="'Duration of shifts during this event'"
+          >
+            <fa-icon [icon]="icons.hour" />
+            {{event.overallEventStatistics.totalHours | number:"1.0-0"}} Shift Hours
+          </div>
+
         </div>
 
         <!-- properties -->
-        <p class="col-span-2 whitespace-pre-wrap">{{event.eventOverview.longDescription}}</p>
+        <p class="col-start-1 row-span-2 row-start-2 whitespace-pre-wrap">{{event.eventOverview.longDescription}}</p>
+
+        <!-- socials -->
+        <div class="flex flex-row gap-md flex-wrap row-span-2 col-start-1 items-center">
+          @for(link of event.eventOverview.socialMediaLinks; track link.url) {
+            <a class="badge hint flex flex-row items-center gap-sm cursor-pointer no-underline" target="_blank" href="{{link.url}}">
+              <fa-icon class="text-lg leading-[.9]" [icon]="getSocialIcon(link)" />
+              <span>{{getSocialName(link)}}</span>
+            </a>
+          }
+        </div>
 
         <!-- own schedule stats -->
-        <div class="flex flex-col items-start gap-xs">
+        <!--<div class="flex flex-col items-start gap-xs">
           <small>Your stats</small>
           <div class="badge"
                tooltipMaxWidth="30ex"
@@ -71,10 +96,10 @@
             <fa-icon [icon]="icons.rewards" />
             {{event.rewardPoints}} Points Rewarded
           </div>
-        </div>
+        </div>-->
 
         <!-- public stats -->
-        <div class="flex flex-col items-start gap-xs">
+        <!--<div class="flex flex-col items-start gap-xs">
           <small>Public stats</small>
           <div class="badge hint"
                tooltipMaxWidth="30ex"
@@ -90,7 +115,7 @@
             <fa-icon [icon]="icons.hour" />
             {{event.overallEventStatistics.totalHours | number:"1.0-0"}} Shift Hours
           </div>
-        </div>
+        </div>-->
 
       </div>
 

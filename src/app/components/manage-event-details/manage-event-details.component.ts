@@ -5,11 +5,10 @@ import {TypedFormControlDirective} from "../../directives/typed-form-control.dir
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {InputDateComponent} from "../inputs/input-date/input-date.component";
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
-import {EventDto, EventEndpointService, LocationEndpointService} from "../../../shiftservice-client";
+import {EventDto, EventEndpointService} from "../../../shiftservice-client";
 import {mapValue} from "../../util/value-maps";
 import {ActivatedRoute, Router} from "@angular/router";
 import {BehaviorSubject, Subject} from "rxjs";
-import {PageService} from "../../services/page/page.service";
 import {AsyncPipe} from "@angular/common";
 import {DialogComponent} from "../dialog/dialog.component";
 import {icons} from "../../util/icons";
@@ -45,10 +44,8 @@ export class ManageEventDetailsComponent {
   private readonly _fb = inject(FormBuilder);
   private readonly _eventService = inject(EventEndpointService);
   private readonly _toastService = inject(ToastService);
-  private readonly _locationsService = inject(LocationEndpointService);
   private readonly _route = inject(ActivatedRoute);
   private readonly _router = inject(Router);
-  private readonly _pageService = inject(PageService);
 
   constructor() {
     this.form = this._fb.group({
@@ -56,7 +53,8 @@ export class ManageEventDetailsComponent {
       shortDescription: this._fb.nonNullable.control<string>("", [Validators.maxLength(100)]),
       longDescription: this._fb.nonNullable.control<string>("", [Validators.maxLength(1000)]),
       startDate: this._fb.nonNullable.control<Date>(new Date()),
-      endDate: this._fb.nonNullable.control<Date>(new Date())
+      endDate: this._fb.nonNullable.control<Date>(new Date()),
+      socials: this._fb.nonNullable.control<string>("")
     });
   }
 
@@ -70,7 +68,8 @@ export class ManageEventDetailsComponent {
         shortDescription: value.event.shortDescription ?? "",
         longDescription: value.event.longDescription ?? "",
         startDate: new Date(value.event.startTime),
-        endDate: new Date(value.event.endTime)
+        endDate: new Date(value.event.endTime),
+        socials: value.event.socialMediaLinks.map(social => social.url).join(", ")
       });
     } else {
       this.form.reset();
@@ -87,7 +86,8 @@ export class ManageEventDetailsComponent {
         shortDescription: mapValue.undefinedIfEmptyString(this.form.controls.shortDescription.value),
         longDescription: mapValue.undefinedIfEmptyString(this.form.controls.longDescription.value),
         startTime: mapValue.dateAsLocalDateStartOfDayString(this.form.controls.startDate.value),
-        endTime: mapValue.dateAsLocalDateEndOfDayString(this.form.controls.endDate.value)
+        endTime: mapValue.dateAsLocalDateEndOfDayString(this.form.controls.endDate.value),
+        socialLinks: mapValue.undefinedIfEmptyString(this.form.controls.socials.value)
       }).pipe(
         this._toastService.tapCreating("Event", event => event.name)
       ).subscribe(created => this._router.navigate([`../${created.id}/manage`], {relativeTo: this._route}));
@@ -105,7 +105,8 @@ export class ManageEventDetailsComponent {
         shortDescription: mapValue.undefinedIfEmptyString(this.form.controls.shortDescription.value),
         longDescription: mapValue.undefinedIfEmptyString(this.form.controls.longDescription.value),
         startTime: mapValue.dateAsLocalDateStartOfDayString(this.form.controls.startDate.value),
-        endTime: mapValue.dateAsLocalDateEndOfDayString(this.form.controls.endDate.value)
+        endTime: mapValue.dateAsLocalDateEndOfDayString(this.form.controls.endDate.value),
+        socialLinks: mapValue.undefinedIfEmptyString(this.form.controls.socials.value)
       }).pipe(
         this._toastService.tapSaving("Event", updated => updated.name)
       ).subscribe(() => this.eventChanged.next());

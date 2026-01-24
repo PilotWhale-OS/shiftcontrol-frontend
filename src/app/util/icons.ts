@@ -5,13 +5,23 @@ import {
   faCalendar,
   faCalendarDay,
   faCalendarDays, faCaretSquareUp, faCertificate, faChartGantt, faCheckCircle, faCircleInfo,
-  faClock, faCrown, faFilter, faForward,
+  faClock, faCrown, faEarthAmericas, faFilter, faForward,
   faGift, faHandSparkles, faHashtag,
   faHourglass, faKey, faLink, faLocationPin, faLock, faMedal, faMessage, faMoon, faPause,
   faPeopleGroup, faPlusCircle, faServer, faShareNodes,
   faShuffle, faSignsPost, faStar, faTableColumns, faTag, faTrophy, faUser,
   faWrench, faXmark
 } from "@fortawesome/free-solid-svg-icons";
+import {
+  faDiscord,
+  faFacebook,
+  faInstagram,
+  faLinkedin,
+  faRedditAlien,
+  faTiktok, faTwitch,
+  faTwitter, faXTwitter,
+  faYoutube
+} from "@fortawesome/free-brands-svg-icons";
 
 export const icons = {
 
@@ -68,6 +78,7 @@ export const icons = {
   help: faSignsPost,
   expand: faArrowUpRightFromSquare,
   close: faXmark,
+  link: faLink,
 
   /* time */
   hour: faHourglass,
@@ -75,5 +86,17 @@ export const icons = {
   date: faCalendarDays,
   startDate: faForward,
   endDate: faBackward,
-  expiry: faClock
+  expiry: faClock,
+
+  /* socials */
+  reddit: faRedditAlien,
+  discord: faDiscord,
+  twitter: faXTwitter,
+  facebook: faFacebook,
+  instagram: faInstagram,
+  linkedIn: faLinkedin,
+  youtube: faYoutube,
+  tiktok: faTiktok,
+  twitch: faTwitch,
+  website: faEarthAmericas
 };

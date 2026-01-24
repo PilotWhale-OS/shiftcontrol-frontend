@@ -8,7 +8,7 @@ import {
   EventEndpointService,
   EventShiftPlansOverviewDto,
   LeaderBoardDto,
-  LeaderboardEndpointService
+  LeaderboardEndpointService, SocialMediaLinkDto
 } from "../../../../shiftservice-client";
 import {combineLatest, map, Observable, shareReplay, switchMap, tap} from "rxjs";
 import {AsyncPipe, DatePipe, DecimalPipe} from "@angular/common";
@@ -73,5 +73,59 @@ export class EventComponent {
 
   public get userType$() {
     return this._userService.userType$;
+  }
+
+  public getSocialIcon(social: SocialMediaLinkDto){
+    switch(social.type){
+      case SocialMediaLinkDto.TypeEnum.Facebook:
+        return this.icons.facebook;
+      case SocialMediaLinkDto.TypeEnum.Instagram:
+        return this.icons.instagram;
+      case SocialMediaLinkDto.TypeEnum.Linkedin:
+        return this.icons.linkedIn;
+      case SocialMediaLinkDto.TypeEnum.Twitter:
+        return this.icons.twitter;
+      case SocialMediaLinkDto.TypeEnum.Youtube:
+        return this.icons.youtube;
+      case SocialMediaLinkDto.TypeEnum.Tiktok:
+        return this.icons.tiktok;
+      case SocialMediaLinkDto.TypeEnum.Discord:
+        return this.icons.discord;
+      case SocialMediaLinkDto.TypeEnum.Reddit:
+        return this.icons.reddit;
+      case SocialMediaLinkDto.TypeEnum.X:
+        return this.icons.twitter;
+      case SocialMediaLinkDto.TypeEnum.Twitch:
+        return this.icons.twitch;
+      default:
+        return this.icons.website;
+    }
+  }
+
+  public getSocialName(social: SocialMediaLinkDto){
+    switch(social.type){
+      case SocialMediaLinkDto.TypeEnum.Facebook:
+        return "Facebook";
+      case SocialMediaLinkDto.TypeEnum.Instagram:
+        return "Instagram";
+      case SocialMediaLinkDto.TypeEnum.Linkedin:
+        return "LinkedIn";
+      case SocialMediaLinkDto.TypeEnum.Twitter:
+        return "Twitter";
+      case SocialMediaLinkDto.TypeEnum.Youtube:
+        return "YouTube";
+      case SocialMediaLinkDto.TypeEnum.Tiktok:
+        return "TikTok";
+      case SocialMediaLinkDto.TypeEnum.Discord:
+        return "Discord";
+      case SocialMediaLinkDto.TypeEnum.Reddit:
+        return "Reddit";
+      case SocialMediaLinkDto.TypeEnum.X:
+        return "X";
+      case SocialMediaLinkDto.TypeEnum.Twitch:
+        return "Twitch";
+      default:
+        return "Website";
+    }
   }
 }
