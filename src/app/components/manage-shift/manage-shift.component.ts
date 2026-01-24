@@ -228,8 +228,8 @@ export class ManageShiftComponent implements OnDestroy {
         filter(params => params !== undefined),
         take(1),
         switchMap(params => params.shift === undefined ? of([]) : this._roleService.getRoles(params.shift.shiftPlan.id))
-      )),
-      map(([data, roles]) => {
+      ), this.canManage$),
+      map(([data, roles, canManage]) => {
         if(data === undefined || data.shift === undefined) {
           return [];
         }
@@ -246,7 +246,7 @@ export class ManageShiftComponent implements OnDestroy {
             availableRoles: roles.map(role => ({name: role.name, value: role}))
           })
         );
-        return [newSlotManageData, ...existingSlotManageData];
+        return [ ...(canManage? [newSlotManageData] : []), ...existingSlotManageData];
       })
     );
   }
