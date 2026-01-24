@@ -282,7 +282,7 @@ export class EventCalendarComponent implements OnDestroy {
       const config: calendarConfig = {
         startDate,
         endDate,
-        activityWidth: calendarMode === "activity" ? "5rem" : undefined,
+        activityWidth: calendarMode === "activity" ? "minmax(5rem, 1fr)" : undefined,
         locationLayouts: layout.scheduleLayoutDtos,
         noLocationLayout: layout.scheduleLayoutNoLocationDto,
         shiftPaddingColumn: calendarMode === "shift",
