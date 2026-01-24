@@ -114,9 +114,9 @@ export class ManageLocationComponent {
   }
 
   protected getOrder(location: LocationDto | undefined) {
-    const order = Number(location?.id) * -1 + Number.MIN_SAFE_INTEGER / -2;
+    const order = -1 * Number(location?.id);
     if(isNaN(order)) {
-      return Number.MIN_SAFE_INTEGER + Number.MIN_SAFE_INTEGER / -2;
+      return Number.MIN_SAFE_INTEGER;
     }
     return order;
   }

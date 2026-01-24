@@ -118,9 +118,9 @@ export class ManagePlanDetailsComponent {
   }
 
   protected getOrder(plan?: ShiftPlanDto) {
-    const order = Number(plan?.id) * -1 + Number.MIN_SAFE_INTEGER / -2;
+    const order = -1 * Number(plan?.id);
     if(isNaN(order)) {
-      return Number.MIN_SAFE_INTEGER + Number.MIN_SAFE_INTEGER / -2;
+      return Number.MIN_SAFE_INTEGER;
     }
     return order;
   }

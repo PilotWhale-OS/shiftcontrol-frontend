@@ -1,7 +1,7 @@
 import {Component, inject} from "@angular/core";
 import {RouterLink} from "@angular/router";
 import {EventDto, EventEndpointService} from "../../../../shiftservice-client";
-import {Observable} from "rxjs";
+import {map, Observable} from "rxjs";
 import {AsyncPipe, DatePipe} from "@angular/common";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {TooltipDirective} from "../../../directives/tooltip.directive";
@@ -31,7 +31,9 @@ export class EventsComponent {
   private _userService = inject(UserService);
 
   constructor() {
-    this.events$ = this._eventsService.getAllEvents();
+    this.events$ = this._eventsService.getAllEvents().pipe(
+      map(events => events.sort((a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime()))
+    );
   }
 
   public get userType$() {

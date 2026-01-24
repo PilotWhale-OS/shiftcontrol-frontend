@@ -111,9 +111,9 @@ export class ManageRoleComponent {
   }
 
   protected getOrder(role?: RoleDto) {
-    const order = Number(role?.id) * -1 + Number.MIN_SAFE_INTEGER / -2;
+    const order = Number(role?.id) * -1;
     if(isNaN(order)) {
-      return Number.MIN_SAFE_INTEGER + Number.MIN_SAFE_INTEGER / -2;
+      return Number.MIN_SAFE_INTEGER;
     }
     return order;
   }

@@ -7,6 +7,7 @@
     @if (mode !== "view") {
       <div
         class="card grid grid-cols-2 gap-x-xl gap-y-lg h-fit w-[min(100%,50rem)]"
+        [style.order]="getOrder(data.position)"
         [ngClass]="mode === 'create' ? 'success' : ''"
       >
 
@@ -112,6 +113,7 @@
     } @else if (data.position !== undefined) {
       <div
         class="card grid grid-cols-2 gap-x-xl gap-y-lg w-[25rem] grid-rows-[auto_auto_auto_auto_1fr_auto]"
+        [style.order]="getOrder(data.position)"
         [ngClass]="{
         'success' : isSignedUp(data.position),
         'cursor-not-allowed opacity-60' : !isSignedUp(data.position) && !isEligible(data.position) && (canManage$ | async) === false

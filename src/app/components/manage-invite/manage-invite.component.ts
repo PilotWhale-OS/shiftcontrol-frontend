@@ -192,9 +192,9 @@ export class ManageInviteComponent implements OnDestroy {
 
   protected getOrder(invite?: ShiftPlanInviteDto) {
     if(invite === undefined) {
-      return Number.MIN_SAFE_INTEGER + Number.MIN_SAFE_INTEGER / -2;
+      return Number.MIN_SAFE_INTEGER;
     }
-    return Math.floor((new Date(invite.createdAt).getTime() / 1000)) * -1 + Number.MIN_SAFE_INTEGER / -2;
+    return Math.floor(new Date(invite.createdAt).getTime() / 1000) * -1;
   }
 
 }

@@ -261,4 +261,12 @@ export class ManagePositionComponent implements OnDestroy {
 
     return position.positionSignupState === PositionSignupStateEnum.SignedUp;
   }
+
+  protected getOrder(position?: PositionSlotDto) {
+    const order = Number(position?.id) * -1;
+    if(isNaN(order)) {
+      return Number.MIN_SAFE_INTEGER;
+    }
+    return order;
+  }
 }
