@@ -57,7 +57,7 @@ export class ManageActivityComponent {
 
   protected readonly manageParams$ = new BehaviorSubject<undefined | manageActivityParams>(undefined);
   protected readonly mangeData$: Observable<manageActivityData>;
-  protected readonly locationOptions$: Observable<SelectOptions<string>>;
+  protected readonly locationOptions$: Observable<SelectOptions<LocationDto>>;
 
   protected showActivityDeleteConfirm = false;
 
@@ -75,7 +75,7 @@ export class ManageActivityComponent {
       startTime: this._fb.nonNullable.control<time>({hour: 0, minute: 0}, [Validators.required]),
       endDate: this._fb.nonNullable.control<Date>(new Date()),
       endTime: this._fb.nonNullable.control<time>({hour: 0, minute: 0}, [Validators.required]),
-      location: this._fb.control<string | null>(null)
+      location: this._fb.control<LocationDto | null>(null)
     });
 
     this.mangeData$ = this.manageParams$.pipe(
@@ -93,7 +93,7 @@ export class ManageActivityComponent {
     this.locationOptions$ = this.mangeData$.pipe(
       map(data => data.locations.map(loc => ({
         name: loc.name,
-        value: loc.id
+        value: loc
       })))
     );
   }
@@ -116,7 +116,7 @@ export class ManageActivityComponent {
         startTime: mapValue.datetimeStringAsLocalTime(value.activity.startTime),
         endDate: new Date(value.activity.endTime),
         endTime: mapValue.datetimeStringAsLocalTime(value.activity.endTime),
-        location: value.activity.location?.id ?? null
+        location: value.activity.location ?? null
       });
     } else {
       this.form.setValue({
@@ -128,7 +128,7 @@ export class ManageActivityComponent {
         endTime: value.suggestedDate ?
           mapValue.datetimeStringAsLocalTime(new Date(value.suggestedDate.getTime() + 1000 * 60 * 60 * 2).toISOString()) :
           {hour: 12, minute: 0},
-        location: value.suggestedLocation?.id ?? null
+        location: value.suggestedLocation ?? null
       });
     }
   }
@@ -150,7 +150,7 @@ export class ManageActivityComponent {
         description: this.form.controls.description.value,
         startTime: start.toISOString(),
         endTime: end.toISOString(),
-        locationId: this.form.controls.location.value ?? undefined
+        locationId: this.form.controls.location.value?.id ?? undefined
       }).pipe(
         this._toastService.tapCreating("Activity", item => item.name)
       ).subscribe(activity => {
@@ -178,7 +178,7 @@ export class ManageActivityComponent {
         description: this.form.controls.description.value,
         startTime: start.toISOString(),
         endTime: end.toISOString(),
-        locationId: this.form.controls.location.value ?? undefined
+        locationId: this.form.controls.location.value?.id ?? undefined
       }).pipe(
         this._toastService.tapSaving("Activity", item => item.name)
       ).subscribe(updated => {
@@ -195,6 +195,10 @@ export class ManageActivityComponent {
     ).subscribe(() => {
       this.activityChanged.emit(activity);
     });
+  }
+
+  protected idComparatorFn(a: LocationDto | null, b: LocationDto | null): boolean {
+    return a?.id === b?.id;
   }
 
 }
