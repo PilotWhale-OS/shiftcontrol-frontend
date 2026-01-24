@@ -13,6 +13,7 @@ import {AsyncPipe} from "@angular/common";
 import {DialogComponent} from "../dialog/dialog.component";
 import {icons} from "../../util/icons";
 import {ToastService} from "../../services/toast/toast.service";
+import {captionLengthValidator, descriptionLengthValidator, nameLengthValidator} from "../../util/textValidators";
 
 @Component({
   selector: "app-manage-event-details",
@@ -49,9 +50,9 @@ export class ManageEventDetailsComponent {
 
   constructor() {
     this.form = this._fb.group({
-      name: this._fb.nonNullable.control<string>("", [Validators.maxLength(30), Validators.required]),
-      shortDescription: this._fb.nonNullable.control<string>("", [Validators.maxLength(100)]),
-      longDescription: this._fb.nonNullable.control<string>("", [Validators.maxLength(1000)]),
+      name: this._fb.nonNullable.control<string>("", [nameLengthValidator, Validators.required]),
+      shortDescription: this._fb.nonNullable.control<string>("", [captionLengthValidator]),
+      longDescription: this._fb.nonNullable.control<string>("", [descriptionLengthValidator]),
       startDate: this._fb.nonNullable.control<Date>(new Date()),
       endDate: this._fb.nonNullable.control<Date>(new Date()),
       socials: this._fb.nonNullable.control<string>("")

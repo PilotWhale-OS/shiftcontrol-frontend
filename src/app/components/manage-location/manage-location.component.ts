@@ -15,6 +15,7 @@ import {DialogComponent} from "../dialog/dialog.component";
 import {icons} from "../../util/icons";
 import {ToastService} from "../../services/toast/toast.service";
 import {BehaviorSubject, map, Subject} from "rxjs";
+import {descriptionLengthValidator, nameLengthValidator} from "../../util/textValidators";
 
 @Component({
   selector: "app-manage-location",
@@ -52,8 +53,8 @@ export class ManageLocationComponent {
 
   constructor() {
     this.form = this._fb.group({
-      name: this._fb.nonNullable.control<string>("", [Validators.required]),
-      description: this._fb.nonNullable.control<string>(""),
+      name: this._fb.nonNullable.control<string>("", [Validators.required, nameLengthValidator]),
+      description: this._fb.nonNullable.control<string>("", [descriptionLengthValidator]),
       url: this._fb.nonNullable.control<string>("")
     });
   }

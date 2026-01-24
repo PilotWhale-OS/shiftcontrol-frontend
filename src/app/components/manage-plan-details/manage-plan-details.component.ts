@@ -14,6 +14,8 @@ import {InputButtonComponent} from "../inputs/input-button/input-button.componen
 import {InputNumberComponent} from "../inputs/input-number/input-number.component";
 import {InputTextComponent} from "../inputs/input-text/input-text.component";
 import {TypedFormControlDirective} from "../../directives/typed-form-control.directive";
+import {captionLengthValidator, descriptionLengthValidator, nameLengthValidator} from "../../util/textValidators";
+import {mapValue} from "../../util/value-maps";
 
 @Component({
   selector: "app-manage-plan-details",
@@ -49,9 +51,9 @@ export class ManagePlanDetailsComponent {
 
   constructor() {
     this.form = this._fb.group({
-      name: this._fb.nonNullable.control<string>("", [Validators.maxLength(30), Validators.required]),
-      shortDescription: this._fb.nonNullable.control<string>("", [Validators.maxLength(100)]),
-      longDescription: this._fb.nonNullable.control<string>("", [Validators.maxLength(1000)]),
+      name: this._fb.nonNullable.control<string>("", [nameLengthValidator, Validators.required]),
+      shortDescription: this._fb.nonNullable.control<string>("", [captionLengthValidator]),
+      longDescription: this._fb.nonNullable.control<string>("", [descriptionLengthValidator]),
       defaultRewardPointsPerMinute: this._fb.nonNullable.control<number>(10, [Validators.min(0)])
     });
   }
@@ -79,8 +81,8 @@ export class ManagePlanDetailsComponent {
     if(this.form.valid) {
       this._planService.createShiftPlan(eventId, {
         name: this.form.controls.name.value,
-        shortDescription: this.form.controls.shortDescription.value,
-        longDescription: this.form.controls.longDescription.value,
+        shortDescription: mapValue.undefinedIfEmptyString(this.form.controls.shortDescription.value),
+        longDescription: mapValue.undefinedIfEmptyString(this.form.controls.longDescription.value),
         defaultNoRolePointsPerMinute: this.form.controls.defaultRewardPointsPerMinute.value
       }).pipe(
         this._toastService.tapCreating("Shift Plan", item => item.shiftPlan.name)

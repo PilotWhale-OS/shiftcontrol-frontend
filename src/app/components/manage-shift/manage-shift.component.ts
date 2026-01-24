@@ -38,6 +38,7 @@ import {icons} from "../../util/icons";
 import {InputNumberComponent} from "../inputs/input-number/input-number.component";
 import {ToastService} from "../../services/toast/toast.service";
 import {LockStatusPipe} from "../../pipes/lock-status.pipe";
+import {descriptionLengthValidator, nameLengthValidator} from "../../util/textValidators";
 
 export interface manageShiftParams {
   eventId: string;
@@ -114,8 +115,8 @@ export class ManageShiftComponent implements OnDestroy {
 
   constructor() {
     this.form = this._fb.group({
-      name: this._fb.nonNullable.control<string>("", [Validators.maxLength(50), Validators.required]),
-      description: this._fb.nonNullable.control<string>("", [Validators.maxLength(1024)]),
+      name: this._fb.nonNullable.control<string>("", [nameLengthValidator, Validators.required]),
+      description: this._fb.nonNullable.control<string>("", [descriptionLengthValidator]),
       startDate: this._fb.nonNullable.control<Date>(new Date()),
       startTime: this._fb.nonNullable.control<time>({hour: 0, minute: 0}, [Validators.required]),
       endDate: this._fb.nonNullable.control<Date>(new Date()),
@@ -410,7 +411,7 @@ export class ManageShiftComponent implements OnDestroy {
 
       this._shiftService.createShift(planId, {
         name: this.form.controls.name.value,
-        longDescription: this.form.controls.description.value,
+        longDescription: mapValue.undefinedIfEmptyString(this.form.controls.description.value),
         startTime: start.toISOString(),
         endTime: end.toISOString(),
         /* location only if not activity set*/
@@ -447,7 +448,7 @@ export class ManageShiftComponent implements OnDestroy {
 
       this._shiftService.updateShift(shift.id, {
         name: this.form.controls.name.value,
-        longDescription: this.form.controls.description.value,
+        longDescription: mapValue.undefinedIfEmptyString(this.form.controls.description.value),
         startTime: start.toISOString(),
         endTime: end.toISOString(),
         /* location only if no activity set*/

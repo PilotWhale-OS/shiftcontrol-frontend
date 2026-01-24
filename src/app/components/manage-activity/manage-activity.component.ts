@@ -16,6 +16,7 @@ import {UserService} from "../../services/user/user.service";
 import UserTypeEnum = AccountInfoDto.UserTypeEnum;
 import {icons} from "../../util/icons";
 import {ToastService} from "../../services/toast/toast.service";
+import {descriptionLengthValidator, nameLengthValidator} from "../../util/textValidators";
 
 export interface manageActivityParams {
   eventId: string;
@@ -68,8 +69,8 @@ export class ManageActivityComponent {
 
   constructor() {
     this.form = this._fb.group({
-      name: this._fb.nonNullable.control<string>("", [Validators.maxLength(30), Validators.required]),
-      description: this._fb.nonNullable.control<string>("", [Validators.maxLength(100)]),
+      name: this._fb.nonNullable.control<string>("", [nameLengthValidator, Validators.required]),
+      description: this._fb.nonNullable.control<string>("", [descriptionLengthValidator]),
       startDate: this._fb.nonNullable.control<Date>(new Date()),
       startTime: this._fb.nonNullable.control<time>({hour: 0, minute: 0}, [Validators.required]),
       endDate: this._fb.nonNullable.control<Date>(new Date()),

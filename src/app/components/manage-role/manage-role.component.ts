@@ -14,6 +14,7 @@ import {icons} from "../../util/icons";
 import {InputNumberComponent} from "../inputs/input-number/input-number.component";
 import {ToastService} from "../../services/toast/toast.service";
 import {BehaviorSubject, Subject} from "rxjs";
+import {descriptionLengthValidator, nameLengthValidator} from "../../util/textValidators";
 
 @Component({
   selector: "app-manage-role",
@@ -51,8 +52,8 @@ export class ManageRoleComponent {
 
   constructor() {
     this.form = this._fb.group({
-      name: this._fb.nonNullable.control<string>("", [Validators.required]),
-      description: this._fb.nonNullable.control<string>(""),
+      name: this._fb.nonNullable.control<string>("", [Validators.required, nameLengthValidator]),
+      description: this._fb.nonNullable.control<string>("", [descriptionLengthValidator]),
       rewardPointsPerMinute: this._fb.nonNullable.control<number>(0, [Validators.min(0)])
     });
   }
