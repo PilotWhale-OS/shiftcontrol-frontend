@@ -129,12 +129,16 @@ export class ManageShiftComponent implements OnDestroy {
 
     this._disableLocationSubscription = this.form.controls.activity.valueChanges.pipe(
       startWith(this.form.controls.activity.value)
-    ).subscribe(activityId => {
+    ).subscribe(activity => {
       const locationIsEnabled = this.form.controls.location.enabled;
 
-      if (activityId !== null && locationIsEnabled) {
+      if(activity !== null) {
+        this.form.controls.location.setValue(activity.location ?? null);
+      }
+
+      if (activity !== null && locationIsEnabled) {
         this.form.controls.location.disable();
-      } else if (activityId === null && !locationIsEnabled) {
+      } else if (activity === null && !locationIsEnabled) {
         this.form.controls.location.enable();
       }
     });
