@@ -41,5 +41,11 @@
       </p>
     </div>
   }
-
 </div>
+
+@if ((events$ | async)?.length === 0 && (userType$ | async) !== "ADMIN") {
+  <div class="flex flex-col w-full items-center gap-md">
+    <h1 class="signature-gradient-font">Nothing to show</h1>
+    <span>You have not joined any events yet.</span>
+  </div>
+}
