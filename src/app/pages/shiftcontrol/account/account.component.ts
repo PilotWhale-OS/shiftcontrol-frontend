@@ -124,21 +124,27 @@ export class AccountComponent implements OnDestroy {
   protected getNotificationKindName(type: NotificationSettingsDto.TypeEnum): string {
     switch (type) {
       case NotificationSettingsDto.TypeEnum.VolunteerAutoAssigned:
-        return "Auto Assigned";
-      case NotificationSettingsDto.TypeEnum.VolunteerTradesAuctionsRequestsChanged:
-        return "Assignment Status Changed";
-      case NotificationSettingsDto.TypeEnum.VolunteerTradeRequested:
-        return "Trade Requested";
+        return "Auto Assignments";
       case NotificationSettingsDto.TypeEnum.VolunteerShiftReminder:
-        return "Shift Reminder";
-      case NotificationSettingsDto.TypeEnum.PlannerTrustAlertTriggered:
-        return "Trust Alert Triggered";
+        return "Shift Reminders";
+      case NotificationSettingsDto.TypeEnum.VolunteerRequestHandled:
+        return "Request Updates";
+      case NotificationSettingsDto.TypeEnum.VolunteerTradeOrAuction:
+        return "Trades & Auctions";
+      case NotificationSettingsDto.TypeEnum.VolunteerPlansChanged:
+        return "Plan Changes";
+      case NotificationSettingsDto.TypeEnum.VolunteerRolesChanged:
+        return "Role Changes";
+      case NotificationSettingsDto.TypeEnum.VolunteerStatusChanged:
+        return "User Status Changes";
+      case NotificationSettingsDto.TypeEnum.PlannerVolunteerRequest:
+        return "Requests";
       case NotificationSettingsDto.TypeEnum.PlannerVolunteerJoinedPlan:
         return "Volunteer Joined";
-      case NotificationSettingsDto.TypeEnum.PlannerVolunteerRequestedAction:
-        return "Volunteer Assignment Action Requested";
       case NotificationSettingsDto.TypeEnum.AdminPlannerJoinedPlan:
         return "Planner Joined";
+      case NotificationSettingsDto.TypeEnum.AdminTrustAlertReceived:
+        return "Trust Alerts";
       case NotificationSettingsDto.TypeEnum.AdminRewardSyncUsed:
         return "Rewards Synced";
     }
