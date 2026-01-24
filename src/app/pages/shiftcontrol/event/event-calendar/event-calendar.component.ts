@@ -286,10 +286,12 @@ export class EventCalendarComponent implements OnDestroy {
         locationLayouts: layout.scheduleLayoutDtos,
         noLocationLayout: layout.scheduleLayoutNoLocationDto,
         shiftPaddingColumn: calendarMode === "shift",
-        shiftClickCallback: calendarMode === "activity" ? undefined : shift => this.selectedShift$.next({
-          shift,
-          eventId: plan.eventOverview.id
-        }),
+        shiftClickCallback: calendarMode === "activity" ? undefined : shift => {
+          this.selectedShift$.next({
+            shift,
+            eventId: plan.eventOverview.id
+          });
+        },
         activityClickCallback: calendarMode === "shift" ? undefined : activity => {
           this.selectedActivity$.next({
             eventId: plan.eventOverview.id,
@@ -302,6 +304,7 @@ export class EventCalendarComponent implements OnDestroy {
           (!isPlanner ? undefined : (date, location) => this.selectedShift$.next({
           eventId: plan.eventOverview.id,
           suggestedLocation: location,
+          shift: undefined,
           suggestedDate: date
         })) :
 

@@ -206,7 +206,7 @@
             />
         }
 
-        @if (slotData.length === 0) {
+        @if (slotData.length === 0 && (mode$ | async) === "view") {
           <div class="flex flex-col items-center justify-center h-full pl-xl">
             <h1 class="signature-gradient-font">Nothing to do</h1>
             <span>There are no positions to sign up for.</span>
