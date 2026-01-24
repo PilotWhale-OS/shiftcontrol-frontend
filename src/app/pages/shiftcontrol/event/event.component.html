@@ -4,7 +4,7 @@
   <div class="flex flex-row gap-lg">
 
     <!-- event cards -->
-    <div class="flex flex-col gap-lg w-[min(100%,40rem)]">
+    <div class="flex flex-col gap-lg w-[min(100%,35rem)]">
 
       <!-- overview card -->
       <div class="card col-start-1 col-span-2 row-span-2 grid grid-columns-2 gap-lg h-fit">
@@ -75,45 +75,13 @@
         <!-- own schedule stats -->
         <!--<div class="flex flex-col items-start gap-xs">
           <small>Your stats</small>
-          <div class="badge"
-               tooltipMaxWidth="30ex"
-               [app-tooltip]="'Days where you signed up for shifts in this event'"
-          >
-            <fa-icon [icon]="icons.day" />
-            {{event.ownEventStatistics.busyDays}} Busy Days
-          </div>
-          <div class="badge"
-               tooltipMaxWidth="30ex"
-               [app-tooltip]="'Sum of signed up shifts in this event'"
-          >
-            <fa-icon [icon]="icons.hour" />
-            {{event.ownEventStatistics.totalHours | number:"1.0-0"}} Shift Hours
-          </div>
+
           <div class="badge success"
                tooltipMaxWidth="30ex"
                [app-tooltip]="'Reward points earned during this event'"
           >
             <fa-icon [icon]="icons.rewards" />
             {{event.rewardPoints}} Points Rewarded
-          </div>
-        </div>-->
-
-        <!-- public stats -->
-        <!--<div class="flex flex-col items-start gap-xs">
-          <small>Public stats</small>
-          <div class="badge hint"
-               tooltipMaxWidth="30ex"
-               [app-tooltip]="'Volunteers participating in this event'"
-          >
-            <fa-icon [icon]="icons.volunteers" />
-            {{event.overallEventStatistics.volunteerCount}} Volunteers
-          </div>
-          <div class="badge hint"
-               tooltipMaxWidth="30ex"
-               [app-tooltip]="'Duration of shifts during this event'"
-          >
-            <fa-icon [icon]="icons.hour" />
-            {{event.overallEventStatistics.totalHours | number:"1.0-0"}} Shift Hours
           </div>
         </div>-->
 
@@ -186,6 +154,11 @@
 
     <!-- volunteer cards -->
     <div class="flex flex-col gap-lg">
+
+      <!-- rewards -->
+      @if ((userType$ | async) !== "ADMIN"){
+        <app-event-rewards [eventDashboard]="event" />
+      }
 
       <!-- leaderboard -->
       @if (leaderboard$ | async; as leaderboard) {

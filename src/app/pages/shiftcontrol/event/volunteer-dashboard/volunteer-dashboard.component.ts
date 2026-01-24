@@ -10,10 +10,11 @@ import {BC_EVENT} from "../../../../breadcrumbs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {PageService} from "../../../../services/page/page.service";
 import {icons} from "../../../../util/icons";
-import {AsyncPipe} from "@angular/common";
+import {AsyncPipe, DecimalPipe} from "@angular/common";
 import {ShiftScheduleComponent, shiftWithOrigin} from "../../../../components/shift-schedule/shift-schedule.component";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {ShiftTradeAuctionComponent} from "../../../../components/shift-trade-auction/shift-trade-auction.component";
+import {TooltipDirective} from "../../../../directives/tooltip.directive";
 
 @Component({
   selector: "app-volunteer-dashboard",
@@ -22,7 +23,9 @@ import {ShiftTradeAuctionComponent} from "../../../../components/shift-trade-auc
     AsyncPipe,
     ShiftScheduleComponent,
     FaIconComponent,
-    ShiftTradeAuctionComponent
+    ShiftTradeAuctionComponent,
+    TooltipDirective,
+    DecimalPipe
   ],
   standalone: true,
   templateUrl: "./volunteer-dashboard.component.html",

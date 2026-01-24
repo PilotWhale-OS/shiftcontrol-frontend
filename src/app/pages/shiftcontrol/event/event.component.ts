@@ -16,6 +16,7 @@ import {TooltipDirective} from "../../../directives/tooltip.directive";
 import {UserService} from "../../../services/user/user.service";
 import {icons} from "../../../util/icons";
 import {EventLeaderboardComponent} from "../../../components/event-leaderboard/event-leaderboard.component";
+import {EventRewardsComponent} from "../../../components/event-rewards/event-rewards.component";
 
 @Component({
   selector: "app-plans",
@@ -27,7 +28,8 @@ import {EventLeaderboardComponent} from "../../../components/event-leaderboard/e
     DatePipe,
     TooltipDirective,
     DecimalPipe,
-    EventLeaderboardComponent
+    EventLeaderboardComponent,
+    EventRewardsComponent
   ],
   standalone: true,
   templateUrl: "./event.component.html",

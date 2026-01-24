@@ -6,7 +6,7 @@ import {
   faCalendarDay,
   faCalendarDays, faCaretSquareUp, faCertificate, faChartGantt, faCheckCircle, faCircleInfo,
   faClock, faCrown, faEarthAmericas, faFilter, faForward,
-  faGift, faHandSparkles, faHashtag,
+  faGift, faHandHoldingHeart, faHandSparkles, faHashtag,
   faHourglass, faKey, faLink, faLocationPin, faLock, faMedal, faMessage, faMoon, faPause,
   faPeopleGroup, faPlusCircle, faServer, faShareNodes,
   faShuffle, faSignsPost, faStar, faTableColumns, faTag, faTrophy, faUser,
@@ -19,7 +19,7 @@ import {
   faLinkedin,
   faRedditAlien,
   faTiktok, faTwitch,
-  faTwitter, faXTwitter,
+  faXTwitter,
   faYoutube
 } from "@fortawesome/free-brands-svg-icons";
 
@@ -29,6 +29,7 @@ export const icons = {
   trade: faShuffle,
   volunteers: faPeopleGroup,
   rewards: faGift,
+  rewardsAlt: faHandHoldingHeart,
   schedule: faBarsProgress,
   event: faStar,
   activity: faStar,
