@@ -60,12 +60,14 @@
       />
     </div>
 
-    <div class="col-span-2 flex gap-x-lg items-center  pt-md">
+    <div class="col-span-2 flex gap-x-lg items-center pt-md">
       @if (manageData.event === undefined){
         <xsb-input-button content="Create Event" action="success" (click)="create()" />
+        <small>or</small>
+        <xsb-input-button content="Import Event" action="success" (click)="import()" />
+        <xsb-input-button content="Download Event Template" (click)="downloadTemplate()" />
       }
       @else {
-        <xsb-input-button content="Clone Event" action="normal" (click)="clone(manageData.event)" />
         <xsb-input-button content="Update Event" action="success" (click)="update(manageData.event)" />
         <xsb-input-button content="Delete Event" action="danger" (click)="showEventDeleteConfirm = true" />
 

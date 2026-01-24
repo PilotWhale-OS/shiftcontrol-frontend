@@ -96,6 +96,39 @@ export class ManageEventDetailsComponent {
     }
   }
 
+  /**
+   * let user choose a xlsx file, and upload event data from it
+   * @protected
+   */
+  protected import() {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".xlsx";
+    input.onchange = () => {
+      if (input.files && input.files.length > 0) {
+        const file = input.files[0];
+        this._eventService.importEventData(file).pipe(
+          this._toastService.tapSuccess("Imported Event Data", event => `Event data imported successfully for event ${event.event.name}.`),
+          this._toastService.tapError("Import Failed", mapValue.apiErrorToMessage)
+        ).subscribe(created => this._router.navigate([`../${created.event.id}/manage`], {relativeTo: this._route}));
+      }
+    };
+    input.click();
+  }
+
+  protected downloadTemplate() {
+    this._eventService.downloadEventImportTemplate().subscribe(blob => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "event_import_template.xlsx";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    });
+  }
+
   protected update(event: EventDto){
     this.form.markAllAsTouched();
 
@@ -113,14 +146,6 @@ export class ManageEventDetailsComponent {
     } else {
       this._toastService.showError("Invalid Event", "Please provide valid event details.");
     }
-  }
-
-  protected clone(event: EventDto) {
-
-    this._eventService.cloneEvent(event.id).pipe(
-      this._toastService.tapSuccess("Event Clone"),
-      this._toastService.tapError("Error cloning event", mapValue.apiErrorToMessage)
-    ).subscribe(cloned => this._router.navigate([`../../${cloned.id}`], {relativeTo: this._route}));
   }
 
   protected delete(event: EventDto) {

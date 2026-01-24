@@ -75,6 +75,11 @@
                 <app-manage-event-details [event]="{event: event?.eventOverview ?? undefined}" (eventChanged)="refreshData()" />
               }
             }
+            @case ("export") {
+              @if (event$ | async; as event) {
+                <app-event-export [event]="{event: event?.eventOverview ?? undefined}" />
+              }
+            }
             @case ("plans") {
               @if (planManageData$ | async; as manageData) {
                 @for (planManageData of manageData; track planManageData.plan?.id){
