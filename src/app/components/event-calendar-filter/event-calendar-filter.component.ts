@@ -9,6 +9,7 @@ import {InputMultiselectComponent} from "../inputs/input-multiselect/input-multi
 import {DecimalPipe, NgClass} from "@angular/common";
 import {EventScheduleFilterDto, ScheduleStatisticsDto} from "../../../shiftservice-client";
 import ShiftRelevancesEnum = EventScheduleFilterDto.ShiftRelevancesEnum;
+import {UserService} from "../../services/user/user.service";
 
 export enum ShiftCalendarViewMode {
   Calendar = "calendar",
@@ -50,6 +51,9 @@ export class EventCalendarFilterComponent {
 
   @Input()
   public plansOptions: SelectOptions<string> = [];
+
+  @Input()
+  public statisticsMode: "admin" | "planner" | "volunteer" = "volunteer";
 
   public readonly availabilityOptions: SelectOptions<ShiftRelevancesEnum> = [
     {name: "Your Shifts", value: ShiftRelevancesEnum.MyShifts},
