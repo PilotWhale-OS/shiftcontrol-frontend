@@ -9,7 +9,6 @@ import {InputMultiselectComponent} from "../inputs/input-multiselect/input-multi
 import {DecimalPipe, NgClass} from "@angular/common";
 import {EventScheduleFilterDto, ScheduleStatisticsDto} from "../../../shiftservice-client";
 import ShiftRelevancesEnum = EventScheduleFilterDto.ShiftRelevancesEnum;
-import {UserService} from "../../services/user/user.service";
 
 export enum ShiftCalendarViewMode {
   Calendar = "calendar",
