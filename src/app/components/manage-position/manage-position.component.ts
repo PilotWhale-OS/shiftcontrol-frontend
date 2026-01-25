@@ -5,7 +5,7 @@ import {
   ShiftDto,
 } from "../../../shiftservice-client";
 import {InputSelectComponent, SelectOptions} from "../inputs/input-select/input-select.component";
-import {BehaviorSubject, catchError, combineLatestWith, map, Observable, of, startWith, Subscription, switchMap} from "rxjs";
+import {BehaviorSubject, combineLatestWith, filter, map, Observable, of, startWith, Subscription, switchMap} from "rxjs";
 import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {UserService} from "../../services/user/user.service";
 import {AsyncPipe, DatePipe, NgClass} from "@angular/common";
@@ -64,26 +64,7 @@ export class ManagePositionComponent implements OnDestroy {
   protected readonly icons = icons;
 
   protected readonly manageData$ = new BehaviorSubject<undefined | managePositionParams>(undefined);
-  protected readonly positionSignupData$: Observable<positionSignupParams | undefined> = this.manageData$.pipe(
-    switchMap(data => {
-      if(data === undefined || data.position === undefined) {
-        return of(undefined);
-      }
-
-      return this._positionService.getPositionSlotUserAssignment(data.position.id).pipe(
-        map(assignment => data.position === undefined ? undefined : ({
-          slot: data.position,
-          shift: data.shift,
-          currentUserAssignment: assignment
-        })),
-        catchError(() => of(data.position === undefined ? undefined : ({
-            slot: data.position,
-            shift: data.shift,
-            currentUserAssignment: undefined
-          })))
-      );
-    })
-  );
+  protected readonly positionSignupData$: Observable<positionSignupParams | undefined>;
   protected readonly requestedEditMode$ = new BehaviorSubject<boolean>(false);
 
   protected showSlotDeleteConfirm = false;
@@ -119,6 +100,27 @@ export class ManagePositionComponent implements OnDestroy {
         this.form.controls.rewardPoints.disable();
       }
     });
+
+    this.positionSignupData$ = this.manageData$.pipe(
+      combineLatestWith(this._userService.kcProfile$.pipe(
+        filter(profile => profile !== null)
+      )),
+      map(([data, user]) => {
+        if(data === undefined || data.position === undefined) {
+          return undefined;
+        }
+
+        const currentUserAssignment = data.position.assignments.find(
+          ass => ass.assignedVolunteer.id === user.id
+        );
+
+        return {
+          slot: data.position,
+          shift: data.shift,
+          currentUserAssignment
+        };
+      })
+    );
   }
 
   public get mode$(){

@@ -9,21 +9,34 @@
 
   </div>
 
-  <div class="card grid card grid-cols-[10rem_auto_auto_auto] gap-y-xs gap-x-md h-fit w-[min(100%,90rem)] items-center">
-    <h1 class="signature-gradient-font col-span-4">Events</h1>
+  <div class="card grid card grid-cols-[10rem_1fr_1fr_2fr_auto] gap-y-xs gap-x-md h-fit w-[min(100%,90rem)] items-center">
+    <h1 class="signature-gradient-font col-span-5">Events</h1>
 
     <small class="pb-sm">Time</small>
     <div class="flex flex-row gap-md items-center pb-sm">
       <small>Type</small>
-      <xsb-input-text placeholder="Filter event type" #type [formControl]="form.controls.type" [xsb-typed]="[type, form.controls.type]" />
+      <xsb-input-text
+        placeholder="Filter event type"
+        #type
+        [formControl]="form.controls.type"
+        [xsb-typed]="[type, form.controls.type]"
+        size="minimal"
+      />
     </div>
     <div class="flex flex-row gap-md items-center pb-sm">
-      <small>Type</small>
-      <xsb-input-text placeholder="Filter event key" #key [formControl]="form.controls.key" [xsb-typed]="[key, form.controls.key]" />
+      <small>Key</small>
+      <xsb-input-text
+        size="minimal"
+        placeholder="Filter event key"
+        #key
+        [formControl]="form.controls.key"
+        [xsb-typed]="[key, form.controls.key]"
+      />
     </div>
+    <small class="pb-sm">Description</small>
     <small class="pb-sm"></small>
 
-    <hr class="col-span-4 mb-sm" />
+    <hr class="col-span-5 mb-sm" />
 
     @if (page$ | async; as page) {
 
@@ -37,6 +50,7 @@
           <span>{{event.timestamp | date:"short"}}</span>
           <span>{{event.eventType}}</span>
           <span>{{event.routingKey}}</span>
+          <span>{{event.description}}</span>
 
           <div class="flex flex-row gap-md justify-end">
             @if ((event.actingUserId?.length ?? 0) > 0) {
@@ -47,9 +61,9 @@
         }
       }
 
-      <hr class="col-span-4 mt-sm" />
+      <hr class="col-span-5 mt-sm" />
 
-      <div class="col-span-3 flex flex-row gap-md items-center pt-sm">
+      <div class="col-span-4 flex flex-row gap-md items-center pt-sm">
         <xsb-input-button size="text" content="Previous"
                           (click)="form.controls.paginationIndex.setValue(page.page - 1)"
                           [lock]="page.page <= 0"
