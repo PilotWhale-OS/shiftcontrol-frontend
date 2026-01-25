@@ -3,20 +3,26 @@ import {BehaviorSubject, map, of, switchMap} from "rxjs";
 import {
   AssignmentDto,
   PositionSlotDto,
-  PositionSlotEndpointService, PositionSlotTradeEndpointService,
-  ShiftDto, ShiftPlanDto, TradeCandidatesDto, TradeInfoDto, VolunteerDto, TradeCreateDto
+  PositionSlotEndpointService,
+  PositionSlotTradeEndpointService,
+  ShiftDto,
+  ShiftPlanDto,
+  TradeCandidatesDto,
+  TradeCreateDto,
+  TradeInfoDto,
+  VolunteerDto
 } from "../../../../shiftservice-client";
 import {icons} from "../../../util/icons";
 import {AsyncPipe, SlicePipe} from "@angular/common";
 import {InputButtonComponent} from "../../inputs/input-button/input-button.component";
 import {ToastService} from "../../../services/toast/toast.service";
 import {mapValue} from "../../../util/value-maps";
-import LockStatusEnum = ShiftPlanDto.LockStatusEnum;
 import {DialogTradeRequestComponent} from "../dialog-trade-request/dialog-trade-request.component";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {DialogTradeDetailsComponent} from "../dialog-trade-details/dialog-trade-details.component";
 import {UserService} from "../../../services/user/user.service";
 import {DialogManageAssignmentsComponent, manageAssignmentsParams} from "../dialog-manage-assignments/dialog-manage-assignments.component";
+import LockStatusEnum = ShiftPlanDto.LockStatusEnum;
 
 export interface positionSignupParams {
   slot: PositionSlotDto;
@@ -399,6 +405,10 @@ export class PositionSignupComponent {
             return "The position slot is currently full.";
           case PositionSlotDto.PositionSignupStateEnum.NotEligible:
             return "You don't have the required roles to sign up for this position.";
+          case PositionSlotDto.PositionSignupStateEnum.TimeConflictTimeConstraint:
+            return "You have a time constraint during the time of this assignemnt.";
+          case PositionSlotDto.PositionSignupStateEnum.TimeConflictAssignment:
+            return "You already have an assignment in this timespan .";
           default:
             return "INVALID_STATE";
         }
@@ -420,6 +430,10 @@ export class PositionSignupComponent {
             return `Make sure to show up at the location ${position.shift.location?.name} at the specified time.`;
           case PositionSlotDto.PositionSignupStateEnum.NotEligible:
             return "You don't have the required roles to sign up for this position.";
+          case PositionSlotDto.PositionSignupStateEnum.TimeConflictTimeConstraint:
+            return "You have a time constraint during the time of this assignemnt.";
+          case PositionSlotDto.PositionSignupStateEnum.TimeConflictAssignment:
+            return "You already have an assignment in this timespan .";
           default:
             return "INVALID_STATE";
         }
@@ -468,6 +482,8 @@ export class PositionSignupComponent {
           case PositionSlotDto.PositionSignupStateEnum.Full:
             return [...REQUEST_TRADE];
           case PositionSlotDto.PositionSignupStateEnum.NotEligible:
+          case PositionSlotDto.PositionSignupStateEnum.TimeConflictTimeConstraint:
+          case PositionSlotDto.PositionSignupStateEnum.TimeConflictAssignment:
             return ["DISABLED_SIGN_UP"];
           default:
             return undefined;
@@ -489,6 +505,8 @@ export class PositionSignupComponent {
           case PositionSlotDto.PositionSignupStateEnum.Full:
             return [...REQUEST_TRADE];
           case PositionSlotDto.PositionSignupStateEnum.NotEligible:
+          case PositionSlotDto.PositionSignupStateEnum.TimeConflictTimeConstraint:
+          case PositionSlotDto.PositionSignupStateEnum.TimeConflictAssignment:
             return ["DISABLED_SIGN_UP"];
           default:
             return undefined;
