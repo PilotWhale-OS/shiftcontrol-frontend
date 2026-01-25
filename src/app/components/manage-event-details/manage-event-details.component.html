@@ -13,7 +13,7 @@
       />
     </div>
 
-    <div class="flex flex-col gap-sm col-start-1 row-start-2">
+    <div class="flex flex-col gap-sm col-start-2 row-start-1">
       <small><fa-icon [icon]="icons.shortDescription" class="pr-sm" />Caption</small>
       <label for="event-manage-caption">Short description, shown in the event preview</label>
       <xsb-input-text #shortDescription
@@ -23,18 +23,7 @@
       />
     </div>
 
-    <div class="flex flex-col gap-sm col-start-1 row-start-3 col-span-2">
-      <small><fa-icon [icon]="icons.longDescription" class="pr-sm" />Description</small>
-      <label for="event-manage-description">Detailed description, shown in the event overview</label>
-      <xsb-input-text #longDescription
-                      [formControl]="form.controls.longDescription"
-                      type="area"
-                      [xsb-typed]="[longDescription, form.controls.longDescription]"
-                      name="event-manage-description" placeholder="Event description"
-      />
-    </div>
-
-    <div class="flex flex-col gap-sm col-start-2 row-start-1">
+    <div class="flex flex-col gap-sm col-start-1 row-start-2">
       <small><fa-icon [icon]="icons.startDate" class="pr-sm" />Start Date</small>
       <label for="event-manage-from">First whole day, in your timezone</label>
       <xsb-input-date #startDate name="event-manage-from"
@@ -50,12 +39,35 @@
                       [xsb-typed]="[endDate, form.controls.endDate]" />
     </div>
 
-    <div class="col-span-2 flex gap-x-lg items-center  pt-md">
+    <div class="flex flex-col gap-sm col-start-1 row-start-3 col-span-2">
+      <small><fa-icon [icon]="icons.link" class="pr-sm" />Social Links</small>
+      <label for="event-manage-socials">List of links to social media or websites, separated by a comma</label>
+      <xsb-input-text #socials
+                      [formControl]="form.controls.socials"
+                      [xsb-typed]="[socials, form.controls.socials]"
+                      name="event-manage-socials" placeholder="Event social media links"
+      />
+    </div>
+
+    <div class="flex flex-col gap-sm col-start-1 row-start-4 col-span-2">
+      <small><fa-icon [icon]="icons.longDescription" class="pr-sm" />Description</small>
+      <label for="event-manage-description">Detailed description, shown in the event overview</label>
+      <xsb-input-text #longDescription
+                      [formControl]="form.controls.longDescription"
+                      type="area"
+                      [xsb-typed]="[longDescription, form.controls.longDescription]"
+                      name="event-manage-description" placeholder="Event description"
+      />
+    </div>
+
+    <div class="col-span-2 flex gap-x-lg items-center pt-md">
       @if (manageData.event === undefined){
         <xsb-input-button content="Create Event" action="success" (click)="create()" />
+        <small>or</small>
+        <xsb-input-button content="Import Event" action="success" (click)="import()" />
+        <xsb-input-button content="Download Event Template" (click)="downloadTemplate()" />
       }
       @else {
-        <xsb-input-button content="Clone Event" action="normal" (click)="clone(manageData.event)" />
         <xsb-input-button content="Update Event" action="success" (click)="update(manageData.event)" />
         <xsb-input-button content="Delete Event" action="danger" (click)="showEventDeleteConfirm = true" />
 

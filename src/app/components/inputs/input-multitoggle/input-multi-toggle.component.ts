@@ -53,6 +53,9 @@ export class InputMultiToggleComponent<TData> implements TypedControlValueAccess
   @Input()
   nullName = " - ";
 
+  @Input()
+  size: "regular" | "minimal" | "text" = "regular";
+
   /**
    * disguise the input as plain text and make immutable
    */

@@ -13,8 +13,9 @@ import {TypedFormControlDirective} from "../../../../directives/typed-form-contr
 import {ManagePlanDetailsComponent} from "../../../../components/manage-plan-details/manage-plan-details.component";
 import {ManageEventDetailsComponent} from "../../../../components/manage-event-details/manage-event-details.component";
 import {ManageLocationComponent} from "../../../../components/manage-location/manage-location.component";
+import {EventExportComponent} from "../../../../components/event-export/event-export.component";
 
-export type managementMode = "details" | "locations" | "plans";
+export type managementMode = "details" | "locations" | "plans" | "export";
 
 @Component({
   selector: "app-manage-event",
@@ -27,7 +28,8 @@ export type managementMode = "details" | "locations" | "plans";
     ManagePlanDetailsComponent,
     ManageEventDetailsComponent,
     ManageLocationComponent,
-    RouterLink
+    RouterLink,
+    EventExportComponent
   ],
   templateUrl: "./manage-event.component.html",
   styleUrl: "./manage-event.component.scss"
@@ -43,6 +45,7 @@ export class ManageEventComponent {
 
   protected readonly modeOptions: MultiToggleOptions<managementMode> = [
     {name: "Details", value: "details"},
+    {name: "Export", value: "export"},
     {name: "Shift Plans", value: "plans"},
     {name: "Locations", value: "locations"}
   ];

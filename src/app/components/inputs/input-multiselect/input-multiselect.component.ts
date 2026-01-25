@@ -1,4 +1,14 @@
-import {ChangeDetectionStrategy, Component, HostBinding, inject, Injector, Input, OnInit} from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  HostBinding,
+  inject,
+  Injector,
+  Input,
+  OnDestroy,
+  OnInit
+} from "@angular/core";
 import { NG_VALUE_ACCESSOR, NgControl } from "@angular/forms";
 import {faCaretDown, faCircleCheck, IconDefinition} from "@fortawesome/free-solid-svg-icons";
 import { SelectOptions } from "../input-select/input-select.component";
@@ -7,6 +17,7 @@ import {FlyoutTriggerDirective} from "../../../directives/flyout-trigger.directi
 import {NgClass} from "@angular/common";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {FlyoutComponent} from "../../flyout/flyout.component";
+import {merge, of, Subscription} from "rxjs";
 
 @Component({
   selector: "xsb-input-multiselect",
@@ -28,7 +39,7 @@ import {FlyoutComponent} from "../../flyout/flyout.component";
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InputMultiselectComponent<TData> implements TypedControlValueAccessor<TData[] | null>, OnInit {
+export class InputMultiselectComponent<TData> implements TypedControlValueAccessor<TData[] | null>, OnInit, OnDestroy {
 
   /**
    * the selection items that can be chosen of
@@ -112,6 +123,8 @@ export class InputMultiselectComponent<TData> implements TypedControlValueAccess
   circleCheckIcon = faCircleCheck;
 
   private injector = inject(Injector);
+  private _changeDetector = inject(ChangeDetectorRef);
+  private _statusSubscription?: Subscription;
 
   @HostBinding("attr.id") get hideIdAttr() { return null; }
   @HostBinding("attr.name") get hideNameAttr() { return null; }
@@ -123,7 +136,7 @@ export class InputMultiselectComponent<TData> implements TypedControlValueAccess
    * @returns name or empty indicator
    */
   get currentValueName() {
-    const opt = this.options.filter(o => this.value?.some(v => v === o.value));
+    const opt = this.options.filter(o => this.value?.some(v => this.comparatorFn(v, o.value)));
     return opt.length === 0 ?
       (this.emptyNaming ?? `No ${this.naming}`) :
       (opt.length === 1 ? opt[0].name :
@@ -141,8 +154,11 @@ export class InputMultiselectComponent<TData> implements TypedControlValueAccess
     return this.options;
   }
 
+  @Input()
+  comparatorFn: ((a: TData | null, b: TData | null) => boolean) = (a, b) => a === b;
+
   isSelected(value: TData | null) {
-    return (this.value ?? []).some(o => o === value);
+    return (this.value ?? []).some(o => this.comparatorFn(o, value));
   }
 
   /**
@@ -150,6 +166,15 @@ export class InputMultiselectComponent<TData> implements TypedControlValueAccess
    */
   ngOnInit(): void {
     this.ngControl = this.injector.get(NgControl);
+
+    this._statusSubscription = merge(
+      this.ngControl.valueChanges ?? of(undefined),
+      this.ngControl.statusChanges ?? of(undefined)
+    ).subscribe(() => this._changeDetector.detectChanges());
+  }
+
+  ngOnDestroy() {
+    this._statusSubscription?.unsubscribe();
   }
 
   /**
@@ -158,7 +183,8 @@ export class InputMultiselectComponent<TData> implements TypedControlValueAccess
    * @param value new value
    */
   writeValue(value: TData[] | null): void {
-    this.value = value?.filter(v => this.options.some(o => o.value === v)) ?? null;
+    this.value = value?.filter(v => this.options.some(o => this.comparatorFn(o.value, v))) ?? null;
+    this._changeDetector.markForCheck();
     if (this.onChange !== undefined) {
       this.onChange(this.value);
     } else {
@@ -208,7 +234,7 @@ export class InputMultiselectComponent<TData> implements TypedControlValueAccess
     if (value !== null && !active) {
       this.value = this.value === null ? [value] : [...this.value, value];
     } else {
-      this.value = this.value === null ? null : this.value.filter(v => v !== value);
+      this.value = this.value === null ? null : this.value.filter(v => !this.comparatorFn(v, value) );
     }
     this.onTouched?.();
     this.onChange?.(this.value);

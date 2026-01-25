@@ -76,7 +76,7 @@
 
     @if (planManageData$ | async; as plan){
 
-      <div class="card flex flex-col gap-lg w-full col-span-2">
+      <div class="card flex flex-col gap-lg w-fit col-span-2">
 
         <h1 class="compact signature-gradient-font">{{ plan.plan?.name }}: {{selectedMode$ | async}}</h1>
 
@@ -98,6 +98,11 @@
             }
             @case ("assignments") {
               <app-manage-assignments [plan]="plan.plan" (planChanged)="refreshData()" />
+            }
+            @case ("users") {
+              <div class="grow">
+                <app-manage-plan-volunteers [manageData]="(volunteersManageData$ | async) ?? undefined" />
+              </div>
             }
           }
         </div>

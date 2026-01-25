@@ -5,6 +5,7 @@ import { routes } from "./app.routes";
 import {AutoRefreshTokenService, provideKeycloak, UserActivityService, withAutoRefreshToken} from "keycloak-angular";
 import { provideHttpClient } from "@angular/common/http";
 import {Configuration as ShiftserviceConfiguration} from "../shiftservice-client";
+import {Configuration as AuditserviceConfiguration} from "../auditservice-client";
 import Keycloak from "keycloak-js";
 import {provideAnimations} from "@angular/platform-browser/animations";
 import {provideToastr} from "ngx-toastr";
@@ -48,6 +49,22 @@ export const appConfig: ApplicationConfig = {
         },
         deps: [Keycloak],
         multi: false
-      },]
+      },
+      {
+        provide: AuditserviceConfiguration,
+        useFactory: () => {
+          const keycloak = inject(Keycloak);
+
+          return new AuditserviceConfiguration({
+            basePath: "http://auditservice.127.0.0.1.nip.io",
+            credentials: {
+              "bearerAuth": () => keycloak.token
+            }
+          });
+        },
+        deps: [Keycloak],
+        multi: false
+      }
+      ]
   }),]
 };

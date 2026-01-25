@@ -9,8 +9,19 @@ import {
   BC_HOME,
   BC_SHIFT_CALENDAR,
   BC_SHIFT_DETAILS,
-  BC_PLAN_ONBOARDING, BC_EVENT_EDIT, BC_EVENT_CREATE, BC_NOTIFICATIONS,
-  BC_EVENT_PLANS, BC_EVENT_HELP, BC_EVENT_VOLUNTEER_DASHBOARD, BC_REWARDS_SYNC, BC_PRETALX_SYNC
+  BC_PLAN_ONBOARDING,
+  BC_EVENT_EDIT,
+  BC_EVENT_CREATE,
+  BC_NOTIFICATIONS,
+  BC_EVENT_PLANS,
+  BC_EVENT_HELP,
+  BC_EVENT_VOLUNTEER_DASHBOARD,
+  BC_REWARDS_SYNC,
+  BC_PRETALX_SYNC,
+  BC_AUDIT_LOG,
+  BC_TRUST_ALERTS,
+  BC_VOLUNTEER,
+  BC_VOLUNTEERS
 } from "./breadcrumbs";
 import { breadcrumbsGuard } from "./guards/breadcrumbs/breadcrumbs.guard";
 import {accessAllowedGuard, notLoggedInGuard} from "./guards/keycloak/keycloak.guard";
@@ -27,6 +38,10 @@ import {EventHelpComponent} from "./pages/shiftcontrol/event/event-help/event-he
 import {VolunteerDashboardComponent} from "./pages/shiftcontrol/event/volunteer-dashboard/volunteer-dashboard.component";
 import {RewardsSyncComponent} from "./pages/shiftcontrol/rewards-sync/rewards-sync.component";
 import {PretalxSyncComponent} from "./pages/shiftcontrol/pretalx-sync/pretalx-sync.component";
+import {AuditLogComponent} from "./pages/shiftcontrol/audit-log/audit-log.component";
+import {TrustAlertsComponent} from "./pages/shiftcontrol/trust-alerts/trust-alerts.component";
+import {VolunteerComponent} from "./pages/shiftcontrol/volunteer/volunteer.component";
+import {ApplicationUsersComponent} from "./pages/shiftcontrol/application-users/application-users.component";
 
 export const routes: Routes = ([
   { path: "", component: HomeComponent, pathMatch: "full", data: {breadcrumbs: BC_HOME}, canActivate: [accessAllowedGuard] },
@@ -67,7 +82,15 @@ export const routes: Routes = ([
   { path: "rewards-sync", component: RewardsSyncComponent,
     data: {breadcrumbs: BC_REWARDS_SYNC}, canActivate: [accessAllowedGuard]},
   { path: "pretalx-sync", component: PretalxSyncComponent,
-    data: {breadcrumbs: BC_PRETALX_SYNC}, canActivate: [accessAllowedGuard]}
+    data: {breadcrumbs: BC_PRETALX_SYNC}, canActivate: [accessAllowedGuard]},
+  { path: "audit", component: AuditLogComponent,
+    data: {breadcrumbs: BC_AUDIT_LOG}, canActivate: [accessAllowedGuard]},
+  { path: "trust", component: TrustAlertsComponent,
+    data: {breadcrumbs: BC_TRUST_ALERTS}, canActivate: [accessAllowedGuard]},
+  { path: "volunteers", component: ApplicationUsersComponent,
+    data: {breadcrumbs: BC_VOLUNTEERS}, canActivate: [accessAllowedGuard]},
+  { path: "volunteers/:volunteerId", component: VolunteerComponent,
+    data: {breadcrumbs: BC_VOLUNTEER}, canActivate: [accessAllowedGuard]}
 
   /* add breadcrumbs guard to each route definition*/
 ] as Routes).map(
