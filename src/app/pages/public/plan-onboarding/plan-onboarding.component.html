@@ -66,7 +66,18 @@
 
               <div class="flex flex-col gap-sm justify-center items-center pt-lg">
                 <small>You have already joined this plan.</small>
-                <xsb-input-button class="w-fit" action="success" content="View Shift Plan" [routerLink]="'/plans/' + invite.inviteDto.shiftPlanDto.id" name="onboarding-view" />
+                <xsb-input-button class="w-fit" action="success" content="View Event" [routerLink]="'/event/' + invite.eventDto.id" name="onboarding-view" />
+              </div>
+            }
+
+            @case ("ADMIN") {
+              <div class="max-w-[30rem]">
+                <b>{{invite.attendingVolunteerCount}} {{invite.attendingVolunteerCount > 1 ? "people have" : "person has"}} joined</b> this plan on ShiftControl.
+              </div>
+
+              <div class="flex flex-col gap-sm justify-center items-center pt-lg">
+                <small>You are an Amin and only previewing the join link.</small>
+                <xsb-input-button class="w-fit" action="success" content="View Event" [routerLink]="'/events/' + invite.eventDto.id" name="onboarding-view" />
               </div>
             }
 

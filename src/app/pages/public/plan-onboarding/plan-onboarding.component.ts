@@ -4,14 +4,15 @@ import {BC_EVENT, BC_PLAN_ONBOARDING} from "../../../breadcrumbs";
 import {InputButtonComponent} from "../../../components/inputs/input-button/input-button.component";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import {ShiftPlanInviteDetailsDto, ShiftPlanInviteEndpointService} from "../../../../shiftservice-client";
-import {BehaviorSubject, map, Subscription, switchMap, withLatestFrom} from "rxjs";
+import {AccountInfoDto, ShiftPlanInviteDetailsDto, ShiftPlanInviteEndpointService} from "../../../../shiftservice-client";
+import {BehaviorSubject, combineLatestWith, map, Subscription, switchMap, withLatestFrom} from "rxjs";
 import {AsyncPipe, DatePipe} from "@angular/common";
 import {TooltipDirective} from "../../../directives/tooltip.directive";
 import {icons} from "../../../util/icons";
 import {UserService} from "../../../services/user/user.service";
 import {mapValue} from "../../../util/value-maps";
 import {ToastService} from "../../../services/toast/toast.service";
+import UserTypeEnum = AccountInfoDto.UserTypeEnum;
 
 @Component({
   selector: "app-plan-onboarding",
@@ -31,16 +32,7 @@ export class PlanOnboardingComponent implements OnDestroy {
 
   protected readonly icons = icons;
   protected readonly invite$ = new BehaviorSubject<ShiftPlanInviteDetailsDto | null | "INVALID">(null);
-  protected readonly inviteMode$ = this.invite$.pipe(
-    map(invite => {
-      if(invite === null) {return null;}
-      if(invite === "INVALID") {return "INVALID";}
-      if(!invite.joined) {return "JOIN";}
-      if(invite.upgradeToPlannerPossible) {return "UPGRADE_ACCESS";}
-      if(invite.extensionOfRolesPossible) {return "UPGRADE_ROLES";}
-      return "JOINED";
-    })
-  );
+  protected readonly inviteMode$;
 
   private readonly _pageService = inject(PageService);
   private readonly _planService = inject(ShiftPlanInviteEndpointService);
@@ -80,6 +72,19 @@ export class PlanOnboardingComponent implements OnDestroy {
         this.invite$.next("INVALID");
       }
     });
+
+    this.inviteMode$ = this.invite$.pipe(
+      combineLatestWith(this._userService.userType$),
+      map(([invite, userType]) => {
+        if(userType === UserTypeEnum.Admin) {return "ADMIN";}
+        if(invite === null) {return null;}
+        if(invite === "INVALID") {return "INVALID";}
+        if(!invite.joined) {return "JOIN";}
+        if(invite.upgradeToPlannerPossible) {return "UPGRADE_ACCESS";}
+        if(invite.extensionOfRolesPossible) {return "UPGRADE_ROLES";}
+        return "JOINED";
+      })
+    );
 
     this._inviteSubscription = this.inviteMode$.pipe(
       withLatestFrom(this.invite$)
