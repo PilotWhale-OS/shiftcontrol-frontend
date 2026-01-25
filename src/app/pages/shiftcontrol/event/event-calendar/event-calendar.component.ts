@@ -186,18 +186,18 @@ export class EventCalendarComponent implements OnDestroy {
 
         /* shifts mode */
         filters$.pipe(
-        switchMap(filters =>
-          this._eventScheduleService.getEventScheduleLayout(eventId, {
-            shiftName: mapValue.undefinedIfEmptyString(filters?.shiftName),
-            locationIds: filters?.locationsList,
-            roleIds: filters?.rolesList,
-            shiftRelevances: filters?.relevanceList
-          })),
-        catchError(() => {
-          this._router.navigateByUrl("/");
-          return EMPTY;
-        })
-      )),
+          switchMap(filters =>
+            this._eventScheduleService.getEventScheduleLayout(eventId, {
+              shiftName: mapValue.undefinedIfEmptyString(filters?.shiftName),
+              locationIds: filters?.locationsList,
+              roleIds: filters?.rolesList,
+              shiftRelevances: filters?.relevanceList
+            })),
+          catchError(() => {
+            this._router.navigateByUrl("/");
+            return EMPTY;
+          })
+        )),
       shareReplay()
     );
 
@@ -254,9 +254,15 @@ export class EventCalendarComponent implements OnDestroy {
     subs.push(filterComponent$.pipe(
       combineLatestWith(filterData$, event$)
     ).subscribe(([filterComponent, filterData, event]) => {
-      filterComponent.rolesOptions = filterData.roles.map(role => ({name: role.name, value: role.id}));
-      filterComponent.locationsOptions = filterData.locations.map(location => ({name: location.name, value: location.id}));
-      filterComponent.plansOptions = event.shiftPlans.map(plan => ({name: plan.name, value: plan.id}));
+      filterComponent.rolesOptions = filterData.roles
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map(role => ({name: role.name, value: role.id}));
+      filterComponent.locationsOptions = filterData.locations
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map(location => ({name: location.name, value: location.id}));
+      filterComponent.plansOptions = event.shiftPlans
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map(plan => ({name: plan.name, value: plan.id}));
     }));
 
     /* react to calendar config and set in component */
@@ -303,11 +309,11 @@ export class EventCalendarComponent implements OnDestroy {
 
           /* shift mode*/
           (!isPlanner ? undefined : (date, location) => this.selectedShift$.next({
-          eventId: plan.eventOverview.id,
-          suggestedLocation: location,
-          shift: undefined,
-          suggestedDate: date
-        })) :
+            eventId: plan.eventOverview.id,
+            suggestedLocation: location,
+            shift: undefined,
+            suggestedDate: date
+          })) :
 
           /* activity mode */
           (!isAdmin ? undefined : (date, location) => {
@@ -317,7 +323,7 @@ export class EventCalendarComponent implements OnDestroy {
                 eventId: plan.eventOverview.id
               });
             }
-        )
+          )
       };
       const calendarViewInited = navigation.visibleDates.length > 0;
       calendar.setConfig(config);
@@ -399,7 +405,7 @@ export class EventCalendarComponent implements OnDestroy {
             date: mapValue.datetimeToUtcDateString(date)
           }).pipe(
             map(schedule => this.mapActivityScheduleToEventSchedule(schedule, date))
-        ));
+          ));
 
         return forkJoin(scheduleDays).pipe(
           map(schedules => ({calendar, schedules}))

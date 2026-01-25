@@ -102,7 +102,10 @@ export class ManageShiftPlansComponent implements OnDestroy {
 
     this.shiftPlanOptions$ = this.event$.pipe(
       filter(event => event !== undefined),
-      map(event => event.shiftPlans.map(plan => ({name: plan.name, value: plan})) as SelectOptions<ShiftPlanDto>),
+      map(event => event.shiftPlans
+        .sort((a,b) => a.name.localeCompare(b.name))
+        .map(plan => ({name: plan.name, value: plan})) as SelectOptions<ShiftPlanDto>
+      ),
       shareReplay()
     );
 
@@ -190,9 +193,11 @@ export class ManageShiftPlansComponent implements OnDestroy {
           }
 
           return this._roleService.getRoles(plan.id).pipe(
-            map(invites => [
+            map(roles => [
               {plan: plan, role: undefined},
-              ...invites.map(role => ({plan: plan, role: role}))
+              ...roles
+                .sort((a,b) => a.name.localeCompare(b.name))
+                .map(role => ({plan: plan, role: role}))
             ])
           );
         }
@@ -201,7 +206,7 @@ export class ManageShiftPlansComponent implements OnDestroy {
   }
 
   ngOnDestroy() {
-     this._formSyncService.unregisterForm("manage-shift-plans");
+    this._formSyncService.unregisterForm("manage-shift-plans");
   }
 
   protected idComparatorFn(a: {id: string} | null, b: {id: string} | null): boolean {
@@ -213,7 +218,7 @@ export class ManageShiftPlansComponent implements OnDestroy {
       take(1),
       switchMap(event =>
         event === undefined ? of(undefined) :
-        this._eventService.getShiftPlansOverviewOfEvent(event?.eventOverview.id)
+          this._eventService.getShiftPlansOverviewOfEvent(event?.eventOverview.id)
       )
     ).subscribe(event => this.event$.next(event));
   }
