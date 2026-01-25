@@ -1,9 +1,4 @@
 import {Component, EventEmitter, inject, Input, OnDestroy, Output} from "@angular/core";
-import {
-  AccountInfoDto,
-  PositionSlotDto, PositionSlotEndpointService, RoleDto,
-  ShiftDto,
-} from "../../../shiftservice-client";
 import {InputSelectComponent, SelectOptions} from "../inputs/input-select/input-select.component";
 import {BehaviorSubject, combineLatestWith, filter, map, Observable, of, startWith, Subscription, switchMap} from "rxjs";
 import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
@@ -24,6 +19,7 @@ import {ToastService} from "../../services/toast/toast.service";
 import UserTypeEnum = AccountInfoDto.UserTypeEnum;
 import {descriptionLengthValidator, nameLengthValidator} from "../../util/textValidators";
 import {mapValue} from "../../util/value-maps";
+import {AccountInfoDto, PositionSlotDto, PositionSlotEndpointService, RoleDto, ShiftDto} from "../../../shiftservice-client";
 
 export interface managePositionParams {
   shift: ShiftDto;
@@ -245,14 +241,16 @@ export class ManagePositionComponent implements OnDestroy {
     }
 
     switch (position.positionSignupState) {
-      case PositionSignupStateEnum.SignupPossible:
-      case PositionSignupStateEnum.SignupViaTrade:
-      case PositionSignupStateEnum.SignupOrTrade:
-      case PositionSignupStateEnum.SignupViaAuction:
-        return true;
 
-      default:
+      /* not eligible if unqualified or time issues */
+      case PositionSignupStateEnum.NotEligible:
+      case PositionSignupStateEnum.TimeConflictTimeConstraint:
+      case PositionSignupStateEnum.TimeConflictAssignment:
         return false;
+
+      /* always possible to signup at least through trade request */
+      default:
+        return true;
     }
   }
 

@@ -180,7 +180,7 @@ export class PositionSignupComponent {
     /* during supervised, if a regular signup would be possible, allow a signup request to be accepted by the admin */
     if(shift.lockStatus === LockStatusEnum.Supervised &&
       (slot.positionSignupState === PositionSlotDto.PositionSignupStateEnum.SignupPossible ||
-      slot.positionSignupState === PositionSlotDto.PositionSignupStateEnum.SignupOrTrade)
+        slot.positionSignupState === PositionSlotDto.PositionSignupStateEnum.SignupOrTrade)
     ) {
       this._positionService.joinRequestPositionSlot(slot.id).pipe(
         this._toastService.tapSuccess("Requested Signup",
@@ -332,22 +332,22 @@ export class PositionSignupComponent {
 
   protected cancelSignUpRequest(slot: PositionSlotDto, shift: ShiftDto, assignment: AssignmentDto | undefined) {
 
-      /* during supervised phase, while not being signed up, users can cancel the request to be assigned */
-      if(
-        shift.lockStatus === LockStatusEnum.Supervised &&
-        slot.positionSignupState !== PositionSlotDto.PositionSignupStateEnum.SignedUp &&
-        assignment !== undefined && assignment.status === AssignmentDto.StatusEnum.RequestForAssignment
-      ) {
-        this._positionService.joinRequestWithdrawPositionSlot(slot.id).pipe(
-          this._toastService.tapSuccess("Cancelled Sign Up Request",
-            () => `You have cancelled your sign up request for the position "${slot.name}". You are not signed up.`),
-          this._toastService.tapError("Could Not Cancel Sign Up Request", mapValue.apiErrorToMessage)
-        ).subscribe(data => {
-          this.positionSignupChanged.emit(data);
-        });
-      }
+    /* during supervised phase, while not being signed up, users can cancel the request to be assigned */
+    if(
+      shift.lockStatus === LockStatusEnum.Supervised &&
+      slot.positionSignupState !== PositionSlotDto.PositionSignupStateEnum.SignedUp &&
+      assignment !== undefined && assignment.status === AssignmentDto.StatusEnum.RequestForAssignment
+    ) {
+      this._positionService.joinRequestWithdrawPositionSlot(slot.id).pipe(
+        this._toastService.tapSuccess("Cancelled Sign Up Request",
+          () => `You have cancelled your sign up request for the position "${slot.name}". You are not signed up.`),
+        this._toastService.tapError("Could Not Cancel Sign Up Request", mapValue.apiErrorToMessage)
+      ).subscribe(data => {
+        this.positionSignupChanged.emit(data);
+      });
+    }
 
-      throw new Error("No available options for cancel requested position sign-up.");
+    throw new Error("No available options for cancel requested position sign-up.");
   }
 
   private getHeader(position: PositionSlotDto | undefined): string | undefined {
@@ -385,12 +385,12 @@ export class PositionSignupComponent {
       case ShiftDto.LockStatusEnum.SelfSignup: {
 
         switch(position.slot.positionSignupState) {
+          case PositionSlotDto.PositionSignupStateEnum.SignupViaAuction:
+            return "You are eligible to sign up for this position.";
           case PositionSlotDto.PositionSignupStateEnum.SignupPossible:
             return "You are eligible to sign up for this position.";
           case PositionSlotDto.PositionSignupStateEnum.SignupViaTrade:
             return "You are eligible to sign up for this position.";
-          case PositionSlotDto.PositionSignupStateEnum.SignupViaAuction:
-            return "INVALID_STATE";
           case PositionSlotDto.PositionSignupStateEnum.SignupOrTrade:
             return "You are eligible to sign up for this position.";
           case PositionSlotDto.PositionSignupStateEnum.SignedUp:
@@ -399,8 +399,12 @@ export class PositionSignupComponent {
             return "The position slot is currently full.";
           case PositionSlotDto.PositionSignupStateEnum.NotEligible:
             return "You don't have the required roles to sign up for this position.";
+          case PositionSlotDto.PositionSignupStateEnum.TimeConflictAssignment:
+            return "You have signed up for another shift at the same time.";
+          case PositionSlotDto.PositionSignupStateEnum.TimeConflictTimeConstraint:
+            return "The shift is during one of your unavailable times.";
           default:
-            return "INVALID_STATE";
+            return "Position eligibility could not be determined.";
         }
       }
 
@@ -420,8 +424,12 @@ export class PositionSignupComponent {
             return `Make sure to show up at the location ${position.shift.location?.name} at the specified time.`;
           case PositionSlotDto.PositionSignupStateEnum.NotEligible:
             return "You don't have the required roles to sign up for this position.";
+          case PositionSlotDto.PositionSignupStateEnum.TimeConflictAssignment:
+            return "You have signed up for another shift at the same time.";
+          case PositionSlotDto.PositionSignupStateEnum.TimeConflictTimeConstraint:
+            return "The shift is during one of your unavailable times.";
           default:
-            return "INVALID_STATE";
+            return "Position eligibility could not be determined.";
         }
       }
 
