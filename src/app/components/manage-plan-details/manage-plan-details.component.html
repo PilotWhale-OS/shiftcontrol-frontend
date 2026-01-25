@@ -33,7 +33,7 @@
 
       <div class="flex flex-col gap-xs col-start-1 row-start-1">
         <small><fa-icon [icon]="icons.name" class="pr-sm" />Plan Name</small>
-        <label for="plan-manage-name">Expressive name for the plan</label>
+        <label for="plan-manage-name">Name describing the shift plan purpose</label>
         <xsb-input-text #name
                         [formControl]="form.controls.name"
                         [xsb-typed]="[name, form.controls.name]"
@@ -43,7 +43,7 @@
 
       <div class="flex flex-col gap-xs col-start-2 row-start-1">
         <small><fa-icon [icon]="icons.rewards" class="pr-sm" />Reward Points</small>
-        <label for="plan-manage-points">Points per minute, if no role selected</label>
+        <label for="plan-manage-points">Default Reward Points per minute</label>
         <xsb-input-number #defaultRewardPointsPerMinute
                           [formControl]="form.controls.defaultRewardPointsPerMinute"
                           [xsb-typed]="[defaultRewardPointsPerMinute, form.controls.defaultRewardPointsPerMinute]"
@@ -51,7 +51,7 @@
         />
       </div>
 
-      <div class="flex flex-col gap-xs col-start-1 row-start-2 col-span-2">
+      <!--<div class="flex flex-col gap-xs col-start-1 row-start-2 col-span-2">
         <small><fa-icon [icon]="icons.shortDescription" class="pr-sm" />Caption</small>
         <label for="plan-manage-caption">Short description, shown in the plan preview</label>
         <xsb-input-text #shortDescription
@@ -59,11 +59,11 @@
                         [xsb-typed]="[shortDescription, form.controls.shortDescription]"
                         name="plan-manage-caption" placeholder="Plan caption"
         />
-      </div>
+      </div>-->
 
-      <div class="flex flex-col gap-xs col-start-1 row-start-3 col-span-2">
+      <div class="flex flex-col gap-xs col-start-1 row-start-2 col-span-2">
         <small><fa-icon [icon]="icons.longDescription" class="pr-sm" />Description</small>
-        <label for="plan-manage-description">Detailed description, shown in the plan overview</label>
+        <label for="plan-manage-description">Description about the tasks and requirements that volunteers can expect</label>
         <xsb-input-text #longDescription
                         [formControl]="form.controls.longDescription"
                         type="area"

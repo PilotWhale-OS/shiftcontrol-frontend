@@ -65,12 +65,15 @@
           <label for="activity-manage-to">
             Location where the activity takes place
           </label>
-          <xsb-input-select #location name="activity-manage-location"
-                            [nullable]="true" nullName="No Location"
-                            [formControl]="form.controls.location"
-                            [options]="(locationOptions$ | async) ?? []"
-                            [xsb-typed]="[location, form.controls.location]"
-          />
+          @if (locationOptions$ | async; as options){
+            <xsb-input-select #location name="activity-manage-location"
+                              [nullable]="true" nullName="No Location"
+                              [formControl]="form.controls.location"
+                              [comparatorFn]="idComparatorFn"
+                              [options]="options ?? []"
+                              [xsb-typed]="[location, form.controls.location]"
+            />
+          }
         </div>
 
         <div class="col-span-2 row-start-5 flex gap-x-lg items-center justify-center pt-md">
