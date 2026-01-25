@@ -53,7 +53,7 @@
 
         <div class="flex flex-col gap-xs ">
           <small><fa-icon [icon]="icons.pretalxKey" class="pr-sm" />API Key</small>
-          <span>{{manageData.token.apiKey}}</span>
+          <span class="break-all">{{manageData.token.apiKey}}</span>
         </div>
 
         <div class="flex flex-col gap-xs ">
@@ -61,7 +61,7 @@
           <span>{{manageData.token.pretalxHost}}</span>
         </div>
 
-        <div class="flex flex-col gap-xs col-span-2">
+        <div class="flex flex-col gap-xs">
           <small class="col-span-2"><fa-icon [icon]="icons.event" class="pr-sm" />Synced Events</small>
           <span>{{manageData.token.accessibleEvents.join(", ")}}</span>
         </div>
