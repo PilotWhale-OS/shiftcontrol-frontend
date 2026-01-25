@@ -157,5 +157,11 @@
           }
       }
     </div>
+  } @else {
+    <div class="flex flex-col items-center justify-center w-full h-full">
+
+      <h1 class="flex gap-md signature-gradient-font"><fa-icon [icon]="icons.empty" />No data available.</h1>
+      <span>Create a shift plan in the <a routerLink="../manage">event settings</a> to start!</span>
+    </div>
   }
 </div>

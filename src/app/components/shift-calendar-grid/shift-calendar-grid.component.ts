@@ -23,6 +23,7 @@ import {
 import {toObservable} from "@angular/core/rxjs-interop";
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
 import {icons} from "../../util/icons";
+import {RouterLink} from "@angular/router";
 
 /**
  * Configuration for the shift calendar grid component.
@@ -76,7 +77,8 @@ export interface calendarNavigation {
     DatePipe,
     NgClass,
     AsyncPipe,
-    InputButtonComponent
+    InputButtonComponent,
+    RouterLink
   ],
   standalone: true,
   templateUrl: "./shift-calendar-grid.component.html",
