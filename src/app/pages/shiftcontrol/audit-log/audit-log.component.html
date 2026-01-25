@@ -9,12 +9,18 @@
 
   </div>
 
-  <div class="card grid card grid-cols-[10rem_1fr_1fr_1fr] gap-y-xs gap-x-md h-fit w-[min(100%,90rem)] items-center">
+  <div class="card grid card grid-cols-[10rem_auto_auto_auto] gap-y-xs gap-x-md h-fit w-[min(100%,90rem)] items-center">
     <h1 class="signature-gradient-font col-span-4">Events</h1>
 
     <small class="pb-sm">Time</small>
-    <small class="pb-sm">Type</small>
-    <small class="pb-sm">Trace</small>
+    <div class="flex flex-row gap-md items-center pb-sm">
+      <small>Type</small>
+      <xsb-input-text placeholder="Filter event type" #type [formControl]="form.controls.type" [xsb-typed]="[type, form.controls.type]" />
+    </div>
+    <div class="flex flex-row gap-md items-center pb-sm">
+      <small>Type</small>
+      <xsb-input-text placeholder="Filter event key" #key [formControl]="form.controls.key" [xsb-typed]="[key, form.controls.key]" />
+    </div>
     <small class="pb-sm"></small>
 
     <hr class="col-span-4 mb-sm" />
@@ -29,8 +35,8 @@
         @for (event of page.items; track event.id) {
 
           <span>{{event.timestamp | date:"short"}}</span>
+          <span>{{event.eventType}}</span>
           <span>{{event.routingKey}}</span>
-          <span>{{event.traceId}}</span>
 
           <div class="flex flex-row gap-md justify-end">
             @if ((event.actingUserId?.length ?? 0) > 0) {
