@@ -22,26 +22,6 @@
             {{event.eventOverview.startTime | date:"shortDate"}} - {{event.eventOverview.endTime | date:"shortDate"}}
           </div>
 
-          @if ((isPlannerInEvent$ | async) === true) {
-            <div class="badge w-fit"
-                 tooltipMaxWidth="30ex"
-                 [app-tooltip]="'Event dates of ' + event.eventOverview.name"
-            >
-              <fa-icon [icon]="icons.userType" />
-              Planner
-            </div>
-          }
-
-          @else {
-            <div class="badge w-fit"
-                 tooltipMaxWidth="30ex"
-                 [app-tooltip]="'Event dates of ' + event.eventOverview.name"
-            >
-              <fa-icon [icon]="icons.userType" />
-              Volunteer
-            </div>
-          }
-
           <div class="badge"
                tooltipMaxWidth="30ex"
                [app-tooltip]="'Volunteers participating in this event'"
@@ -60,31 +40,68 @@
         </div>
 
         <!-- properties -->
-        <p class="col-start-1 row-span-2 row-start-2 whitespace-pre-wrap">{{event.eventOverview.longDescription}}</p>
+        <p class="col-start-1 row-start-2 whitespace-pre-wrap">{{event.eventOverview.longDescription}}</p>
 
         <!-- socials -->
-        <div class="flex flex-row gap-md flex-wrap row-span-2 col-start-1 items-center">
-          @for(link of event.eventOverview.socialMediaLinks; track link.url) {
-            <a class="badge hint flex flex-row items-center gap-sm cursor-pointer no-underline" target="_blank" href="{{link.url}}">
-              <fa-icon class="text-lg leading-[.9]" [icon]="getSocialIcon(link)" />
-              <span>{{getSocialName(link)}}</span>
-            </a>
-          }
-        </div>
+        @if (event.eventOverview.socialMediaLinks.length > 0) {
 
-        <!-- own schedule stats -->
-        <!--<div class="flex flex-col items-start gap-xs">
-          <small>Your stats</small>
-
-          <div class="badge success"
-               tooltipMaxWidth="30ex"
-               [app-tooltip]="'Reward points earned during this event'"
-          >
-            <fa-icon [icon]="icons.rewards" />
-            {{event.rewardPoints}} Points Rewarded
+          <div class="flex flex-row gap-md flex-wrap col-span-2 col-start-1 items-center">
+            @for(link of event.eventOverview.socialMediaLinks; track link.url) {
+              <a class="badge hint flex flex-row items-center gap-sm cursor-pointer no-underline" target="_blank" href="{{link.url}}">
+                <fa-icon class="text-lg leading-[.9]" [icon]="getSocialIcon(link)" />
+                <span>{{getSocialName(link)}}</span>
+              </a>
+            }
           </div>
-        </div>-->
+        }
 
+        <!-- own role -->
+        <div class="col-span-2 flex flex-col gap-lg">
+          <hr>
+          <div class="flex flex-row gap-sm">
+
+            <!-- user type -->
+            @if ((userType$ | async) === "ADMIN") {
+              <div class="badge w-fit"
+                   tooltipMaxWidth="30ex"
+                   [app-tooltip]="'Event dates of ' + event.eventOverview.name"
+              >
+                <fa-icon [icon]="icons.userType" />
+                Administrator
+              </div>
+            }
+            @else if ((isPlannerInEvent$ | async) === true) {
+              <div class="badge w-fit"
+                   tooltipMaxWidth="30ex"
+                   [app-tooltip]="'Event dates of ' + event.eventOverview.name"
+              >
+                <fa-icon [icon]="icons.userType" />
+                Planner
+              </div>
+            }
+
+            @else {
+              <div class="badge w-fit"
+                   tooltipMaxWidth="30ex"
+                   [app-tooltip]="'Event dates of ' + event.eventOverview.name"
+              >
+                <fa-icon [icon]="icons.userType" />
+                Volunteer
+              </div>
+            }
+
+            <!-- roles -->
+            @for (role of event.roles; track role.id) {
+              <div class="badge w-fit"
+                   tooltipMaxWidth="30ex"
+                   [app-tooltip]="'You have the role ' + role.name"
+              >
+                <fa-icon [icon]="icons.role" />
+                {{role.name}}
+              </div>
+            }
+          </div>
+        </div>
       </div>
 
       @if ((userType$ | async) === "ADMIN") {

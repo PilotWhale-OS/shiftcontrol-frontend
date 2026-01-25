@@ -5,7 +5,7 @@
 
     <div class="flex flex-col gap-sm col-start-1 row-start-1">
       <small><fa-icon [icon]="icons.name" class="pr-sm" />Event Name</small>
-      <label for="event-manage-name">Expressive name for the event</label>
+      <label for="event-manage-name">Official name of the event</label>
       <xsb-input-text #name
                       [formControl]="form.controls.name"
                       [xsb-typed]="[name, form.controls.name]"
@@ -15,7 +15,7 @@
 
     <div class="flex flex-col gap-sm col-start-2 row-start-1">
       <small><fa-icon [icon]="icons.shortDescription" class="pr-sm" />Caption</small>
-      <label for="event-manage-caption">Short description, shown in the event preview</label>
+      <label for="event-manage-caption">Overview of what the event is about</label>
       <xsb-input-text #shortDescription
                       [formControl]="form.controls.shortDescription"
                       [xsb-typed]="[shortDescription, form.controls.shortDescription]"
@@ -51,7 +51,7 @@
 
     <div class="flex flex-col gap-sm col-start-1 row-start-4 col-span-2">
       <small><fa-icon [icon]="icons.longDescription" class="pr-sm" />Description</small>
-      <label for="event-manage-description">Detailed description, shown in the event overview</label>
+      <label for="event-manage-description">Detailed description of event highlights and what visitors of the event will expect</label>
       <xsb-input-text #longDescription
                       [formControl]="form.controls.longDescription"
                       type="area"

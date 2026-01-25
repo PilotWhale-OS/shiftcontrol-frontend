@@ -19,7 +19,7 @@
 
         <p class="max-w-[30rem]">
           <small>About the event</small><br>
-          {{invite.inviteDto.shiftPlanDto.longDescription ?? invite.inviteDto.shiftPlanDto.shortDescription}}<br>
+          {{invite.inviteDto.shiftPlanDto.longDescription ?? invite.eventDto.shortDescription ?? "No Description provided"}}<br>
         </p>
 
         @if (invite.inviteDto.autoAssignedRoles.length > 0) {

@@ -22,6 +22,8 @@ import {PositionSignupComponent, positionSignupParams} from "./position-signup/p
 import PositionSignupStateEnum = PositionSlotDto.PositionSignupStateEnum;
 import {ToastService} from "../../services/toast/toast.service";
 import UserTypeEnum = AccountInfoDto.UserTypeEnum;
+import {descriptionLengthValidator, nameLengthValidator} from "../../util/textValidators";
+import {mapValue} from "../../util/value-maps";
 
 export interface managePositionParams {
   shift: ShiftDto;
@@ -95,8 +97,8 @@ export class ManagePositionComponent implements OnDestroy {
 
   constructor() {
     this.form = this._fb.group({
-      name: this._fb.nonNullable.control<string>("", [Validators.maxLength(50), Validators.required]),
-      description: this._fb.nonNullable.control<string>("", [Validators.maxLength(1024)]),
+      name: this._fb.nonNullable.control<string>("", [nameLengthValidator, Validators.required]),
+      description: this._fb.nonNullable.control<string>("", [descriptionLengthValidator]),
       desiredVolunteerCount: this._fb.nonNullable.control<number>(5, [Validators.min(1), Validators.required]),
       skipAutoAssignment: this._fb.nonNullable.control<boolean>(false),
       role: this._fb.control<RoleDto | null>(null),
@@ -187,7 +189,7 @@ export class ManagePositionComponent implements OnDestroy {
 
       this._positionService.createPositionSlotInShift(shiftId, {
         name: this.form.controls.name.value,
-        description: this.form.controls.description.value,
+        description: mapValue.undefinedIfEmptyString(this.form.controls.description.value),
         desiredVolunteerCount: this.form.controls.desiredVolunteerCount.value,
         skipAutoAssignment: this.form.controls.skipAutoAssignment.value,
         roleId: this.form.controls.role.value?.id ?? undefined,
@@ -208,7 +210,7 @@ export class ManagePositionComponent implements OnDestroy {
     if(this.form.valid) {
       this._positionService.updatePositionSlot(position.id, {
         name: this.form.controls.name.value,
-        description: this.form.controls.description.value,
+        description: mapValue.undefinedIfEmptyString(this.form.controls.description.value),
         desiredVolunteerCount: this.form.controls.desiredVolunteerCount.value,
         skipAutoAssignment: this.form.controls.skipAutoAssignment.value,
         roleId: this.form.controls.role.value?.id ?? undefined,
@@ -258,5 +260,13 @@ export class ManagePositionComponent implements OnDestroy {
     }
 
     return position.positionSignupState === PositionSignupStateEnum.SignedUp;
+  }
+
+  protected getOrder(position?: PositionSlotDto) {
+    const order = Number(position?.id) * -1;
+    if(isNaN(order)) {
+      return Number.MIN_SAFE_INTEGER;
+    }
+    return order;
   }
 }

@@ -12,6 +12,7 @@ import {DialogComponent} from "../dialog/dialog.component";
 import {icons} from "../../util/icons";
 import {ToastService} from "../../services/toast/toast.service";
 import {BehaviorSubject, Subject} from "rxjs";
+import {nameLengthValidator} from "../../util/textValidators";
 
 @Component({
   selector: "app-manage-rewards-share-token",
@@ -47,7 +48,7 @@ export class ManageRewardsShareTokenComponent {
 
   constructor() {
     this.form = this._fb.group({
-      name: this._fb.nonNullable.control<string>("", [Validators.required])
+      name: this._fb.nonNullable.control<string>("", [Validators.required, nameLengthValidator])
     });
   }
 

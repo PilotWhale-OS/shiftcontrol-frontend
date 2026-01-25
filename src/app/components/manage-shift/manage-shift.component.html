@@ -17,7 +17,7 @@
 
         <div class="flex flex-col gap-sm col-start-1 row-start-2">
           <small><fa-icon [icon]="icons.name" class="pr-sm" />Shift Name</small>
-          <label for="shift-manage-name">Expressive name for the shift</label>
+          <label for="shift-manage-name">Brief name that describes the shift context</label>
           <xsb-input-text #name
                           [formControl]="form.controls.name"
                           [xsb-typed]="[name, form.controls.name]"
@@ -91,7 +91,7 @@
 
         <div class="flex flex-col gap-sm col-start-1 row-start-5">
           <small><fa-icon [icon]="icons.description" class="pr-sm" />Description</small>
-          <label for="shift-manage-description">Relevant infos about the shift</label>
+          <label for="shift-manage-description">Explanation what volunteers will expect at this shift</label>
           <xsb-input-text #description
                           [formControl]="form.controls.description"
                           [xsb-typed]="[description, form.controls.description]"
@@ -204,6 +204,14 @@
             [manageData]="slot"
             (positionChanged)="refreshShift(slot.shift.id)"
             />
+        }
+
+        @if (slotData.length === 0 && (mode$ | async) === "view") {
+          <div class="flex flex-col items-center justify-center h-full pl-xl">
+            <h1 class="signature-gradient-font">Nothing to do</h1>
+            <span>There are no positions to sign up for.</span>
+            <span>Check back later!</span>
+          </div>
         }
       }
     </div>

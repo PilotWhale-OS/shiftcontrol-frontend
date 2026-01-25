@@ -38,6 +38,7 @@ import {icons} from "../../util/icons";
 import {InputNumberComponent} from "../inputs/input-number/input-number.component";
 import {ToastService} from "../../services/toast/toast.service";
 import {LockStatusPipe} from "../../pipes/lock-status.pipe";
+import {descriptionLengthValidator, nameLengthValidator} from "../../util/textValidators";
 
 export interface manageShiftParams {
   eventId: string;
@@ -114,8 +115,8 @@ export class ManageShiftComponent implements OnDestroy {
 
   constructor() {
     this.form = this._fb.group({
-      name: this._fb.nonNullable.control<string>("", [Validators.maxLength(50), Validators.required]),
-      description: this._fb.nonNullable.control<string>("", [Validators.maxLength(1024)]),
+      name: this._fb.nonNullable.control<string>("", [nameLengthValidator, Validators.required]),
+      description: this._fb.nonNullable.control<string>("", [descriptionLengthValidator]),
       startDate: this._fb.nonNullable.control<Date>(new Date()),
       startTime: this._fb.nonNullable.control<time>({hour: 0, minute: 0}, [Validators.required]),
       endDate: this._fb.nonNullable.control<Date>(new Date()),
@@ -128,12 +129,16 @@ export class ManageShiftComponent implements OnDestroy {
 
     this._disableLocationSubscription = this.form.controls.activity.valueChanges.pipe(
       startWith(this.form.controls.activity.value)
-    ).subscribe(activityId => {
+    ).subscribe(activity => {
       const locationIsEnabled = this.form.controls.location.enabled;
 
-      if (activityId !== null && locationIsEnabled) {
+      if(activity !== null) {
+        this.form.controls.location.setValue(activity.location ?? null);
+      }
+
+      if (activity !== null && locationIsEnabled) {
         this.form.controls.location.disable();
-      } else if (activityId === null && !locationIsEnabled) {
+      } else if (activity === null && !locationIsEnabled) {
         this.form.controls.location.enable();
       }
     });
@@ -227,8 +232,8 @@ export class ManageShiftComponent implements OnDestroy {
         filter(params => params !== undefined),
         take(1),
         switchMap(params => params.shift === undefined ? of([]) : this._roleService.getRoles(params.shift.shiftPlan.id))
-      )),
-      map(([data, roles]) => {
+      ), this.canManage$),
+      map(([data, roles, canManage]) => {
         if(data === undefined || data.shift === undefined) {
           return [];
         }
@@ -245,7 +250,7 @@ export class ManageShiftComponent implements OnDestroy {
             availableRoles: roles.map(role => ({name: role.name, value: role}))
           })
         );
-        return [newSlotManageData, ...existingSlotManageData];
+        return [ ...(canManage? [newSlotManageData] : []), ...existingSlotManageData];
       })
     );
   }
@@ -410,7 +415,7 @@ export class ManageShiftComponent implements OnDestroy {
 
       this._shiftService.createShift(planId, {
         name: this.form.controls.name.value,
-        longDescription: this.form.controls.description.value,
+        longDescription: mapValue.undefinedIfEmptyString(this.form.controls.description.value),
         startTime: start.toISOString(),
         endTime: end.toISOString(),
         /* location only if not activity set*/
@@ -447,7 +452,7 @@ export class ManageShiftComponent implements OnDestroy {
 
       this._shiftService.updateShift(shift.id, {
         name: this.form.controls.name.value,
-        longDescription: this.form.controls.description.value,
+        longDescription: mapValue.undefinedIfEmptyString(this.form.controls.description.value),
         startTime: start.toISOString(),
         endTime: end.toISOString(),
         /* location only if no activity set*/

@@ -51,6 +51,9 @@ export class EventCalendarFilterComponent {
   @Input()
   public plansOptions: SelectOptions<string> = [];
 
+  @Input()
+  public statisticsMode: "admin" | "planner" | "volunteer" = "volunteer";
+
   public readonly availabilityOptions: SelectOptions<ShiftRelevancesEnum> = [
     {name: "Your Shifts", value: ShiftRelevancesEnum.MyShifts},
     {name: "Signup Possible", value: ShiftRelevancesEnum.SignupPossible}

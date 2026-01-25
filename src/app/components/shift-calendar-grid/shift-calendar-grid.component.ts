@@ -162,7 +162,7 @@ export class ShiftCalendarGridComponent {
 
   private readonly activityWidth = "2rem";
   private readonly dateWidth = "6rem";
-  private readonly shiftWidth = "10rem";
+  private readonly shiftWidth = "minmax(10rem, 1fr)";
   private readonly venueGapWidth = "1rem";
   private readonly minuteHeightRem = 0.05;
 
@@ -432,7 +432,7 @@ export class ShiftCalendarGridComponent {
       }).join(" ")
     } ${
       config.noLocationLayout === undefined ? "" : createLocationColumns("none", config.noLocationLayout.requiredShiftColumns)
-    } blank-start] 1fr [blank-end filter-start]  ${this.dateWidth} [filter-end]`;
+    } blank-start] auto [blank-end filter-start]  ${this.dateWidth} [filter-end]`;
   }
 
   /**

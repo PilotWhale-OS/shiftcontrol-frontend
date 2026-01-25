@@ -175,7 +175,8 @@ export class EventCalendarComponent implements OnDestroy {
             scheduleStatistics: {
               totalShifts: 0,
               totalHours: 0,
-              unassignedCount: 0
+              unassignedCount: 0,
+              shiftCountForSignup: 0
             },
             scheduleLayoutNoLocationDto: {
               requiredShiftColumns: 0
@@ -282,14 +283,16 @@ export class EventCalendarComponent implements OnDestroy {
       const config: calendarConfig = {
         startDate,
         endDate,
-        activityWidth: calendarMode === "activity" ? "5rem" : undefined,
+        activityWidth: calendarMode === "activity" ? "minmax(5rem, 1fr)" : undefined,
         locationLayouts: layout.scheduleLayoutDtos,
         noLocationLayout: layout.scheduleLayoutNoLocationDto,
         shiftPaddingColumn: calendarMode === "shift",
-        shiftClickCallback: calendarMode === "activity" ? undefined : shift => this.selectedShift$.next({
-          shift,
-          eventId: plan.eventOverview.id
-        }),
+        shiftClickCallback: calendarMode === "activity" ? undefined : shift => {
+          this.selectedShift$.next({
+            shift,
+            eventId: plan.eventOverview.id
+          });
+        },
         activityClickCallback: calendarMode === "shift" ? undefined : activity => {
           this.selectedActivity$.next({
             eventId: plan.eventOverview.id,
@@ -302,6 +305,7 @@ export class EventCalendarComponent implements OnDestroy {
           (!isPlanner ? undefined : (date, location) => this.selectedShift$.next({
           eventId: plan.eventOverview.id,
           suggestedLocation: location,
+          shift: undefined,
           suggestedDate: date
         })) :
 
@@ -319,6 +323,7 @@ export class EventCalendarComponent implements OnDestroy {
       calendar.setConfig(config);
 
       filterComponent.statistics = layout.scheduleStatistics;
+      filterComponent.statisticsMode = isAdmin ? "admin" : isPlanner ? "planner" : "volunteer";
 
       if(!calendarViewInited) {
         calendar.jumpToDate(new Date(Math.min(Math.max(startDate.getTime(), new Date().getTime()), endDate.getTime())));
