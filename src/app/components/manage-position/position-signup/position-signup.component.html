@@ -122,12 +122,6 @@
           (submitted)="$event !== undefined ? submitTradeRequest(position.slot, $event.partner, $event.slot) : 0; tradeRequestOptions$.next(undefined)"
         />
 
-        <app-dialog-manage-assignments
-          [params]="(dialogAssignmentsParams$ | async) ?? undefined"
-          (assignmentChanged)="dialogAssignmentsParams$.next(undefined); $event ? positionSignupChanged.emit(undefined) : 0"
-          class="contents"
-        />
-
         <app-dialog-trade-details
           class="contents"
           [tradeInfo]="(dialogTradeInfo$ | async) ?? undefined"
@@ -139,5 +133,13 @@
 
   </div>
 } @else {
-  <span>Administrators cannot sign up.</span>
+  @if (position$ | async; as position){
+    <xsb-input-button content="Manage Assignments" action="normal" (click)="manageAssignments(position.slot)" />
+  }
 }
+
+<app-dialog-manage-assignments
+  [params]="(dialogAssignmentsParams$ | async) ?? undefined"
+  (assignmentChanged)="dialogAssignmentsParams$.next(undefined); $event ? positionSignupChanged.emit(undefined) : 0"
+  class="contents"
+/>
