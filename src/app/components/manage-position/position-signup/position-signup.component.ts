@@ -467,9 +467,10 @@ export class PositionSignupComponent {
 
         switch(position.slot.positionSignupState) {
           case PositionSlotDto.PositionSignupStateEnum.SignupPossible:
-          case PositionSlotDto.PositionSignupStateEnum.SignupViaTrade:
           case PositionSlotDto.PositionSignupStateEnum.SignupViaAuction:
+            return ["SIGN_UP"];
           case PositionSlotDto.PositionSignupStateEnum.SignupOrTrade:
+          case PositionSlotDto.PositionSignupStateEnum.SignupViaTrade:
             return ["SIGN_UP", ...REQUEST_TRADE];
           case PositionSlotDto.PositionSignupStateEnum.SignedUp:
             return ["SIGN_OUT"];
