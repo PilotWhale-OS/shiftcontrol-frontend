@@ -175,7 +175,8 @@ export class EventCalendarComponent implements OnDestroy {
             scheduleStatistics: {
               totalShifts: 0,
               totalHours: 0,
-              unassignedCount: 0
+              unassignedCount: 0,
+              shiftCountForSignup: 0
             },
             scheduleLayoutNoLocationDto: {
               requiredShiftColumns: 0
@@ -322,6 +323,7 @@ export class EventCalendarComponent implements OnDestroy {
       calendar.setConfig(config);
 
       filterComponent.statistics = layout.scheduleStatistics;
+      filterComponent.statisticsMode = isAdmin ? "admin" : isPlanner ? "planner" : "volunteer";
 
       if(!calendarViewInited) {
         calendar.jumpToDate(new Date(Math.min(Math.max(startDate.getTime(), new Date().getTime()), endDate.getTime())));

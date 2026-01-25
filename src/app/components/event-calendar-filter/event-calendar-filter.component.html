@@ -51,10 +51,15 @@
     <!-- summary -->
     <div class="col-start-6 row-span-2 flex flex-col justify-center justify-self-end px-lg">
       @if(statistics !== undefined) {
-        <small>Results:</small>
-        <span>{{statistics.totalShifts}} shifts</span>
-        <span>{{statistics.totalHours | number:'1.0-0'}} hours</span>
-        <span>{{statistics.unassignedCount}} unassigned</span>
+        <small>{{statistics.totalShifts}} shifts</small>
+        <small>{{statistics.totalHours | number:'1.0-0'}} hours</small>
+
+        @if (statisticsMode === "admin" || statisticsMode === "planner"){
+          <small>{{statistics.unassignedCount}} required signups</small>
+        }
+        @if (statisticsMode === "volunteer" || statisticsMode === "planner"){
+          <small>{{statistics.shiftCountForSignup}} eligible shifts</small>
+        }
       }
     </div>
   }
