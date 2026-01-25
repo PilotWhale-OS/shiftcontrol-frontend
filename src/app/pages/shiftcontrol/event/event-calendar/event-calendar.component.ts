@@ -19,7 +19,7 @@ import {
   EMPTY,
   filter,
   forkJoin,
-  map, merge, mergeWith, Observable,
+  map, merge, Observable,
   of,
   shareReplay,
   startWith, Subject,
