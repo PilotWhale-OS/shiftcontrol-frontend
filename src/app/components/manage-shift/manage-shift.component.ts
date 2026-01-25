@@ -336,7 +336,7 @@ export class ManageShiftComponent implements OnDestroy {
         description: "",
         startDate: value.suggestedDate ?? new Date(),
         startTime: value.suggestedDate ? mapValue.datetimeStringAsLocalTime(value.suggestedDate.toISOString()) : {hour: 10, minute: 0},
-        endDate: value.suggestedDate ?? new Date(),
+        endDate: value.suggestedDate ? new Date(value.suggestedDate.getTime() + 1000 * 60 * 60 * 2) : new Date(),
         endTime: value.suggestedDate ?
           mapValue.datetimeStringAsLocalTime(new Date(value.suggestedDate.getTime() + 1000 * 60 * 60 * 2).toISOString()) :
           {hour: 12, minute: 0},
