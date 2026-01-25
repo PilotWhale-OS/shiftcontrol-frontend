@@ -19,7 +19,7 @@ import {
   EMPTY,
   filter,
   forkJoin,
-  map, mergeWith, Observable,
+  map, merge, mergeWith, Observable,
   of,
   shareReplay,
   startWith, Subject,
@@ -127,6 +127,7 @@ export class EventCalendarComponent implements OnDestroy {
         event.shiftPlans.map(plan => this._userService.canManagePlan$(plan.id).pipe(take(1)))
       )),
       map(canManageList => canManageList.some(canManage => canManage)),
+      startWith(false),
       shareReplay()
     );
 
@@ -165,7 +166,10 @@ export class EventCalendarComponent implements OnDestroy {
 
     /* observable containing the current calendar layout config */
     const layout$: Observable<EventScheduleLayoutDto> = calendarMode$.pipe(
-      switchMap(mode => mode === "activity" ?
+      combineLatestWith(merge(this.activityChanged$, this.shiftChanged$).pipe(
+        startWith(undefined)
+      )),
+      switchMap(([mode]) => mode === "activity" ?
 
         /* schedule mode */
         locations$.pipe(
@@ -242,14 +246,6 @@ export class EventCalendarComponent implements OnDestroy {
         );
     }));
 
-    /* clear cache when shift or activity changed */
-    subs.push(this.shiftChanged$.pipe(
-      mergeWith(this.activityChanged$),
-      withLatestFrom(calendarComponent$)
-    ).subscribe(([,calendar]) => {
-      calendar.clearLoadedDays();
-    }));
-
     /* set filter values with api data */
     subs.push(filterComponent$.pipe(
       combineLatestWith(filterData$, event$)
@@ -273,7 +269,7 @@ export class EventCalendarComponent implements OnDestroy {
       ), event$, isAdmin$, isPlanner$)
     ).subscribe((
       [[filterData, calendar, layout, filterComponent, calendarMode],
-        navigation, plan, isAdmin, isPlanner
+        navigation, event, isAdmin, isPlanner
       ]) => {
 
       /*
@@ -289,6 +285,7 @@ export class EventCalendarComponent implements OnDestroy {
       const config: calendarConfig = {
         startDate,
         endDate,
+        showNoContentHint: event.shiftPlans.length === 0,
         activityWidth: calendarMode === "activity" ? "minmax(5rem, 1fr)" : undefined,
         locationLayouts: layout.scheduleLayoutDtos,
         noLocationLayout: layout.scheduleLayoutNoLocationDto,
@@ -296,12 +293,12 @@ export class EventCalendarComponent implements OnDestroy {
         shiftClickCallback: calendarMode === "activity" ? undefined : shift => {
           this.selectedShift$.next({
             shift,
-            eventId: plan.eventOverview.id
+            eventId: event.eventOverview.id
           });
         },
         activityClickCallback: calendarMode === "shift" ? undefined : activity => {
           this.selectedActivity$.next({
-            eventId: plan.eventOverview.id,
+            eventId: event.eventOverview.id,
             activity
           });
         },
@@ -309,7 +306,7 @@ export class EventCalendarComponent implements OnDestroy {
 
           /* shift mode*/
           (!isPlanner ? undefined : (date, location) => this.selectedShift$.next({
-            eventId: plan.eventOverview.id,
+            eventId: event.eventOverview.id,
             suggestedLocation: location,
             shift: undefined,
             suggestedDate: date
@@ -320,7 +317,7 @@ export class EventCalendarComponent implements OnDestroy {
               this.selectedActivity$.next({
                 suggestedDate: date,
                 suggestedLocation: location,
-                eventId: plan.eventOverview.id
+                eventId: event.eventOverview.id
               });
             }
           )

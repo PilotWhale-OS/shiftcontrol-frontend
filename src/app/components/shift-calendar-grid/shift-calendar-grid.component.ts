@@ -41,6 +41,7 @@ export interface calendarConfig {
   activityClickCallback?: (activity: ActivityDto) => void;
   shiftClickCallback?: (shift: ShiftDto) => void;
   shiftPaddingColumn?: boolean;
+  showNoContentHint?: boolean;
 }
 
 /**
