@@ -19,3 +19,7 @@ Then("I should see the admin event cards", () => {
   cy.contains(".card", SELECTORS_ADMIN_EVENT.CARDS.EVENT_CALENDAR).should("be.visible");
   cy.contains(".card", "Volunteer Dashboard").should("not.exist");
 });
+
+Then("I should not see the volunteer dashboard card", () => {
+  cy.contains(".card", "Volunteer Dashboard").should("not.exist");
+});
