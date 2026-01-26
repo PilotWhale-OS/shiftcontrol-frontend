@@ -18,4 +18,9 @@ export class UserProfileWorkflow extends BaseWorkflow {
   verifyAllTilesAreShown() {
     userProfilePo.verifyAllCardsAreShown()
   }
+
+  navigateFromHeader() {
+    cy.get(".header .profile").should("be.visible").click();
+    userProfilePo.verifyPageUrl();
+  }
 }

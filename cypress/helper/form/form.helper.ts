@@ -10,7 +10,7 @@ import {
   setTextInputValue,
   setWysiwygValue,
 } from './form-input.helper';
-import {getMaterialToggleState, getMatSelectValue, getReadonlyValue, getSelectValue, getWysiwygValue, getXsbTextValue, getXsbToggleState} from './form-read.helper';
+import {getMaterialToggleState, getMatSelectValue, getReadonlyValue, getSelectValue, getWysiwygValue, getXsbMultiToggleValue, getXsbTextValue, getXsbToggleState} from './form-read.helper';
 import {APP_CONFIG} from '../../config';
 
 type InputHandler = (selector: string, value: string | boolean) => void;
@@ -32,6 +32,10 @@ const inputHandlers: Record<string, InputHandler> = {
     cy.get(selector).click();
   },
   datepicker: (selector, value) => setDatepickerValue(selector, String(value)),
+  'xsb-multi-toggle': (selector, value) => {
+    const expected = String(value);
+    cy.get(selector).find('button').contains(expected).click();
+  },
 };
 
 const verifyHandlers: Record<string, VerifyHandler> = {
@@ -44,6 +48,7 @@ const verifyHandlers: Record<string, VerifyHandler> = {
   span: (selector, expected) => getReadonlyValue(selector).should('eq', String(expected)),
   'xsb-text':    (selector, expected) => getXsbTextValue(selector).should('eq', String(expected)),
   'xsb-toggle': (selector, expected) => getXsbToggleState(selector).then(actual => String(actual)).should('eq', String(expected)),
+  'xsb-multi-toggle': (selector, expected) => getXsbMultiToggleValue(selector).should('eq', String(expected)),
 };
 
 /**
