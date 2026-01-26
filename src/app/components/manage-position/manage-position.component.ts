@@ -1,6 +1,6 @@
 import {Component, EventEmitter, inject, Input, OnDestroy, Output} from "@angular/core";
 import {InputSelectComponent, SelectOptions} from "../inputs/input-select/input-select.component";
-import {BehaviorSubject, catchError, combineLatestWith, filter, map, Observable, of, startWith, Subscription, switchMap} from "rxjs";
+import {BehaviorSubject, catchError, combineLatestWith, map, Observable, of, startWith, Subscription, switchMap} from "rxjs";
 import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {UserService} from "../../services/user/user.service";
 import {AsyncPipe, DatePipe, NgClass} from "@angular/common";

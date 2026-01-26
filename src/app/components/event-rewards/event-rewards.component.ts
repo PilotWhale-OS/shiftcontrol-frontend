@@ -4,15 +4,13 @@ import {BehaviorSubject} from "rxjs";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {icons} from "../../util/icons";
 import {AsyncPipe} from "@angular/common";
-import {InputButtonComponent} from "../inputs/input-button/input-button.component";
 import {ToastService} from "../../services/toast/toast.service";
 
 @Component({
   selector: "app-event-rewards",
   imports: [
     FaIconComponent,
-    AsyncPipe,
-    InputButtonComponent
+    AsyncPipe
   ],
   standalone: true,
   templateUrl: "./event-rewards.component.html",
