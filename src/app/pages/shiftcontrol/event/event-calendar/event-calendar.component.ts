@@ -276,15 +276,17 @@ export class EventCalendarComponent implements OnDestroy {
       start date parsed from utc date, begin of day
       */
       const startDate = filterData.firstDate ?
-        mapValue.dateStringAsStartOfDayDatetime(filterData.firstDate) : new Date();
+        mapValue.localDayBeginFromDatetimeString(filterData.firstDate) : new Date();
 
       /* end date parsed from utc date, end of day */
       const endDate = filterData.lastDate ?
-        mapValue.dateStringAsEndOfDayDatetime(filterData.lastDate) : new Date();
+        mapValue.localDayEndFromDatetimeString(filterData.lastDate) : new Date();
 
       const config: calendarConfig = {
         startDate,
         endDate,
+        eventStartTime: new Date(event.eventOverview.startTime),
+        eventEndTime: new Date(event.eventOverview.endTime),
         showNoContentHint: event.shiftPlans.length === 0,
         activityWidth: calendarMode === "activity" ? "minmax(5rem, 1fr)" : undefined,
         locationLayouts: layout.scheduleLayoutDtos,

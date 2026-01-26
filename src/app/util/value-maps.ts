@@ -24,6 +24,16 @@ export const mapValue = {
       + "T00:00:00.000Z"
     );
   },
+  localDayBeginFromDatetimeString(value: string): Date {
+    const date = new Date(value);
+    date.setHours(0,0,0,0);
+    return date;
+  },
+  localDayEndFromDatetimeString(value: string): Date{
+    const date = new Date(value);
+    date.setHours(23,59,59,999);
+    return date;
+  },
   datetimeStringAsLocalTime(value: string): time{
     const date = new Date(value);
     return {

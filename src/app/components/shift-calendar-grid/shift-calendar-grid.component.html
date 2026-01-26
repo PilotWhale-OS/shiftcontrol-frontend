@@ -69,6 +69,30 @@
           ></div>
         }
 
+        <!-- marker for event start -->
+        @if (getDateMinutesFromStart(config.eventStartTime, config) >= 60) {
+          <div
+            class="start-marker"
+            style="grid-column: 1 / -1; grid-row: 2 / 2"
+            [style.top]="getMinuteHeight(getDateMinutesFromStart(config.eventStartTime, config))"
+            [style.height]="getMinuteHeight(60)"
+          >
+            <small>Event Start</small>
+          </div>
+        }
+
+        <!-- marker for event end -->
+        @if (getDateMinutesFromStart(config.adjustedEndDate, config) - getDateMinutesFromStart(config.eventEndTime, config) >= 60) {
+          <div
+            class="end-marker"
+            style="grid-column: 1 / -1; grid-row: 2 / 2"
+            [style.top]="getMinuteHeight(getDateMinutesFromStart(config.eventEndTime, config))"
+            [style.height]="getMinuteHeight(60)"
+          >
+            <small>Event End</small>
+          </div>
+        }
+
         @for (venue of config.locationLayouts; track venue.location.id) {
 
           <!-- venue header -->

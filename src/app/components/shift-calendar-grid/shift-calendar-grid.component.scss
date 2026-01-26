@@ -11,10 +11,10 @@
   @apply sticky left-0 h-full border-r-2 border-framing-card bg-background-card z-40;
 
   > .hour {
-    @apply absolute w-full grid place-content-center align-top text-sm opacity-50;
+    @apply absolute w-full grid items-start justify-center align-top text-sm opacity-50;
 
     &.new-day {
-      @apply opacity-100;
+      @apply opacity-100 items-center;
     }
   }
 }
@@ -24,6 +24,18 @@
 
   &.new-day {
     @apply border-b-framing-card border-opacity-100 border-b-2;
+  }
+}
+
+.start-marker, .end-marker {
+  @apply border-framing-default_success from-transparent to-background-card_success  absolute w-full z-0 grid place-content-center;
+
+  &.start-marker {
+    @apply border-b-ctr bg-gradient-to-b;
+  }
+
+  &.end-marker {
+    @apply border-t-ctr bg-gradient-to-t;
   }
 }
 

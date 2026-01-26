@@ -33,6 +33,8 @@ import {RouterLink} from "@angular/router";
 export interface calendarConfig {
   startDate: Date;
   endDate: Date;
+  eventStartTime: Date;
+  eventEndTime: Date;
   locationLayouts: ScheduleLayoutDto[];
   noLocationLayout?: Omit<ScheduleLayoutDto, "location">;
   activityWidth?: string;
@@ -304,7 +306,7 @@ export class ShiftCalendarGridComponent {
       adjustedEndDate: new Date(config.endDate.getTime())
     };
 
-    adjustedConfig.adjustedStartDate.setHours(
+    /* adjustedConfig.adjustedStartDate.setHours(
       config.startDate.getUTCHours(),
       config.startDate.getUTCMinutes(),
       config.startDate.getUTCSeconds(),
@@ -316,7 +318,7 @@ export class ShiftCalendarGridComponent {
       config.endDate.getUTCMinutes(),
       config.endDate.getUTCSeconds(),
       config.endDate.getUTCMilliseconds()
-    );
+    );*/
 
     this.config$.next(adjustedConfig);
     this.loadedDays$.next(new Map());
@@ -458,7 +460,17 @@ export class ShiftCalendarGridComponent {
    */
   protected getItemMinutesFromStart(shift: ShiftDto | ActivityDto, config: calendarAdjustedConfig) {
     const shiftStart = new Date(shift.startTime);
-    const durationMs = shiftStart.getTime() - config.adjustedStartDate.getTime();
+    return this.getDateMinutesFromStart(shiftStart, config);
+  }
+
+  /**
+   * Get the minutes from the start of the calendar day to a given date
+   * @param date
+   * @param config
+   * @protected
+   */
+  protected getDateMinutesFromStart(date: Date, config: calendarAdjustedConfig) {
+    const durationMs = date.getTime() - config.adjustedStartDate.getTime();
     return Math.floor(durationMs / 60000); // convert ms to minutes
   }
 
