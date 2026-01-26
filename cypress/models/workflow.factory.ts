@@ -11,6 +11,8 @@ import {EventCalendarWorkflow} from "../e2e/volunteer/event-calendar/event-calen
 import {VolunteerDashboardWorkflow} from "../e2e/volunteer/volunteer-dashboard/volunteer-dashboard.workflow";
 import {NotificationsWorkflow} from "../e2e/volunteer/notifications/notifications.workflow";
 import {EventHelpWorkflow} from "../e2e/volunteer/event-help/event-help.workflow";
+import {PlannerEventWorkflow} from "../e2e/planner/event/event.workflow";
+import {PlannerShiftPlansWorkflow} from "../e2e/planner/shift-plans/shift-plans.workflow";
 
 const registry: Record<string, () => BaseWorkflow> = {};
 
@@ -38,3 +40,5 @@ WorkflowFactory.register('eventCalendar', () => new EventCalendarWorkflow());
 WorkflowFactory.register('volunteerDashboard', () => new VolunteerDashboardWorkflow());
 WorkflowFactory.register('notifications', () => new NotificationsWorkflow());
 WorkflowFactory.register('eventHelp', () => new EventHelpWorkflow());
+WorkflowFactory.register('plannerEvent', () => new PlannerEventWorkflow());
+WorkflowFactory.register('plannerShiftPlans', () => new PlannerShiftPlansWorkflow());
