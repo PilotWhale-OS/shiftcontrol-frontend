@@ -5,6 +5,12 @@ import {ShiftDashBoardWorkflow} from "../e2e/volunteer/shift-dashboard/shift-das
 import {EventWorkflow} from "../e2e/volunteer/event/event.workflow";
 import {ShiftDetailWorkflow} from "../e2e/volunteer/shift-detail/shift-detail.workflow";
 import {ShiftPlanWorkflow} from "../e2e/volunteer/shift-plan/shift-plan.workflow";
+import {HomeWorkflow} from "../e2e/volunteer/home/home.workflow";
+import {EventsWorkflow} from "../e2e/volunteer/events/events.workflow";
+import {EventCalendarWorkflow} from "../e2e/volunteer/event-calendar/event-calendar.workflow";
+import {VolunteerDashboardWorkflow} from "../e2e/volunteer/volunteer-dashboard/volunteer-dashboard.workflow";
+import {NotificationsWorkflow} from "../e2e/volunteer/notifications/notifications.workflow";
+import {EventHelpWorkflow} from "../e2e/volunteer/event-help/event-help.workflow";
 
 const registry: Record<string, () => BaseWorkflow> = {};
 
@@ -26,3 +32,9 @@ WorkflowFactory.register('shiftDashboard', () => new ShiftDashBoardWorkflow());
 WorkflowFactory.register('shiftPlans', () => new ShiftPlanWorkflow());
 WorkflowFactory.register('shiftDetail', () => new ShiftDetailWorkflow());
 WorkflowFactory.register('events', () => new EventWorkflow());
+WorkflowFactory.register('home', () => new HomeWorkflow());
+WorkflowFactory.register('eventsList', () => new EventsWorkflow());
+WorkflowFactory.register('eventCalendar', () => new EventCalendarWorkflow());
+WorkflowFactory.register('volunteerDashboard', () => new VolunteerDashboardWorkflow());
+WorkflowFactory.register('notifications', () => new NotificationsWorkflow());
+WorkflowFactory.register('eventHelp', () => new EventHelpWorkflow());
