@@ -1,6 +1,6 @@
 import {Component, EventEmitter, inject, Input, OnDestroy, Output} from "@angular/core";
 import {InputSelectComponent, SelectOptions} from "../inputs/input-select/input-select.component";
-import {BehaviorSubject, combineLatestWith, filter, map, Observable, of, startWith, Subscription, switchMap} from "rxjs";
+import {BehaviorSubject, catchError, combineLatestWith, filter, map, Observable, of, startWith, Subscription, switchMap} from "rxjs";
 import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {UserService} from "../../services/user/user.service";
 import {AsyncPipe, DatePipe, NgClass} from "@angular/common";
@@ -98,23 +98,21 @@ export class ManagePositionComponent implements OnDestroy {
     });
 
     this.positionSignupData$ = this.manageData$.pipe(
-      combineLatestWith(this._userService.kcProfile$.pipe(
-        filter(profile => profile !== null)
-      )),
-      map(([data, user]) => {
+      switchMap((data) => {
         if(data === undefined || data.position === undefined) {
-          return undefined;
+          return of(undefined);
         }
+        const position = data.position;
 
-        const currentUserAssignment = data.position.assignments.find(
-          ass => ass.assignedVolunteer.id === user.id
+        /* necessary because signup requests are not shown in public position data */
+        return this._positionService.getPositionSlotUserAssignment(data.position.id).pipe(
+          catchError(() => of(undefined)),
+          map(currentUserAssignment => ({
+            slot: position,
+            shift: data.shift,
+            currentUserAssignment
+          })),
         );
-
-        return {
-          slot: data.position,
-          shift: data.shift,
-          currentUserAssignment
-        };
       })
     );
   }

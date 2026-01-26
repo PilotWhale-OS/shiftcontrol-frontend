@@ -8,7 +8,7 @@ import {
   faClock, faCrown, faEarthAmericas, faFilter, faForward,
   faGift, faHandHoldingHeart, faHandSparkles, faHashtag,
   faHourglass, faKey, faLink, faLocationPin, faLock, faMagnifyingGlass, faMedal, faMessage, faMoon, faPause,
-  faPeopleGroup, faPlusCircle, faServer, faShareNodes,
+  faPeopleGroup, faPlusCircle, faRightFromBracket, faRightToBracket, faServer, faShareNodes,
   faShuffle, faSignsPost, faStar, faTableColumns, faTag, faTrophy, faUser,
   faWrench, faXmark
 } from "@fortawesome/free-solid-svg-icons";
@@ -41,9 +41,10 @@ export const icons = {
   role: faHashtag,
   signUp: faKey,
   signedUp: faCertificate,
-  signupRequested: faLock,
+  signupRequested: faRightToBracket,
   assigned: faCheckCircle,
   unassigned: faBan,
+  requestedUnassign: faRightFromBracket,
   eligible: faCertificate,
   ineligible: faBan,
   plan: faTableColumns,
