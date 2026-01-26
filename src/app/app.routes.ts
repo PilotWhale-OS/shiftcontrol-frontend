@@ -24,7 +24,7 @@ import {
   BC_VOLUNTEERS
 } from "./breadcrumbs";
 import { breadcrumbsGuard } from "./guards/breadcrumbs/breadcrumbs.guard";
-import {accessAllowedGuard, notLoggedInGuard} from "./guards/keycloak/keycloak.guard";
+import {authenticatedGuard, notLoggedInGuard} from "./guards/keycloak/keycloak.guard";
 import {AccountComponent} from "./pages/shiftcontrol/account/account.component";
 import {HomeComponent} from "./pages/shiftcontrol/home/home.component";
 import {EventCalendarComponent} from "./pages/shiftcontrol/event/event-calendar/event-calendar.component";
@@ -42,14 +42,17 @@ import {AuditLogComponent} from "./pages/shiftcontrol/audit-log/audit-log.compon
 import {TrustAlertsComponent} from "./pages/shiftcontrol/trust-alerts/trust-alerts.component";
 import {VolunteerComponent} from "./pages/shiftcontrol/volunteer/volunteer.component";
 import {ApplicationUsersComponent} from "./pages/shiftcontrol/application-users/application-users.component";
+import {isAdminGuard} from "./guards/access/admin.guard";
+import {isVolunteerInEventGuard} from "./guards/access/volunteer.guard";
+import {isPlannerInEventGuard} from "./guards/access/planner.guard";
 
 export const routes: Routes = ([
-  { path: "", component: HomeComponent, pathMatch: "full", data: {breadcrumbs: BC_HOME}, canActivate: [accessAllowedGuard] },
+  { path: "", component: HomeComponent, pathMatch: "full", data: {breadcrumbs: BC_HOME}, canActivate: [authenticatedGuard] },
   { path: "login", component: LoginComponent, canActivate: [notLoggedInGuard] },
   { path: "me", component: AccountComponent,
-    data: {breadcrumbs: BC_ACCOUNT}, canActivate: [accessAllowedGuard]},
+    data: {breadcrumbs: BC_ACCOUNT}, canActivate: [authenticatedGuard]},
   { path: "notifications", component: NotificationsComponent,
-    data: {breadcrumbs: BC_NOTIFICATIONS}, canActivate: [accessAllowedGuard]},
+    data: {breadcrumbs: BC_NOTIFICATIONS}, canActivate: [authenticatedGuard]},
 
   /* onboarding */
   { path: "join/:shiftPlanInvite", redirectTo: "onboarding/:shiftPlanInvite", pathMatch: "full" },
@@ -58,39 +61,39 @@ export const routes: Routes = ([
 
   /* events */
   { path: "events", component: EventsComponent,
-    data: {breadcrumbs: BC_EVENTS}, canActivate: [accessAllowedGuard]},
+    data: {breadcrumbs: BC_EVENTS}, canActivate: [authenticatedGuard]},
   { path: "events/create", component: CreateEventComponent,
-    data: {breadcrumbs: BC_EVENT_CREATE}, canActivate: [accessAllowedGuard]},
+    data: {breadcrumbs: BC_EVENT_CREATE}, canActivate: [authenticatedGuard, isAdminGuard]},
   { path: "events/:eventId", component: EventComponent,
-    data: {breadcrumbs: BC_EVENT}, canActivate: [accessAllowedGuard]},
+    data: {breadcrumbs: BC_EVENT}, canActivate: [authenticatedGuard, isVolunteerInEventGuard("eventId")]},
   { path: "events/:eventId/plans", component: ManageShiftPlansComponent,
-    data: {breadcrumbs: BC_EVENT_PLANS}, canActivate: [accessAllowedGuard]},
+    data: {breadcrumbs: BC_EVENT_PLANS}, canActivate: [authenticatedGuard, isPlannerInEventGuard("eventId")]},
   { path: "events/:eventId/manage", component: ManageEventComponent,
-    data: {breadcrumbs: BC_EVENT_EDIT}, canActivate: [accessAllowedGuard]},
+    data: {breadcrumbs: BC_EVENT_EDIT}, canActivate: [authenticatedGuard, isAdminGuard]},
   { path: "events/:eventId/calendar", component: EventCalendarComponent,
-    data: { breadcrumbs: BC_SHIFT_CALENDAR }, canActivate: [accessAllowedGuard]},
+    data: { breadcrumbs: BC_SHIFT_CALENDAR }, canActivate: [authenticatedGuard, isVolunteerInEventGuard("eventId")]},
   { path: "events/:eventId/help", component: EventHelpComponent,
-    data: { breadcrumbs: BC_EVENT_HELP }, canActivate: [accessAllowedGuard]},
+    data: { breadcrumbs: BC_EVENT_HELP }, canActivate: [authenticatedGuard, isVolunteerInEventGuard("eventId")]},
   { path: "events/:eventId/volunteer", component: VolunteerDashboardComponent,
-    data: { breadcrumbs: BC_EVENT_VOLUNTEER_DASHBOARD }, canActivate: [accessAllowedGuard]},
+    data: { breadcrumbs: BC_EVENT_VOLUNTEER_DASHBOARD }, canActivate: [authenticatedGuard, isVolunteerInEventGuard("eventId")]},
 
   /* shifts */
   { path: "shifts/:shiftId", component: ShiftDetailsComponent,
-    data: { breadcrumbs: BC_SHIFT_DETAILS }, canActivate: [accessAllowedGuard]},
+    data: { breadcrumbs: BC_SHIFT_DETAILS }, canActivate: [authenticatedGuard]},
 
   /* admin */
   { path: "rewards-sync", component: RewardsSyncComponent,
-    data: {breadcrumbs: BC_REWARDS_SYNC}, canActivate: [accessAllowedGuard]},
+    data: {breadcrumbs: BC_REWARDS_SYNC}, canActivate: [authenticatedGuard, isAdminGuard]},
   { path: "pretalx-sync", component: PretalxSyncComponent,
-    data: {breadcrumbs: BC_PRETALX_SYNC}, canActivate: [accessAllowedGuard]},
+    data: {breadcrumbs: BC_PRETALX_SYNC}, canActivate: [authenticatedGuard, isAdminGuard]},
   { path: "audit", component: AuditLogComponent,
-    data: {breadcrumbs: BC_AUDIT_LOG}, canActivate: [accessAllowedGuard]},
+    data: {breadcrumbs: BC_AUDIT_LOG}, canActivate: [authenticatedGuard, isAdminGuard]},
   { path: "trust", component: TrustAlertsComponent,
-    data: {breadcrumbs: BC_TRUST_ALERTS}, canActivate: [accessAllowedGuard]},
+    data: {breadcrumbs: BC_TRUST_ALERTS}, canActivate: [authenticatedGuard, isAdminGuard]},
   { path: "volunteers", component: ApplicationUsersComponent,
-    data: {breadcrumbs: BC_VOLUNTEERS}, canActivate: [accessAllowedGuard]},
+    data: {breadcrumbs: BC_VOLUNTEERS}, canActivate: [authenticatedGuard, isAdminGuard]},
   { path: "volunteers/:volunteerId", component: VolunteerComponent,
-    data: {breadcrumbs: BC_VOLUNTEER}, canActivate: [accessAllowedGuard]}
+    data: {breadcrumbs: BC_VOLUNTEER}, canActivate: [authenticatedGuard, isAdminGuard]}
 
   /* add breadcrumbs guard to each route definition*/
 ] as Routes).map(
