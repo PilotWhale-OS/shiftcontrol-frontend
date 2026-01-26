@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100.48 103.78">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+      }
+
+      .cls-2 {
+        mask: url(#mask);
+      }
+
+      .cls-3 {
+        fill: url(#linear-gradient);
+      }
+    </style>
+    <mask id="mask" x="-14.07" y="-10.76" width="128.61" height="128.61" maskUnits="userSpaceOnUse">
+      <g>
+        <rect class="cls-1" x="-14.07" y="-10.76" width="128.61" height="128.61"/>
+        <g id="shift">
+          <rect x="37.16" y="88.5" width="26.15" height="15.38"/>
+          <path d="M45.85,48.84l-26.74,31.55c-3.17,3.74-.51,9.48,4.39,9.48h53.48c4.9,0,7.56-5.74,4.39-9.48l-26.74-31.55c-2.3-2.71-6.49-2.71-8.79,0Z"/>
+        </g>
+      </g>
+    </mask>
+    <linearGradient id="linear-gradient" x1="5.76" y1="100.75" x2="94.72" y2="11.78" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#c7cbfd"/>
+      <stop offset=".25" stop-color="#c0c1fa"/>
+      <stop offset=".67" stop-color="#afa8f3"/>
+      <stop offset=".71" stop-color="#aea6f3"/>
+      <stop offset=".99" stop-color="#c7cbfd"/>
+    </linearGradient>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer 1">
+    <g class="cls-2">
+      <path id="calendar" class="cls-3" d="M85.48,103.78H15c-8.28,0-15-6.72-15-15v-50.69h100.48v50.69c0,8.28-6.72,15-15,15ZM100.48,23.75c0-8.28-6.72-15-15-15H15C6.72,8.75,0,15.47,0,23.75v5.1h100.48v-5.1ZM26.68,5.01c0-2.76-2.24-5-5-5h-2.06c-2.76,0-5,2.24-5,5v3.74h12.06v-3.74ZM85.43,5C85.43,2.24,83.19,0,80.43,0h-2.06c-2.76,0-5,2.24-5,5v3.75s12.06,0,12.06,0v-3.75Z"/>
+    </g>
+  </g>
+</svg>

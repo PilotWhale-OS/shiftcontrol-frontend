@@ -75,7 +75,7 @@ export const routes: Routes = ([
   { path: "events/:eventId/help", component: EventHelpComponent,
     data: { breadcrumbs: BC_EVENT_HELP }, canActivate: [authenticatedGuard, isVolunteerInEventGuard("eventId")]},
   { path: "events/:eventId/volunteer", component: VolunteerDashboardComponent,
-    data: { breadcrumbs: BC_EVENT_VOLUNTEER_DASHBOARD }, canActivate: [authenticatedGuard, isVolunteerInEventGuard("eventId")]},
+    data: { breadcrumbs: BC_EVENT_VOLUNTEER_DASHBOARD }, canActivate: [authenticatedGuard, isVolunteerInEventGuard("eventId", false)]},
 
   /* shifts */
   { path: "shifts/:shiftId", component: ShiftDetailsComponent,
