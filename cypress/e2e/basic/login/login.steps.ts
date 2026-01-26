@@ -17,10 +17,11 @@ Given('I login as user', () => {
   // todo ad seperate admin and user username
 });
 
-Given('I login as user', () => {
+Given('I log in as admin', () => {
+  const adminUser = (Cypress.env("ADMIN_USERNAME") as string) || "testadmin";
+  const adminPass = (Cypress.env("ADMIN_PASSWORD") as string) || "test";
   wf.visitLoginPage();
-  wf.loginViaKeycloak(APP_CONFIG.USERNAME, APP_CONFIG.PASSWORD);
-  // todo ad seperate admin and user username
+  wf.loginViaKeycloak(adminUser, adminPass);
 });
 
 When('I log out completely from FreeFinance', () => {
