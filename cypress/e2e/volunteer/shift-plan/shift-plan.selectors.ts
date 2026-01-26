@@ -1,6 +1,6 @@
 const SELECTORS_SHIFT_PLAN = {
-  CARDS: {
-    SHIFT: "Pilot Shift",
-  }
+  INVITE: {
+    heading: "Photographer Plan",
+  },
 };
 export default SELECTORS_SHIFT_PLAN;

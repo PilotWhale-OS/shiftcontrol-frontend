@@ -20,7 +20,7 @@
 
         <div class="badge hint"
              tooltipMaxWidth="30ex"
-             [app-tooltip]="'Sum of signed up shifts in this event'"
+             [app-tooltip]="'Sum of your shift durations in this event'"
         >
           <fa-icon [icon]="icons.hour" />
           {{event.ownEventStatistics.totalHours | number:"1.0-0"}} Hours

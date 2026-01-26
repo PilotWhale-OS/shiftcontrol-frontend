@@ -41,10 +41,12 @@ export class DialogTradeRequestComponent {
   protected readonly requestOptions$ = new BehaviorSubject<tradeRequestOptions | undefined>(undefined);
   protected readonly offerShiftOptions$ = this.requestOptions$.pipe(
     filter(opt => opt !== undefined),
-    map(opt => opt.candidates.map(slot => ({
+    map(opt => opt.candidates
+      .map(slot => ({
         name: `${slot.ownShiftName}: ${slot.ownPosition.name}`,
         value: slot
-      })) as SelectOptions<TradeCandidatesDto>)
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name)) as SelectOptions<TradeCandidatesDto>)
   );
   protected readonly partnerOptions$;
 
@@ -62,10 +64,12 @@ export class DialogTradeRequestComponent {
           return undefined;
         }
 
-        return value.eligibleTradeRecipients.map(rec => ({
-          name: `${rec.firstName} ${rec.lastName}`,
-          value: rec
-        })) as SelectOptions<VolunteerDto>;
+        return value.eligibleTradeRecipients
+          .map(rec => ({
+            name: `${rec.firstName} ${rec.lastName}`,
+            value: rec
+          }))
+          .sort((a, b) => a.name.localeCompare(b.name)) as SelectOptions<VolunteerDto>;
       })
     );
   }

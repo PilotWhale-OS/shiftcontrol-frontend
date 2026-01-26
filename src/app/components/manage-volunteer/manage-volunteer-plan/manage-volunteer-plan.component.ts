@@ -50,9 +50,11 @@ export class ManageVolunteerPlanComponent implements OnDestroy {
     volunteer: UserEventDto; plan: ShiftPlanDto | undefined; plans: ShiftPlanDto[];
   } | undefined>(undefined);
   protected readonly newPlanOptions$ = this.manageData$.pipe(
-    map(data => data?.plans.map(plan => ({
-      value: plan,
-      name: plan.name
+    map(data => data?.plans
+      ?.sort((a,b) => a.name.localeCompare(b.name))
+      .map(plan => ({
+        value: plan,
+        name: plan.name
     })) ?? []),
     shareReplay()
   );

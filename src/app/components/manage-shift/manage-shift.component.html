@@ -152,8 +152,8 @@
 
         <!-- badges -->
         <div class="flex flex-row flex-wrap gap-sm items-center w-full row-start-3 col-start-1 col-span-2">
-          <div class="badge">
-            <fa-icon [icon]="icons.date" />
+          <div class="badge" [app-tooltip]="'The time this shift takes place'" tooltipMaxWidth="30ex">
+            <fa-icon [icon]="icons.date"/>
             <span>{{getDateRange(data.shift)}}</span>
           </div>
 
@@ -162,13 +162,13 @@
             <span>{{data.shift.lockStatus | lockStatus}}</span>
           </div>
 
-          <div class="badge" [app-tooltip]="'Associated shift plan of this shift'" tooltipMaxWidth="10rem" >
+          <div class="badge" [app-tooltip]="'Only volunteers in \'' + data.shift.shiftPlan.name + '\' can view this shift'" tooltipMaxWidth="10rem" >
             <fa-icon [icon]="icons.plan"/>
             <span>{{data.shift.shiftPlan.name}}</span>
           </div>
 
           @if(data.shift.bonusRewardPoints > 0) {
-            <div class="badge hint" [app-tooltip]="'This shift has bonus reward points to make it more attractive to volunteers. The points are already included in the position reward info.'">
+            <div class="badge hint" [app-tooltip]="'This shift has bonus reward points to make it more attractive to sign up. The points are already included in the position reward info.'">
               <fa-icon [icon]="icons.rewards" />
               <span>{{data.shift.bonusRewardPoints}} Bonus Points</span>
             </div>

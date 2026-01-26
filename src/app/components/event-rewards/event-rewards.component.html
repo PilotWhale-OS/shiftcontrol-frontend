@@ -7,22 +7,21 @@
       Your Rewards
     </h1>
 
-    <div class="col-span-2">
-      Participate in shifts to earn reward points!
+    <div class="col-span-2 max-w-[30rem]">
+      When you sign up for shifts, you earn Reward Points.<br> You can redeem these points for exclusive rewards!
     </div>
 
-    <div class="card compact spotlight w-full grid grid-cols-[auto_1fr] gap-y-0 gap-x-lg items-center">
+    <div class="card compact interaction spotlight w-full grid grid-cols-[auto_1fr] gap-y-0 gap-x-lg items-center col-span-2"
+         (click)="goToRewards(event)"
+         tabindex="0" (keydown)="goToRewards(event)"
+    >
       <div class="row-span-2 grid place-content-center">
         <fa-icon [icon]="icons.rewards" class="text-framing-highlight_hint" />
       </div>
       <h2 class="m-0 flex gap-md items-center text-base pr-md">
-        Earned Points
+        View your Rewards
       </h2>
-      <span class="justify-self-start pr-md">{{event.rewardPoints}} Points</span>
-    </div>
-
-    <div class="grid items-center">
-      <xsb-input-button content="Redeem your Points" />
+      <span class="justify-self-start pr-md">{{event.rewardPoints}} Reward Points earned</span>
     </div>
   </div>
 

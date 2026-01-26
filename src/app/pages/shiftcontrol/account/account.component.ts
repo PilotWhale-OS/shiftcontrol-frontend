@@ -4,11 +4,12 @@ import {FormBuilder, FormControl, ReactiveFormsModule} from "@angular/forms";
 import {InputTextComponent} from "../../../components/inputs/input-text/input-text.component";
 import {TypedFormControlDirective} from "../../../directives/typed-form-control.directive";
 import {InputButtonComponent} from "../../../components/inputs/input-button/input-button.component";
-import {NotificationSettingsDto, UserProfileEndpointService} from "../../../../shiftservice-client";
+import {AccountInfoDto, NotificationSettingsDto, UserProfileEndpointService} from "../../../../shiftservice-client";
 import {InputMultiToggleComponent, MultiToggleOptions} from "../../../components/inputs/input-multitoggle/input-multi-toggle.component";
 import {BehaviorSubject, catchError, forkJoin, pairwise, startWith, Subscription, switchMap} from "rxjs";
 import {AsyncPipe} from "@angular/common";
 import {ToastService} from "../../../services/toast/toast.service";
+import UserTypeEnum = AccountInfoDto.UserTypeEnum;
 
 type notificationToggleValue = NotificationSettingsDto.ChannelsEnum | "ALL";
 
@@ -75,6 +76,21 @@ export class AccountComponent implements OnDestroy {
 
     this._userProfileService.getCurrentUserProfile().subscribe(profile => {
       const map = new Map(profile.notifications
+        .filter(notif => {
+          if(notif.type.startsWith("ADMIN_")) {
+            return profile.account.userType === UserTypeEnum.Admin;
+          }
+
+          if(notif.type.startsWith("PLANNER_")){
+            return profile.account.userType === UserTypeEnum.Admin || profile.planningPlans.length > 0;
+          }
+
+          if(notif.type.startsWith("VOLUNTEER_")){
+            return profile.account.userType !== UserTypeEnum.Admin && profile.volunteeringPlans.length > 0;
+          }
+
+          return false;
+        })
         .map(notification => {
           const currentValue = notification.channels.length === 2 ? "ALL" :
             notification.channels.length === 1 ? Array.from(notification.channels)[0] : null;

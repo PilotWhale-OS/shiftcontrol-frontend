@@ -39,13 +39,23 @@
                       [xsb-typed]="[endDate, form.controls.endDate]" />
     </div>
 
-    <div class="flex flex-col gap-sm col-start-1 row-start-3 col-span-2">
+    <div class="flex flex-col gap-sm col-start-1 row-start-3">
       <small><fa-icon [icon]="icons.link" class="pr-sm" />Social Links</small>
       <label for="event-manage-socials">List of links to social media or websites, separated by a comma</label>
       <xsb-input-text #socials
                       [formControl]="form.controls.socials"
                       [xsb-typed]="[socials, form.controls.socials]"
                       name="event-manage-socials" placeholder="Event social media links"
+      />
+    </div>
+
+    <div class="flex flex-col gap-sm col-start-2 row-start-3">
+      <small><fa-icon [icon]="icons.link" class="pr-sm" />Rewards URL</small>
+      <label for="event-manage-rewards">A URL where users can redeem points and/or view possible rewards</label>
+      <xsb-input-text #rewardsUrl
+                      [formControl]="form.controls.rewardsUrl"
+                      [xsb-typed]="[rewardsUrl, form.controls.rewardsUrl]"
+                      name="event-manage-rewards" placeholder="Rewards URL"
       />
     </div>
 

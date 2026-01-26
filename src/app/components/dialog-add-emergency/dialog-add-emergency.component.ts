@@ -3,6 +3,7 @@ import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
 import {DialogComponent, dialogResult} from "../dialog/dialog.component";
 import {InputDateComponent} from "../inputs/input-date/input-date.component";
 import {TypedFormControlDirective} from "../../directives/typed-form-control.directive";
+import {mapValue} from "../../util/value-maps";
 
 @Component({
   selector: "app-dialog-add-emergency",
@@ -39,8 +40,8 @@ export class DialogAddEmergencyComponent {
   closed(result: dialogResult) {
     if (result === "success") {
       const date = this.form.controls.emergencyDate.value;
-      date.setUTCHours(0,0,0,0);
-      this.result.emit(date);
+      const dayBegin = mapValue.localDayBeginFromDatetimeString(date.toDateString());
+      this.result.emit(dayBegin);
       this.form.reset();
     } else {
       this.result.emit(undefined);

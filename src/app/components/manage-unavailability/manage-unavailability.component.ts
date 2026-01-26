@@ -14,6 +14,7 @@ import {BehaviorSubject, of, switchMap} from "rxjs";
 import {FormBuilder} from "@angular/forms";
 import {DialogAddEmergencyComponent} from "../dialog-add-emergency/dialog-add-emergency.component";
 import {addUnavailabilityInput, DialogAddUnavailabilityComponent} from "../dialog-add-unavailability/dialog-add-unavailability.component";
+import {TooltipDirective} from "../../directives/tooltip.directive";
 
 @Component({
   selector: "app-manage-unavailability",
@@ -23,7 +24,8 @@ import {addUnavailabilityInput, DialogAddUnavailabilityComponent} from "../dialo
     FaIconComponent,
     InputButtonComponent,
     DialogAddEmergencyComponent,
-    DialogAddUnavailabilityComponent
+    DialogAddUnavailabilityComponent,
+    TooltipDirective
   ],
   standalone: true,
   templateUrl: "./manage-unavailability.component.html",
@@ -95,7 +97,7 @@ export class ManageUnavailabilityComponent {
 
     this._timeConstraintService.createTimeConstraint(event.eventOverview.id, {
       from: emergencyDate.toISOString(),
-      to: emergencyDate.toISOString(),
+      to: new Date(emergencyDate.getTime() + 24 * 60 * 60 * 1000).toISOString(),
       type: TimeConstraintCreateDto.TypeEnum.Emergency
     }).pipe(
       this._toastService.tapCreating("Emergency")

@@ -10,7 +10,11 @@
   <!-- top 3 -->
   <div class="flex flex-col gap-md justify-center items-center w-full">
 
-    <div class="card compact success w-full grid grid-cols-[min-content_min-content_auto] gap-md gap-y-sm items-center">
+    <div
+      tooltipMaxWidth="30ex"
+      [app-tooltip]="'These are the top 3 volunteers with the highest contributed hours.'"
+      class="card compact success w-full grid grid-cols-[min-content_min-content_auto] gap-md gap-y-sm items-center"
+    >
 
       @for (rank of ranksTop3; track rank) {
         @switch (rank.rank) {
@@ -46,7 +50,11 @@
   </div>
 
   <!-- 4-10 -->
-  <div class="card compact grid grid-cols-[min-content_auto_auto] gap-md gap-y-sm w-full h-full">
+  <div
+    tooltipMaxWidth="30ex"
+    [app-tooltip]="'These are the volunteers ranked 4 to 10 based on their contributed hours.'"
+    class="card compact grid grid-cols-[min-content_auto_auto] gap-md gap-y-sm w-full h-full"
+  >
     @for (rank of ranksRest; track rank) {
       <span class="font-semibold opacity-60">#{{rank.rank}}</span>
       <b class="m-0">{{rank.firstName}} {{rank.lastName.slice(0,1)}}.</b>

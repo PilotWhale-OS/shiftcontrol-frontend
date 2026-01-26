@@ -1,11 +1,13 @@
 import {Component, inject} from "@angular/core";
 import { icons } from "../../../util/icons";
-import {FormBuilder} from "@angular/forms";
+import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
 import {LogEndpointService, LogEntryDto} from "../../../../auditservice-client";
 import {AsyncPipe, DatePipe} from "@angular/common";
 import {InputButtonComponent} from "../../../components/inputs/input-button/input-button.component";
 import {debounceTime, shareReplay, startWith, switchMap} from "rxjs";
 import {RouterLink} from "@angular/router";
+import {InputTextComponent} from "../../../components/inputs/input-text/input-text.component";
+import {TypedFormControlDirective} from "../../../directives/typed-form-control.directive";
 
 @Component({
   selector: "app-audit-log",
@@ -13,7 +15,10 @@ import {RouterLink} from "@angular/router";
     AsyncPipe,
     DatePipe,
     InputButtonComponent,
-    RouterLink
+    RouterLink,
+    InputTextComponent,
+    ReactiveFormsModule,
+    TypedFormControlDirective
   ],
   templateUrl: "./audit-log.component.html",
   styleUrl: "./audit-log.component.scss"
@@ -30,7 +35,9 @@ export class AuditLogComponent {
 
   constructor() {
     this.form = this._fb.group({
-      paginationIndex: this._fb.nonNullable.control<number>(0)
+      paginationIndex: this._fb.nonNullable.control<number>(0),
+      type: this._fb.nonNullable.control<string>(""),
+      key: this._fb.nonNullable.control<string>("")
     });
 
     this.page$ = this.form.valueChanges.pipe(
@@ -39,7 +46,9 @@ export class AuditLogComponent {
       switchMap((value) =>
         this._logService.getLogs(value.paginationIndex ?? 0, this.pageSize, {
         startTime: new Date(0).toISOString(),
-        endTime: new Date().toISOString()
+        endTime: new Date().toISOString(),
+        eventType: value.type,
+        routingKey: value.key
       })),
       shareReplay()
     );

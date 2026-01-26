@@ -109,7 +109,7 @@ export class DialogTradeDetailsComponent {
         ).subscribe(() => this.tradeChanged.emit());
         return;
       } else if(result === "danger") {
-        this._tradeService.acceptTrade(tradeData.tradeId).pipe(
+        this._tradeService.declineTrade(tradeData.tradeId).pipe(
           this._toastService.tapSuccess("Trade Declined", () => "The trade has been declined successfully."),
           this._toastService.tapError("Decline Failed", mapValue.apiErrorToMessage)
         ).subscribe(() => this.tradeChanged.emit());

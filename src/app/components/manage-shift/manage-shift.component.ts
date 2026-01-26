@@ -215,13 +215,19 @@ export class ManageShiftComponent implements OnDestroy {
 
     /* data containing select options for dropdowns */
     this.activityOptions$ = availableActivities$.pipe(
-      map(activities => activities.map(activity => ({name: activity.name, value: activity})))
+      map(activities => activities
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map(activity => ({name: activity.name, value: activity})))
     );
     this.locationOptions$ = availableLocations$.pipe(
-      map(locations => locations.map(location => ({name: location.name, value: location})))
+      map(locations => locations
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map(location => ({name: location.name, value: location})))
     );
     this.shiftPlanOptions$ = this.manageData$.pipe(
-      map(data => data.plans.map(plan => ({name: plan.name, value: plan})))
+      map(data => data.plans
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map(plan => ({name: plan.name, value: plan})))
     );
 
     /**
@@ -242,12 +248,16 @@ export class ManageShiftComponent implements OnDestroy {
         const newSlotManageData = {
           shift,
           position: undefined,
-          availableRoles: roles.map(role => ({name: role.name, value: role}))
+          availableRoles: roles
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .map(role => ({name: role.name, value: role}))
         };
         const existingSlotManageData = shift.positionSlots.map(slot => ({
             shift,
             position: slot,
-            availableRoles: roles.map(role => ({name: role.name, value: role}))
+            availableRoles: roles
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map(role => ({name: role.name, value: role}))
           })
         );
         return [ ...(canManage? [newSlotManageData] : []), ...existingSlotManageData];
@@ -336,7 +346,7 @@ export class ManageShiftComponent implements OnDestroy {
         description: "",
         startDate: value.suggestedDate ?? new Date(),
         startTime: value.suggestedDate ? mapValue.datetimeStringAsLocalTime(value.suggestedDate.toISOString()) : {hour: 10, minute: 0},
-        endDate: value.suggestedDate ?? new Date(),
+        endDate: value.suggestedDate ? new Date(value.suggestedDate.getTime() + 1000 * 60 * 60 * 2) : new Date(),
         endTime: value.suggestedDate ?
           mapValue.datetimeStringAsLocalTime(new Date(value.suggestedDate.getTime() + 1000 * 60 * 60 * 2).toISOString()) :
           {hour: 12, minute: 0},
