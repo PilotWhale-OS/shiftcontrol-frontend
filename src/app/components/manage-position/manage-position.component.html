@@ -168,7 +168,7 @@
         <div class="flex flex-row flex-wrap gap-sm items-center w-full row-start-4 col-start-1 col-span-2">
 
           <!-- reward points -->
-          <div class="badge hint" [app-tooltip]="'Amount of reward points you get for volunteering in this position'">
+          <div class="badge hint" [app-tooltip]="'Every volunteer participating in this position receives ' + data.position.rewardPointsDto.currentRewardPoints + ' points as reward'">
             <fa-icon [icon]="icons.rewards" />
             <span>{{data.position.rewardPointsDto.currentRewardPoints}} Points</span>
           </div>
@@ -189,7 +189,7 @@
 
           <!-- attending volunteers -->
           <div class="badge hint"
-               [app-tooltip]="data.position.assignments.length + ' of ' + data.position.desiredVolunteerCount + 'required Volunteers have signed up'"
+               [app-tooltip]="data.position.assignments.length + ' of ' + data.position.desiredVolunteerCount + ' needed volunteers have signed up'"
           >
             <fa-icon [icon]="icons.role" />
             <span>{{data.position.assignments.length}} / {{data.position.desiredVolunteerCount}} taken</span>

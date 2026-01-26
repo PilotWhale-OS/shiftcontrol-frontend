@@ -31,6 +31,7 @@ import {ManageRoleComponent} from "../../../../components/manage-role/manage-rol
 import {ManageAssignmentsComponent} from "../../../../components/manage-assignments/manage-assignments.component";
 import {FormRouteSyncService} from "../../../../services/form-route-sync.service";
 import {ManagePlanVolunteersComponent} from "../../../../components/manage-plan-volunteers/manage-plan-volunteers.component";
+import {TooltipDirective} from "../../../../directives/tooltip.directive";
 
 export type managementMode = "invites" | "assignments" | "users" | "roles";
 
@@ -46,7 +47,8 @@ export type managementMode = "invites" | "assignments" | "users" | "roles";
     ManageInviteComponent,
     ManageRoleComponent,
     ManageAssignmentsComponent,
-    ManagePlanVolunteersComponent
+    ManagePlanVolunteersComponent,
+    TooltipDirective
   ],
   templateUrl: "./manage-shift-plans.component.html",
   styleUrl: "./manage-shift-plans.component.scss"

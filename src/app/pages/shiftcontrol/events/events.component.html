@@ -20,7 +20,7 @@
       <div class="flex flex-row gap-sm items-center">
         <div class="badge w-fit"
              tooltipMaxWidth="30ex"
-             [app-tooltip]="'The event dates of ' + event.name"
+             [app-tooltip]="'The event period of ' + event.name"
         >
           <fa-icon [icon]="icons.date" />
           {{event.startTime | date:"mediumDate"}} - {{event.endTime | date:"mediumDate"}}

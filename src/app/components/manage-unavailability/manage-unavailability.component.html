@@ -19,7 +19,11 @@
           <div class="flex gap-lg items-center">
 
             @if (constraint.type === "EMERGENCY") {
-              <div class="badge hint">
+              <div
+                class="badge hint"
+                tooltipMaxWidth="30ex"
+                [app-tooltip]="'You signalized you can\'t take your shifts on this day'"
+              >
                 <fa-icon [icon]="icons.unavailable" />
                 Emergency
               </div>
@@ -30,7 +34,10 @@
             }
 
             @else {
-              <div class="badge success">
+              <div
+                class="badge success"
+                [app-tooltip]="'You are unavailable during this time'"
+              >
                 <fa-icon [icon]="icons.unavailable" />
                 {{ getUnavailabilityDayLength(constraint) }}
               </div>

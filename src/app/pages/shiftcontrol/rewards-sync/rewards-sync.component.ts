@@ -2,7 +2,6 @@ import {Component, inject} from "@angular/core";
 import { icons } from "../../../util/icons";
 import {RewardPointsEndpointService, RewardPointsShareTokenDto} from "../../../../shiftservice-client";
 import {BehaviorSubject,} from "rxjs";
-import {ToastService} from "../../../services/toast/toast.service";
 import {AsyncPipe} from "@angular/common";
 import {ManageRewardsShareTokenComponent} from "../../../components/manage-rewards-share-token/manage-rewards-share-token.component";
 
@@ -17,11 +16,9 @@ import {ManageRewardsShareTokenComponent} from "../../../components/manage-rewar
 })
 export class RewardsSyncComponent {
 
-  protected shares$ = new BehaviorSubject<RewardPointsShareTokenDto[]>([]);
-
+  protected readonly shares$ = new BehaviorSubject<RewardPointsShareTokenDto[]>([]);
   protected readonly icons = icons;
 
-  private readonly _toastService = inject(ToastService);
   private readonly _rewardsService = inject(RewardPointsEndpointService);
 
   constructor() {

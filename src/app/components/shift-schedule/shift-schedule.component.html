@@ -49,13 +49,13 @@
               }
 
               @for(slot of getAssignedPositionSlots(shift.shift); track slot.id) {
-                <div class="badge" [app-tooltip]="'Your position in this shift'">
-                  <fa-icon [icon]="icons.role" />
+                <div class="badge" [app-tooltip]="'Your task in this shift'">
+                  <fa-icon [icon]="icons.position" />
                   {{slot.name}}
                 </div>
               }
               @if (shift.shift.location !== undefined) {
-                <div class="badge" [app-tooltip]="'The shift location'">
+                <div class="badge" [app-tooltip]="'The location where this shift takes place'">
                   <fa-icon [icon]="icons.location" />
                   {{shift.shift.location.name}}
                 </div>

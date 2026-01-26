@@ -32,5 +32,4 @@ export class PretalxSyncComponent {
   protected fetchConfigs() {
     this._pretalxService.getPretalxApiKeys().subscribe(res => this.configs$.next(res));
   }
-
 }
