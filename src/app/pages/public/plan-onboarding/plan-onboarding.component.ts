@@ -56,7 +56,7 @@ export class PlanOnboardingComponent implements OnDestroy {
       next: details => {
         this.invite$.next(details);
         this._pageService
-          .configurePageName(`Join ${details.inviteDto.shiftPlanDto.name}`)
+          .configurePageName(`Join ${details.eventDto.name}`)
           .configureBreadcrumb(
             BC_EVENT,
             details.eventDto.name,

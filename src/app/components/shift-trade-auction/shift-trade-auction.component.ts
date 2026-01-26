@@ -131,7 +131,7 @@ export class ShiftTradeAuctionComponent {
 
   @Input()
   public set trades(trades: TradeInfoDto[]) {
-    this.trades$.next(trades.filter(trade => trade.status === TradeInfoDto.StatusEnum.Accepted));
+    this.trades$.next(trades.filter(trade => trade.status === TradeInfoDto.StatusEnum.Open));
   }
 
   @Input()
