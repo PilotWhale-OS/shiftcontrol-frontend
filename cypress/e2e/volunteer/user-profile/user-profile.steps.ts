@@ -17,3 +17,6 @@ Given('The user profile page tiles exist', () => {
    wf.verifyAllTilesAreShown()
 });
 
+Given('I navigate to the user profile page from the header', () => {
+   wf.navigateFromHeader();
+});

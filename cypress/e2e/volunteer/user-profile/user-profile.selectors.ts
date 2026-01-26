@@ -2,23 +2,20 @@ const SELECTORS_USER_PROFILE = {
   CARDS: {
     USER_SETTINGS: 'Account Information',
     NOTIFICATION_SETTINGS: 'Notifications',
-    UNAVAILABILITY_SETTINGS: 'Unavailability',
   },
   USER_SETTINGS: {
-    name: 'xsb-input-text[ng-reflect-name="userGivenName"]',
-    surname: 'xsb-input-text[ng-reflect-name="userLastName"]',
-    manageAccount: '[name="me-manage-account"]',
-    signOut: '[name="me-sign-out"]',
+    name: '.card xsb-input-text:nth-of-type(1)',
+    surname: '.card xsb-input-text:nth-of-type(2)',
+    email: '.card xsb-input-text:nth-of-type(3)',
+    username: '.card xsb-input-text:nth-of-type(4)',
+    manageAccount: 'input[name="me-manage-account"]',
+    signOut: 'input[name="me-sign-out"]',
   },
   NOTIFICATION_SETTINGS: {
-    emailNotification: 'xsb-input-toggle[ng-reflect-name="me-notifications-email"]',
-    pushNotification: 'xsb-input-toggle[ng-reflect-name="me-notifocations-push"]',
-    autoAssigned: 'xsb-input-toggle[ng-reflect-name="me-notifocations-push"]',
-    tradeAccepted: 'xsb-input-toggle[ng-reflect-name="me-topic-tradeaccepted"]',
-    shiftReminder: 'xsb-input-toggle[ng-reflect-name="me-topic-shiftreminder"]',
-  },
-  UNAVAILABILITY_SETTINGS: {
-    // todo add
+    autoAssigned: '#me-notifications-VOLUNTEER_AUTO_ASSIGNED',
+    tradeRequested: '#me-notifications-VOLUNTEER_TRADE_REQUESTED',
+    tradeStatusChanged: '#me-notifications-VOLUNTEER_TRADES_AUCTIONS_REQUESTS_CHANGED',
+    shiftReminder: '#me-notifications-VOLUNTEER_SHIFT_REMINDER',
   },
 
 };

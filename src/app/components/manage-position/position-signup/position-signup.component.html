@@ -5,34 +5,38 @@
     @if (options.slot.requestedTrades.length > 0 || options.slot.offeredTrades.length > 0) {
       <div class="flex flex-col gap-md">
         @for (requestedTrade of options.slot.requestedTrades; track requestedTrade.createdAt) {
-          <div class="grid grid-cols-[auto_1fr] gap-md items-center">
-            <div class="badge h-fit">
-              <fa-icon [icon]="icons.trade" />
-              Trade Request
-            </div>
-            <div class="flex flex-row flex-wrap gap-x-xs items-center">
-              <span>You requested</span>
-              <xsb-input-button size="text" content="a trade" (click)="dialogTradeInfo$.next(requestedTrade)" />
-              <span>
+          @if (requestedTrade.status === "OPEN") {
+            <div class="grid grid-cols-[auto_1fr] gap-md items-center">
+              <div class="badge h-fit">
+                <fa-icon [icon]="icons.trade" />
+                Trade Request
+              </div>
+              <div class="flex flex-row flex-wrap gap-x-xs items-center">
+                <span>You requested</span>
+                <xsb-input-button size="text" content="a trade" (click)="dialogTradeInfo$.next(requestedTrade)" />
+                <span>
                 with {{requestedTrade.requestedAssignment.assignment.assignedVolunteer.firstName}}
-                {{requestedTrade.requestedAssignment.assignment.assignedVolunteer.lastName | slice:0:1}}.
+                  {{requestedTrade.requestedAssignment.assignment.assignedVolunteer.lastName | slice:0:1}}.
               </span>
+              </div>
             </div>
-          </div>
+          }
         }
 
         @for (offeredTrade of options.slot.offeredTrades; track offeredTrade.createdAt) {
-          <div class="flex flex-row gap-sm items-center">
-            <div class="badge hint">
-              <fa-icon [icon]="icons.trade" />
-              Trade Offer
+          @if (offeredTrade.status === "OPEN") {
+            <div class="flex flex-row gap-sm items-center">
+              <div class="badge hint">
+                <fa-icon [icon]="icons.trade" />
+                Trade Offer
+              </div>
+              <span>
+                {{offeredTrade.offeringAssignment.assignment.assignedVolunteer.firstName}}
+                  {{offeredTrade.offeringAssignment.assignment.assignedVolunteer.lastName | slice:0:1}}. offers
+              </span>
+              <xsb-input-button size="text" content="a position" (click)="dialogTradeInfo$.next(offeredTrade)" />
             </div>
-            <span>
-              {{offeredTrade.offeringAssignment.assignment.assignedVolunteer.firstName}}
-              {{offeredTrade.offeringAssignment.assignment.assignedVolunteer.lastName | slice:0:1}}. offers
-            </span>
-            <xsb-input-button size="text" content="a position" (click)="dialogTradeInfo$.next(offeredTrade)" />
-          </div>
+          }
         }
       </div>
 
@@ -122,12 +126,6 @@
           (submitted)="$event !== undefined ? submitTradeRequest(position.slot, $event.partner, $event.slot) : 0; tradeRequestOptions$.next(undefined)"
         />
 
-        <app-dialog-manage-assignments
-          [params]="(dialogAssignmentsParams$ | async) ?? undefined"
-          (assignmentChanged)="dialogAssignmentsParams$.next(undefined); $event ? positionSignupChanged.emit(undefined) : 0"
-          class="contents"
-        />
-
         <app-dialog-trade-details
           class="contents"
           [tradeInfo]="(dialogTradeInfo$ | async) ?? undefined"
@@ -139,5 +137,13 @@
 
   </div>
 } @else {
-  <span>Administrators cannot sign up.</span>
+  @if (position$ | async; as position){
+    <xsb-input-button content="Manage Assignments" action="normal" (click)="manageAssignments(position.slot)" />
+  }
 }
+
+<app-dialog-manage-assignments
+  [params]="(dialogAssignmentsParams$ | async) ?? undefined"
+  (assignmentChanged)="dialogAssignmentsParams$.next(undefined); $event ? positionSignupChanged.emit(undefined) : 0"
+  class="contents"
+/>

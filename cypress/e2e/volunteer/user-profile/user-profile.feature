@@ -7,7 +7,7 @@ Feature: User profile page
 
   Scenario: Press cards for routing to user profile page
     Given I navigate to the dashboard page
-    Then I navigate to the user settings page from the dashboard page
+    Then I navigate to the user profile page from the header
 
   Scenario: The expected Tiles are visible
     Then The user profile page tiles exist
@@ -15,8 +15,7 @@ Feature: User profile page
   Scenario: Profile tiles are visible
     And the form should contain the following data on "userProfile"
       | name | surname |
-      | Max  | Muster  |
+      | Kerbert  | Huttelwascher  |
     And the form should contain the following data on "userProfile"
-      | emailNotification | pushNotification | autoAssigned | tradeAccepted | shiftReminder |
-      | false             | false            | false        | false         | false         |
-
+      | autoAssigned | tradeRequested | tradeStatusChanged | shiftReminder |
+      | Email        | None           | None               | None          |

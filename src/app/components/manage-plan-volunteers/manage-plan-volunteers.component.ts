@@ -46,9 +46,11 @@ export class ManagePlanVolunteersComponent implements OnDestroy {
   protected readonly manageData$ = new BehaviorSubject<planVolunteersData | undefined>(undefined);
   protected readonly roleSelectOptions$ = this.manageData$.pipe(
     filter((data): data is planVolunteersData => data !== undefined),
-    map(data => data.roles.map(role => ({
-      name: role.name,
-      value: role
+    map(data => data.roles
+      .sort((a,b) => a.name.localeCompare(b.name))
+      .map(role => ({
+        name: role.name,
+        value: role
     })))
   );
   protected readonly roleSelectControls$;

@@ -39,12 +39,26 @@
 
               <!-- badge -->
               @if(item.assignment !== undefined) {
-                <div class="badge success">
-                  <fa-icon [icon]="icons.assigned" />
-                  Assigned
-                </div>
+                @if (item.assignment.status === "AUCTION_REQUEST_FOR_UNASSIGN" || item.assignment.status === "AUCTION") {
+                  <div class="badge hint w-fit">
+                    <fa-icon [icon]="icons.requestedUnassign" />
+                    Requested Unassign
+                  </div>
+                }
+                @else if (item.assignment.status === "REQUEST_FOR_ASSIGNMENT") {
+                  <div class="badge hint w-fit">
+                    <fa-icon [icon]="icons.signupRequested" />
+                    Requested Assign
+                  </div>
+                }
+                @else {
+                  <div class="badge success w-fit">
+                    <fa-icon [icon]="icons.assigned" />
+                    Assigned
+                  </div>
+                }
               } @else {
-                <div class="badge">
+                <div class="badge w-fit">
                   <fa-icon [icon]="icons.unassigned" />
                   Unassigned
                 </div>
@@ -54,7 +68,7 @@
               <span>{{item.volunteer.firstName}} {{item.volunteer.lastName}}</span>
 
               <!-- action -->
-              @if(item.assignment !== undefined) {
+              @if(item.assignment !== undefined && item.assignment.status !== "REQUEST_FOR_ASSIGNMENT") {
                 <xsb-input-button content="Unassign" size="text"
                                   (click)="unassignVolunteer(item.assignment)" />
               } @else {

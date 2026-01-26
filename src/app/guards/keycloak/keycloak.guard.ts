@@ -35,5 +35,5 @@ const isNotLoggedIn = async (
   return router.parseUrl("/");
 };
 
-export const accessAllowedGuard = createAuthGuard<CanActivateFn>(isAccessAllowed);
+export const authenticatedGuard = createAuthGuard<CanActivateFn>(isAccessAllowed);
 export const notLoggedInGuard = createAuthGuard<CanActivateFn>(isNotLoggedIn);

@@ -55,7 +55,8 @@ export class ManageEventDetailsComponent {
       longDescription: this._fb.nonNullable.control<string>("", [descriptionLengthValidator]),
       startDate: this._fb.nonNullable.control<Date>(new Date()),
       endDate: this._fb.nonNullable.control<Date>(new Date()),
-      socials: this._fb.nonNullable.control<string>("")
+      socials: this._fb.nonNullable.control<string>(""),
+      rewardsUrl: this._fb.nonNullable.control<string>("")
     });
   }
 
@@ -70,7 +71,8 @@ export class ManageEventDetailsComponent {
         longDescription: value.event.longDescription ?? "",
         startDate: new Date(value.event.startTime),
         endDate: new Date(value.event.endTime),
-        socials: value.event.socialMediaLinks.map(social => social.url).join(", ")
+        socials: value.event.socialMediaLinks.map(social => social.url).join(", "),
+        rewardsUrl: value.event.rewardPointsRedeemUrl ?? ""
       });
     } else {
       this.form.reset();
@@ -88,7 +90,8 @@ export class ManageEventDetailsComponent {
         longDescription: mapValue.undefinedIfEmptyString(this.form.controls.longDescription.value),
         startTime: mapValue.dateAsLocalDateStartOfDayString(this.form.controls.startDate.value),
         endTime: mapValue.dateAsLocalDateEndOfDayString(this.form.controls.endDate.value),
-        socialLinks: mapValue.undefinedIfEmptyString(this.form.controls.socials.value)
+        socialLinks: mapValue.undefinedIfEmptyString(this.form.controls.socials.value),
+        rewardPointsRedeemUrl: mapValue.undefinedIfEmptyString(this.form.controls.rewardsUrl.value)
       }).pipe(
         this._toastService.tapCreating("Event", event => event.name)
       ).subscribe(created => this._router.navigate([`../${created.id}/manage`], {relativeTo: this._route}));
@@ -140,7 +143,8 @@ export class ManageEventDetailsComponent {
         longDescription: mapValue.undefinedIfEmptyString(this.form.controls.longDescription.value),
         startTime: mapValue.dateAsLocalDateStartOfDayString(this.form.controls.startDate.value),
         endTime: mapValue.dateAsLocalDateEndOfDayString(this.form.controls.endDate.value),
-        socialLinks: mapValue.undefinedIfEmptyString(this.form.controls.socials.value)
+        socialLinks: mapValue.undefinedIfEmptyString(this.form.controls.socials.value),
+        rewardPointsRedeemUrl: mapValue.undefinedIfEmptyString(this.form.controls.rewardsUrl.value)
       }).pipe(
         this._toastService.tapSaving("Event", updated => updated.name)
       ).subscribe(() => this.eventChanged.next());

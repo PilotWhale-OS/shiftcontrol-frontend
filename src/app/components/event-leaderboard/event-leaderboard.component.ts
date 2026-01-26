@@ -3,12 +3,14 @@ import {LeaderBoardDto, RankDto} from "../../../shiftservice-client";
 import { icons } from "../../util/icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {DecimalPipe} from "@angular/common";
+import {TooltipDirective} from "../../directives/tooltip.directive";
 
 @Component({
   selector: "app-event-leaderboard",
   imports: [
     FaIconComponent,
-    DecimalPipe
+    DecimalPipe,
+    TooltipDirective
   ],
   templateUrl: "./event-leaderboard.component.html",
   styleUrl: "./event-leaderboard.component.scss"

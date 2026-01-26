@@ -8,11 +8,19 @@ export class EventWorkflow extends BaseWorkflow {
   }
 
   visitEventPage() {
-    eventPo.navigateOverCard(SELECTORS_EVENTS.CARDS.EVENT, eventPo.getPageUrl() + "/someid");
+    eventPo.visitEvent(SELECTORS_EVENTS.EVENT.id);
   }
 
-  visitPlanPage() {
-    eventPo.navigateOverCard(SELECTORS_EVENTS.CARDS.PLAN, "events/someid/otherid");
+  openVolunteerDashboard() {
+    eventPo.navigateOverCard(SELECTORS_EVENTS.CARDS.VOLUNTEER_DASHBOARD, `events/${SELECTORS_EVENTS.EVENT.id}/volunteer`);
+  }
+
+  openEventCalendar() {
+    eventPo.navigateOverCard(SELECTORS_EVENTS.CARDS.EVENT_CALENDAR, `events/${SELECTORS_EVENTS.EVENT.id}/calendar`);
+  }
+
+  openEventHelp() {
+    eventPo.navigateOverCard(SELECTORS_EVENTS.CARDS.HELP, `events/${SELECTORS_EVENTS.EVENT.id}/help`);
   }
 
 }
