@@ -41,6 +41,10 @@
 
 .venue {
   @apply sticky top-0 z-40 flex flex-row gap-sm items-center justify-center font-semibold border-b-2 border-framing-card pb-xs;
+
+  span {
+    @apply whitespace-nowrap overflow-hidden overflow-ellipsis;
+  }
 }
 
 .venue-flow {
@@ -68,6 +72,10 @@
   > .tag, > .time {
     @apply hidden;
   }
+
+  .label {
+    @apply overflow-hidden overflow-ellipsis;
+  }
 }
 
 .item-primary {
@@ -82,6 +90,10 @@
 
   &.eligible {
     @apply border-framing-item_hint bg-background-item_hint hover:border-framing-highlight_hint;
+  }
+
+  .label {
+    @apply overflow-hidden overflow-ellipsis;
   }
 
   > .tag, > .time {

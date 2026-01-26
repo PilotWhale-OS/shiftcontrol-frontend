@@ -74,7 +74,7 @@
           <div
             class="start-marker"
             style="grid-column: 1 / -1; grid-row: 2 / 2"
-            [style.top]="getMinuteHeight(getDateMinutesFromStart(config.eventStartTime, config))"
+            [style.top]="getMinuteHeight(getDateMinutesFromStart(config.eventStartTime, config) - 60)"
             [style.height]="getMinuteHeight(60)"
           >
             <small>Event Start</small>
@@ -165,7 +165,7 @@
               <span class="time">
                 {{shiftItem.shift.shiftDto.startTime | date:"shortTime"}} - {{shiftItem.shift.shiftDto.endTime | date:"shortTime"}}
               </span>
-              <span>{{shiftItem.shift.shiftDto.name}}</span>
+              <span class="label">{{shiftItem.shift.shiftDto.name}}</span>
             </div>
           }
 
@@ -183,7 +183,7 @@
               <span class="time">
                 {{activityItem.activity.startTime | date:"shortTime"}} - {{activityItem.activity.endTime | date:"shortTime"}}
               </span>
-              <span>{{activityItem.activity.name}}</span>
+              <span class="label">{{activityItem.activity.name}}</span>
             </div>
           }
         }
