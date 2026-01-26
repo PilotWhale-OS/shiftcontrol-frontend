@@ -72,3 +72,14 @@ export function getXsbToggleState(selector: string) {
     .invoke('prop', 'checked')
     .then((checked) => String(checked)) as Cypress.Chainable<string>;
 }
+
+export function getXsbMultiToggleValue(selector: string) {
+  return cy
+    .get(selector)
+    .should('exist')
+    .find('button.bg-gradient_badge')
+    .should('be.visible')
+    .first()
+    .invoke('text')
+    .then((t) => t.trim());
+}

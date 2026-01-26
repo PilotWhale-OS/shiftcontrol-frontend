@@ -38,6 +38,14 @@ export function getElementType(selector: string) {
 
           if (tagName === 'xsb-input-text') return 'xsb-text';
           if (tagName === 'xsb-input-toggle') return 'xsb-toggle';
+          if (tagName === 'div') {
+            return cy.get(selector).invoke('attr', 'id').then((id) => {
+              if (!id) return 'unknown';
+              return cy.get(selector)
+                .find(`button[id^="${id}-option-"]`)
+                .then(($buttons) => ($buttons.length ? 'xsb-multi-toggle' : 'unknown'));
+            });
+          }
           return 'unknown';
         });
     });

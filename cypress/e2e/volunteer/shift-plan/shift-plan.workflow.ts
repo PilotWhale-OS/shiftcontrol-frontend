@@ -7,7 +7,7 @@ export class ShiftPlanWorkflow extends BaseWorkflow {
     super(SELECTORS_SHIFT_PLAN);
   }
 
-  visitShiftPage() {
-    shiftPlanPo.navigateOverCard(SELECTORS_SHIFT_PLAN.CARDS.SHIFT, "events/someid/otherid/otherid");
+  visitInvite(code: string) {
+    shiftPlanPo.visitInvite(code);
   }
 }
