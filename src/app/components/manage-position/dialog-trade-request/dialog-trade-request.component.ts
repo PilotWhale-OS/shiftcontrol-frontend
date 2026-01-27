@@ -63,7 +63,7 @@ export class DialogTradeRequestComponent {
     this.partnerOptions$ = this.form.controls.offeredPosition.valueChanges.pipe(
       startWith(this.form.controls.offeredPosition.value),
       map(value => {
-        if(value === undefined) {
+        if(value === undefined || value === null) {
           return undefined;
         }
 
