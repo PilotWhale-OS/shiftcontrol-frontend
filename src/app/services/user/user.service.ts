@@ -1,7 +1,7 @@
 import { effect, Injectable, Signal, inject } from "@angular/core";
 import {KEYCLOAK_EVENT_SIGNAL, KeycloakEvent, KeycloakEventType, ReadyArgs, typeEventArgs} from "keycloak-angular";
 import Keycloak, {KeycloakProfile} from "keycloak-js";
-import {BehaviorSubject, catchError, delay, map, Observable, of, switchMap, tap} from "rxjs";
+import {BehaviorSubject, catchError, map, Observable, of, switchMap, tap} from "rxjs";
 import {AccountInfoDto, UserProfileDto, UserProfileEndpointService} from "../../../shiftservice-client";
 import UserTypeEnum = AccountInfoDto.UserTypeEnum;
 

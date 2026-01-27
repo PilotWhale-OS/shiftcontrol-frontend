@@ -9,7 +9,6 @@ import {InputSelectComponent, SelectOptions} from "../../inputs/input-select/inp
 import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {TypedFormControlDirective} from "../../../directives/typed-form-control.directive";
 import {InputButtonComponent} from "../../inputs/input-button/input-button.component";
-import {tapLog} from "../../../util/log.pipe";
 
 export interface tradeRequestOptions {
   slot: PositionSlotDto;
@@ -47,8 +46,7 @@ export class DialogTradeRequestComponent {
         name: `${slot.ownShiftName}: ${slot.ownPosition.name}`,
         value: slot
       }))
-      .sort((a, b) => a.name.localeCompare(b.name)) as SelectOptions<TradeCandidatesDto>),
-    tapLog("offerShiftOptions$")
+      .sort((a, b) => a.name.localeCompare(b.name)) as SelectOptions<TradeCandidatesDto>)
   );
   protected readonly partnerOptions$;
 
@@ -73,8 +71,7 @@ export class DialogTradeRequestComponent {
             value: rec
           }))
           .sort((a, b) => a.name.localeCompare(b.name)) as SelectOptions<VolunteerDto>;
-      }),
-      tapLog("partnerOptions$")
+      })
     );
   }
 
