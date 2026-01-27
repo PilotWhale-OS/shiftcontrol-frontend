@@ -8,25 +8,25 @@
   }
 
 
-  @for (notification of notifications$ | async; track notification.id) {
+  @for (notification of notifications$ | async; track notification.notification.id) {
     <div class="card compact w-[min(100%,30rem)]">
       <div class="flex items-start pr-sm">
         <h2 class="flex gap-md">
           <fa-icon class="icon opacity-50" [icon]="icons.notification" />
-          {{notification.title}}
+          {{notification.notification.title}}
         </h2>
 
-        <small class="grow text-right">{{notification.time | date:"short"}}</small>
+        <small class="grow text-right">{{notification.notification.time | date:"short"}}</small>
       </div>
 
       <div class="flex items-start pr-sm gap-sm">
-        <p class="grow">{{notification.notification}}</p>
+        <p class="grow">{{notification.notification.notification}}</p>
 
-        @if (notification.url !== undefined && notification.url !== null) {
-          <xsb-input-button size="text" content="View" class="justify-self-end" [routerLink]="notification.url" />
+        @if (notification.tree !== undefined && notification.tree !== null) {
+          <a class="justify-self-end" [routerLink]="notification.tree">View</a>
         }
-        @if (notification.id !== undefined && notification.id !== null) {
-          <xsb-input-button size="text" content="Delete" class="justify-self-end" (click)="clearNotification(notification.id)" />
+        @if (notification.notification.id !== undefined && notification.notification.id !== null) {
+          <xsb-input-button size="text" content="Delete" class="justify-self-end" (click)="clearNotification(notification.notification.id)" />
         }
       </div>
     </div>

@@ -5,7 +5,7 @@ import {AsyncPipe, DatePipe} from "@angular/common";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {icons} from "../../../util/icons";
 import {InputButtonComponent} from "../../../components/inputs/input-button/input-button.component";
-import {RouterLink} from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
 
 @Component({
   selector: "app-notifications",
@@ -25,11 +25,16 @@ export class NotificationsComponent {
   protected readonly notifications$;
 
   private readonly _notificationService = inject(NotificationService);
+  private readonly _router = inject(Router);
 
   constructor() {
     this.notifications$ = this._notificationService.notifications$.pipe(
       tap(async () => await this._notificationService.markAllAsRead()),
-      map(notifications => [...notifications])
+      map(notifications => [...notifications]),
+      map(notifications => notifications.map(notification => ({
+        notification,
+        tree: notification.url === undefined || notification.url === null ? undefined : this._router.parseUrl(notification.url)
+      })))
     );
   }
 
