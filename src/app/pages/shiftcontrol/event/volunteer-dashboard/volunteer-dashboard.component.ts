@@ -80,6 +80,7 @@ export class VolunteerDashboardComponent {
       tap(event => {
         this._pageService
           .configurePageName(`${event.eventOverview.name}`)
+          .withCalendarLink("../calendar")
           .configureBreadcrumb(BC_EVENT, event.eventOverview.name, event.eventOverview.id);
       }),
       shareReplay()

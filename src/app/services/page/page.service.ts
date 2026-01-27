@@ -10,6 +10,7 @@ export class PageService {
 
   private _breadcrumbs$ = new BehaviorSubject<Breadcrumb | undefined>(undefined);
   private _pageName$ = new BehaviorSubject<string | undefined>(undefined);
+  private _calendarLink$ = new BehaviorSubject<string | undefined>(undefined);
 
   public get breadcrumbs$() {
     return this._breadcrumbs$.asObservable();
@@ -23,12 +24,28 @@ export class PageService {
   }
 
   /**
+   * Get the current calendar link
+   */
+  public get calendarLink$() {
+    return this._calendarLink$.asObservable();
+  }
+
+  /**
    * Set the current breadcrumbs
    * @param breadcrumb
    */
   public withBreadcrumbs(breadcrumb?: Breadcrumb): PageService {
     this._breadcrumbs$.next(breadcrumb?.clone());
     this._pageName$.next(breadcrumb?.name);
+    return this;
+  }
+
+  /**
+   * Set the current calendar link
+   * @param href
+   */
+  public withCalendarLink(href?: string): PageService {
+    this._calendarLink$.next(href);
     return this;
   }
 

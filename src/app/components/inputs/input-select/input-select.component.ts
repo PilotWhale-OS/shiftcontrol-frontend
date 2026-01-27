@@ -194,7 +194,7 @@ export class InputSelectComponent<TData> implements TypedControlValueAccessor<TD
     this.onChange = fn;
 
     /* check if init value has changed before onchange was registered */
-    if (this.initModified !== undefined && this.value === this.initModified) {
+    if (this.initModified !== undefined && this.comparatorFn(this.value, this.initModified)) {
       this.onChange(this.initModified);
     }
   }

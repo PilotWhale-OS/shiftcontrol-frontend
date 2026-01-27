@@ -1,6 +1,6 @@
 import {Component, EventEmitter, inject, Input, Output} from "@angular/core";
 import {PositionSlotDto, TradeCandidatesDto, VolunteerDto} from "../../../../shiftservice-client";
-import {BehaviorSubject, filter, map} from "rxjs";
+import {BehaviorSubject, filter, map, startWith} from "rxjs";
 import {AsyncPipe} from "@angular/common";
 import {DialogComponent} from "../../dialog/dialog.component";
 import {icons} from "../../../util/icons";
@@ -59,8 +59,9 @@ export class DialogTradeRequestComponent {
     });
 
     this.partnerOptions$ = this.form.controls.offeredPosition.valueChanges.pipe(
+      startWith(this.form.controls.offeredPosition.value),
       map(value => {
-        if(value === undefined) {
+        if(value === undefined || value === null) {
           return undefined;
         }
 

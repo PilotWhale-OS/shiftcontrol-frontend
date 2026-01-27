@@ -23,10 +23,10 @@
         <!-- action(s) -->
         <div class="pl-lg grow flex flex-row justify-end gap-sm">
           @if (trade.isOwnRequest){
-            <xsb-input-button size="text" content="Cancel" (click)="cancelTrade(trade.trade)" />
+            <xsb-input-button size="text" content="Cancel" (xsbClick)="cancelTrade(trade.trade)" />
           } @else {
-            <xsb-input-button size="text" content="Accept" (click)="acceptTrade(trade.trade)" />
-            <xsb-input-button size="text" content="Decline" (click)="declineTrade(trade.trade)" />
+            <xsb-input-button size="text" content="Accept" (xsbClick)="acceptTrade(trade.trade)" />
+            <xsb-input-button size="text" content="Decline" (xsbClick)="declineTrade(trade.trade)" />
           }
         </div>
       </div>
@@ -76,9 +76,9 @@
         <!-- action(s) -->
         <div class="pl-lg grow flex flex-row justify-end">
           @if (auction.isOwnRequest){
-            <xsb-input-button size="text" content="Cancel" (click)="cancelAuction(auction.auction)" />
+            <xsb-input-button size="text" content="Cancel" (xsbClick)="cancelAuction(auction.auction)" />
           } @else {
-            <xsb-input-button size="text" content="Accept" (click)="acceptAuction(auction.auction)" />
+            <xsb-input-button size="text" content="Accept" (xsbClick)="acceptAuction(auction.auction)" />
           }
         </div>
       </div>

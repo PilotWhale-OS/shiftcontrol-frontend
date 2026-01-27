@@ -10,6 +10,9 @@ export const breadcrumbsGuard: CanActivateFn = (route) => {
 
   const pageService = inject(PageService);
 
+  /* reset calendar link */
+  pageService.withCalendarLink(undefined);
+
   /* get breadcrumbs of route data */
   const routeData = route.data;
   const breadcrumbs = routeData["breadcrumbs"];

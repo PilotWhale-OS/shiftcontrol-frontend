@@ -78,11 +78,11 @@
 
         <div class="col-span-2 row-start-5 flex gap-x-lg items-center justify-center pt-md">
           @if (data.activity === undefined){
-            <xsb-input-button content="Create Activity" action="success" (click)="create(data.eventId)" />
+            <xsb-input-button content="Create Activity" action="success" (xsbClick)="create(data.eventId)" />
           }
           @else {
-            <xsb-input-button content="Update Activity" action="success" (click)="update(data.activity)" />
-            <xsb-input-button content="Delete Activity" action="danger" (click)="showActivityDeleteConfirm = true" />
+            <xsb-input-button content="Update Activity" action="success" (xsbClick)="update(data.activity)" />
+            <xsb-input-button content="Delete Activity" action="danger" (xsbClick)="showActivityDeleteConfirm = true" />
           }
         </div>
       </div>

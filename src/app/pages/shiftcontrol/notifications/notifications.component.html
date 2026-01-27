@@ -4,7 +4,7 @@
     <h1 class="flex gap-md signature-gradient-font"><fa-icon [icon]="icons.noNotification" /> It's quiet for now</h1>
     <span>No notifications available.</span>
   } @else {
-    <xsb-input-button size="text" content="Clear History" class="pb-md" (click)="clearHistory()" />
+    <xsb-input-button size="text" content="Clear History" class="pb-md" (xsbClick)="clearHistory()" />
   }
 
 
@@ -26,7 +26,7 @@
           <a class="justify-self-end" [routerLink]="notification.tree">View</a>
         }
         @if (notification.notification.id !== undefined && notification.notification.id !== null) {
-          <xsb-input-button size="text" content="Delete" class="justify-self-end" (click)="clearNotification(notification.notification.id)" />
+          <xsb-input-button size="text" content="Delete" class="justify-self-end" (xsbClick)="clearNotification(notification.notification.id)" />
         }
       </div>
     </div>

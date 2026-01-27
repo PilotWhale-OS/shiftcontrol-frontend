@@ -13,7 +13,7 @@
               </div>
               <div class="flex flex-row flex-wrap gap-x-xs items-center">
                 <span>You requested</span>
-                <xsb-input-button size="text" content="a trade" (click)="dialogTradeInfo$.next(requestedTrade)" />
+                <xsb-input-button size="text" content="a trade" (xsbClick)="dialogTradeInfo$.next(requestedTrade)" />
                 <span>
                 with {{requestedTrade.requestedAssignment.assignment.assignedVolunteer.firstName}}
                   {{requestedTrade.requestedAssignment.assignment.assignedVolunteer.lastName | slice:0:1}}.
@@ -34,7 +34,7 @@
                 {{offeredTrade.offeringAssignment.assignment.assignedVolunteer.firstName}}
                   {{offeredTrade.offeringAssignment.assignment.assignedVolunteer.lastName | slice:0:1}}. offers
               </span>
-              <xsb-input-button size="text" content="a position" (click)="dialogTradeInfo$.next(offeredTrade)" />
+              <xsb-input-button size="text" content="a position" (xsbClick)="dialogTradeInfo$.next(offeredTrade)" />
             </div>
           }
         }
@@ -64,7 +64,7 @@
           <span>
             If your request is urgent, you can
             <xsb-input-button class="inline" size="text" content="request planner attention."
-                              (click)="requestSignOut(position.slot, position.shift, position.currentUserAssignment)"
+                              (xsbClick)="requestSignOut(position.slot, position.shift, position.currentUserAssignment)"
             />
           </span>
         }
@@ -74,36 +74,36 @@
             <div class="empty:hidden">
               @switch(action) {
                 @case("SIGN_UP") {
-                  <xsb-input-button content="Sign Up" action="success" (click)="signUp(position.slot, position.shift)" />
+                  <xsb-input-button content="Sign Up" action="success" (xsbClick)="signUp(position.slot, position.shift)" />
                 }
 
                 @case("SIGN_OUT") {
-                  <xsb-input-button content="Leave Position" action="normal" (click)="signOut(position.slot)" />
+                  <xsb-input-button content="Leave Position" action="normal" (xsbClick)="signOut(position.slot)" />
                 }
 
                 @case("REQUEST_SIGN_UP") {
-                  <xsb-input-button content="Request Sign Up" action="success" (click)="requestSignUp(position.slot, position.shift)"  />
+                  <xsb-input-button content="Request Sign Up" action="success" (xsbClick)="requestSignUp(position.slot, position.shift)"  />
                 }
 
                 @case("REQUEST_SIGN_OUT") {
                   <xsb-input-button content="Request Leave" action="normal"
-                                    (click)="requestSignOut(position.slot, position.shift, position.currentUserAssignment)"
+                                    (xsbClick)="requestSignOut(position.slot, position.shift, position.currentUserAssignment)"
                   />
                 }
 
                 @case("REQUEST_TRADE") {
-                  <xsb-input-button content="Request Trade" action="normal" (click)="requestTrade(position.slot)"  />
+                  <xsb-input-button content="Request Trade" action="normal" (xsbClick)="requestTrade(position.slot)"  />
                 }
 
                 @case("CANCEL_REQUEST_SIGN_UP") {
                   <xsb-input-button content="Cancel Sign Up Request" action="normal"
-                                    (click)="cancelSignUpRequest(position.slot, position.shift, position.currentUserAssignment)"
+                                    (xsbClick)="cancelSignUpRequest(position.slot, position.shift, position.currentUserAssignment)"
                   />
                 }
 
                 @case("CANCEL_REQUEST_SIGN_OUT") {
                   <xsb-input-button content="Cancel Leave Request" action="normal"
-                                    (click)="cancelSignOutRequest(position.slot, position.shift, position.currentUserAssignment)"
+                                    (xsbClick)="cancelSignOutRequest(position.slot, position.shift, position.currentUserAssignment)"
                   />
                 }
 
@@ -114,31 +114,31 @@
             </div>
           }
 
+          @if (canManage$ | async) {
+            <xsb-input-button content="Manage Assignments" action="normal" (xsbClick)="manageAssignments(position.slot)" />
+          }
+
         </div>
+
+        <app-dialog-trade-request
+          class="absolute"
+          [requestOptions]="(tradeRequestOptions$ | async) ?? undefined"
+          (submitted)="$event !== undefined ? submitTradeRequest(position.slot, $event.partner, $event.slot) : 0; tradeRequestOptions$.next(undefined)"
+        />
+
+        <app-dialog-trade-details
+          class="absolute"
+          [tradeInfo]="(dialogTradeInfo$ | async) ?? undefined"
+          (dialogClosed)="dialogTradeInfo$.next(undefined)"
+          (tradeChanged)="positionSignupChanged.emit(undefined); dialogTradeInfo$.next(undefined)"
+        />
       }
-
-      @if (canManage$ | async) {
-        <xsb-input-button content="Manage Assignments" action="normal" (click)="manageAssignments(position.slot)" />
-      }
-
-      <app-dialog-trade-request
-        class="absolute"
-        [requestOptions]="(tradeRequestOptions$ | async) ?? undefined"
-        (submitted)="$event !== undefined ? submitTradeRequest(position.slot, $event.partner, $event.slot) : 0; tradeRequestOptions$.next(undefined)"
-      />
-
-      <app-dialog-trade-details
-        class="absolute"
-        [tradeInfo]="(dialogTradeInfo$ | async) ?? undefined"
-        (dialogClosed)="dialogTradeInfo$.next(undefined)"
-        (tradeChanged)="positionSignupChanged.emit(undefined); dialogTradeInfo$.next(undefined)"
-      />
     }
 
   </div>
 } @else {
   @if (position$ | async; as position){
-    <xsb-input-button content="Manage Assignments" action="normal" (click)="manageAssignments(position.slot)" />
+    <xsb-input-button content="Manage Assignments" action="normal" (xsbClick)="manageAssignments(position.slot)" />
   }
 }
 

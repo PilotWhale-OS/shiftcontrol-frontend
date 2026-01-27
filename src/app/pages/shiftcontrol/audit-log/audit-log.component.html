@@ -56,7 +56,7 @@
             @if ((event.actingUserId?.length ?? 0) > 0) {
               <a routerLink="/volunteers/{{event.actingUserId}}">View acting User</a>
             }
-            <xsb-input-button size="text" content="View Event JSON" (click)="viewEventDetails(event)" />
+            <xsb-input-button size="text" content="View Event JSON" (xsbClick)="viewEventDetails(event)" />
           </div>
         }
       }
@@ -65,14 +65,14 @@
 
       <div class="col-span-4 flex flex-row gap-md items-center pt-sm">
         <xsb-input-button size="text" content="Previous"
-                          (click)="form.controls.paginationIndex.setValue(page.page - 1)"
+                          (xsbClick)="form.controls.paginationIndex.setValue(page.page - 1)"
                           [lock]="page.page <= 0"
         />
 
         <span>Page {{page.page + 1}}/{{page.pages}}</span>
 
         <xsb-input-button size="text" content="Next"
-                          (click)="form.controls.paginationIndex.setValue(page.page + 1)"
+                          (xsbClick)="form.controls.paginationIndex.setValue(page.page + 1)"
                           [lock]="page.page >= page.pages - 1"
         />
       </div>

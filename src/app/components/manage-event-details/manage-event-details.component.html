@@ -72,14 +72,14 @@
 
     <div class="col-span-2 flex gap-x-lg items-center pt-md">
       @if (manageData.event === undefined){
-        <xsb-input-button content="Create Event" action="success" (click)="create()" />
+        <xsb-input-button content="Create Event" action="success" (xsbClick)="create()" />
         <small>or</small>
-        <xsb-input-button content="Import Event" action="success" (click)="import()" />
-        <xsb-input-button content="Download Event Template" (click)="downloadTemplate()" />
+        <xsb-input-button content="Import Event" action="success" (xsbClick)="import()" />
+        <xsb-input-button content="Download Event Template" (xsbClick)="downloadTemplate()" />
       }
       @else {
-        <xsb-input-button content="Update Event" action="success" (click)="update(manageData.event)" />
-        <xsb-input-button content="Delete Event" action="danger" (click)="showEventDeleteConfirm = true" />
+        <xsb-input-button content="Update Event" action="success" (xsbClick)="update(manageData.event)" />
+        <xsb-input-button content="Delete Event" action="danger" (xsbClick)="showEventDeleteConfirm = true" />
 
         @if (showEventDeleteConfirm){
           <xsb-dialog action="danger" danger="Delete Event" (closeDialog)="showEventDeleteConfirm = false; $event === 'danger' && delete(manageData.event)">

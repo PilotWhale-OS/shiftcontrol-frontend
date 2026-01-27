@@ -12,7 +12,10 @@
       'rounded-md text-sm border-ctr' : size === 'minimal',
       'rounded-lg border-ctr' : size === 'regular',
     }" type="number" [(ngModel)]="value" (ngModelChange)="onChange ? onChange($event) : 0"
-           (blur)="onTouched ? onTouched() : 0">
+           (blur)="onTouched ? onTouched() : 0"
+           [min]="min === undefined ? null : min"
+            [max]="max === undefined ? null : max"
+    >
 
     <div [ngClass]="{
     'opacity-100' : !valid && !disabled,

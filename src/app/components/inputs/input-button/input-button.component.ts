@@ -19,8 +19,7 @@ export class InputButtonComponent {
    * event when the button had been clicked
    */
   @Output()
-  // eslint-disable-next-line @angular-eslint/no-output-native
-  public readonly click = new EventEmitter<MouseEvent>();
+  public readonly xsbClick = new EventEmitter<MouseEvent>();
 
   @Input()
   size: "minimal" | "regular" | "text" = "regular";
@@ -52,9 +51,10 @@ export class InputButtonComponent {
   @HostBinding("attr.name") get hideNameAttr() { return null; }
   @HostBinding("attr.type") get hideTypeAttr() { return null; }
 
-  preventDefault(event: MouseEvent) {
+
+  clicked(event: MouseEvent) {
     event.preventDefault();
     event.stopPropagation();
-    if(!this.lock) {this.click.emit(event);}
+    if(!this.lock) {this.xsbClick.emit(event);}
   }
 }

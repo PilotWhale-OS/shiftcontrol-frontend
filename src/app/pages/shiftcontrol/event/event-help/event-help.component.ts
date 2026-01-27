@@ -39,6 +39,7 @@ export class EventHelpComponent {
     this._eventService.getShiftPlansOverviewOfEvent(eventId).subscribe(event => {
       this._pageService
         .configurePageName(`${event.eventOverview.name}`)
+        .withCalendarLink("../calendar")
         .configureBreadcrumb(BC_EVENT, event.eventOverview.name, event.eventOverview.id);
     });
   }

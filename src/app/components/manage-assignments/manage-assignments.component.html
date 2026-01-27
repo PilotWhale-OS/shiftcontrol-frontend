@@ -28,7 +28,7 @@
         />
         <xsb-input-button class="grow" size="minimal" content="Change Phase" action="success"
                           [disableLockIcon]="true"
-                          (click)="updatePhase(plan)"
+                          (xsbClick)="updatePhase(plan)"
                           [lock]="plan.lockStatus === form.controls.assignmentPhase.value" />
       </div>
 
@@ -97,18 +97,18 @@
                 <div class="col-start-4 flex flex-row gap-sm items-center">
                   @switch (context.assignment.status){
                     @case ("ACCEPTED") {
-                      <xsb-input-button size="text" content="Unassign" (click)="unassign(plan, context.assignment)" />
+                      <xsb-input-button size="text" content="Unassign" (xsbClick)="unassign(plan, context.assignment)" />
                     }
                     @case ("AUCTION") {
-                      <xsb-input-button size="text" content="Unassign" (click)="unassign(plan, context.assignment)" />
+                      <xsb-input-button size="text" content="Unassign" (xsbClick)="unassign(plan, context.assignment)" />
                     }
                     @case ("AUCTION_REQUEST_FOR_UNASSIGN") {
-                      <xsb-input-button size="text" content="Approve Unassign" (click)="acceptRequest(plan, context.assignment)" />
-                      <xsb-input-button size="text" content="Decline Request" (click)="declineRequest(plan, context.assignment)" />
+                      <xsb-input-button size="text" content="Approve Unassign" (xsbClick)="acceptRequest(plan, context.assignment)" />
+                      <xsb-input-button size="text" content="Decline Request" (xsbClick)="declineRequest(plan, context.assignment)" />
                     }
                     @case ("REQUEST_FOR_ASSIGNMENT") {
-                      <xsb-input-button size="text" content="Approve Assign" (click)="acceptRequest(plan, context.assignment)" />
-                      <xsb-input-button size="text" content="Decline Request" (click)="declineRequest(plan, context.assignment)" />
+                      <xsb-input-button size="text" content="Approve Assign" (xsbClick)="acceptRequest(plan, context.assignment)" />
+                      <xsb-input-button size="text" content="Decline Request" (xsbClick)="declineRequest(plan, context.assignment)" />
                     }
                   }
                 </div>

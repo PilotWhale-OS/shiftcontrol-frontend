@@ -50,14 +50,14 @@
             }
 
           </div>
-          <xsb-input-button action="normal" content="Remove {{constraint.type === 'EMERGENCY' ? 'Emergency' : 'Absence'}}" size="text" (click)="removeUnavailability(constraint, event)" />
+          <xsb-input-button action="normal" content="Remove {{constraint.type === 'EMERGENCY' ? 'Emergency' : 'Absence'}}" size="text" (xsbClick)="removeUnavailability(constraint, event)" />
         }
       </div>
     }
 
     <div class="flex gap-sm">
-      <xsb-input-button content="Add Absence" (click)="showUnavailabilityDialog = true" size="minimal" class="w-fit" />
-      <xsb-input-button content="Set Emergency" (click)="showEmergencyDialog = true" action="danger" size="minimal" class="w-fit" />
+      <xsb-input-button content="Add Absence" (xsbClick)="showUnavailabilityDialog = true" size="minimal" class="w-fit" />
+      <xsb-input-button content="Set Emergency" (xsbClick)="showEmergencyDialog = true" action="danger" size="minimal" class="w-fit" />
     </div>
   </div>
 

@@ -6,7 +6,7 @@
         <hr>
         <small>Clone Event</small>
         <span>Cloning this event will copy all its configuration, but no volunteer sign-ups.</span>
-        <xsb-input-button content="Clone Event" class="w-fit" size="minimal" (click)="clone(event)" />
+        <xsb-input-button content="Clone Event" class="w-fit" size="minimal" (xsbClick)="clone(event)" />
       </div>
 
       <div class="flex flex-col gap-md">
@@ -14,8 +14,8 @@
         <small>Export Event</small>
         <span>Exporting this event will save a schedule overview, including all of its shifts with associated locations and activities.</span>
         <div class="flex flex-row gap-md">
-          <xsb-input-button content="Export CSV" class="w-fit" size="minimal" (click)="exportEvent(event,'csv')" />
-          <xsb-input-button content="Export Excel" class="w-fit" size="minimal" (click)="exportEvent(event,'xlsx')" />
+          <xsb-input-button content="Export CSV" class="w-fit" size="minimal" (xsbClick)="exportEvent(event,'csv')" />
+          <xsb-input-button content="Export Excel" class="w-fit" size="minimal" (xsbClick)="exportEvent(event,'xlsx')" />
         </div>
       </div>
     </div>

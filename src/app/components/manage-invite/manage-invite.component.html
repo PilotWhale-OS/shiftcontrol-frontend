@@ -20,13 +20,13 @@
       <span class="grow"></span>
 
       @if (manageData.invite === undefined) {
-        <xsb-input-button content="Create" size="text" (click)="create(manageData.plan)" />
+        <xsb-input-button content="Create" size="text" (xsbClick)="create(manageData.plan)" />
       }
       @else if(manageData.invite.active) {
-        <xsb-input-button content="Revoke" size="text" (click)="revoke(manageData.invite)" />
+        <xsb-input-button content="Revoke" size="text" (xsbClick)="revoke(manageData.invite)" />
       }
       @else {
-        <xsb-input-button content="Remove" size="text" (click)="remove(manageData.invite)" />
+        <xsb-input-button content="Remove" size="text" (xsbClick)="remove(manageData.invite)" />
       }
 
     </div>
@@ -58,7 +58,7 @@
 
         <div class="flex flex-col gap-xs col-span-2">
           <small><fa-icon [icon]="icons.url" class="pr-sm" />Invite Link</small> {{ getInviteLink(manageData.invite) }}
-          <xsb-input-button content="Copy Link" size="text" (click)="copyInviteLinkToClipboard(manageData.invite)" />
+          <xsb-input-button content="Copy Link" size="text" (xsbClick)="copyInviteLinkToClipboard(manageData.invite)" />
         </div>
 
       }
@@ -118,6 +118,7 @@
             <label class="grow" for="invite-manage-enableMaxUses">Enable Limit</label>
 
             <xsb-input-number #maxUses name="invite-manage-maxUses"
+                              [min]="0"
                               [formControl]="form.controls.maxUses"
                               [xsb-typed]="[maxUses, form.controls.maxUses]" />
           </div>

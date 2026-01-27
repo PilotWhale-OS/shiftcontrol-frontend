@@ -236,7 +236,6 @@ export class ManageShiftComponent implements OnDestroy {
     this.positionManageData$ = this.manageData$.pipe(
       combineLatestWith(this.manageParams$.pipe(
         filter(params => params !== undefined),
-        take(1),
         switchMap(params => params.shift === undefined ? of([]) : this._roleService.getRoles(params.shift.shiftPlan.id))
       ), this.canManage$),
       map(([data, roles, canManage]) => {

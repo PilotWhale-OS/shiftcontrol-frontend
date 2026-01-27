@@ -26,6 +26,13 @@
     <!-- quick links at the right side -->
     <div class="links">
 
+      <!-- calendar -->
+      @if (calendarLink$ | async; as link) {
+        <div class="calendar" [routerLink]="link">
+          <fa-icon [icon]="icons.calendar" />
+        </div>
+      }
+
       <!-- notifications -->
       @if (unseenNotificationCount$ | async; as unseen) {
         <div class="notifications" routerLink="notifications" [ngClass]="unseen.count > 0 ? 'unseen' : 'idle'">
