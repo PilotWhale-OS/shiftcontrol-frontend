@@ -14,6 +14,10 @@
   @apply p-10;
 }
 
+img {
+  transition-duration: .5s;
+}
+
 .gradient-bg {
   background-size: 25em 20em;
   background-repeat: no-repeat;
