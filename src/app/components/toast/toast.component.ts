@@ -5,6 +5,7 @@ import {InputButtonComponent} from "../inputs/input-button/input-button.componen
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {Router, RouterLink} from "@angular/router";
 import {NgClass} from "@angular/common";
+import {NotificationService} from "../../services/notification/notification.service";
 
 @Component({
   selector: "app-toast",
@@ -22,6 +23,7 @@ export class ToastComponent extends Toast {
   protected readonly icons = icons;
 
   private readonly _router = inject(Router);
+  private readonly _notificationService = inject(NotificationService);
 
   public get type(){
     if(this.options.payload !== undefined && this.options.payload.notification === true) {
@@ -31,11 +33,27 @@ export class ToastComponent extends Toast {
     }
   }
 
+  public get url(): string | undefined {
+    if(this.options.payload !== undefined && typeof this.options.payload.url === "string") {
+      return this.options.payload.url;
+    } else {
+      return undefined;
+    }
+  }
+
   close(){
     this.remove();
   }
 
   click() {
+
+    if(this.url !== undefined) {
+      const tree = this._router.parseUrl(this.url);
+      this._router.navigateByUrl(tree);
+      this._notificationService.markAllAsRead();
+      return;
+    }
+
     switch (this.type) {
       case "notification":
         this._router.navigateByUrl("/notifications");

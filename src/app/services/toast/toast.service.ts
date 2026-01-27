@@ -11,11 +11,12 @@ export class ToastService {
 
   constructor() { }
 
-  public showNotification(title: string, message: string, timeout?: number) {
+  public showNotification(title: string, message: string, url?: string, timeout?: number) {
     this._toastr.info(message,title, {
       timeOut: timeout ?? 5000,
       payload: {
         notification: true,
+        url
       }
     });
   }

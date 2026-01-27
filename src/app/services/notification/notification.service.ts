@@ -136,7 +136,7 @@ export class NotificationService {
   }
 
   private addNotification(event: PushNotificationDto) {
-    this._toastService.showNotification(event.title, event.notification);
+    this._toastService.showNotification(event.title, event.notification, event.url ?? undefined);
     this._notifications$.pipe(
       take(1)
     ).subscribe(notifications => {
