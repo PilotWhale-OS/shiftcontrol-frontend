@@ -1,6 +1,6 @@
 import {Component, inject, Input, OnDestroy} from "@angular/core";
 import {
-  PaginationDtoUserEventDto, PaginationDtoUserPlanDto,
+  PaginationDtoUserPlanDto,
   RoleDto,
   ShiftPlanDto,
   UserEventEndpointService,
@@ -17,7 +17,7 @@ import {
   map, Observable, of, pairwise,
   shareReplay,
   startWith,
-  switchMap, withLatestFrom
+  switchMap
 } from "rxjs";
 import { icons } from "../../util/icons";
 import {FormBuilder, FormControl, ReactiveFormsModule} from "@angular/forms";
@@ -81,6 +81,7 @@ export class ManagePlanVolunteersComponent implements OnDestroy {
     });
 
     this.page$ = this.form.valueChanges.pipe(
+      startWith(this.form.value),
       pairwise(),
       switchMap(([previousValue, value]) => {
 
