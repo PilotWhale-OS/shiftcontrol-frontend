@@ -11,7 +11,7 @@
             {{ invite.eventDto.startTime | date:"shortDate" }} - {{ invite.eventDto.endTime | date:"shortDate" }}
           </div>
 
-          <div class="badge hint h-fit" [app-tooltip]="'Associated event\n of this shift plan'">
+          <div class="badge hint h-fit" [app-tooltip]="'The shift plan\n that you\'re about to join'">
             <fa-icon [icon]="icons.plan" />
             {{invite.inviteDto.shiftPlanDto.name}}
           </div>
@@ -39,7 +39,15 @@
 
             @case ("UPGRADE_ACCESS") {
               <div class="max-w-[30rem]">
-                <b>{{invite.attendingVolunteerCount}} {{invite.attendingVolunteerCount > 1 ? "people have" : "person has"}} joined</b> this plan on ShiftControl.
+                @if (invite.attendingVolunteerCount === 0) {
+                  You are the first volunteer to join this plan on ShiftControl - welcome!
+                } @else {
+                  <b>
+                    {{invite.attendingVolunteerCount}}
+                    {{invite.attendingVolunteerCount > 1 ? "people have" : "person has"}}
+                    joined
+                  </b> this plan on ShiftControl.
+                }
               </div>
 
               <div class="flex flex-col gap-sm justify-center items-center pt-lg">
@@ -50,7 +58,15 @@
 
             @case ("UPGRADE_ROLES") {
               <div class="max-w-[30rem]">
-                <b>{{invite.attendingVolunteerCount}} {{invite.attendingVolunteerCount > 1 ? "people have" : "person has"}} joined</b> this plan on ShiftControl.
+                @if (invite.attendingVolunteerCount === 0) {
+                  You are the first volunteer to join this plan on ShiftControl - welcome!
+                } @else {
+                  <b>
+                    {{invite.attendingVolunteerCount}}
+                    {{invite.attendingVolunteerCount > 1 ? "people have" : "person has"}}
+                    joined
+                  </b> this plan on ShiftControl.
+                }
               </div>
 
               <div class="flex flex-col gap-sm justify-center items-center pt-lg">
@@ -61,7 +77,15 @@
 
             @case ("JOINED") {
               <div class="max-w-[30rem]">
-                <b>{{invite.attendingVolunteerCount}} {{invite.attendingVolunteerCount > 1 ? "people have" : "person has"}} joined</b> this plan on ShiftControl.
+                @if (invite.attendingVolunteerCount === 0) {
+                  You are the first volunteer to join this plan on ShiftControl - welcome!
+                } @else {
+                  <b>
+                    {{invite.attendingVolunteerCount}}
+                    {{invite.attendingVolunteerCount > 1 ? "people have" : "person has"}}
+                    joined
+                  </b> this plan on ShiftControl.
+                }
               </div>
 
               <div class="flex flex-col gap-sm justify-center items-center pt-lg">
@@ -72,7 +96,16 @@
 
             @case ("ADMIN") {
               <div class="max-w-[30rem]">
-                <b>{{invite.attendingVolunteerCount}} {{invite.attendingVolunteerCount > 1 ? "people have" : "person has"}} joined</b> this plan on ShiftControl.
+
+                @if (invite.attendingVolunteerCount === 0) {
+                  No volunteers joined this plan yet.
+                } @else {
+                  <b>
+                    {{invite.attendingVolunteerCount}}
+                    {{invite.attendingVolunteerCount > 1 ? "people have" : "person has"}}
+                    joined
+                  </b> this plan on ShiftControl.
+                }
               </div>
 
               <div class="flex flex-col gap-sm justify-center items-center pt-lg">
@@ -83,8 +116,17 @@
 
             @case ("JOIN") {
               <div class="max-w-[30rem]">
-                <b>{{invite.attendingVolunteerCount}} {{invite.attendingVolunteerCount > 1 ? "people have" : "person has"}} joined</b> this plan on ShiftControl.<br>
-                Be one of them and make the event happen!
+
+                @if (invite.attendingVolunteerCount === 0) {
+                  You are the first volunteer to join this plan on ShiftControl - welcome!
+                } @else {
+                  <b>
+                    {{invite.attendingVolunteerCount}}
+                    {{invite.attendingVolunteerCount > 1 ? "people have" : "person has"}}
+                    joined
+                  </b> this plan on ShiftControl.<br>
+                  Be one of them and make the event happen!
+                }
               </div>
 
               <div class="flex flex-col gap-sm justify-center items-center pt-lg">
