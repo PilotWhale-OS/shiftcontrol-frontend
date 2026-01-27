@@ -1,15 +1,23 @@
 import {Component, inject, Input, OnDestroy} from "@angular/core";
-import {RoleDto, ShiftPlanDto, UserEventEndpointService, UserPlanEndpointService, VolunteerDto} from "../../../shiftservice-client";
+import {
+  PaginationDtoUserEventDto, PaginationDtoUserPlanDto,
+  RoleDto,
+  ShiftPlanDto,
+  UserEventEndpointService,
+  UserPlanEndpointService,
+  VolunteerDto
+} from "../../../shiftservice-client";
 import {
   BehaviorSubject, catchError,
   combineLatest,
   combineLatestWith,
   debounceTime, distinctUntilChanged,
+  EMPTY,
   filter,
-  map, of,
+  map, Observable, of, pairwise,
   shareReplay,
   startWith,
-  switchMap
+  switchMap, withLatestFrom
 } from "rxjs";
 import { icons } from "../../util/icons";
 import {FormBuilder, FormControl, ReactiveFormsModule} from "@angular/forms";
@@ -42,7 +50,7 @@ export interface planVolunteersData {
 })
 export class ManagePlanVolunteersComponent implements OnDestroy {
 
-  protected page$;
+  protected page$: Observable<PaginationDtoUserPlanDto>;
   protected readonly manageData$ = new BehaviorSubject<planVolunteersData | undefined>(undefined);
   protected readonly roleSelectOptions$ = this.manageData$.pipe(
     filter((data): data is planVolunteersData => data !== undefined),
@@ -73,6 +81,18 @@ export class ManagePlanVolunteersComponent implements OnDestroy {
     });
 
     this.page$ = this.form.valueChanges.pipe(
+      pairwise(),
+      switchMap(([previousValue, value]) => {
+
+        /* something else than page index changed, reset page */
+        if(value.paginationIndex === previousValue.paginationIndex && value.paginationIndex !== 0) {
+          this.form.controls.paginationIndex.setValue(0, {emitEvent: true});
+          return EMPTY;
+        }
+
+        /* page index changed, keep filters */
+        return of(value);
+      }),
       startWith(this.form.value),
       debounceTime(100),
       combineLatestWith(this.manageData$.pipe(
