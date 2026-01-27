@@ -499,6 +499,8 @@ export class PositionSignupComponent {
             return [...REQUEST_TRADE];
           case PositionSlotDto.PositionSignupStateEnum.NotEligible:
             return ["DISABLED_SIGN_UP"];
+          case PositionSlotDto.PositionSignupStateEnum.TimeConflictAssignment:
+            return [...REQUEST_TRADE];
           default:
             return undefined;
         }

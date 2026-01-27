@@ -114,25 +114,25 @@
             </div>
           }
 
-          @if (canManage$ | async) {
-            <xsb-input-button content="Manage Assignments" action="normal" (click)="manageAssignments(position.slot)" />
-          }
-
         </div>
-
-        <app-dialog-trade-request
-          class="contents"
-          [requestOptions]="(tradeRequestOptions$ | async) ?? undefined"
-          (submitted)="$event !== undefined ? submitTradeRequest(position.slot, $event.partner, $event.slot) : 0; tradeRequestOptions$.next(undefined)"
-        />
-
-        <app-dialog-trade-details
-          class="contents"
-          [tradeInfo]="(dialogTradeInfo$ | async) ?? undefined"
-          (dialogClosed)="dialogTradeInfo$.next(undefined)"
-          (tradeChanged)="positionSignupChanged.emit(undefined); dialogTradeInfo$.next(undefined)"
-        />
       }
+
+      @if (canManage$ | async) {
+        <xsb-input-button content="Manage Assignments" action="normal" (click)="manageAssignments(position.slot)" />
+      }
+
+      <app-dialog-trade-request
+        class="absolute"
+        [requestOptions]="(tradeRequestOptions$ | async) ?? undefined"
+        (submitted)="$event !== undefined ? submitTradeRequest(position.slot, $event.partner, $event.slot) : 0; tradeRequestOptions$.next(undefined)"
+      />
+
+      <app-dialog-trade-details
+        class="absolute"
+        [tradeInfo]="(dialogTradeInfo$ | async) ?? undefined"
+        (dialogClosed)="dialogTradeInfo$.next(undefined)"
+        (tradeChanged)="positionSignupChanged.emit(undefined); dialogTradeInfo$.next(undefined)"
+      />
     }
 
   </div>
@@ -145,5 +145,5 @@
 <app-dialog-manage-assignments
   [params]="(dialogAssignmentsParams$ | async) ?? undefined"
   (assignmentChanged)="dialogAssignmentsParams$.next(undefined); $event ? positionSignupChanged.emit(undefined) : 0"
-  class="contents"
+  class="absolute"
 />
