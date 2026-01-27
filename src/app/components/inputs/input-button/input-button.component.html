@@ -15,7 +15,7 @@
     'text-default' : action === 'normal',
 
     'cursor-pointer transition-all opacity-100 hover:opacity-80 underline' : !lock
-  }" (click)="preventDefault($event)" [name]="name" tabindex="0" [value]="content" />
+  }" (click)="clicked($event)" [name]="name" tabindex="0" [value]="content" />
   </div>
 }
 
@@ -45,7 +45,7 @@
       <fa-icon class="animate-spin" [icon]="lockIcon" />
     }
 
-    <input class="grow cursor-pointer" (click)="preventDefault($event)" [ngClass]="{
+    <input class="grow cursor-pointer" (click)="clicked($event)" [ngClass]="{
     'w-0' : content.length === 0
   }"
            [type]="type" [name]="name" tabindex="0" [value]="content">

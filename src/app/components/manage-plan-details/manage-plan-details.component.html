@@ -21,11 +21,11 @@
       <span class="grow"></span>
 
       @if (manageData.plan === undefined) {
-        <xsb-input-button content="Create" size="text" (click)="create(manageData.eventId)" />
+        <xsb-input-button content="Create" size="text" (xsbClick)="create(manageData.eventId)" />
       }
       @else {
-        <xsb-input-button content="Delete" size="text" (click)="showPlanDeleteConfirm = true" />
-        <xsb-input-button content="Save" size="text" (click)="update(manageData.plan)" />
+        <xsb-input-button content="Delete" size="text" (xsbClick)="showPlanDeleteConfirm = true" />
+        <xsb-input-button content="Save" size="text" (xsbClick)="update(manageData.plan)" />
       }
     </div>
 

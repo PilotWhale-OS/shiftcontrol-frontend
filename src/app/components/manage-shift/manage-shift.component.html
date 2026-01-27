@@ -9,9 +9,9 @@
         <h1 class="signature-gradient-font">Shift Details</h1>
         <div class="flex flex-row gap-sm justify-end">
           @if(data.shift !== undefined) {
-            <xsb-input-button content="Cancel" size="text" (click)="requestedEditMode$.next(false)" />
-            <xsb-input-button content="Save" size="text" (click)="update(data.shift)" />
-            <xsb-input-button content="Delete" size="text" (click)="showShiftDeleteConfirm = true" />
+            <xsb-input-button content="Cancel" size="text" (xsbClick)="requestedEditMode$.next(false)" />
+            <xsb-input-button content="Save" size="text" (xsbClick)="update(data.shift)" />
+            <xsb-input-button content="Delete" size="text" (xsbClick)="showShiftDeleteConfirm = true" />
           }
         </div>
 
@@ -119,7 +119,7 @@
 
             <div class="flex flex-row flex-wrap gap-sm">
               @for (activity of suggestedActivities; track activity.id) {
-                <xsb-input-button [content]="activity.name" size="text" (click)="linkAndFill(activity, data)" />
+                <xsb-input-button [content]="activity.name" size="text" (xsbClick)="linkAndFill(activity, data)" />
               }
 
               @if (suggestedActivities.length === 0) {
@@ -132,7 +132,7 @@
 
         <div class="col-span-2 row-start-7 flex gap-x-lg items-center justify-center pt-md">
           @if (data.shift === undefined){
-            <xsb-input-button content="Create Shift" action="success" (click)="create()" />
+            <xsb-input-button content="Create Shift" action="success" (xsbClick)="create()" />
           }
         </div>
       </div>
@@ -144,8 +144,8 @@
         <h1 class="signature-gradient-font row-start-1 col-start-1">Shift Details</h1>
         <div class="flex flex-row gap-sm justify-end row-start-1 col-start-2">
           @if (canManage$ | async) {
-            <xsb-input-button content="Edit" size="text" (click)="requestedEditMode$.next(true)" />
-            <xsb-input-button content="Delete" size="text" (click)="showShiftDeleteConfirm = true" />
+            <xsb-input-button content="Edit" size="text" (xsbClick)="requestedEditMode$.next(true)" />
+            <xsb-input-button content="Delete" size="text" (xsbClick)="showShiftDeleteConfirm = true" />
           }
         </div>
 

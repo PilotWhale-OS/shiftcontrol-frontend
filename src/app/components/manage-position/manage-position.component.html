@@ -25,11 +25,11 @@
 
         <div class="flex flex-row gap-sm justify-end">
           @if(data.position !== undefined) {
-            <xsb-input-button content="Cancel" size="text" (click)="requestedEditMode$.next(false)" />
-            <xsb-input-button content="Save" size="text" (click)="update(data.position)" />
-            <xsb-input-button content="Delete" size="text" (click)="showSlotDeleteConfirm = true" />
+            <xsb-input-button content="Cancel" size="text" (xsbClick)="requestedEditMode$.next(false)" />
+            <xsb-input-button content="Save" size="text" (xsbClick)="update(data.position)" />
+            <xsb-input-button content="Delete" size="text" (xsbClick)="showSlotDeleteConfirm = true" />
           } @else {
-            <xsb-input-button content="Create" size="text" (click)="create(data.shift.id)" />
+            <xsb-input-button content="Create" size="text" (xsbClick)="create(data.shift.id)" />
           }
         </div>
 
@@ -153,8 +153,8 @@
           <div class="grow"></div>
 
           @if(canManage$ | async) {
-            <xsb-input-button content="Edit" size="text" (click)="requestedEditMode$.next(true)" />
-            <xsb-input-button content="Delete" size="text" (click)="showSlotDeleteConfirm = true" />
+            <xsb-input-button content="Edit" size="text" (xsbClick)="requestedEditMode$.next(true)" />
+            <xsb-input-button content="Delete" size="text" (xsbClick)="showSlotDeleteConfirm = true" />
           }
         </div>
 

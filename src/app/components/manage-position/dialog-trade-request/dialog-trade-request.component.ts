@@ -1,6 +1,6 @@
 import {Component, EventEmitter, inject, Input, Output} from "@angular/core";
 import {PositionSlotDto, TradeCandidatesDto, VolunteerDto} from "../../../../shiftservice-client";
-import {BehaviorSubject, filter, map} from "rxjs";
+import {BehaviorSubject, filter, map, startWith} from "rxjs";
 import {AsyncPipe} from "@angular/common";
 import {DialogComponent} from "../../dialog/dialog.component";
 import {icons} from "../../../util/icons";
@@ -9,6 +9,7 @@ import {InputSelectComponent, SelectOptions} from "../../inputs/input-select/inp
 import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {TypedFormControlDirective} from "../../../directives/typed-form-control.directive";
 import {InputButtonComponent} from "../../inputs/input-button/input-button.component";
+import {tapLog} from "../../../util/log.pipe";
 
 export interface tradeRequestOptions {
   slot: PositionSlotDto;
@@ -46,7 +47,8 @@ export class DialogTradeRequestComponent {
         name: `${slot.ownShiftName}: ${slot.ownPosition.name}`,
         value: slot
       }))
-      .sort((a, b) => a.name.localeCompare(b.name)) as SelectOptions<TradeCandidatesDto>)
+      .sort((a, b) => a.name.localeCompare(b.name)) as SelectOptions<TradeCandidatesDto>),
+    tapLog("offerShiftOptions$")
   );
   protected readonly partnerOptions$;
 
@@ -59,6 +61,7 @@ export class DialogTradeRequestComponent {
     });
 
     this.partnerOptions$ = this.form.controls.offeredPosition.valueChanges.pipe(
+      startWith(this.form.controls.offeredPosition.value),
       map(value => {
         if(value === undefined) {
           return undefined;
@@ -70,7 +73,8 @@ export class DialogTradeRequestComponent {
             value: rec
           }))
           .sort((a, b) => a.name.localeCompare(b.name)) as SelectOptions<VolunteerDto>;
-      })
+      }),
+      tapLog("partnerOptions$")
     );
   }
 

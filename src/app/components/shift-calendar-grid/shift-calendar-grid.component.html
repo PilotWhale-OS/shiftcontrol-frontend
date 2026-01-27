@@ -29,7 +29,7 @@
         <!-- filter side -->
         <div style="grid-row: 1 / 1; grid-column: filter-start / filter-end" class="filter">
           @if(config.hideFilterToggle !== true) {
-            <xsb-input-button [icon]="icons.filter" size="minimal" content="Filter" (click)="filterToggleClicked()" />
+            <xsb-input-button [icon]="icons.filter" size="minimal" content="Filter" (xsbClick)="filterToggleClicked()" />
           }
         </div>
 

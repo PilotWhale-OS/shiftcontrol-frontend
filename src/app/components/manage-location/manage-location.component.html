@@ -27,11 +27,11 @@
       <span class="grow"></span>
 
       @if (manageData.location === undefined) {
-        <xsb-input-button content="Create" size="text" (click)="save(manageData.location, manageData.event)" />
+        <xsb-input-button content="Create" size="text" (xsbClick)="save(manageData.location, manageData.event)" />
       }
       @else if((isPretalxManaged$ | async) === false) {
-        <xsb-input-button content="Delete" size="text" (click)="showDeleteConfirm = true" />
-        <xsb-input-button content="Save" size="text" (click)="save(manageData.location, manageData.event)" />
+        <xsb-input-button content="Delete" size="text" (xsbClick)="showDeleteConfirm = true" />
+        <xsb-input-button content="Save" size="text" (xsbClick)="save(manageData.location, manageData.event)" />
       }
 
     </div>

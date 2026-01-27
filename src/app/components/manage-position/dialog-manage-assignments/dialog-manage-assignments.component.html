@@ -70,10 +70,10 @@
               <!-- action -->
               @if(item.assignment !== undefined && item.assignment.status !== "REQUEST_FOR_ASSIGNMENT") {
                 <xsb-input-button content="Unassign" size="text"
-                                  (click)="unassignVolunteer(item.assignment)" />
+                                  (xsbClick)="unassignVolunteer(item.assignment)" />
               } @else {
                 <xsb-input-button content="Assign" size="text"
-                                  (click)="assignVolunteer(item.volunteer, params.position)" />
+                                  (xsbClick)="assignVolunteer(item.volunteer, params.position)" />
               }
             }
 

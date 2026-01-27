@@ -27,7 +27,7 @@
     <div></div>
 
     <div class="justify-self-end">
-      <xsb-input-button size="text" content="Add Plan Access" (click)="addAccess(data.volunteer)" />
+      <xsb-input-button size="text" content="Add Plan Access" (xsbClick)="addAccess(data.volunteer)" />
     </div>
 
   } @else {
@@ -55,8 +55,8 @@
     </div>
 
     <div class="justify-self-end flex flex-row gap-md">
-      <xsb-input-button size="text" content="Reset Assignments" (click)="resetAssignments(data.volunteer, data.plan)" />
-      <xsb-input-button size="text" content="Revoke Access" (click)="revokeAccess(data.volunteer, data.plan)" />
+      <xsb-input-button size="text" content="Reset Assignments" (xsbClick)="resetAssignments(data.volunteer, data.plan)" />
+      <xsb-input-button size="text" content="Revoke Access" (xsbClick)="revokeAccess(data.volunteer, data.plan)" />
     </div>
   }
 

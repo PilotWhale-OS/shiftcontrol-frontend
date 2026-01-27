@@ -47,10 +47,10 @@
       <div class="flex flex-row justify-center gap-xl">
 
         @if(success !== undefined) {
-          <xsb-input-button action="success" (click)="closeDialog.next('success')" [content]="success" />
+          <xsb-input-button action="success" (xsbClick)="closeDialog.next('success')" [content]="success" />
         }
         @if(danger !== undefined) {
-          <xsb-input-button action="danger" (click)="closeDialog.next('danger')"  [content]="danger" />
+          <xsb-input-button action="danger" (xsbClick)="closeDialog.next('danger')"  [content]="danger" />
         }
       </div>
 
