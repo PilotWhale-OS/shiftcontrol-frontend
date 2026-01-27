@@ -4,7 +4,7 @@ import {
   faBarsProgress, faBell, faBook,
   faCalendar,
   faCalendarDay,
-  faCalendarDays, faCaretSquareUp, faCertificate, faChartGantt, faCheckCircle, faCircleInfo,
+  faCalendarDays, faCalendarXmark, faCaretSquareUp, faCertificate, faChartGantt, faCheckCircle, faCircleInfo,
   faClock, faCrown, faEarthAmericas, faFilter, faForward,
   faGift, faHandHoldingHeart, faHandSparkles, faHashtag,
   faHourglass, faKey, faLink, faLocationPin, faLock, faMagnifyingGlass, faMedal, faMessage, faMoon, faPause,
@@ -59,6 +59,7 @@ export const icons = {
   pretalxKey: faKey,
   pretalxHost: faServer,
   email: faAt,
+  timeConflict: faCalendarXmark,
 
   /* labels */
   calendar: faCalendar,

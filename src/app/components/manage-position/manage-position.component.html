@@ -136,12 +136,17 @@
               <fa-icon [icon]="icons.position"/>
               Position
             </div>
+          } @else if (hasTimeConflict(data.position)) {
+            <div class="badge w-fit">
+              <fa-icon [icon]="icons.timeConflict"/>
+              Time-Conflicting Position
+            </div>
           } @else if (isEligible(data.position)) {
             <div class="badge w-fit">
               <fa-icon [icon]="icons.signUp"/>
               Eligible Position
             </div>
-          } @else {
+          }  @else {
             <div class="badge deaf w-fit">
               <fa-icon [icon]="icons.ineligible"/>
               Ineligible Position

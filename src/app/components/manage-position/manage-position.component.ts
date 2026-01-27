@@ -233,23 +233,22 @@ export class ManagePositionComponent implements OnDestroy {
     return a?.id === b?.id || (a === null && b === null);
   }
 
+  protected hasTimeConflict(position?: PositionSlotDto): boolean {
+    if(position === undefined) {
+      return false;
+    }
+
+    return position.positionSignupState !== PositionSignupStateEnum.NotEligible &&
+      (position.positionSignupState === PositionSignupStateEnum.TimeConflictAssignment ||
+      position.positionSignupState === PositionSignupStateEnum.TimeConflictTimeConstraint);
+  }
+
   protected isEligible(position?: PositionSlotDto): boolean {
     if(position === undefined) {
       return false;
     }
 
-    switch (position.positionSignupState) {
-
-      /* not eligible if unqualified or time issues */
-      case PositionSignupStateEnum.NotEligible:
-      case PositionSignupStateEnum.TimeConflictTimeConstraint:
-      case PositionSignupStateEnum.TimeConflictAssignment:
-        return false;
-
-      /* always possible to signup at least through trade request */
-      default:
-        return true;
-    }
+    return position.positionSignupState !== PositionSignupStateEnum.NotEligible;
   }
 
   protected isSignedUp(position?: PositionSlotDto): boolean {
