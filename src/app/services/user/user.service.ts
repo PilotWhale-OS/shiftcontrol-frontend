@@ -1,7 +1,7 @@
 import { effect, Injectable, Signal, inject } from "@angular/core";
 import {KEYCLOAK_EVENT_SIGNAL, KeycloakEvent, KeycloakEventType, ReadyArgs, typeEventArgs} from "keycloak-angular";
 import Keycloak, {KeycloakProfile} from "keycloak-js";
-import {BehaviorSubject, catchError, map, Observable, of, switchMap, tap} from "rxjs";
+import {BehaviorSubject, catchError, delay, map, Observable, of, switchMap, tap} from "rxjs";
 import {AccountInfoDto, UserProfileDto, UserProfileEndpointService} from "../../../shiftservice-client";
 import UserTypeEnum = AccountInfoDto.UserTypeEnum;
 
@@ -45,11 +45,11 @@ export class UserService {
     this._kcProfile$.pipe(
       switchMap(profile => profile === null ? of(null) : this.userService.getCurrentUserProfile()),
       catchError(() => of(null))
-    ).subscribe(this._userProfile$);
+    ).subscribe(user => this._userProfile$.next(user));
 
     this._userProfile$.pipe(
       map(profile => profile === null ? null : profile.account.userType)
-    ).subscribe(this._userType$);
+    ).subscribe(user => this._userType$.next(user));
   }
 
   /**

@@ -5,7 +5,7 @@ import {InputButtonComponent} from "../../../components/inputs/input-button/inpu
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {AccountInfoDto, ShiftPlanInviteDetailsDto, ShiftPlanInviteEndpointService} from "../../../../shiftservice-client";
-import {BehaviorSubject, combineLatestWith, map, Subscription, switchMap, withLatestFrom} from "rxjs";
+import {BehaviorSubject, combineLatestWith, filter, map, Subscription, switchMap, take, withLatestFrom} from "rxjs";
 import {AsyncPipe, DatePipe} from "@angular/common";
 import {TooltipDirective} from "../../../directives/tooltip.directive";
 import {icons} from "../../../util/icons";
@@ -87,7 +87,12 @@ export class PlanOnboardingComponent implements OnDestroy {
     );
 
     this._inviteSubscription = this.inviteMode$.pipe(
-      withLatestFrom(this.invite$)
+      withLatestFrom(this.invite$),
+      combineLatestWith(this._userService.userProfile$),
+      filter(([[mode], user]) =>
+        (mode === "JOIN" || mode === "UPGRADE_ACCESS" || mode === "UPGRADE_ROLES") && accept !== null && user !== null),
+      take(1),
+      map(([[mode, invite]]) => [mode, invite] as const)
     ).subscribe(([mode, invite]) => {
       if(invite !== "INVALID" && invite !== null && accept !== null &&
         (mode === "JOIN" || mode === "UPGRADE_ACCESS" || mode === "UPGRADE_ROLES")) {
@@ -116,7 +121,8 @@ export class PlanOnboardingComponent implements OnDestroy {
           switchMap(() => this._userService.refreshProfile())
         );
       })
-    ).subscribe(() => {
+    ).subscribe((profile) => {
+      console.log("Joined shift plan, navigating to event", profile);
       this._router.navigateByUrl(`/events/${invite.eventDto.id}`);
     });
   }
