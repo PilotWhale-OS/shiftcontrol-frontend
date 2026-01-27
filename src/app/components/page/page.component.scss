@@ -17,7 +17,7 @@
   }
 
   .profile {
-    @apply rounded-full aspect-square h-10 bg-framing-highlight_hint grid place-content-center select-none cursor-pointer;
+    @apply rounded-full aspect-square h-10 bg-framing-highlight_hint grid place-content-center select-none cursor-pointer ml-lg;
     /*@apply border-ctr border-framing-item;*/
   }
 
@@ -41,6 +41,15 @@
     &.idle .count {
       @apply hidden;
     }
+  }
+
+  .calendar {
+    @apply text-xl grid aspect-square h-10 rounded-full place-content-center cursor-pointer;
+
+    &:hover {
+      @apply bg-framing-card transition-colors;
+    }
+
   }
 
   .header {
@@ -103,7 +112,7 @@
 
     .links {
       justify-self: end;
-      @apply flex flex-row items-center gap-lg;
+      @apply flex flex-row items-center gap-sm;
     }
   }
 

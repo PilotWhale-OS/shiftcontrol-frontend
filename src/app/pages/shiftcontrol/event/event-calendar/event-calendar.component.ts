@@ -239,6 +239,7 @@ export class EventCalendarComponent implements OnDestroy {
     subs.push(event$.subscribe(dashboard => {
       this._pageService
         .configurePageName(`${dashboard.eventOverview.name} Calendar`)
+        .withCalendarLink("./")
         .configureBreadcrumb(
           BC_EVENT,
           dashboard.eventOverview.name,

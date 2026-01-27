@@ -1,7 +1,7 @@
 import { Component, inject } from "@angular/core";
 import {PageService} from "../../services/page/page.service";
 import {AsyncPipe, NgClass} from "@angular/common";
-import {RouterLink} from "@angular/router";
+import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {UserService} from "../../services/user/user.service";
 import {KeycloakProfile} from "keycloak-js";
 import {combineLatestWith, map} from "rxjs";
@@ -27,6 +27,8 @@ export class PageComponent {
 
   private readonly _pageService = inject(PageService);
   private readonly _userService = inject(UserService);
+  private readonly _router = inject(Router);
+  private readonly _activatedRoute = inject(ActivatedRoute);
   private readonly _notificationService = inject(NotificationService);
 
   public get breadcrumbs$() {
@@ -37,6 +39,12 @@ export class PageComponent {
 
   public get pageName$() {
     return this._pageService.pageName$;
+  }
+
+  public get calendarLink$() {
+    return this._pageService.calendarLink$.pipe(
+      map(link => link === undefined ? undefined : this._router.createUrlTree([link], {relativeTo: this._activatedRoute.firstChild}))
+    );
   }
 
   public get profile$() {

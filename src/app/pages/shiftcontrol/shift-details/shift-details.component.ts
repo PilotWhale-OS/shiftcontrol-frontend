@@ -60,6 +60,7 @@ export class ShiftDetailsComponent {
       this._pageService
         .configurePageName(shift.shift.name)
         .configureBreadcrumb(BC_EVENT, shift.event.name, shift.event.id)
+        .withCalendarLink("/events/" + shift.event.id + "/calendar")
         .configureBreadcrumb(BC_SHIFT_DETAILS, shift.shift.name, shift.shift.id);
     });
   }

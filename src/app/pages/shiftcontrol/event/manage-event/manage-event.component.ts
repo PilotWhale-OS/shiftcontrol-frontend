@@ -72,6 +72,7 @@ export class ManageEventComponent {
       tap(event => {
         this._pageService
           .configurePageName(`${event.eventOverview.name}`)
+          .withCalendarLink("../calendar")
           .configureBreadcrumb(BC_EVENT, event.eventOverview.name, event.eventOverview.id);
       })
     ).subscribe(data => this.event$.next(data));
