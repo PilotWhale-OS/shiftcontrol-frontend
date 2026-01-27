@@ -31,7 +31,9 @@ export class NotificationsComponent {
     this.notifications$ = this._notificationService.notifications$.pipe(
       tap(async () => await this._notificationService.markAllAsRead()),
       map(notifications => [...notifications]),
-      map(notifications => notifications.map(notification => ({
+      map(notifications => notifications
+        .sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
+        .map(notification => ({
         notification,
         tree: notification.url === undefined || notification.url === null ? undefined : this._router.parseUrl(notification.url)
       })))
