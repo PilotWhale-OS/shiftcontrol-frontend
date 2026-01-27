@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import {Component, inject, OnInit} from "@angular/core";
 import {PageService} from "../../services/page/page.service";
 import {AsyncPipe, NgClass} from "@angular/common";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
@@ -8,6 +8,7 @@ import {combineLatestWith, map} from "rxjs";
 import {NotificationService} from "../../services/notification/notification.service";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {icons} from "../../util/icons";
+import {Title} from "@angular/platform-browser";
 
 @Component({
   selector: "app-page",
@@ -21,37 +22,38 @@ import {icons} from "../../util/icons";
   templateUrl: "./page.component.html",
   styleUrl: "./page.component.scss"
 })
-export class PageComponent {
+export class PageComponent implements OnInit {
 
   protected readonly icons = icons;
 
   private readonly _pageService = inject(PageService);
   private readonly _userService = inject(UserService);
   private readonly _router = inject(Router);
+  private readonly _title = inject(Title);
   private readonly _activatedRoute = inject(ActivatedRoute);
   private readonly _notificationService = inject(NotificationService);
 
-  public get breadcrumbs$() {
+  protected get breadcrumbs$() {
     return this._pageService.breadcrumbs$.pipe(
       map(crumb => crumb?.getPath() ?? [])
     );
   }
 
-  public get pageName$() {
+  protected get pageName$() {
     return this._pageService.pageName$;
   }
 
-  public get calendarLink$() {
+  protected get calendarLink$() {
     return this._pageService.calendarLink$.pipe(
       map(link => link === undefined ? undefined : this._router.createUrlTree([link], {relativeTo: this._activatedRoute.firstChild}))
     );
   }
 
-  public get profile$() {
+  protected get profile$() {
     return this._userService.kcProfile$;
   }
 
-  public get unseenNotificationCount$() {
+  protected get unseenNotificationCount$() {
     return this._notificationService.unreadCount$.pipe(
       map(count => ({count})),
       combineLatestWith(this._userService.userProfile$),
@@ -59,11 +61,18 @@ export class PageComponent {
     );
   }
 
+  ngOnInit() {
+    this.pageName$.subscribe(pageName => {
+      const title = pageName !== undefined && pageName !== "ShiftControl" ? `ShiftControl | ${pageName}` : "ShiftControl";
+      this._title.setTitle(title);
+    });
+  }
+
   /**
    * Get initials from profile data
    * @param profile
    */
-  public getInitials(profile: KeycloakProfile) {
+  protected getInitials(profile: KeycloakProfile) {
     if(!profile) {return "";}
     return `${profile.firstName?.charAt(0)} ${profile.lastName?.charAt(0)}`.trim();
   }
