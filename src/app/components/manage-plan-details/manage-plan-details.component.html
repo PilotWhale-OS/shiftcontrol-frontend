@@ -45,6 +45,7 @@
         <small><fa-icon [icon]="icons.rewards" class="pr-sm" />Reward Points</small>
         <label for="plan-manage-points">Default Reward Points per minute</label>
         <xsb-input-number #defaultRewardPointsPerMinute
+                          [min]="0"
                           [formControl]="form.controls.defaultRewardPointsPerMinute"
                           [xsb-typed]="[defaultRewardPointsPerMinute, form.controls.defaultRewardPointsPerMinute]"
                           name="plan-manage-points" placeholder="Default points per minute"

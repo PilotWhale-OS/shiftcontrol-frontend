@@ -39,6 +39,18 @@ export class InputNumberComponent implements TypedControlValueAccessor<number>, 
   name = "";
 
   /**
+   * the native html min attribute
+   */
+  @Input()
+  min?: number;
+
+  /**
+   * the native html max attribute
+   */
+  @Input()
+  max?: number;
+
+  /**
    * disguise the input as plain text and make immutable
    */
   @Input()

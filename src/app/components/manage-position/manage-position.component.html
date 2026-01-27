@@ -59,6 +59,7 @@
           <small><fa-icon [icon]="icons.volunteers" class="pr-sm" />Volunteer Count</small>
           <label for="position-manage-count">The required amount of volunteers</label>
           <xsb-input-number #count
+                            [min]="1"
                             [formControl]="form.controls.desiredVolunteerCount"
                             [xsb-typed]="[count, form.controls.desiredVolunteerCount]"
                             name="position-manage-count" placeholder="Volunteer Count"
@@ -78,6 +79,7 @@
             />
             <label for="position-manage-enableCustomPoints" class="pr-sm whitespace-nowrap">Custom Points</label>
             <xsb-input-number #rewardPoints
+                              [min]="0"
                               [formControl]="form.controls.rewardPoints"
                               [xsb-typed]="[rewardPoints, form.controls.rewardPoints]"
                               name="position-manage-points" placeholder="Reward Points"

@@ -118,6 +118,7 @@
             <label class="grow" for="invite-manage-enableMaxUses">Enable Limit</label>
 
             <xsb-input-number #maxUses name="invite-manage-maxUses"
+                              [min]="0"
                               [formControl]="form.controls.maxUses"
                               [xsb-typed]="[maxUses, form.controls.maxUses]" />
           </div>

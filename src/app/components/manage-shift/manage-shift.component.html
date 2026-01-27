@@ -105,6 +105,7 @@
           <small><fa-icon [icon]="icons.name" class="pr-sm" />Bonus Points</small>
           <label for="shift-manage-bonusPoints">Make this shift more attractive to sign up</label>
           <xsb-input-number #bonusPoints
+                            [min]="0"
                             [formControl]="form.controls.bonusPoints"
                             [xsb-typed]="[bonusPoints, form.controls.bonusPoints]"
                             name="shift-manage-bonusPoints" placeholder="Bonus Points"
