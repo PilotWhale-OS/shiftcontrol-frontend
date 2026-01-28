@@ -32,8 +32,9 @@ import {ManageAssignmentsComponent} from "../../../../components/manage-assignme
 import {FormRouteSyncService} from "../../../../services/form-route-sync.service";
 import {ManagePlanVolunteersComponent} from "../../../../components/manage-plan-volunteers/manage-plan-volunteers.component";
 import {TooltipDirective} from "../../../../directives/tooltip.directive";
+import {ManagePlanStatusComponent} from "../../../../components/manage-plan-status/manage-plan-status.component";
 
-export type managementMode = "invites" | "assignments" | "users" | "roles";
+export type managementMode = "invites" | "assignments" | "users" | "roles" | "status";
 
 @Component({
   selector: "app-manage-shift-plans",
@@ -48,7 +49,8 @@ export type managementMode = "invites" | "assignments" | "users" | "roles";
     ManageRoleComponent,
     ManageAssignmentsComponent,
     ManagePlanVolunteersComponent,
-    TooltipDirective
+    TooltipDirective,
+    ManagePlanStatusComponent
   ],
   templateUrl: "./manage-shift-plans.component.html",
   styleUrl: "./manage-shift-plans.component.scss"
@@ -67,6 +69,7 @@ export class ManageShiftPlansComponent implements OnDestroy {
   protected readonly icons = icons;
 
   protected readonly modeOptions: MultiToggleOptions<managementMode> = [
+    {name: "Status", value: "status"},
     {name: "Invites", value: "invites"},
     {name: "Roles", value: "roles"},
     {name: "Assignments", value: "assignments"},
@@ -91,7 +94,7 @@ export class ManageShiftPlansComponent implements OnDestroy {
 
     this.form = this._fb.group({
       shiftPlan: this._fb.nonNullable.control<ShiftPlanDto | null>(null),
-      managementMode: this._fb.nonNullable.control<managementMode>("invites")
+      managementMode: this._fb.nonNullable.control<managementMode>("status")
     });
 
     this._eventService.getShiftPlansOverviewOfEvent(eventId).pipe(

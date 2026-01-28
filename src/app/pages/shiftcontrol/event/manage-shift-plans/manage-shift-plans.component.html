@@ -121,6 +121,9 @@
             @case ("assignments") {
               <app-manage-assignments [plan]="plan.plan" (planChanged)="refreshData()" />
             }
+            @case ("status") {
+              <app-manage-plan-status [manageData]="(volunteersManageData$ | async) ?? undefined" />
+            }
             @case ("users") {
               <div class="grow">
                 <app-manage-plan-volunteers [manageData]="(volunteersManageData$ | async) ?? undefined" />
