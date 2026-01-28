@@ -85,8 +85,9 @@ export class AccountComponent implements OnDestroy {
             return profile.account.userType === UserTypeEnum.Admin || profile.planningPlans.length > 0;
           }
 
+          /* view volunteer settings even if not joined plans yet */
           if(notif.type.startsWith("VOLUNTEER_")){
-            return profile.account.userType !== UserTypeEnum.Admin && profile.volunteeringPlans.length > 0;
+            return profile.account.userType !== UserTypeEnum.Admin;
           }
 
           return false;
