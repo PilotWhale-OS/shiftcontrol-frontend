@@ -45,7 +45,10 @@
 
 @if ((events$ | async)?.length === 0 && (userType$ | async) !== "ADMIN") {
   <div class="flex flex-col w-full items-center gap-md">
-    <h1 class="signature-gradient-font">Nothing to show</h1>
-    <span>You have not joined any events yet.</span>
+    <h1 class="signature-gradient-font">
+      <fa-icon [icon]="icons.empty" class="pr-sm" />
+      Nothing to show here
+    </h1>
+    <span>You have not joined any events yet. Ask a planner for an invite code!</span>
   </div>
 }

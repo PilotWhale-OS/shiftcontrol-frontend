@@ -4,10 +4,10 @@ import {
   faBarsProgress, faBell, faBook,
   faCalendar,
   faCalendarDay,
-  faCalendarDays, faCalendarXmark, faCaretSquareUp, faCertificate, faChartGantt, faCheckCircle, faCircleInfo,
-  faClock, faCrown, faEarthAmericas, faFilter, faForward,
+  faCalendarDays, faCaretSquareUp, faCertificate, faChartGantt, faCheckCircle, faCircleInfo,
+  faClock, faCrown, faEarthAmericas, faFilter, faForward, faGhost,
   faGift, faHandHoldingHeart, faHandSparkles, faHashtag,
-  faHourglass, faKey, faLink, faLocationPin, faLock, faMagnifyingGlass, faMedal, faMessage, faMoon, faPause,
+  faHourglass, faKey, faLink, faLocationPin, faLock, faCalendarXmark, faMedal, faMessage, faMoon, faPause,
   faPeopleGroup, faPlusCircle, faRightFromBracket, faRightToBracket, faServer, faShareNodes,
   faShuffle, faSignsPost, faStar, faTableColumns, faTag, faTrophy, faUser,
   faWrench, faXmark
@@ -82,7 +82,7 @@ export const icons = {
   expand: faArrowUpRightFromSquare,
   close: faXmark,
   link: faLink,
-  empty: faMagnifyingGlass,
+  empty: faGhost,
 
   /* time */
   hour: faHourglass,
