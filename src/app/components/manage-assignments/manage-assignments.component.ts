@@ -107,10 +107,6 @@ export class ManageAssignmentsComponent implements OnDestroy {
 
     if(plan !== undefined) {
       this.form.controls.assignmentPhase.setValue(plan.lockStatus);
-
-      this._signupService.getAllShifts(plan.id, 0, 10).subscribe((a) => {
-        console.log(a);
-      });
     } else {
       this.form.reset();
     }
