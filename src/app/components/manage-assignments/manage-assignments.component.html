@@ -86,7 +86,7 @@
               @for (context of shift.slots; track context.assignment.id) {
 
                 <div class="col-start-2">
-                  <xsb-input-button size="text" [content]="context.positionSlotContext.name" [icon]="icons.position" [routerLink]="'/shifts/' + shift.shiftId" />
+                  <a [routerLink]="'/shifts/' + shift.shiftId">{{context.positionSlotContext.name}}</a>
                 </div>
 
                 <div class="col-start-3">

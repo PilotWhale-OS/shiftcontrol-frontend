@@ -86,6 +86,10 @@ export class PositionSignupComponent {
     );
   }
 
+  public get user$() {
+    return this.userService.userProfile$;
+  }
+
   @Input()
   public set positionSlot(value: positionSignupParams | undefined) {
     this.position$.next(value);
@@ -428,6 +432,8 @@ export class PositionSignupComponent {
             return "You have signed up for another shift at the same time.";
           case PositionSlotDto.PositionSignupStateEnum.TimeConflictTimeConstraint:
             return "The shift is during one of your unavailable times.";
+          case PositionSlotDto.PositionSignupStateEnum.Full:
+            return "The position is already fully staffed.";
           default:
             return "Position eligibility could not be determined.";
         }

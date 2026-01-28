@@ -4,38 +4,65 @@
   @if (position$ | async; as options){
     @if (options.slot.requestedTrades.length > 0 || options.slot.offeredTrades.length > 0) {
       <div class="flex flex-col gap-md">
-        @for (requestedTrade of options.slot.requestedTrades; track requestedTrade.createdAt) {
-          @if (requestedTrade.status === "OPEN") {
-            <div class="grid grid-cols-[auto_1fr] gap-md items-center">
-              <div class="badge h-fit">
-                <fa-icon [icon]="icons.trade" />
-                Trade Request
+        @if (user$ | async; as user){
+          @for (requestedTrade of options.slot.requestedTrades; track requestedTrade.createdAt) {
+            @if (requestedTrade.status === "OPEN") {
+              <div class="grid grid-cols-[auto_1fr] gap-md items-center">
+                <div class="badge h-fit">
+                  <fa-icon [icon]="icons.trade" />
+                  Trade Request
+                </div>
+                <div class="flex flex-row flex-wrap gap-x-xs items-center">
+                  @if (requestedTrade.requestedAssignment.assignment.assignedVolunteer.id === user.account.volunteer.id) {
+                    <span>{{requestedTrade.requestedAssignment.assignment.assignedVolunteer.firstName}}
+                      {{requestedTrade.requestedAssignment.assignment.assignedVolunteer.lastName | slice:0:1}} requested</span>
+                    <xsb-input-button size="text" content="this position" (xsbClick)="dialogTradeInfo$.next(requestedTrade)" />
+                    <span>
+                      from you.
+                    </span>
+                  }
+                  @else {
+                    <span>You requested</span>
+                    <xsb-input-button size="text" content="a trade" (xsbClick)="dialogTradeInfo$.next(requestedTrade)" />
+                    <span>
+                      with {{requestedTrade.requestedAssignment.assignment.assignedVolunteer.firstName}}
+                      {{requestedTrade.requestedAssignment.assignment.assignedVolunteer.lastName | slice:0:1}}.
+                    </span>
+                  }
+                </div>
               </div>
-              <div class="flex flex-row flex-wrap gap-x-xs items-center">
-                <span>You requested</span>
-                <xsb-input-button size="text" content="a trade" (xsbClick)="dialogTradeInfo$.next(requestedTrade)" />
-                <span>
-                with {{requestedTrade.requestedAssignment.assignment.assignedVolunteer.firstName}}
-                  {{requestedTrade.requestedAssignment.assignment.assignedVolunteer.lastName | slice:0:1}}.
-              </span>
-              </div>
-            </div>
+            }
           }
-        }
 
-        @for (offeredTrade of options.slot.offeredTrades; track offeredTrade.createdAt) {
-          @if (offeredTrade.status === "OPEN") {
-            <div class="flex flex-row gap-sm items-center">
-              <div class="badge hint">
-                <fa-icon [icon]="icons.trade" />
-                Trade Offer
+          @for (offeredTrade of options.slot.offeredTrades; track offeredTrade.createdAt) {
+            @if (offeredTrade.status === "OPEN") {
+              <div class="grid grid-cols-[auto_1fr] gap-md items-center">
+                <div class="badge hint">
+                  <fa-icon [icon]="icons.trade" />
+                  Trade Offer
+                </div>
+                <div class="flex flex-row flex-wrap gap-x-xs items-center">
+                  @if (offeredTrade.offeringAssignment.assignment.assignedVolunteer.id === user.account.volunteer.id) {
+                    <span>
+                      You offered
+                    </span>
+                    <xsb-input-button size="text" content="this position" (xsbClick)="dialogTradeInfo$.next(offeredTrade)" />
+                    to <span>
+                      {{offeredTrade.requestedAssignment.assignment.assignedVolunteer.firstName}}
+                          {{offeredTrade.requestedAssignment.assignment.assignedVolunteer.lastName | slice:0:1}}.
+                    </span>
+                  }
+                  @else {
+                    <span>
+                      {{offeredTrade.offeringAssignment.assignment.assignedVolunteer.firstName}}
+                          {{offeredTrade.offeringAssignment.assignment.assignedVolunteer.lastName | slice:0:1}}. offers
+                    </span>
+                    <xsb-input-button size="text" content="their position" (xsbClick)="dialogTradeInfo$.next(offeredTrade)" />
+                  }
+                </div>
+
               </div>
-              <span>
-                {{offeredTrade.offeringAssignment.assignment.assignedVolunteer.firstName}}
-                  {{offeredTrade.offeringAssignment.assignment.assignedVolunteer.lastName | slice:0:1}}. offers
-              </span>
-              <xsb-input-button size="text" content="a position" (xsbClick)="dialogTradeInfo$.next(offeredTrade)" />
-            </div>
+            }
           }
         }
       </div>
