@@ -8,6 +8,7 @@ import {debounceTime, EMPTY, of, pairwise, shareReplay, startWith, switchMap} fr
 import {RouterLink} from "@angular/router";
 import {InputTextComponent} from "../../../components/inputs/input-text/input-text.component";
 import {TypedFormControlDirective} from "../../../directives/typed-form-control.directive";
+import {MinPipe} from "../../../pipes/min.pipe";
 
 @Component({
   selector: "app-audit-log",
@@ -18,7 +19,8 @@ import {TypedFormControlDirective} from "../../../directives/typed-form-control.
     RouterLink,
     InputTextComponent,
     ReactiveFormsModule,
-    TypedFormControlDirective
+    TypedFormControlDirective,
+    MinPipe
   ],
   templateUrl: "./audit-log.component.html",
   styleUrl: "./audit-log.component.scss"

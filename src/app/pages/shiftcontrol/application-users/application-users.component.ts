@@ -8,6 +8,7 @@ import {InputButtonComponent} from "../../../components/inputs/input-button/inpu
 import {RouterLink} from "@angular/router";
 import {InputTextComponent} from "../../../components/inputs/input-text/input-text.component";
 import {TypedFormControlDirective} from "../../../directives/typed-form-control.directive";
+import {MinPipe} from "../../../pipes/min.pipe";
 
 @Component({
   selector: "app-application-users",
@@ -18,7 +19,8 @@ import {TypedFormControlDirective} from "../../../directives/typed-form-control.
     RouterLink,
     InputTextComponent,
     ReactiveFormsModule,
-    TypedFormControlDirective
+    TypedFormControlDirective,
+    MinPipe
   ],
   templateUrl: "./application-users.component.html",
   styleUrl: "./application-users.component.scss"

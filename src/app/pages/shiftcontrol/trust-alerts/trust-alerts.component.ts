@@ -6,6 +6,7 @@ import {debounceTime, shareReplay, startWith, switchMap} from "rxjs";
 import {AsyncPipe, DatePipe} from "@angular/common";
 import {InputButtonComponent} from "../../../components/inputs/input-button/input-button.component";
 import {RouterLink} from "@angular/router";
+import {MinPipe} from "../../../pipes/min.pipe";
 
 @Component({
   selector: "app-trust-alerts",
@@ -13,7 +14,8 @@ import {RouterLink} from "@angular/router";
     AsyncPipe,
     DatePipe,
     InputButtonComponent,
-    RouterLink
+    RouterLink,
+    MinPipe
   ],
   templateUrl: "./trust-alerts.component.html",
   styleUrl: "./trust-alerts.component.scss"

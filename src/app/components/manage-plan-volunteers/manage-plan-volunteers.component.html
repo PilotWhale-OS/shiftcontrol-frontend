@@ -74,7 +74,7 @@
                           [lock]="page.page <= 0"
         />
 
-        <span>Page {{page.page + 1}}/{{page.pages}}</span>
+        <span>Page {{page.page + 1}}/{{page.pages | min:1}}</span>
 
         <xsb-input-button size="text" content="Next"
                           (xsbClick)="form.controls.paginationIndex.setValue(page.page + 1)"

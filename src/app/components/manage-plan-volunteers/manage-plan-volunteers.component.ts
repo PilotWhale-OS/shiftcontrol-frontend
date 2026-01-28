@@ -28,6 +28,7 @@ import {TypedFormControlDirective} from "../../directives/typed-form-control.dir
 import {ToastService} from "../../services/toast/toast.service";
 import {InputMultiselectComponent} from "../inputs/input-multiselect/input-multiselect.component";
 import {InputToggleComponent} from "../inputs/input-toggle/input-toggle.component";
+import {MinPipe} from "../../pipes/min.pipe";
 
 export interface planVolunteersData {
   plan: ShiftPlanDto;
@@ -43,7 +44,8 @@ export interface planVolunteersData {
     ReactiveFormsModule,
     TypedFormControlDirective,
     InputMultiselectComponent,
-    InputToggleComponent
+    InputToggleComponent,
+    MinPipe
   ],
   templateUrl: "./manage-plan-volunteers.component.html",
   styleUrl: "./manage-plan-volunteers.component.scss"
