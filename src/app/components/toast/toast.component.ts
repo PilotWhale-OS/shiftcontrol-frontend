@@ -1,18 +1,15 @@
 import {Component, inject} from "@angular/core";
 import {Toast} from "ngx-toastr";
 import {icons} from "../../util/icons";
-import {InputButtonComponent} from "../inputs/input-button/input-button.component";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import {Router, RouterLink} from "@angular/router";
+import {Router} from "@angular/router";
 import {NgClass} from "@angular/common";
 import {NotificationService} from "../../services/notification/notification.service";
 
 @Component({
   selector: "app-toast",
   imports: [
-    InputButtonComponent,
     FaIconComponent,
-    RouterLink,
     NgClass
   ],
   templateUrl: "./toast.component.html",

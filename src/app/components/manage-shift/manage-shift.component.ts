@@ -398,6 +398,7 @@ export class ManageShiftComponent implements OnDestroy {
       this.form.controls.endDate.setValue(new Date(activity.endTime));
 
       this.form.controls.description.setValue(`Shift for activity: ${activity.name}`);
+      this.form.controls.name.setValue(`${activity.name} Shift`);
     }
   }
 
