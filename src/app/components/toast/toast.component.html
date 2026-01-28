@@ -20,12 +20,12 @@
     }
 
     <div class="flex flex-row items-center gap-lg">
-      @if (options.closeButton) {
-        <small>Click to close</small>
-      }
 
-      @if (type === "notification") {
-        <xsb-input-button content="View" size="text" routerLink="/notifications" (xsbClick)="close()" />
+      @if (url !== undefined) {
+        <small>Click to view</small>
+      }
+      @else if (options.closeButton) {
+        <small>Click to close</small>
       }
     </div>
   </div>

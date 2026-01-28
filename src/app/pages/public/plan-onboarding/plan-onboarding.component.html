@@ -90,7 +90,7 @@
 
               <div class="flex flex-col gap-sm justify-center items-center pt-lg">
                 <small>You have already joined this plan.</small>
-                <xsb-input-button class="w-fit" action="success" content="View Event" [routerLink]="'/events/' + invite.eventDto.id" name="onboarding-view" />
+                <xsb-input-button class="w-fit" action="success" content="View Event" [preventDefault]="false" [routerLink]="'/events/' + invite.eventDto.id" name="onboarding-view" />
               </div>
             }
 
@@ -110,7 +110,7 @@
 
               <div class="flex flex-col gap-sm justify-center items-center pt-lg">
                 <small>You are an Admin and only previewing the join link.</small>
-                <xsb-input-button class="w-fit" action="success" content="View Event" [routerLink]="'/events/' + invite.eventDto.id" name="onboarding-view" />
+                <xsb-input-button class="w-fit" action="success" content="View Event" [preventDefault]="false" [routerLink]="'/events/' + invite.eventDto.id" name="onboarding-view" />
               </div>
             }
 
@@ -152,7 +152,7 @@
         </div>
 
         <div class="flex flex-col gap-sm justify-center items-center pt-lg">
-            <xsb-input-button class="w-fit" action="normal" content="Go Home" routerLink="/" name="onboarding-home" />
+            <xsb-input-button class="w-fit" action="normal" content="Go Home" [preventDefault]="false" routerLink="/" name="onboarding-home" />
         </div>
 
       </div>

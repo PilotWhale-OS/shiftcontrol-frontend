@@ -43,6 +43,9 @@ export class InputButtonComponent {
   lock = false;
 
   @Input()
+  preventDefault = true;
+
+  @Input()
   disableLockIcon = false;
 
   lockIcon = faGear;
@@ -51,10 +54,11 @@ export class InputButtonComponent {
   @HostBinding("attr.name") get hideNameAttr() { return null; }
   @HostBinding("attr.type") get hideTypeAttr() { return null; }
 
-
   clicked(event: MouseEvent) {
-    event.preventDefault();
-    event.stopPropagation();
+    if(this.preventDefault){
+      event.preventDefault();
+      event.stopPropagation();
+    }
     if(!this.lock) {this.xsbClick.emit(event);}
   }
 }

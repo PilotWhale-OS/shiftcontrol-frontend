@@ -56,6 +56,7 @@ export class ToastComponent extends Toast {
 
     switch (this.type) {
       case "notification":
+        this.close();
         this._router.navigateByUrl("/notifications");
         return;
       case "feedback":
