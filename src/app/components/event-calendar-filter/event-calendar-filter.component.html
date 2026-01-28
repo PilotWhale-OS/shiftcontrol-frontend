@@ -15,7 +15,7 @@
   </div>
 
   <!-- view mode selection -->
-  <div class="col-start-2 row-start-2">
+  <div class="col-start-2 row-start-2 hidden">
     <xsb-input-select #viewMode [options]="viewModeOptions" [formControl]="viewForm.controls.viewMode"
                       [xsb-typed]="[viewMode, viewForm.controls.viewMode]" [icon]="iconView" name="calendar-view-mode" />
   </div>
