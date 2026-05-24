@@ -28,34 +28,31 @@ RUN npm run build
 
 FROM nginxinc/nginx-unprivileged:${NGINX_VERSION} AS runner
 
-# Copy custom Nginx config
+USER root
+
+# Install sed only
+RUN apk add --no-cache sed bash
+
+# Copy nginx config
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# Copy the static build output from the build stage to Nginx's default HTML serving directory
-COPY --chown=nginx:nginx --from=builder /app/dist/*/browser /usr/share/nginx/html
+# Copy Angular build
+COPY --from=builder /app/dist/*/browser /usr/share/nginx/html
 
 # Fix permissions for runtime replacement
 RUN chown -R nginx:nginx /usr/share/nginx/html \
     && chmod -R u+w /usr/share/nginx/html
 
-# Copy entrypoint script
+# Copy entrypoint
 COPY entrypoint.sh /entrypoint.sh
 
-USER root
-
-# Install sed/bash
-RUN apk add --no-cache bash sed
-
-# Make it executable
 RUN chmod +x /entrypoint.sh
 
-# Use a built-in non-root user for security best practices
+# Drop privileges
 USER nginx
 
-# Expose port 8080 to allow HTTP traffic
-# Note: The default NGINX container now listens on port 8080 instead of 80
 EXPOSE 8080
 
-# Start Nginx after replacing env variables
 ENTRYPOINT ["/entrypoint.sh"]
+
 CMD ["nginx", "-c", "/etc/nginx/nginx.conf", "-g", "daemon off;"]
