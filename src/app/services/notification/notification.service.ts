@@ -6,6 +6,7 @@ import {IPushNotificationHub} from "../../../notificationservice-client/TypedSig
 import {PushNotificationDto} from "../../../notificationservice-client/NotificationService.Classes.Dto";
 import {BehaviorSubject, combineLatestWith, distinctUntilChanged, firstValueFrom, map, Observable, switchMap, take} from "rxjs";
 import {ToastService} from "../toast/toast.service";
+import {environment} from "../../environment";
 
 interface connectionState {
   connection: HubConnection;
@@ -18,7 +19,7 @@ interface connectionState {
 })
 export class NotificationService {
 
-  private readonly _hubUrl = "http://notificationservice.127.0.0.1.nip.io/hubs/push";
+  private readonly _hubUrl = `${environment.notificationserviceBasePath}/hubs/push`;
   private readonly _userService = inject(UserService);
   private readonly _toastService = inject(ToastService);
 

@@ -13,6 +13,7 @@ import {icons} from "../../util/icons";
 import {ToastService} from "../../services/toast/toast.service";
 import {BehaviorSubject, Subject} from "rxjs";
 import {nameLengthValidator} from "../../util/textValidators";
+import {environment} from "../../environment";
 
 @Component({
   selector: "app-manage-rewards-share-token",
@@ -100,7 +101,7 @@ export class ManageRewardsShareTokenComponent {
   }
 
   protected copyLink(token: RewardPointsShareTokenDto) {
-    const link = `http://shiftservice.127.0.0.1.nip.io/api/v1/reward-points/share/${token.token}`;
+    const link = `${environment.shiftserviceBasePath}/api/v1/reward-points/share/${token.token}`;
     navigator.clipboard.writeText(link).then(() => {
       this._toastService.showSuccess("Link Copied", "The share link has been copied to your clipboard.");
     }).catch(() => {

@@ -1,0 +1,8 @@
+export const environment = {
+  keycloakUrl: "KEYCLOAK_URL_PLACEHOLDER",
+  keycloakRealm: "KEYCLOAK_REALM_PLACEHOLDER",
+  keycloakClientId: "KEYCLOAK_CLIENT_ID_PLACEHOLDER",
+  shiftserviceBasePath: "SHIFTSERVICE_BASE_PATH_PLACEHOLDER",
+  auditserviceBasePath: "AUDITSERVICE_BASE_PATH_PLACEHOLDER",
+  notificationserviceBasePath: "NOTIFICATIONSERVICE_BASE_PATH_PLACEHOLDER"
+};

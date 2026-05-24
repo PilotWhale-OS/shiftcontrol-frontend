@@ -10,13 +10,14 @@ import Keycloak from "keycloak-js";
 import {provideAnimations} from "@angular/platform-browser/animations";
 import {provideToastr} from "ngx-toastr";
 import {ToastComponent} from "./components/toast/toast.component";
+import {environment} from "./environment";
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideKeycloak({
     config: {
-      url: "http://keycloak.127.0.0.1.nip.io",
-      realm: "dev",
-      clientId: "frontend"
+      url: environment.keycloakUrl,
+      realm: environment.keycloakRealm,
+      clientId: environment.keycloakClientId
     },
     initOptions: {
       onLoad: "check-sso",
@@ -41,7 +42,7 @@ export const appConfig: ApplicationConfig = {
           const keycloak = inject(Keycloak);
 
           return new ShiftserviceConfiguration({
-            basePath: "http://shiftservice.127.0.0.1.nip.io",
+            basePath: environment.shiftserviceBasePath,
             credentials: {
               "bearerAuth": () => keycloak.token
             }
@@ -56,7 +57,7 @@ export const appConfig: ApplicationConfig = {
           const keycloak = inject(Keycloak);
 
           return new AuditserviceConfiguration({
-            basePath: "http://auditservice.127.0.0.1.nip.io",
+            basePath: environment.auditserviceBasePath,
             credentials: {
               "bearerAuth": () => keycloak.token
             }
