@@ -34,6 +34,10 @@ COPY nginx.conf /etc/nginx/nginx.conf
 # Copy the static build output from the build stage to Nginx's default HTML serving directory
 COPY --chown=nginx:nginx --from=builder /app/dist/*/browser /usr/share/nginx/html
 
+# Fix permissions for runtime replacement
+RUN chown -R nginx:nginx /usr/share/nginx/html \
+    && chmod -R u+w /usr/share/nginx/html
+
 # Copy entrypoint script
 COPY entrypoint.sh /entrypoint.sh
 
