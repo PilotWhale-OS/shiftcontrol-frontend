@@ -30,6 +30,9 @@ FROM nginxinc/nginx-unprivileged:${NGINX_VERSION} AS runner
 
 USER root
 
+# Install sed/bash
+RUN apk add --no-cache bash sed
+
 # Copy custom Nginx config
 COPY nginx.conf /etc/nginx/nginx.conf
 
