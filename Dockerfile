@@ -37,7 +37,7 @@ COPY nginx.conf /etc/nginx/nginx.conf
 COPY --chown=nginx:nginx --from=builder /app/dist/*/browser /usr/share/nginx/html
 
 # Copy entrypoint script
-COPY docker-entrypoint.sh /docker-entrypoint.sh
+COPY entrypoint.sh /entrypoint.sh
 
 # Make it executable
 RUN chmod +x /docker-entrypoint.sh
@@ -50,5 +50,5 @@ USER nginx
 EXPOSE 8080
 
 # Start Nginx after replacing env variables
-ENTRYPOINT ["/docker-entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["nginx", "-c", "/etc/nginx/nginx.conf", "-g", "daemon off;"]
