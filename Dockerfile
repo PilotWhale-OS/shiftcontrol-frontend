@@ -40,7 +40,7 @@ COPY --chown=nginx:nginx --from=builder /app/dist/*/browser /usr/share/nginx/htm
 COPY entrypoint.sh /entrypoint.sh
 
 # Make it executable
-RUN chmod +x /docker-entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 # Use a built-in non-root user for security best practices
 USER nginx
