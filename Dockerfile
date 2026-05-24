@@ -28,11 +28,6 @@ RUN npm run build
 
 FROM nginxinc/nginx-unprivileged:${NGINX_VERSION} AS runner
 
-USER root
-
-# Install sed/bash
-RUN apk add --no-cache bash sed
-
 # Copy custom Nginx config
 COPY nginx.conf /etc/nginx/nginx.conf
 
@@ -41,6 +36,11 @@ COPY --chown=nginx:nginx --from=builder /app/dist/*/browser /usr/share/nginx/htm
 
 # Copy entrypoint script
 COPY entrypoint.sh /entrypoint.sh
+
+USER root
+
+# Install sed/bash
+RUN apk add --no-cache bash sed
 
 # Make it executable
 RUN chmod +x /entrypoint.sh
