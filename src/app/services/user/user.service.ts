@@ -2,8 +2,7 @@ import { effect, Injectable, Signal, inject } from "@angular/core";
 import {KEYCLOAK_EVENT_SIGNAL, KeycloakEvent, KeycloakEventType, ReadyArgs, typeEventArgs} from "keycloak-angular";
 import Keycloak, {KeycloakProfile} from "keycloak-js";
 import {BehaviorSubject, catchError, map, Observable, of, switchMap, tap} from "rxjs";
-import {AccountInfoDto, UserProfileDto, UserProfileEndpointService} from "../../../shiftservice-client";
-import UserTypeEnum = AccountInfoDto.UserTypeEnum;
+import {UserProfileDto, UserProfileEndpointService} from "../../../shiftservice-client";
 
 @Injectable({
   providedIn: "root"
@@ -14,7 +13,7 @@ export class UserService {
 
   private _kcProfile$ = new BehaviorSubject<KeycloakProfile | null>(null);
   private _userProfile$ = new BehaviorSubject<UserProfileDto | null>(null);
-  private _userType$ = new BehaviorSubject<UserTypeEnum | null>(null);
+  private _isPlatformAdmin$ = new BehaviorSubject<boolean>(false);
 
   constructor() {
     const eventSignal = inject<Signal<KeycloakEvent>>(KEYCLOAK_EVENT_SIGNAL);
@@ -48,8 +47,8 @@ export class UserService {
     ).subscribe(user => this._userProfile$.next(user));
 
     this._userProfile$.pipe(
-      map(profile => profile === null ? null : profile.account.userType)
-    ).subscribe(user => this._userType$.next(user));
+      map(profile => profile?.account.platformAdmin === true)
+    ).subscribe(isPlatformAdmin => this._isPlatformAdmin$.next(isPlatformAdmin));
   }
 
   /**
@@ -64,8 +63,8 @@ export class UserService {
     return this._userProfile$.asObservable();
   }
 
-  public get userType$() {
-    return this._userType$.asObservable();
+  public get isPlatformAdmin$() {
+    return this._isPlatformAdmin$.asObservable();
   }
 
   /**
@@ -91,7 +90,7 @@ export class UserService {
       map(profile => {
         if(profile === null) {return false;}
 
-        if (profile.account.userType === UserTypeEnum.Admin) {
+        if (profile.account.platformAdmin === true) {
           return true;
         }
 
@@ -111,10 +110,6 @@ export class UserService {
     return this.userProfile$.pipe(
       map(profile => {
         if(profile === null) {return false;}
-
-        if (profile.account.userType === UserTypeEnum.Admin) {
-          return true;
-        }
 
         return profile.volunteeringPlans.some(allowedPlanId => allowedPlanId === planId)
           || profile.planningPlans.some(allowedPlanId => allowedPlanId === planId);

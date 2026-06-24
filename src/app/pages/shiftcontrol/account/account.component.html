@@ -34,8 +34,8 @@
                     [xsb-typed]="[username, form.controls.username]"
     />
 
-    @if ((userType$ | async) === "ADMIN") {
-      <span class="badge w-fit">User Type</span>
+    @if (isPlatformAdmin$ | async) {
+      <span class="badge w-fit">Platform Role</span>
       <span>Administrator</span>
     }
 
@@ -62,5 +62,4 @@
 
   </div>
 </div>
-
 

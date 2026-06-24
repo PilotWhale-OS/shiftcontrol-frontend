@@ -65,7 +65,7 @@
       <ng-container dialog-header>
         <h1 class="signature-gradient-font">
           {{
-            ((userType$ | async) === "ADMIN") ?
+            (isPlatformAdmin$ | async) ?
             activityData.activity === undefined ? 'Create Activity' : activityData.activity.name :
             activityData.activity?.name
           }}

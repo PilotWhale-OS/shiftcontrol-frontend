@@ -1,5 +1,6 @@
-import { TestBed } from "@angular/core/testing";
-import { PageService } from "./page.service";
+import {TestBed} from "@angular/core/testing";
+import {firstValueFrom} from "rxjs";
+import {PageService} from "./page.service";
 
 import {Breadcrumb} from "../../util/breadcrumb";
 
@@ -16,11 +17,11 @@ describe("PageService", () => {
   });
 
   describe("withBreadcrumbs", () => {
-    it("should store a clone of the given breadcrumb", () => {
+    it("should store a clone of the given breadcrumb", async () => {
       const root = new Breadcrumb("Home", "/", undefined);
       service.withBreadcrumbs(root);
 
-      const stored = service.breadcrumbs;
+      const stored = await firstValueFrom(service.breadcrumbs$);
 
       expect(stored).toBeTruthy();
       expect(stored).not.toBe(root); // cloned
@@ -29,12 +30,12 @@ describe("PageService", () => {
       expect(stored?.href).toBe("/");
     });
 
-    it("should clear breadcrumbs if undefined is passed", () => {
+    it("should clear breadcrumbs if undefined is passed", async () => {
       const root = new Breadcrumb("Home", "/", undefined);
       service.withBreadcrumbs(root);
       service.withBreadcrumbs(undefined);
 
-      expect(service.breadcrumbs).toBeUndefined();
+      expect(await firstValueFrom(service.breadcrumbs$)).toBeUndefined();
     });
   });
 
@@ -51,24 +52,24 @@ describe("PageService", () => {
       service.withBreadcrumbs(event);
     });
 
-    it("should update name and href of the matched breadcrumb", () => {
+    it("should update name and href of the matched breadcrumb", async () => {
       service.configureBreadcrumb(events, "SomeEvent", "someId");
 
-      const updated = service.breadcrumbs;
+      const updated = await firstValueFrom(service.breadcrumbs$);
       const clonedChild = updated?.parent;
 
       expect(clonedChild?.name).toBe("SomeEvent");
       expect(clonedChild?.href).toBe("someId");
     });
 
-    it("should not modify breadcrumbs if id does not match", () => {
+    it("should not modify breadcrumbs if id does not match", async () => {
       const unrelated = new Breadcrumb("X", "x");
 
-      const before = service.breadcrumbs?.clone();
+      const before = (await firstValueFrom(service.breadcrumbs$))?.clone();
 
       service.configureBreadcrumb(unrelated, "NoChange", "no-change");
 
-      const after = service.breadcrumbs as Breadcrumb;
+      const after = await firstValueFrom(service.breadcrumbs$) as Breadcrumb;
 
       // unchanged because unrelated.id does not appear in chain
       expect(after.name).toBe(before?.name as string);

@@ -4,7 +4,7 @@ import {BC_EVENT, BC_PLAN_ONBOARDING} from "../../../breadcrumbs";
 import {InputButtonComponent} from "../../../components/inputs/input-button/input-button.component";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import {AccountInfoDto, ShiftPlanInviteDetailsDto, ShiftPlanInviteEndpointService} from "../../../../shiftservice-client";
+import {ShiftPlanInviteDetailsDto, ShiftPlanInviteEndpointService} from "../../../../shiftservice-client";
 import {BehaviorSubject, combineLatestWith, filter, map, Subscription, switchMap, take, withLatestFrom} from "rxjs";
 import {AsyncPipe, DatePipe} from "@angular/common";
 import {TooltipDirective} from "../../../directives/tooltip.directive";
@@ -12,7 +12,6 @@ import {icons} from "../../../util/icons";
 import {UserService} from "../../../services/user/user.service";
 import {mapValue} from "../../../util/value-maps";
 import {ToastService} from "../../../services/toast/toast.service";
-import UserTypeEnum = AccountInfoDto.UserTypeEnum;
 
 @Component({
   selector: "app-plan-onboarding",
@@ -74,9 +73,7 @@ export class PlanOnboardingComponent implements OnDestroy {
     });
 
     this.inviteMode$ = this.invite$.pipe(
-      combineLatestWith(this._userService.userType$),
-      map(([invite, userType]) => {
-        if(userType === UserTypeEnum.Admin) {return "ADMIN";}
+      map(invite => {
         if(invite === null) {return null;}
         if(invite === "INVALID") {return "INVALID";}
         if(!invite.joined) {return "JOIN";}

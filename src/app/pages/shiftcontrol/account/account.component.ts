@@ -4,12 +4,11 @@ import {FormBuilder, FormControl, ReactiveFormsModule} from "@angular/forms";
 import {InputTextComponent} from "../../../components/inputs/input-text/input-text.component";
 import {TypedFormControlDirective} from "../../../directives/typed-form-control.directive";
 import {InputButtonComponent} from "../../../components/inputs/input-button/input-button.component";
-import {AccountInfoDto, NotificationSettingsDto, UserProfileEndpointService} from "../../../../shiftservice-client";
+import {NotificationSettingsDto, UserProfileEndpointService} from "../../../../shiftservice-client";
 import {InputMultiToggleComponent, MultiToggleOptions} from "../../../components/inputs/input-multitoggle/input-multi-toggle.component";
 import {BehaviorSubject, catchError, forkJoin, pairwise, startWith, Subscription, switchMap} from "rxjs";
 import {AsyncPipe} from "@angular/common";
 import {ToastService} from "../../../services/toast/toast.service";
-import UserTypeEnum = AccountInfoDto.UserTypeEnum;
 
 type notificationToggleValue = NotificationSettingsDto.ChannelsEnum | "ALL";
 
@@ -39,7 +38,7 @@ export class AccountComponent implements OnDestroy {
   protected readonly notificationFormControls$ = new BehaviorSubject<undefined | Map<
       NotificationSettingsDto.TypeEnum, FormControl<null | notificationToggleValue>
     >>(undefined);
-  protected readonly userType$;
+  protected readonly isPlatformAdmin$;
 
   private readonly _userService = inject(UserService);
   private readonly _fb = inject(FormBuilder);
@@ -59,7 +58,7 @@ export class AccountComponent implements OnDestroy {
       checked: this._fb.nonNullable.control<boolean>(false)
     });
 
-    this.userType$ = this._userService.userType$;
+    this.isPlatformAdmin$ = this._userService.isPlatformAdmin$;
 
     this._profileSubscription = this._userService.kcProfile$.subscribe(profile => {
       if(profile) {
@@ -78,16 +77,15 @@ export class AccountComponent implements OnDestroy {
       const map = new Map(profile.notifications
         .filter(notif => {
           if(notif.type.startsWith("ADMIN_")) {
-            return profile.account.userType === UserTypeEnum.Admin;
+            return profile.account.platformAdmin === true;
           }
 
           if(notif.type.startsWith("PLANNER_")){
-            return profile.account.userType === UserTypeEnum.Admin || profile.planningPlans.length > 0;
+            return profile.planningPlans.length > 0;
           }
 
-          /* view volunteer settings even if not joined plans yet */
           if(notif.type.startsWith("VOLUNTEER_")){
-            return profile.account.userType !== UserTypeEnum.Admin;
+            return true;
           }
 
           return false;
@@ -101,7 +99,7 @@ export class AccountComponent implements OnDestroy {
         .sort((a,b) => a[0].localeCompare(b[0]))
       );
 
-      this._notificationChangesSubscription = forkJoin([...map.entries()].map(([type, control]) => control.valueChanges.pipe(
+      const notificationChanges$ = [...map.entries()].map(([type, control]) => control.valueChanges.pipe(
         startWith(control.value),
         pairwise(),
         switchMap(([oldValue, newValue]) => this._userProfileService.updateNotificationSettings({
@@ -116,7 +114,11 @@ export class AccountComponent implements OnDestroy {
             return [];
           })
         ))
-      ))).subscribe();
+      ));
+
+      this._notificationChangesSubscription = notificationChanges$.length === 0 ?
+        undefined :
+        forkJoin(notificationChanges$).subscribe();
 
       this.notificationFormControls$.next(map);
     });

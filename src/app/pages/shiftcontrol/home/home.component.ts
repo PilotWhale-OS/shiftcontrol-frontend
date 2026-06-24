@@ -4,8 +4,7 @@ import {UserService} from "../../../services/user/user.service";
 import {AsyncPipe, NgClass} from "@angular/common";
 import {BehaviorSubject, combineLatestWith, map, withLatestFrom} from "rxjs";
 import {icons} from "../../../util/icons";
-import {AccountInfoDto, EventEndpointService} from "../../../../shiftservice-client";
-import UserTypeEnum = AccountInfoDto.UserTypeEnum;
+import {EventEndpointService} from "../../../../shiftservice-client";
 
 @Component({
   selector: "app-home",
@@ -78,9 +77,7 @@ export class HomeComponent {
   }
 
   protected get isAdmin$(){
-    return this._userService.userType$.pipe(
-      map(type => type === UserTypeEnum.Admin)
-    );
+    return this._userService.isPlatformAdmin$;
   }
 
 }

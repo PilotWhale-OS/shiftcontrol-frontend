@@ -1,4 +1,4 @@
-@if ((userService.userType$ | async) === "ASSIGNED" ) {
+@if (canParticipate$ | async) {
 
   <!-- list of available trades -->
   @if (position$ | async; as options){
@@ -164,8 +164,10 @@
 
   </div>
 } @else {
-  @if (position$ | async; as position){
-    <xsb-input-button content="Manage Assignments" action="normal" (xsbClick)="manageAssignments(position.slot)" />
+  @if (canManage$ | async) {
+    @if (position$ | async; as position){
+      <xsb-input-button content="Manage Assignments" action="normal" (xsbClick)="manageAssignments(position.slot)" />
+    }
   }
 }
 
