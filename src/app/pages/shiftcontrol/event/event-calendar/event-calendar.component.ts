@@ -5,7 +5,7 @@ import {PageService} from "../../../../services/page/page.service";
 import {BC_EVENT} from "../../../../breadcrumbs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {
-  AccountInfoDto, ActivityDto, ActivityScheduleDto,
+  ActivityDto, ActivityScheduleDto,
   EventEndpointService, EventScheduleContentDto, EventScheduleEndpointService, EventScheduleLayoutDto, LocationDto, LocationEndpointService,
   ShiftColumnDto,
   ShiftDto
@@ -33,7 +33,6 @@ import {AsyncPipe} from "@angular/common";
 import {DialogComponent} from "../../../../components/dialog/dialog.component";
 import {ManageShiftComponent, manageShiftParams} from "../../../../components/manage-shift/manage-shift.component";
 import {UserService} from "../../../../services/user/user.service";
-import UserTypeEnum = AccountInfoDto.UserTypeEnum;
 import {InputMultiToggleComponent, MultiToggleOptions} from "../../../../components/inputs/input-multitoggle/input-multi-toggle.component";
 import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
 import {TypedFormControlDirective} from "../../../../directives/typed-form-control.directive";
@@ -98,8 +97,8 @@ export class EventCalendarComponent implements OnDestroy {
     this._subscriptions = this.setupWithObservables(eventId);
   }
 
-  protected get userType$(){
-    return this._userService.userType$;
+  protected get isPlatformAdmin$(){
+    return this._userService.isPlatformAdmin$;
   }
 
   ngOnDestroy() {
@@ -117,8 +116,7 @@ export class EventCalendarComponent implements OnDestroy {
       shareReplay()
     );
 
-    const isAdmin$ = this._userService.userType$.pipe(
-      map(userType => userType === UserTypeEnum.Admin),
+    const isAdmin$ = this._userService.isPlatformAdmin$.pipe(
       shareReplay()
     );
 

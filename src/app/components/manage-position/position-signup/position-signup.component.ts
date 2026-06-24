@@ -61,6 +61,12 @@ export class PositionSignupComponent {
   protected readonly dialogTradeInfo$ = new BehaviorSubject<TradeInfoDto | undefined>(undefined);
   protected readonly dialogAssignmentsParams$ = new BehaviorSubject<manageAssignmentsParams | undefined>(undefined);
   protected readonly position$ = new BehaviorSubject<positionSignupParams | undefined>(undefined);
+  protected readonly canParticipate$ = this.position$.pipe(
+    switchMap(data => data === undefined ?
+      of(false) :
+      this.userService.canParticipatePlan$(data.shift.shiftPlan.id)
+    )
+  );
   protected readonly header$ = this.position$.pipe(
     map(position => this.getHeader(position?.slot))
   );

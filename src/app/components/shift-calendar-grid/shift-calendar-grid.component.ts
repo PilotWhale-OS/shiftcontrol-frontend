@@ -1,11 +1,11 @@
-import {Component, ElementRef, inject, viewChild} from "@angular/core";
+import {Component, ElementRef, viewChild} from "@angular/core";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {
   ActivityDto, LocationDto,
   PositionSlotDto,
   ScheduleLayoutDto,
   ShiftDto,
-  EventScheduleContentDto, AccountInfoDto
+  EventScheduleContentDto
 } from "../../../shiftservice-client";
 import {AsyncPipe, DatePipe, NgClass} from "@angular/common";
 import {
@@ -24,8 +24,6 @@ import {toObservable} from "@angular/core/rxjs-interop";
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
 import {icons} from "../../util/icons";
 import {RouterLink} from "@angular/router";
-import {UserService} from "../../services/user/user.service";
-import UserTypeEnum = AccountInfoDto.UserTypeEnum;
 
 /**
  * Configuration for the shift calendar grid component.
@@ -178,8 +176,6 @@ export class ShiftCalendarGridComponent {
   private readonly _jumpDate$ = new Subject<Date>();
   private readonly _filterToggled$ = new Subject<void>();
   private readonly _scrolling$ = new BehaviorSubject<boolean>(false);
-  private readonly _userService = inject(UserService);
-
   constructor() {
     this.navigation$ = this._visibleDates$.pipe(
       withLatestFrom(this.bodyInitialized$.pipe(
@@ -258,10 +254,6 @@ export class ShiftCalendarGridComponent {
       const visibleDays = this.getVisibleValidDays(parent as HTMLDivElement, config);
       this._visibleDates$.next(visibleDays);
     });
-  }
-
-  public get userType$() {
-    return this._userService.userType$;
   }
 
   /**
@@ -484,14 +476,9 @@ export class ShiftCalendarGridComponent {
   /**
    * Get the display/color category for a shift based on signup state
    * @param shift
-   * @param userType
    * @protected
    */
-  protected getShiftDisplayCategory(shift: ShiftDto, userType: UserTypeEnum): "eligible" | "signed-up" | "" {
-    if(userType === UserTypeEnum.Admin) {
-      return "";
-    }
-
+  protected getShiftDisplayCategory(shift: ShiftDto): "eligible" | "signed-up" | "" {
     if(shift.positionSlots.some(slot => slot.positionSignupState ===  PositionSlotDto.PositionSignupStateEnum.SignedUp)){
       return "signed-up";
     }
@@ -510,14 +497,9 @@ export class ShiftCalendarGridComponent {
   /**
    * Get the caption/tag for a shift based on signup state
    * @param shift
-   * @param userType
    * @protected
    */
-  protected getShiftDisplayTag(shift: ShiftDto, userType: UserTypeEnum): string {
-    if(userType === UserTypeEnum.Admin) {
-      return "";
-    }
-
+  protected getShiftDisplayTag(shift: ShiftDto): string {
     if(shift.positionSlots.some(slot => slot.positionSignupState ===  PositionSlotDto.PositionSignupStateEnum.SignedUp)){
       return "Signed Up";
     }

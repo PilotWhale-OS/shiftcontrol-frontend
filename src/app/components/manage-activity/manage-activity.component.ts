@@ -7,13 +7,12 @@ import {InputTextComponent} from "../inputs/input-text/input-text.component";
 import {TypedFormControlDirective} from "../../directives/typed-form-control.directive";
 import {InputDateComponent} from "../inputs/input-date/input-date.component";
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
-import {AccountInfoDto, ActivityDto, ActivityEndpointService, LocationDto, LocationEndpointService} from "../../../shiftservice-client";
+import {ActivityDto, ActivityEndpointService, LocationDto, LocationEndpointService} from "../../../shiftservice-client";
 import {AsyncPipe, DatePipe} from "@angular/common";
 import {InputSelectComponent, SelectOptions} from "../inputs/input-select/input-select.component";
 import {InputTimeComponent, time} from "../inputs/input-time/input-time.component";
 import {mapValue} from "../../util/value-maps";
 import {UserService} from "../../services/user/user.service";
-import UserTypeEnum = AccountInfoDto.UserTypeEnum;
 import {icons} from "../../util/icons";
 import {ToastService} from "../../services/toast/toast.service";
 import {descriptionLengthValidator, nameLengthValidator} from "../../util/textValidators";
@@ -99,9 +98,7 @@ export class ManageActivityComponent {
   }
 
   public get canManage$() {
-    return this._userService.userType$.pipe(
-      map(userType => userType === UserTypeEnum.Admin)
-    );
+    return this._userService.isPlatformAdmin$;
   }
 
   @Input({required: true})

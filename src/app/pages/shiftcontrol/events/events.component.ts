@@ -36,8 +36,8 @@ export class EventsComponent {
     );
   }
 
-  public get userType$() {
-    return this._userService.userType$;
+  public get isPlatformAdmin$() {
+    return this._userService.isPlatformAdmin$;
   }
 
 }

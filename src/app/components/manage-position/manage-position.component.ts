@@ -16,10 +16,9 @@ import {icons} from "../../util/icons";
 import {PositionSignupComponent, positionSignupParams} from "./position-signup/position-signup.component";
 import PositionSignupStateEnum = PositionSlotDto.PositionSignupStateEnum;
 import {ToastService} from "../../services/toast/toast.service";
-import UserTypeEnum = AccountInfoDto.UserTypeEnum;
 import {descriptionLengthValidator, nameLengthValidator} from "../../util/textValidators";
 import {mapValue} from "../../util/value-maps";
-import {AccountInfoDto, PositionSlotDto, PositionSlotEndpointService, RoleDto, ShiftDto} from "../../../shiftservice-client";
+import {PositionSlotDto, PositionSlotEndpointService, RoleDto, ShiftDto} from "../../../shiftservice-client";
 
 export interface managePositionParams {
   shift: ShiftDto;
@@ -129,12 +128,6 @@ export class ManagePositionComponent implements OnDestroy {
         }
         return "view";
       })
-    );
-  }
-
-  public get isAdmin$(){
-    return this._userService.userType$.pipe(
-      map(userType => userType === UserTypeEnum.Admin)
     );
   }
 

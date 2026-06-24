@@ -3,8 +3,6 @@ import {inject} from "@angular/core";
 import {UserService} from "../../services/user/user.service";
 import {filter, map} from "rxjs";
 import {ToastService} from "../../services/toast/toast.service";
-import {AccountInfoDto} from "../../../shiftservice-client";
-import UserTypeEnum = AccountInfoDto.UserTypeEnum;
 
 export const isVolunteerInEventGuard:
   ((planParam: string, allowAdmin?: boolean) => CanActivateFn) =
@@ -24,7 +22,8 @@ export const isVolunteerInEventGuard:
       filter(profile => profile !== null),
       map(user => user !== null && (
         user.volunteeringEvents.some(event => event === eventId) ||
-        allowAdmin && user.account.userType === UserTypeEnum.Admin)
+        user.planningEvents.some(event => event === eventId) ||
+        allowAdmin && user.account.platformAdmin === true)
       ),
       map(success => {
         if(!success) {

@@ -2,8 +2,7 @@
 <!-- card list -->
 <div class="grid grid-cols-[repeat(auto-fit,min(100%,30rem))] gap-md">
 
-  @if (userType$ | async; as userType) {
-    @if (userType === 'ADMIN') {
+  @if (isPlatformAdmin$ | async) {
       <div class="card spotlight interaction grid place-items-center p-lg"
            [routerLink]="'/events/create'">
         <h2 class="compact">
@@ -11,7 +10,6 @@
           Create new event
         </h2>
       </div>
-    }
   }
 
   @for (event of (events$ | async); track event) {
@@ -43,7 +41,7 @@
   }
 </div>
 
-@if ((events$ | async)?.length === 0 && (userType$ | async) !== "ADMIN") {
+@if ((events$ | async)?.length === 0) {
   <div class="flex flex-col w-full items-center gap-md">
     <h1 class="signature-gradient-font">
       <fa-icon [icon]="icons.empty" class="pr-sm" />

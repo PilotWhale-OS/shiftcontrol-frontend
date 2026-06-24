@@ -133,11 +133,6 @@
               <fa-icon [icon]="icons.signedUp"/>
               Signed Up Position
             </div>
-          } @else if ((isAdmin$ | async) === true) {
-            <div class="badge w-fit">
-              <fa-icon [icon]="icons.position"/>
-              Position
-            </div>
           } @else if (hasTimeConflict(data.position)) {
             <div class="badge w-fit">
               <fa-icon [icon]="icons.timeConflict"/>

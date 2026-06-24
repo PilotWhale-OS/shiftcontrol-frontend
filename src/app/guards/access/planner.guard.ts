@@ -2,8 +2,6 @@ import {ActivatedRouteSnapshot, CanActivateFn, Router} from "@angular/router";
 import {inject} from "@angular/core";
 import {UserService} from "../../services/user/user.service";
 import {filter, map} from "rxjs";
-import {AccountInfoDto} from "../../../shiftservice-client";
-import UserTypeEnum = AccountInfoDto.UserTypeEnum;
 import {ToastService} from "../../services/toast/toast.service";
 
 export const isPlannerInEventGuard:
@@ -24,7 +22,7 @@ export const isPlannerInEventGuard:
       filter(profile => profile !== null),
       map(user => user !== null && (
         user.planningEvents.some(event => event === eventId) ||
-        user.account.userType === UserTypeEnum.Admin)
+        user.account.platformAdmin === true)
       ),
       map(success => {
         if(!success) {
