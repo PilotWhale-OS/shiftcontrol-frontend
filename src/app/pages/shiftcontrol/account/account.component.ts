@@ -4,9 +4,9 @@ import {FormBuilder, FormControl, ReactiveFormsModule} from "@angular/forms";
 import {InputTextComponent} from "../../../components/inputs/input-text/input-text.component";
 import {TypedFormControlDirective} from "../../../directives/typed-form-control.directive";
 import {InputButtonComponent} from "../../../components/inputs/input-button/input-button.component";
-import {NotificationSettingsDto, UserProfileEndpointService} from "../../../../shiftservice-client";
+import {NotificationSettingsDto, RoleDto, UserProfileEndpointService} from "../../../../shiftservice-client";
 import {InputMultiToggleComponent, MultiToggleOptions} from "../../../components/inputs/input-multitoggle/input-multi-toggle.component";
-import {BehaviorSubject, catchError, forkJoin, pairwise, startWith, Subscription, switchMap} from "rxjs";
+import {BehaviorSubject, catchError, forkJoin, map, pairwise, startWith, Subscription, switchMap} from "rxjs";
 import {AsyncPipe} from "@angular/common";
 import {ToastService} from "../../../services/toast/toast.service";
 
@@ -39,6 +39,8 @@ export class AccountComponent implements OnDestroy {
       NotificationSettingsDto.TypeEnum, FormControl<null | notificationToggleValue>
     >>(undefined);
   protected readonly isPlatformAdmin$;
+  protected readonly currentUserProfile$;
+  protected readonly assignedRoles$;
 
   private readonly _userService = inject(UserService);
   private readonly _fb = inject(FormBuilder);
@@ -59,6 +61,10 @@ export class AccountComponent implements OnDestroy {
     });
 
     this.isPlatformAdmin$ = this._userService.isPlatformAdmin$;
+    this.currentUserProfile$ = this._userService.userProfile$;
+    this.assignedRoles$ = this.currentUserProfile$.pipe(
+      map(profile => [...(profile?.assignedRoles ?? [])].sort((left, right) => left.name.localeCompare(right.name)))
+    );
 
     this._profileSubscription = this._userService.kcProfile$.subscribe(profile => {
       if(profile) {
@@ -74,7 +80,7 @@ export class AccountComponent implements OnDestroy {
     });
 
     this._userProfileService.getCurrentUserProfile().subscribe(profile => {
-      const map = new Map(profile.notifications
+      const notificationControls = new Map(profile.notifications
         .filter(notif => {
           if(notif.type.startsWith("ADMIN_")) {
             return profile.account.platformAdmin === true;
@@ -99,7 +105,7 @@ export class AccountComponent implements OnDestroy {
         .sort((a,b) => a[0].localeCompare(b[0]))
       );
 
-      const notificationChanges$ = [...map.entries()].map(([type, control]) => control.valueChanges.pipe(
+      const notificationChanges$ = [...notificationControls.entries()].map(([type, control]) => control.valueChanges.pipe(
         startWith(control.value),
         pairwise(),
         switchMap(([oldValue, newValue]) => this._userProfileService.updateNotificationSettings({
@@ -120,7 +126,7 @@ export class AccountComponent implements OnDestroy {
         undefined :
         forkJoin(notificationChanges$).subscribe();
 
-      this.notificationFormControls$.next(map);
+      this.notificationFormControls$.next(notificationControls);
     });
   }
 
@@ -167,5 +173,11 @@ export class AccountComponent implements OnDestroy {
       case NotificationSettingsDto.TypeEnum.AdminRewardSyncUsed:
         return "Rewards Synced";
     }
+  }
+
+  protected getRoleLabel(role: RoleDto): string {
+    return role.description?.trim()
+      ? `${role.name}: ${role.description}`
+      : role.name;
   }
 }
