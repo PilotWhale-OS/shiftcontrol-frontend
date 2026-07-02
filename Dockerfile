@@ -49,7 +49,7 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # Drop privileges
-USER nginx
+USER 100
 
 EXPOSE 8080
 
