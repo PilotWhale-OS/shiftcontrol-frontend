@@ -32,6 +32,12 @@ USER root
 
 # Install sed only
 RUN apk add --no-cache sed bash
+# Fix permissions for runtime replacement
+RUN chown -R nginx:nginx /usr/share/nginx/html \
+    && chmod -R u+w /usr/share/nginx/html
+
+# Change to nginx user
+USER 101
 
 # Copy nginx config
 COPY nginx.conf /etc/nginx/nginx.conf
@@ -39,17 +45,11 @@ COPY nginx.conf /etc/nginx/nginx.conf
 # Copy Angular build
 COPY --from=builder /app/dist/*/browser /usr/share/nginx/html
 
-# Fix permissions for runtime replacement
-RUN chown -R nginx:nginx /usr/share/nginx/html \
-    && chmod -R u+w /usr/share/nginx/html
-
 # Copy entrypoint
 COPY entrypoint.sh /entrypoint.sh
 
-RUN chmod +x /entrypoint.sh
+#RUN chmod +x /entrypoint.sh
 
-# Drop privileges
-USER 100
 
 EXPOSE 8080
 
