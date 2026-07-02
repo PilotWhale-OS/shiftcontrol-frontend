@@ -13,6 +13,7 @@ WORKDIR /app
 # Copy package-related files first to leverage Docker's caching mechanism
 COPY package.json package-lock.json ./
 
+ENV CYPRESS_INSTALL_BINARY=0
 # Install project dependencies using npm ci (ensures a clean, reproducible install)
 RUN --mount=type=cache,target=/root/.npm npm ci
 
@@ -30,6 +31,11 @@ FROM nginxinc/nginx-unprivileged:${NGINX_VERSION} AS runner
 
 USER root
 
+# Copy entrypoint
+COPY entrypoint.sh /entrypoint.sh
+
+RUN chmod +x /entrypoint.sh
+
 # Install sed only
 RUN apk add --no-cache sed bash
 # Fix permissions for runtime replacement
@@ -44,11 +50,6 @@ COPY nginx.conf /etc/nginx/nginx.conf
 
 # Copy Angular build
 COPY --from=builder /app/dist/*/browser /usr/share/nginx/html
-
-# Copy entrypoint
-COPY entrypoint.sh /entrypoint.sh
-
-#RUN chmod +x /entrypoint.sh
 
 
 EXPOSE 8080
