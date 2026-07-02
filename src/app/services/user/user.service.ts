@@ -1,7 +1,7 @@
 import { effect, Injectable, Signal, inject } from "@angular/core";
 import {KEYCLOAK_EVENT_SIGNAL, KeycloakEvent, KeycloakEventType, ReadyArgs, typeEventArgs} from "keycloak-angular";
 import Keycloak, {KeycloakProfile} from "keycloak-js";
-import {BehaviorSubject, catchError, map, Observable, of, switchMap, tap} from "rxjs";
+import {BehaviorSubject, map, Observable, tap} from "rxjs";
 import {UserProfileDto, UserProfileEndpointService} from "../../../shiftservice-client";
 
 @Injectable({
@@ -22,33 +22,51 @@ export class UserService {
     effect(() => {
       const event = eventSignal();
 
-      // When Keycloak is ready, check if authenticated and log the user profile
-      if (event.type === KeycloakEventType.Ready) {
-        const authenticated = typeEventArgs<ReadyArgs>(event.args);
-
-        if (authenticated) {
-          this.keycloak
-            .loadUserProfile()
-            .then(profile => {
-              this._kcProfile$.next(profile);
-            })
-            .catch(() =>
-              this._kcProfile$.next(null)
-            );
-        } else {
-          this._kcProfile$.next(null);
-        }
+      if (
+        event.type === KeycloakEventType.Ready
+        || event.type === KeycloakEventType.AuthSuccess
+        || event.type === KeycloakEventType.AuthRefreshSuccess
+        || event.type === KeycloakEventType.AuthLogout
+        || event.type === KeycloakEventType.AuthError
+        || event.type === KeycloakEventType.AuthRefreshError
+      ) {
+        void this.syncUserState(event);
       }
     });
-
-    this._kcProfile$.pipe(
-      switchMap(profile => profile === null ? of(null) : this.userService.getCurrentUserProfile()),
-      catchError(() => of(null))
-    ).subscribe(user => this._userProfile$.next(user));
 
     this._userProfile$.pipe(
       map(profile => profile?.account.platformAdmin === true)
     ).subscribe(isPlatformAdmin => this._isPlatformAdmin$.next(isPlatformAdmin));
+  }
+
+  private async syncUserState(event: KeycloakEvent) {
+    const isReadyEvent = event.type === KeycloakEventType.Ready;
+    const isAuthenticated = isReadyEvent
+      ? typeEventArgs<ReadyArgs>(event.args)
+      : this.keycloak.authenticated === true;
+
+    if (!isAuthenticated) {
+      this._kcProfile$.next(null);
+      this._userProfile$.next(null);
+      return;
+    }
+
+    try {
+      const profile = await this.keycloak.loadUserProfile();
+      this._kcProfile$.next(profile);
+    } catch {
+      this._kcProfile$.next(null);
+    }
+
+    this.userService.getCurrentUserProfile().pipe(
+      tap(user => this._userProfile$.next(user))
+    ).subscribe({
+      error: () => {
+        if (this.keycloak.authenticated !== true) {
+          this._userProfile$.next(null);
+        }
+      }
+    });
   }
 
   /**
