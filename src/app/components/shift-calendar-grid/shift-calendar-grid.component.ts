@@ -4,6 +4,7 @@ import {
   ActivityDto, LocationDto,
   PositionSlotDto,
   ScheduleLayoutDto,
+  ShiftColumnDto,
   ShiftDto,
   EventScheduleContentDto
 } from "../../../shiftservice-client";
@@ -155,7 +156,18 @@ export class ShiftCalendarGridComponent {
           })))
         ])
         .flat();
-      const shiftMap = new Map(shifts.map(shiftItem => [shiftItem.shift.shiftDto.id, shiftItem]));
+      const shiftMap = new Map<string, typeof shifts[number]>();
+      for (const shiftItem of shifts) {
+        const shiftId = shiftItem.shift.shiftDto.id;
+        const existingShiftItem = shiftMap.get(shiftId);
+
+        if (
+          existingShiftItem === undefined ||
+          shiftItem.shift.columnIndex > existingShiftItem.shift.columnIndex
+        ) {
+          shiftMap.set(shiftId, shiftItem);
+        }
+      }
 
       return {
         activities: [...activityMap.values()],
@@ -432,10 +444,22 @@ export class ShiftCalendarGridComponent {
         return 0;
       }).map(locationColumn => {
         const locationName = locationColumn.location.id;
-        return createLocationColumns(locationName, locationColumn.requiredShiftColumns);
+        return createLocationColumns(
+          locationName,
+          Math.max(
+            locationColumn.requiredShiftColumns,
+            this.getLoadedShiftColumnCount(locationColumn.location.id)
+          )
+        );
       }).join(" ")
     } ${
-      config.noLocationLayout === undefined ? "" : createLocationColumns("none", config.noLocationLayout.requiredShiftColumns)
+      config.noLocationLayout === undefined ? "" : createLocationColumns(
+        "none",
+        Math.max(
+          config.noLocationLayout.requiredShiftColumns,
+          this.getLoadedShiftColumnCount()
+        )
+      )
     } blank-start] auto [blank-end filter-start]  ${this.dateWidth} [filter-end]`;
   }
 
@@ -551,5 +575,26 @@ export class ShiftCalendarGridComponent {
     return dates
       .map(time => new Date(time))
       .filter(date => date.getTime() <= config.adjustedEndDate.getTime() && date.getTime() >= config.adjustedStartDate.getTime());
+  }
+
+  private getLoadedShiftColumnCount(locationId?: string) {
+    const loadedDays = [...this.loadedDays$.getValue().values()];
+
+    return loadedDays.reduce((maxCount, day) => {
+      const matchingShiftColumns = locationId === undefined ?
+        day.scheduleContentNoLocationDto?.shiftColumns ?? [] :
+        day.scheduleContentDtos
+          .filter(schedule => schedule.location.id === locationId)
+          .flatMap(schedule => schedule.shiftColumns);
+
+      return Math.max(maxCount, this.getRequiredShiftColumnCount(matchingShiftColumns));
+    }, 0);
+  }
+
+  private getRequiredShiftColumnCount(shiftColumns: ShiftColumnDto[]) {
+    return shiftColumns.reduce(
+      (maxCount, shiftColumn) => Math.max(maxCount, shiftColumn.columnIndex + 1),
+      0
+    );
   }
 }
