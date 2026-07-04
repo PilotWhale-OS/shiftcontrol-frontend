@@ -58,14 +58,9 @@ export class ApplicationUsersComponent {
       }),
       startWith(this.form.value),
       debounceTime(100),
-      switchMap((value): Observable<PaginationDtoUserEventDto> => this._userEventService.getAllUsers(
-        value.paginationIndex ?? 0,
-        this.pageSize,
-        {
-          name: value.search
-        },
-        "body"
-      )),
+      switchMap((value) => this._userEventService.getAllUsers(value.paginationIndex ?? 0, this.pageSize, {
+        name: value.search
+      })),
       shareReplay()
     );
   }

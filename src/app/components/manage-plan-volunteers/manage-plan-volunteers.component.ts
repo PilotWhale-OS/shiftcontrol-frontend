@@ -101,15 +101,13 @@ export class ManagePlanVolunteersComponent implements OnDestroy {
       combineLatestWith(this.manageData$.pipe(
         filter((data): data is planVolunteersData => data !== undefined
       ))),
-      switchMap(([value, manageData]): Observable<PaginationDtoUserPlanDto> => this._userPlanService.getAllUsersOfPlan(
+      switchMap(([value, manageData]) => this._userPlanService.getAllUsersOfPlan(
         manageData.plan.id,
         value.paginationIndex ?? 0,
-        this.pageSize,
-        {
+        this.pageSize, {
           name: value.search
-        },
-        "body"
-      )),
+        })
+      ),
       shareReplay()
     );
 
