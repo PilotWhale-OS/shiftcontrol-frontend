@@ -7,8 +7,9 @@ import {TypedFormControlDirective} from "../../directives/typed-form-control.dir
 import {InputDateComponent} from "../inputs/input-date/input-date.component";
 import {InputMultiselectComponent} from "../inputs/input-multiselect/input-multiselect.component";
 import {DecimalPipe, NgClass} from "@angular/common";
-import {EventScheduleFilterDto, ScheduleStatisticsDto} from "../../../shiftservice-client";
-import ShiftRelevancesEnum = EventScheduleFilterDto.ShiftRelevancesEnum;
+import {ScheduleStatisticsDto} from "../../../shiftservice-client";
+
+type ShiftRelevance = "MY_SHIFTS" | "SIGNUP_POSSIBLE";
 
 export enum ShiftCalendarViewMode {
   Calendar = "calendar",
@@ -54,9 +55,9 @@ export class EventCalendarFilterComponent {
   @Input()
   public statisticsMode: "admin" | "planner" | "volunteer" = "volunteer";
 
-  public readonly availabilityOptions: SelectOptions<ShiftRelevancesEnum> = [
-    {name: "Your Shifts", value: ShiftRelevancesEnum.MyShifts},
-    {name: "Signup Possible", value: ShiftRelevancesEnum.SignupPossible}
+  public readonly availabilityOptions: SelectOptions<ShiftRelevance> = [
+    {name: "Your Shifts", value: "MY_SHIFTS"},
+    {name: "Signup Possible", value: "SIGNUP_POSSIBLE"}
   ];
   public readonly viewModeOptions: SelectOptions<ShiftCalendarViewMode> = [
     {name: "Calendar", value: ShiftCalendarViewMode.Calendar},
@@ -83,7 +84,7 @@ export class EventCalendarFilterComponent {
       rolesList: this._fb.nonNullable.control<string[]>([]),
       plansList: this._fb.nonNullable.control<string[]>([]),
       locationsList: this._fb.nonNullable.control<string[]>([]),
-      relevanceList: this._fb.nonNullable.control<ShiftRelevancesEnum[]>([])
+      relevanceList: this._fb.nonNullable.control<ShiftRelevance[]>([])
     });
     this.viewForm = this._fb.group({
       date: this._fb.nonNullable.control<Date>(new Date()),
