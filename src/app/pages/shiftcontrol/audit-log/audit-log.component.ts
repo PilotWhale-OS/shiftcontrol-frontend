@@ -1,10 +1,10 @@
 import {Component, inject} from "@angular/core";
 import { icons } from "../../../util/icons";
 import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
-import {LogEndpointService, LogEntryDto} from "../../../../auditservice-client";
+import {LogEndpointService, LogEntryDto, PaginationDtoLogEntryDto} from "../../../../auditservice-client";
 import {AsyncPipe, DatePipe} from "@angular/common";
 import {InputButtonComponent} from "../../../components/inputs/input-button/input-button.component";
-import {debounceTime, EMPTY, of, pairwise, shareReplay, startWith, switchMap} from "rxjs";
+import {Observable, debounceTime, EMPTY, of, pairwise, shareReplay, startWith, switchMap} from "rxjs";
 import {RouterLink} from "@angular/router";
 import {InputTextComponent} from "../../../components/inputs/input-text/input-text.component";
 import {TypedFormControlDirective} from "../../../directives/typed-form-control.directive";
@@ -26,7 +26,7 @@ import {MinPipe} from "../../../pipes/min.pipe";
   styleUrl: "./audit-log.component.scss"
 })
 export class AuditLogComponent {
-  protected page$;
+  protected readonly page$: Observable<PaginationDtoLogEntryDto>;
 
   protected readonly form;
   protected readonly icons = icons;
@@ -58,13 +58,20 @@ export class AuditLogComponent {
       }),
       startWith(this.form.value),
       debounceTime(100),
-      switchMap((value) =>
-        this._logService.getLogs(value.paginationIndex ?? 0, this.pageSize, {
-        startTime: new Date(0).toISOString(),
-        endTime: new Date().toISOString(),
-        eventType: value.type,
-        routingKey: value.key
-      })),
+      switchMap((value) => {
+        const eventType = value.type?.trim() || undefined;
+        const routingKey = value.key?.trim() || undefined;
+
+        return this._logService.getLogs(
+          value.paginationIndex ?? 0,
+          this.pageSize,
+          new Date(0).toISOString(),
+          new Date().toISOString(),
+          undefined,
+          routingKey,
+          eventType
+        );
+      }),
       shareReplay()
     );
   }
