@@ -56,47 +56,47 @@
         }
 
         <!-- own role -->
-        <div class="col-span-2 flex flex-col gap-lg">
+        <div class="col-span-2 min-w-0 flex flex-col gap-lg">
           <hr>
-          <div class="flex flex-row gap-sm">
+          <div class="flex flex-row flex-wrap gap-sm min-w-0">
 
             @if (isPlatformAdmin$ | async) {
-              <div class="badge w-fit"
+              <div class="badge max-w-full"
                    tooltipMaxWidth="30ex"
                    [app-tooltip]="'As admin, you have platform-wide management access'"
               >
                 <fa-icon [icon]="icons.userType" />
-                Administrator
+                <span class="break-words">Administrator</span>
               </div>
             }
 
             @if ((isPlannerInEvent$ | async) === true) {
-              <div class="badge w-fit"
+              <div class="badge max-w-full"
                    tooltipMaxWidth="30ex"
                    [app-tooltip]="'You are a planner and can manage some plans of this event'"
               >
                 <fa-icon [icon]="icons.userType" />
-                Planner
+                <span class="break-words">Planner</span>
               </div>
             }
             @else if ((isParticipantInEvent$ | async) === true) {
-              <div class="badge w-fit"
+              <div class="badge max-w-full"
                    tooltipMaxWidth="30ex"
                    [app-tooltip]="'You are volunteering for this event. Sign up to shifts in the calendar!'"
               >
                 <fa-icon [icon]="icons.userType" />
-                Volunteer
+                <span class="break-words">Volunteer</span>
               </div>
             }
 
             <!-- roles -->
             @for (role of event.roles; track role.id) {
-              <div class="badge w-fit"
+              <div class="badge max-w-full"
                    tooltipMaxWidth="30ex"
                    [app-tooltip]="'You can sign up to positions that require the role ' + role.name"
               >
                 <fa-icon [icon]="icons.role" />
-                {{role.name}}
+                <span class="break-words">{{role.name}}</span>
               </div>
             }
           </div>
