@@ -18,7 +18,7 @@ import PositionSignupStateEnum = PositionSlotDto.PositionSignupStateEnum;
 import {ToastService} from "../../services/toast/toast.service";
 import {descriptionLengthValidator, nameLengthValidator} from "../../util/textValidators";
 import {mapValue} from "../../util/value-maps";
-import {PositionSlotDto, PositionSlotEndpointService, RoleDto, ShiftDto} from "../../../shiftservice-client";
+import {PositionSlotDto, PositionSlotEndpointService, RoleDto, ShiftDto, VolunteerDto} from "../../../shiftservice-client";
 
 export interface managePositionParams {
   shift: ShiftDto;
@@ -258,5 +258,14 @@ export class ManagePositionComponent implements OnDestroy {
       return Number.MIN_SAFE_INTEGER;
     }
     return order;
+  }
+
+  protected getVolunteerFullName(volunteer: VolunteerDto) {
+    return `${volunteer.firstName} ${volunteer.lastName}`.trim() || volunteer.username;
+  }
+
+  protected getVolunteerInitials(firstName?: string, lastName?: string, username?: string) {
+    const initials = `${firstName?.charAt(0) ?? ""}${lastName?.charAt(0) ?? ""}`.trim();
+    return initials || username?.charAt(0)?.toUpperCase() || "";
   }
 }

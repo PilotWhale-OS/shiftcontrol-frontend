@@ -47,8 +47,14 @@
           <div
             class="profile"
             routerLink="/me"
+            [attr.aria-label]="profile.displayName"
+            [title]="profile.displayName"
           >
-            <span class="font-bold uppercase text-white">{{getInitials(profile)}}</span>
+            @if (profile.imageUrl) {
+              <img class="profile-image" [src]="profile.imageUrl" [alt]="profile.displayName">
+            } @else {
+              <span class="font-bold uppercase text-white">{{profile.initials}}</span>
+            }
           </div>
         }
       }

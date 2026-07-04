@@ -19,6 +19,14 @@
   .profile {
     @apply rounded-full aspect-square h-10 bg-framing-highlight_hint grid place-content-center select-none cursor-pointer ml-lg;
     /*@apply border-ctr border-framing-item;*/
+    overflow: hidden;
+
+    .profile-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
   }
 
   .notifications {

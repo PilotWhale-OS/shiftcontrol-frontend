@@ -3,7 +3,6 @@ import {PageService} from "../../services/page/page.service";
 import {AsyncPipe, NgClass} from "@angular/common";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {UserService} from "../../services/user/user.service";
-import {KeycloakProfile} from "keycloak-js";
 import {combineLatestWith, map} from "rxjs";
 import {NotificationService} from "../../services/notification/notification.service";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
@@ -50,7 +49,22 @@ export class PageComponent implements OnInit {
   }
 
   protected get profile$() {
-    return this._userService.kcProfile$;
+    return this._userService.userProfile$.pipe(
+      map(profile => {
+        if (profile === null) {
+          return null;
+        }
+
+        const volunteer = profile.account.volunteer;
+        const displayName = `${volunteer.firstName} ${volunteer.lastName}`.trim() || profile.account.username;
+
+        return {
+          displayName,
+          imageUrl: profile.account.profile?.trim() || volunteer.profile?.trim() || null,
+          initials: this.getInitials(volunteer.firstName, volunteer.lastName, profile.account.username)
+        };
+      })
+    );
   }
 
   protected get unseenNotificationCount$() {
@@ -70,10 +84,9 @@ export class PageComponent implements OnInit {
 
   /**
    * Get initials from profile data
-   * @param profile
    */
-  protected getInitials(profile: KeycloakProfile) {
-    if(!profile) {return "";}
-    return `${profile.firstName?.charAt(0)} ${profile.lastName?.charAt(0)}`.trim();
+  protected getInitials(firstName?: string, lastName?: string, username?: string) {
+    const initials = `${firstName?.charAt(0) ?? ""}${lastName?.charAt(0) ?? ""}`.trim();
+    return initials || username?.charAt(0)?.toUpperCase() || "";
   }
 }
