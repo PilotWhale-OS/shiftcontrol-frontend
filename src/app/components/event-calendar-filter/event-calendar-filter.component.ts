@@ -7,8 +7,9 @@ import {TypedFormControlDirective} from "../../directives/typed-form-control.dir
 import {InputDateComponent} from "../inputs/input-date/input-date.component";
 import {InputMultiselectComponent} from "../inputs/input-multiselect/input-multiselect.component";
 import {DecimalPipe, NgClass} from "@angular/common";
-import {EventScheduleFilterDto, ScheduleStatisticsDto} from "../../../shiftservice-client";
-import ShiftRelevancesEnum = EventScheduleFilterDto.ShiftRelevancesEnum;
+import {ScheduleStatisticsDto} from "../../../shiftservice-client";
+
+type ShiftRelevancesEnum = "MY_SHIFTS" | "SIGNUP_POSSIBLE";
 
 export enum ShiftCalendarViewMode {
   Calendar = "calendar",
@@ -55,8 +56,8 @@ export class EventCalendarFilterComponent {
   public statisticsMode: "admin" | "planner" | "volunteer" = "volunteer";
 
   public readonly availabilityOptions: SelectOptions<ShiftRelevancesEnum> = [
-    {name: "Your Shifts", value: ShiftRelevancesEnum.MyShifts},
-    {name: "Signup Possible", value: ShiftRelevancesEnum.SignupPossible}
+    {name: "Your Shifts", value: "MY_SHIFTS"},
+    {name: "Signup Possible", value: "SIGNUP_POSSIBLE"}
   ];
   public readonly viewModeOptions: SelectOptions<ShiftCalendarViewMode> = [
     {name: "Calendar", value: ShiftCalendarViewMode.Calendar},

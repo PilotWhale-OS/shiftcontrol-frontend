@@ -3,7 +3,7 @@ import { icons } from "../../util/icons";
 import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
 import {
   AssignmentDto,
-  AssignmentFilterDto, AssignmentPlannerInfoDto,
+  AssignmentPlannerInfoDto,
   ShiftPlanDto,
   ShiftPlanEndpointService,
   SignupEndpointService
@@ -17,10 +17,11 @@ import {TypedFormControlDirective} from "../../directives/typed-form-control.dir
 import {InputButtonComponent} from "../inputs/input-button/input-button.component";
 import {ToastService} from "../../services/toast/toast.service";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import StatusesEnum = AssignmentFilterDto.StatusesEnum;
 import {RouterLink} from "@angular/router";
 import {FormRouteSyncService} from "../../services/form-route-sync.service";
 import {mapValue} from "../../util/value-maps";
+
+type StatusesEnum = AssignmentDto.StatusEnum;
 
 @Component({
   selector: "app-manage-assignments",
@@ -55,10 +56,10 @@ export class ManageAssignmentsComponent implements OnDestroy {
     { value: LockStatusEnum.Locked, name: "Locked" }
   ];
   protected readonly statusOptions: MultiToggleOptions<StatusesEnum> = [
-    { value: StatusesEnum.Accepted, name: "Assigned" },
-    { value: StatusesEnum.Auction, name: "Auctioned" },
-    { value: StatusesEnum.AuctionRequestForUnassign, name: "Emergency Unassign" },
-    { value: StatusesEnum.RequestForAssignment, name: "Requested Assignment" },
+    { value: AssignmentDto.StatusEnum.Accepted, name: "Assigned" },
+    { value: AssignmentDto.StatusEnum.Auction, name: "Auctioned" },
+    { value: AssignmentDto.StatusEnum.AuctionRequestForUnassign, name: "Emergency Unassign" },
+    { value: AssignmentDto.StatusEnum.RequestForAssignment, name: "Requested Assignment" },
   ];
 
   private readonly _fb = inject(FormBuilder);
@@ -71,7 +72,7 @@ export class ManageAssignmentsComponent implements OnDestroy {
   constructor() {
     this.form = this._fb.group({
       assignmentPhase: this._fb.nonNullable.control<LockStatusEnum>(ShiftPlanDto.LockStatusEnum.SelfSignup),
-      assignmentStatus: this._fb.nonNullable.control<StatusesEnum>(StatusesEnum.AuctionRequestForUnassign)
+      assignmentStatus: this._fb.nonNullable.control<StatusesEnum>(AssignmentDto.StatusEnum.AuctionRequestForUnassign)
     });
 
     this._filterSubscription = this.reloadAssignments$.pipe(
@@ -81,9 +82,7 @@ export class ManageAssignmentsComponent implements OnDestroy {
         combineLatestWith(this.plan$.pipe(
           filter((plan): plan is ShiftPlanDto => plan !== undefined)
         )),
-        switchMap(([status, plan]) => this._signupService.getSlots(plan.id, {
-          statuses: [status]
-        }))
+        switchMap(([status, plan]) => this._signupService.getSlots(plan.id, [status], "body"))
       ))
     ).subscribe(data => this.assignments$.next(data));
 
@@ -96,7 +95,7 @@ export class ManageAssignmentsComponent implements OnDestroy {
       params => of({
         assignmentStatus: params.status !== undefined ?
           params.status as StatusesEnum :
-          StatusesEnum.AuctionRequestForUnassign
+          AssignmentDto.StatusEnum.AuctionRequestForUnassign
       })
     );
   }

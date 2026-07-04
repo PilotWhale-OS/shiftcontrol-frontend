@@ -186,15 +186,18 @@ export class EventCalendarComponent implements OnDestroy {
           }))
         ) :
 
-        /* shifts mode */
-        filters$.pipe(
-          switchMap(filters =>
-            this._eventScheduleService.getEventScheduleLayout(eventId, {
-              shiftName: mapValue.undefinedIfEmptyString(filters?.shiftName),
-              locationIds: filters?.locationsList,
-              roleIds: filters?.rolesList,
-              shiftRelevances: filters?.relevanceList
-            })),
+          /* shifts mode */
+          filters$.pipe(
+            switchMap(filters =>
+            this._eventScheduleService.getEventScheduleLayout(
+              eventId,
+              undefined,
+              mapValue.undefinedIfEmptyString(filters?.shiftName),
+              filters?.relevanceList,
+              filters?.rolesList,
+              filters?.locationsList,
+              "body"
+            )),
           catchError(() => {
             this._router.navigateByUrl("/");
             return EMPTY;
@@ -389,19 +392,23 @@ export class EventCalendarComponent implements OnDestroy {
         const scheduleDays = calendarMode === "shift" ?
 
           /* shift schedule mode */
-          newDays.map(date => this._eventScheduleService.getEventScheduleContent(eventId, {
-            date: mapValue.datetimeToUtcDateString(date),
-            shiftName: mapValue.undefinedIfEmptyString(filters?.shiftName),
-            locationIds: filters?.locationsList,
-            roleIds: filters?.rolesList,
-            shiftPlanIds: filters?.plansList,
-            shiftRelevances: filters?.relevanceList
-          })) :
+          newDays.map(date => this._eventScheduleService.getEventScheduleContent(
+            eventId,
+            mapValue.datetimeToUtcDateString(date),
+            filters?.plansList,
+            mapValue.undefinedIfEmptyString(filters?.shiftName),
+            filters?.relevanceList,
+            filters?.rolesList,
+            filters?.locationsList,
+            "body"
+          )) :
 
           /* event schedule mode */
-          newDays.map(date => this._eventScheduleService.getActivitySchedule(eventId, {
-            date: mapValue.datetimeToUtcDateString(date)
-          }).pipe(
+          newDays.map(date => this._eventScheduleService.getActivitySchedule(
+            eventId,
+            mapValue.datetimeToUtcDateString(date),
+            "body"
+          ).pipe(
             map(schedule => this.mapActivityScheduleToEventSchedule(schedule, date))
           ));
 

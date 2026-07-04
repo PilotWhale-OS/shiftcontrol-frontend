@@ -58,9 +58,7 @@ export class ApplicationUsersComponent {
       }),
       startWith(this.form.value),
       debounceTime(100),
-      switchMap((value) => this._userEventService.getAllUsers(value.paginationIndex ?? 0, this.pageSize, {
-        name: value.search
-      })),
+      switchMap((value) => this._userEventService.getAllUsers(value.paginationIndex ?? 0, this.pageSize, value.search, "body")),
       shareReplay()
     );
   }

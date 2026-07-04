@@ -104,9 +104,9 @@ export class ManagePlanVolunteersComponent implements OnDestroy {
       switchMap(([value, manageData]) => this._userPlanService.getAllUsersOfPlan(
         manageData.plan.id,
         value.paginationIndex ?? 0,
-        this.pageSize, {
-          name: value.search
-        })
+        this.pageSize,
+        value.search,
+        "body")
       ),
       shareReplay()
     );
