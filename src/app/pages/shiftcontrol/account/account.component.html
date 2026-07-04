@@ -74,4 +74,37 @@
     }
 
   </div>
+
+  <!-- calendar feed card -->
+  @if (currentUserProfile$ | async; as profile) {
+    <div class="card flex flex-col gap-md w-[30rem] h-fit">
+      <h1 class="signature-gradient-font">Calendar Feed</h1>
+
+      <p class="text-sm">
+        Subscribe to your personal shift calendar in Apple Calendar, Google Calendar, Outlook, or any app that supports iCal feeds.
+      </p>
+
+      @if (getCalendarLink(profile); as calendarLink) {
+        <div class="flex flex-col gap-xs">
+          <span class="badge w-fit">Subscription Link</span>
+          <a class="break-all text-sm underline" [href]="calendarLink" target="_blank" rel="noreferrer">
+            {{calendarLink}}
+          </a>
+        </div>
+
+        <p class="text-sm text-slate-600">
+          Regenerating this link invalidates the old one. Any existing calendar subscription must be updated with the new URL.
+        </p>
+
+        <div class="flex flex-row gap-lg pt-sm">
+          <xsb-input-button name="me-copy-calendar-link" content="Copy Link" size="minimal" (xsbClick)="copyCalendarLink(profile)" />
+          <xsb-input-button name="me-regenerate-calendar-link" content="Regenerate Link" size="minimal" (xsbClick)="regenerateCalendarLink()" />
+        </div>
+      } @else {
+        <p class="text-sm text-slate-600">
+          Your personal calendar link is being prepared.
+        </p>
+      }
+    </div>
+  }
 </div>

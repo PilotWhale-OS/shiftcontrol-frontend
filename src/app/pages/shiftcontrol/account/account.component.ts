@@ -4,11 +4,13 @@ import {FormBuilder, FormControl, ReactiveFormsModule} from "@angular/forms";
 import {InputTextComponent} from "../../../components/inputs/input-text/input-text.component";
 import {TypedFormControlDirective} from "../../../directives/typed-form-control.directive";
 import {InputButtonComponent} from "../../../components/inputs/input-button/input-button.component";
-import {NotificationSettingsDto, RoleDto, UserProfileEndpointService} from "../../../../shiftservice-client";
+import {NotificationSettingsDto, RoleDto, UserProfileDto, UserProfileEndpointService} from "../../../../shiftservice-client";
 import {InputMultiToggleComponent, MultiToggleOptions} from "../../../components/inputs/input-multitoggle/input-multi-toggle.component";
-import {BehaviorSubject, catchError, forkJoin, map, pairwise, startWith, Subscription, switchMap} from "rxjs";
+import {BehaviorSubject, catchError, EMPTY, forkJoin, map, pairwise, startWith, Subscription, switchMap} from "rxjs";
 import {AsyncPipe} from "@angular/common";
 import {ToastService} from "../../../services/toast/toast.service";
+import {environment} from "../../../environment";
+import {mapValue} from "../../../util/value-maps";
 
 type notificationToggleValue = NotificationSettingsDto.ChannelsEnum | "ALL";
 
@@ -179,5 +181,42 @@ export class AccountComponent implements OnDestroy {
     return role.description?.trim()
       ? `${role.name}: ${role.description}`
       : role.name;
+  }
+
+  protected getCalendarLink(profile: UserProfileDto | null): string | null {
+    const shareId = profile?.calendarShareId?.trim();
+    if(!shareId) {
+      return null;
+    }
+
+    const basePath = environment.shiftserviceBasePath.replace(/\/+$/, "");
+    return `${basePath}/api/v1/calendar/share/${encodeURIComponent(shareId)}`;
+  }
+
+  protected copyCalendarLink(profile: UserProfileDto | null) {
+    const link = this.getCalendarLink(profile);
+
+    if(!link) {
+      this._toastService.showError("Calendar Link Missing", "The calendar link is not available yet.");
+      return;
+    }
+
+    navigator.clipboard.writeText(link).then(() => {
+      this._toastService.showSuccess("Calendar Link Copied", "The calendar feed link has been copied to your clipboard.");
+    }).catch(() => {
+      this._toastService.showError("Copy Failed", "Failed to copy the calendar feed link.");
+    });
+  }
+
+  protected regenerateCalendarLink() {
+    this._userProfileService.regenerateCurrentUserCalendarShareId().pipe(
+      switchMap(() => this._userService.refreshProfile()),
+      this._toastService.tapSuccess(
+        "Calendar Link Regenerated",
+        () => "The old calendar link no longer works. Update your calendar app with the new link."
+      ),
+      this._toastService.tapError("Calendar Link Error", mapValue.apiErrorToMessage),
+      catchError(() => EMPTY)
+    ).subscribe();
   }
 }
