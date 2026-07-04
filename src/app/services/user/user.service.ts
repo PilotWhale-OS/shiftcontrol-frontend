@@ -97,6 +97,24 @@ export class UserService {
     return this.keycloak.token;
   }
 
+  public get isAuthenticated() {
+    return this.keycloak.authenticated === true;
+  }
+
+  public async ensureValidToken(minValidity = 30): Promise<string | undefined> {
+    if (!this.isAuthenticated) {
+      return undefined;
+    }
+
+    try {
+      await this.keycloak.updateToken(minValidity);
+    } catch {
+      return undefined;
+    }
+
+    return this.keycloak.token;
+  }
+
   /**
    * Check if the current user can manage the given plan
    * admins have access to all plans

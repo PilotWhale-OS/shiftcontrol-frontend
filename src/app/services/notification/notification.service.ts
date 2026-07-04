@@ -114,7 +114,7 @@ export class NotificationService {
     const connection = new HubConnectionBuilder()
       .withUrl(this._hubUrl, {
         withCredentials: false,
-        accessTokenFactory: () => (this._userService.token ?? "")
+        accessTokenFactory: async () => (await this._userService.ensureValidToken()) ?? ""
       })
       .build();
     const hubProxy = getHubProxyFactory("IPushNotificationHub")
