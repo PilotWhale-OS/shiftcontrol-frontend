@@ -260,12 +260,11 @@ export class ManagePositionComponent implements OnDestroy {
     return order;
   }
 
-  protected getVolunteerFullName(volunteer: VolunteerDto) {
-    return `${volunteer.firstName} ${volunteer.lastName}`.trim() || volunteer.username;
+  protected getVolunteerUsername(volunteer: VolunteerDto) {
+    return volunteer.username ?? "";
   }
 
-  protected getVolunteerInitials(firstName?: string, lastName?: string, username?: string) {
-    const initials = `${firstName?.charAt(0) ?? ""}${lastName?.charAt(0) ?? ""}`.trim();
-    return initials || username?.charAt(0)?.toUpperCase() || "";
+  protected getVolunteerInitials(username?: string) {
+    return username?.charAt(0)?.toUpperCase() || "";
   }
 }

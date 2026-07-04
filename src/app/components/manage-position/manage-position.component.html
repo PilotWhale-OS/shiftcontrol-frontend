@@ -207,22 +207,21 @@
           @if (data.position.assignments.length > 0) {
             <div class="assigned-volunteers-list">
               @for (assignment of data.position.assignments; track assignment.id) {
-                <div class="assigned-volunteer" [title]="getVolunteerFullName(assignment.assignedVolunteer)">
+                <div class="assigned-volunteer" [title]="getVolunteerUsername(assignment.assignedVolunteer)">
                   @if (assignment.assignedVolunteer.profile) {
                     <img
                       class="assigned-volunteer-avatar"
                       [src]="assignment.assignedVolunteer.profile"
-                      [alt]="getVolunteerFullName(assignment.assignedVolunteer)"
+                      [alt]="getVolunteerUsername(assignment.assignedVolunteer)"
                     >
                   } @else {
                     <div class="assigned-volunteer-avatar assigned-volunteer-avatar-fallback">
-                      {{getVolunteerInitials(assignment.assignedVolunteer.firstName, assignment.assignedVolunteer.lastName, assignment.assignedVolunteer.username)}}
+                      {{getVolunteerInitials(assignment.assignedVolunteer.username)}}
                     </div>
                   }
 
                   <div class="assigned-volunteer-copy">
-                    <span class="assigned-volunteer-username">{{assignment.assignedVolunteer.username}}</span>
-                    <span class="assigned-volunteer-name">{{getVolunteerFullName(assignment.assignedVolunteer)}}</span>
+                    <span class="assigned-volunteer-username">{{getVolunteerUsername(assignment.assignedVolunteer)}}</span>
                   </div>
                 </div>
               }
