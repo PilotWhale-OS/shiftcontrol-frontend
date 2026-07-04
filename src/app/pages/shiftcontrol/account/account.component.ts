@@ -68,13 +68,13 @@ export class AccountComponent implements OnDestroy {
       map(profile => [...(profile?.assignedRoles ?? [])].sort((left, right) => left.name.localeCompare(right.name)))
     );
 
-    this._profileSubscription = this._userService.kcProfile$.subscribe(profile => {
-      if(profile) {
+    this._profileSubscription = this.currentUserProfile$.subscribe(appProfile => {
+      if(appProfile) {
         this.form.setValue({
-          givenName: profile.firstName ?? "",
-          lastName: profile.lastName ?? "",
-          email: profile.email ?? "",
-          username: profile.username ?? "",
+          givenName: appProfile.account.volunteer.firstName,
+          lastName: appProfile.account.volunteer.lastName,
+          email: appProfile.account.email,
+          username: appProfile.account.username,
           checked: false,
           notification: null
         });
