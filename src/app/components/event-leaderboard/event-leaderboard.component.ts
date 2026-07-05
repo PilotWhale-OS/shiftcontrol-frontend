@@ -56,7 +56,7 @@ export class EventLeaderboardComponent {
         (rankMap.get(ranks.ownRank.rank - 1)?.hours ?? 0) - ranks.ownRank.hours + 1
       } more hours to reach the #1 spot.`;
     } else if(ranks.ownRank.rank <= ranks.size) {
-      return `You are ranked in toe top 10!\nYou need ${
+      return `You are ranked in the top 10!\nYou need ${
         (rankMap.get(3)?.hours ?? 0) - ranks.ownRank.hours + 1
       } more hours to reach the podium.`;
     } else {
