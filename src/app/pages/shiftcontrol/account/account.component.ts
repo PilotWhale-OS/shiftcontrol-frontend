@@ -42,7 +42,6 @@ export class AccountComponent implements OnDestroy {
     >>(undefined);
   protected readonly isPlatformAdmin$;
   protected readonly currentUserProfile$;
-  protected readonly assignedRoles$;
 
   private readonly _userService = inject(UserService);
   private readonly _fb = inject(FormBuilder);
@@ -64,9 +63,6 @@ export class AccountComponent implements OnDestroy {
 
     this.isPlatformAdmin$ = this._userService.isPlatformAdmin$;
     this.currentUserProfile$ = this._userService.userProfile$;
-    this.assignedRoles$ = this.currentUserProfile$.pipe(
-      map(profile => [...(profile?.assignedRoles ?? [])].sort((left, right) => left.name.localeCompare(right.name)))
-    );
 
     this._profileSubscription = this.currentUserProfile$.subscribe(appProfile => {
       if(appProfile) {

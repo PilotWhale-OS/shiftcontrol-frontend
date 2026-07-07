@@ -34,19 +34,6 @@
                     [xsb-typed]="[username, form.controls.username]"
     />
 
-    <span class="badge w-fit">Roles</span>
-    <div class="flex flex-wrap gap-sm">
-      @if (assignedRoles$ | async; as assignedRoles) {
-        @if (assignedRoles.length > 0) {
-          @for (role of assignedRoles; track role.id) {
-            <span class="badge" [title]="getRoleLabel(role)">{{ role.name }}</span>
-          }
-        } @else {
-          <span>None</span>
-        }
-      }
-    </div>
-
     @if (isPlatformAdmin$ | async) {
       <span class="badge w-fit">Platform Role</span>
       <span>Administrator</span>
